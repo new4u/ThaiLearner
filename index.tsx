@@ -125,6 +125,7 @@ const App: React.FC = () => {
             <ThaiKeyboardPractice
               initialTargetWord={keyboardTargetWord}
               onSpeak={handleSpeak}
+              onBackToStudy={() => setActiveTab('dual_sync_player')}
             />
           </div>
         )}

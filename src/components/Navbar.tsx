@@ -21,11 +21,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             📿
           </div>
           <div className="flex items-center gap-2 whitespace-nowrap">
-            <span className="font-extrabold text-sm sm:text-base text-white tracking-tight">
-              泰语共学工作台
+            <span className="font-extrabold text-base sm:text-lg text-white tracking-tight">
+              泰学
             </span>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 hidden sm:inline-flex items-center">
-              双视频同步 & 键盘打卡
+              Tai Xue · 泰语共学
             </span>
           </div>
         </div>
