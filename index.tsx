@@ -6,6 +6,7 @@ import { ThaiKeyboardPractice } from './src/components/ThaiKeyboardPractice';
 import { WordDetailModal } from './src/components/WordDetailModal';
 import { RegistrationCheckinView } from './src/components/RegistrationCheckinView';
 import { AdminSanctuaryModal } from './src/components/AdminSanctuaryModal';
+import { AppFooter } from './src/components/AppFooter';
 import { INITIAL_SUBTITLES } from './src/data/luangporCourseData';
 import { SubtitleLine, WordToken, WordStatus, ActiveTab, RegisteredStudent } from './src/types';
 import { thaiAudio } from './src/utils/thaiAudioSynthesizer';
@@ -182,6 +183,9 @@ const App: React.FC = () => {
         )}
 
       </main>
+
+      {/* 站点通用页脚：小助手二维码常驻展示 (任何页面底部可见) */}
+      <AppFooter />
 
       {/* 生词解析弹窗 */}
       {selectedWord && (

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { RegisteredStudent, StudyCheckinRecord } from '../types';
 import { studentStudyService } from '../services/studentStudyService';
-import { WechatAssistantCard } from './WechatAssistantCard';
 import { 
   CheckCircle2, Calendar, Award, Flame, LogOut, 
   Sparkles, Keyboard, BookOpen, Clock, 
   Copy, Check, History, RefreshCw, ArrowRight,
-  Cloud, X, UserCheck, MessageSquare
+  Cloud, X, UserCheck
 } from 'lucide-react';
 
 interface RegistrationCheckinViewProps {
@@ -24,8 +23,8 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
   onNavigateToPlayer,
   onOpenAdmin
 }) => {
-  // 当前子标签页：每日打卡 / 我的记录 / 小助手微信
-  const [activeTab, setActiveTab] = useState<'checkin' | 'records' | 'assistant'>('checkin');
+  // 当前子标签页：每日打卡 / 我的记录
+  const [activeTab, setActiveTab] = useState<'checkin' | 'records'>('checkin');
 
   // 打卡笔记输入
   const [checkinNotes, setCheckinNotes] = useState('');
@@ -340,19 +339,6 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
           <Award className="w-3.5 h-3.5" />
           <span>打卡记录 ({personalRecords.length})</span>
         </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('assistant')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
-            activeTab === 'assistant'
-              ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-              : 'text-stone-300 hover:text-white hover:bg-slate-800'
-          }`}
-        >
-          <MessageSquare className="w-3.5 h-3.5" />
-          <span>小助手二维码</span>
-        </button>
       </div>
 
       {/* TAB 1: 今日打卡核心区域 */}
@@ -525,11 +511,6 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
             </div>
           )}
         </div>
-      )}
-
-      {/* TAB 3: 小助手二维码 */}
-      {activeTab === 'assistant' && (
-        <WechatAssistantCard />
       )}
 
       {/* 注册/登录弹窗（仅在特定场景如未登录点击打卡时弹出） */}

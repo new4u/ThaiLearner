@@ -1,7 +1,12 @@
 -- ==============================================================================
--- 泰语尊者法谈共学平台 · Supabase 数据表初始化脚本 (One-Click Setup)
+-- 泰语尊者法谈共学平台 · 数据库初始化脚本 (One-Click Setup)
 -- 使用方法：复制本脚本全部内容 -> 登录 Supabase 控制台 -> 进入 SQL Editor -> 粘贴并点击 RUN
+-- 覆盖表: students / login_logs / study_records / study_progress
+-- 本脚本幂等可重复执行，并会自动清理历史演示假数据
 -- ==============================================================================
+
+-- 0. 启用 UUID 扩展 (study_progress 主键使用)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. 创建学员档案表 (students)
 CREATE TABLE IF NOT EXISTS public.students (
@@ -52,12 +57,27 @@ CREATE TABLE IF NOT EXISTS public.study_records (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
--- 4. 开启行级安全策略 (Row Level Security)
+-- 4. 创建学习进度表 (study_progress, 前端 src/lib/supabase.ts 预留, 按 user_id+course_id 去重)
+CREATE TABLE IF NOT EXISTS public.study_progress (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id TEXT,
+    course_id TEXT NOT NULL,
+    current_sentence_index INTEGER DEFAULT 0,
+    total_sentences INTEGER DEFAULT 0,
+    completed_sentences JSONB DEFAULT '[]',
+    thai_typing_wpm NUMERIC,
+    thai_typing_accuracy NUMERIC,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
+    UNIQUE (user_id, course_id)
+);
+
+-- 5. 开启行级安全策略 (Row Level Security)
 ALTER TABLE public.students ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.login_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.study_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.study_progress ENABLE ROW LEVEL SECURITY;
 
--- 5. 配置开放式共学 RLS 策略 (允许前端轻量免密注册与打卡读写)
+-- 6. 配置开放式共学 RLS 策略 (允许前端轻量免密注册与打卡读写)
 DROP POLICY IF EXISTS "Public select students" ON public.students;
 CREATE POLICY "Public select students" ON public.students FOR SELECT USING (true);
 
@@ -76,17 +96,13 @@ CREATE POLICY "Public select study_records" ON public.study_records FOR SELECT U
 DROP POLICY IF EXISTS "Public insert/update study_records" ON public.study_records;
 CREATE POLICY "Public insert/update study_records" ON public.study_records FOR ALL USING (true);
 
--- 6. 插入共学示范同修数据
-INSERT INTO public.students (id, name, wechat_or_phone, learning_goal, thai_level, daily_target, registered_at, last_login_at, login_count, streak_days, last_checkin_date, total_checkins, keyboard_practice_count, words_mastered_count, video_minutes_studied, avatar_seed, role)
-VALUES 
-    ('stu_demo_1', '妙心居士', 'miaoxin_dhamma', '能够听懂尊者实况开示中关于五蕴、正定与知者心的巴利核心法词', 'beginner', '每天打卡 20 分钟 · 练习泰语键盘打卡', '2026-10-18 19:30', '2026-10-23 09:15', 14, 6, '2026-10-23', 14, 42, 38, 185, 'amber', 'student'),
-    ('stu_demo_2', '觉知知者', 'sati_watcher_88', '零基础从头学，想在今年年底去泰国 Wat Suan Santidham 禅修参访', 'zero', '每天跟读 10 句泰文双语字幕', '2026-10-19 20:00', '2026-10-22 21:40', 9, 4, '2026-10-22', 9, 26, 19, 120, 'emerald', 'student'),
-    ('stu_demo_3', '知行助教 (圆明)', 'yuanming_ta', '带读共学班主持人，熟练掌握 746 句朱拉音标与巴利词源', 'intermediate', '主持每周二、四共学双视频放映', '2026-10-15 14:00', '2026-10-23 10:00', 28, 9, '2026-10-23', 28, 88, 75, 320, 'indigo', 'ta')
-ON CONFLICT (id) DO NOTHING;
+DROP POLICY IF EXISTS "Public select study_progress" ON public.study_progress;
+CREATE POLICY "Public select study_progress" ON public.study_progress FOR SELECT USING (true);
 
--- 插入共学示范打卡与日志
-INSERT INTO public.login_logs (id, student_id, student_name, wechat_or_phone, timestamp, time_str, action, device)
-VALUES 
-    ('log_seed_1', 'stu_demo_3', '知行助教 (圆明)', 'yuanming_ta', 1792750000000, '2026-10-23 08:10:22', 'login', 'Mac OS Chrome (网页端)'),
-    ('log_seed_2', 'stu_demo_1', '妙心居士', 'miaoxin_dhamma', 1792742800000, '2026-10-23 06:15:30', 'login', 'iOS Safari (移动端)')
-ON CONFLICT (id) DO NOTHING;
+DROP POLICY IF EXISTS "Public insert/update study_progress" ON public.study_progress;
+CREATE POLICY "Public insert/update study_progress" ON public.study_progress FOR ALL USING (true);
+
+-- 7. 清理历史演示假数据 (若曾在旧版脚本中插入过虚拟同修数据)
+DELETE FROM public.students WHERE id LIKE 'stu_demo_%' OR name IN ('妙心居士', '觉知知者', '知行助教 (圆明)');
+DELETE FROM public.login_logs WHERE id LIKE 'log_seed_%';
+DELETE FROM public.study_records WHERE id LIKE 'rec_seed_%';
