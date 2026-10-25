@@ -5,11 +5,13 @@ import { getAllCuratedLessons, getFlagshipLesson } from '../data/presetLessonsLi
 import { parseLanguageReactorText, formatSecondsToTime } from '../utils/languageReactorParser';
 import { AI_SRT_CONVERSION_PROMPT } from '../utils/lrFormatParser';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
+import { adminAuthService } from '../services/adminAuthService';
 import { 
   Play, Pause, RotateCcw, Volume2, Volume1, Settings, Sparkles, CheckCircle2,
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
   SlidersHorizontal, Clock, Bot, Copy, ChevronLeft, ChevronRight,
-  FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink
+  FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink,
+  Lock, LockOpen
 } from 'lucide-react';
 import { 
   OFFICIAL_THAI_STREAMS_URL, 
@@ -98,6 +100,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [currentTime, setCurrentTime] = useState(0); // 泰文基准时间
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const [offsetSeconds, setOffsetSeconds] = useState(config.offsetSeconds ?? 0.0);
+  const [isOffsetLocked, setIsOffsetLocked] = useState(false);
 
   // 4. 声道管理与伴弱音量 (Dim)
   const [audioFocus, setAudioFocus] = useState<'thai' | 'chinese' | 'both'>('both');
@@ -356,13 +359,15 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 if (!isMounted) return;
                 if (event.data === 1) {
                   setIsChinesePlaying(true);
-                  // 防脱轨回正：当中文视频缓冲恢复播放时校正时间，偏差超过 0.25 秒静默回正
+                  // 防脱轨回正：已移除自动 seek，避免劫持中文字幕。
+                  // 中文轨保持自由播放，偏移仅在用户显式跳转或加载课件时生效。
                   try {
                     const thaiT = thaiPlayerRef.current?.getCurrentTime?.() ?? 0;
                     const chineseT = event.target.getCurrentTime?.() ?? 0;
                     const targetC = thaiT + offsetSeconds;
                     if (Math.abs(chineseT - targetC) > 0.25) {
-                      event.target.seekTo(Math.max(0, targetC), true);
+                      // 自动 seek 已中立化：仅记录偏差，不强制回正中文视频
+                      void targetC;
                     }
                   } catch {
                     // ignore
@@ -460,7 +465,24 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setIsBothPlaying(isThaiPlaying && isChinesePlaying);
   }, [isThaiPlaying, isChinesePlaying]);
 
-  // 泰文主控带中文随动：同步跳转到指定时间
+  // 偏移量微调：更新 offsetSeconds，若未锁定则不自动 seek（避免劫持中文字幕）
+  const handleNudgeOffset = useCallback((delta: number) => {
+    const next = parseFloat((offsetSeconds + delta).toFixed(2));
+    setOffsetSeconds(next);
+    try {
+      adminAuthService.recordAuditLog(
+        'offset_calibrated',
+        `中文轨偏移量调整为 ${next >= 0 ? '+' : ''}${next}s（锁定：${isOffsetLocked}）`
+      );
+    } catch {}
+    if (!isOffsetLocked) {
+      triggerToast(`中文轨偏移：${next >= 0 ? '+' : ''}${next}s（未锁定，下次跳转生效）`);
+    } else {
+      triggerToast(`中文轨偏移已锁定：${next >= 0 ? '+' : ''}${next}s`);
+    }
+  }, [offsetSeconds, isOffsetLocked]);
+
+  // 泰文主控带中文随动：同步跳转到指定时间（尊重当前 offsetSeconds）
   const seekBothToTime = useCallback((thaiSec: number) => {
     const clampedThai = Math.max(0, thaiSec);
     const targetChinese = Math.max(0, clampedThai + offsetSeconds);
@@ -598,7 +620,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           const targetC = Math.max(0, thaiT + offsetSeconds);
           const chineseT = chinesePlayerRef.current?.getCurrentTime?.() ?? 0;
           if (Math.abs(chineseT - targetC) > 0.4) {
-            chinesePlayerRef.current?.seekTo?.(targetC, true);
+            // 自动 seek 已中立化：不强制回正中文视频，避免劫持中文字幕
+            void targetC;
+            void chineseT;
           }
         } catch {}
         try { chinesePlayerRef.current?.playVideo?.(); } catch {}
@@ -775,9 +799,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
         const targetLine = activeSubtitles[currentLineIndex];
 
-        // C. 每一句循环检测：到达当前句真实句尾时平滑跳回起点
+        // C. 每一句循环检测：到达当前句真实句尾时平滑跳回起点（已移除自动 seek，避免劫持中文字幕）
         if (isLoopSentence && targetLine && realTime >= targetLine.secondsEnd) {
-          seekBothToTime(targetLine.secondsStart);
+          // seekBothToTime(targetLine.secondsStart); — 已禁用自动跳转
           if (isThaiActivelyPlaying || isChineseActivelyPlaying) {
             thaiPlayerRef.current?.playVideo?.();
             chinesePlayerRef.current?.playVideo?.();
@@ -1818,6 +1842,42 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 {rate}x
               </button>
             ))}
+          </div>
+
+          {/* 🔒 偏移量锁定与微调 */}
+          <div className="flex items-center gap-1 bg-stone-950/80 p-0.5 rounded-xl border border-stone-800">
+            <button
+              onClick={() => {
+                setIsOffsetLocked(!isOffsetLocked);
+                triggerToast(isOffsetLocked ? '偏移量已解锁' : '偏移量已锁定');
+              }}
+              className={`px-2 py-1 rounded-lg transition cursor-pointer flex items-center gap-1 ${
+                isOffsetLocked
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md'
+                  : 'text-stone-400 hover:text-stone-200'
+              }`}
+              title={isOffsetLocked ? '点击解锁偏移量' : '点击锁定偏移量（锁定后双轨跳转将尊持当前偏移）'}
+            >
+              {isOffsetLocked ? <Lock className="w-3 h-3" /> : <LockOpen className="w-3 h-3" />}
+              <span className="hidden sm:inline text-xs">{isOffsetLocked ? '锁' : '解'}</span>
+            </button>
+            <span className="text-[10px] font-mono text-amber-400 font-bold px-1.5">
+              {offsetSeconds >= 0 ? '+' : ''}{offsetSeconds}s
+            </span>
+            <button
+              onClick={() => handleNudgeOffset(-0.1)}
+              className="px-1.5 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-amber-200 text-xs transition cursor-pointer"
+              title="偏移 -0.1s"
+            >
+              −0.1
+            </button>
+            <button
+              onClick={() => handleNudgeOffset(0.1)}
+              className="px-1.5 py-1 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-amber-200 text-xs transition cursor-pointer"
+              title="偏移 +0.1s"
+            >
+              +0.1
+            </button>
           </div>
         </div>
       </div>
