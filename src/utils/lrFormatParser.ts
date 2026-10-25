@@ -83,14 +83,19 @@ export function formatSecondsToSRT(totalSeconds: number): string {
 }
 
 /**
- * 辅助函数：秒数转 00:00 简短时间格式
+ * 辅助函数：秒数转 00:00 简短时间格式（支持超过1小时的 HH:MM:SS 显示）
  */
 export function formatSecondsToTime(sec: number): string {
   if (isNaN(sec) || sec < 0) sec = 0;
-  const m = Math.floor(sec / 60);
+  const hr = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
   const s = Math.floor(sec % 60);
   const mm = m < 10 ? `0${m}` : `${m}`;
   const ss = s < 10 ? `0${s}` : `${s}`;
+  if (hr > 0) {
+    const hh = hr < 10 ? `0${hr}` : `${hr}`;
+    return `${hh}:${mm}:${ss}`;
+  }
   return `${mm}:${ss}`;
 }
 

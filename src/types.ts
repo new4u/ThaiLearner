@@ -1,5 +1,14 @@
 export type WordStatus = 'unmarked' | 'learning' | 'mastered';
 
+export interface TargetWordData {
+  thai: string;
+  romanization?: string;
+  chinese?: string;
+  rootBreakdown?: string;
+  tip?: string;
+  isCore?: boolean;
+}
+
 export interface WordToken {
   id: string;
   thai: string;
@@ -42,8 +51,55 @@ export type ActiveTab =
   | 'student_promo'      // 共学指南（通关指南、学员心法、每周1小时办学规程、全勤季度滚动奖）
   | 'host_sop'           // 带读 SOP（主持人带读 5 步流程）
   | 'keyboard_lab'       // 键盘打卡（Kedmanee 泰语键盘盲打实战）
+  | 'registration_checkin' // 免费注册、打卡记录、小助手共学与登录日志
   | 'paragraph_analyzer' // 段落智能解构（纯前端离线朱拉音标解构，脱离外部大模型依赖）
   | 'course_manager';    // 课件分发与导入导出（深度对接 LR 官方 TSV/Excel/JSON 规范）
+
+// 注册学员基本信息
+export interface RegisteredStudent {
+  id: string;
+  name: string;
+  wechatOrPhone: string;
+  learningGoal: string;
+  thaiLevel: 'zero' | 'beginner' | 'intermediate';
+  dailyTarget: string;
+  registeredAt: string;
+  lastLoginAt: string;
+  loginCount: number;
+  streakDays: number;
+  lastCheckinDate?: string;
+  totalCheckins: number;
+  keyboardPracticeCount: number;
+  wordsMasteredCount: number;
+  videoMinutesStudied: number;
+  avatarSeed?: string;
+  role: 'student' | 'ta' | 'guest';
+}
+
+// 学员登录记录 (包含每个人登录情况与轨迹)
+export interface UserLoginLog {
+  id: string;
+  studentId: string;
+  studentName: string;
+  wechatOrPhone: string;
+  timestamp: number;
+  timeStr: string;
+  action: 'register' | 'login' | 'auto_login';
+  device: string;
+}
+
+// 学员打卡与学习记录
+export interface StudyCheckinRecord {
+  id: string;
+  studentId: string;
+  studentName: string;
+  date: string; // YYYY-MM-DD
+  timeStr: string;
+  streakDay: number;
+  notes: string;
+  type: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone';
+  summary: string;
+}
 
 export interface DualVideoConfig {
   id?: string;
@@ -127,4 +183,58 @@ export interface ZoomMeetingInfo {
   joinUrl: string;
   practiceRoomUrl: string;
   scheduleNotice: string;
+}
+
+// 预制精品课件库模型
+export interface CuratedLesson {
+  id: string;
+  date: string; // YYYY-MM-DD
+  title: string;
+  chineseTitle: string;
+  speaker: string;
+  source: string;
+  thaiVideoUrl: string;
+  chineseVideoUrl: string;
+  thaiVideoId: string;
+  chineseVideoId: string;
+  defaultOffsetSeconds: number;
+  totalSentences: number;
+  tags: string[];
+  keyTerms: Array<{
+    thai: string;
+    romanization: string;
+    chinese: string;
+    explanation: string;
+    shortcutKey?: string;
+  }>;
+  subtitles: SubtitleLine[];
+}
+
+// 独立安全管理后台审计日志
+export interface AdminAuditLog {
+  id: string;
+  timestamp: number;
+  timeStr: string;
+  action: 'unlock_success' | 'unlock_failed' | 'passphrase_changed' | 'data_exported' | 'record_deleted' | 'offset_calibrated';
+  details: string;
+  device: string;
+}
+
+// 独立安全管理后台会话状态
+export interface AdminSessionState {
+  isAuthenticated: boolean;
+  unlockedAt: number | null;
+  expiresAt: number | null;
+  adminName: string;
+}
+
+// 公共前台脱敏共学动态流
+export interface PublicZenActivity {
+  id: string;
+  maskedStudentName: string;
+  activityType: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone';
+  summary: string;
+  timeAgo: string;
+  timestamp: number;
+  streakDay?: number;
 }

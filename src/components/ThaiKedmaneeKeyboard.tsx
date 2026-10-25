@@ -72,6 +72,7 @@ interface ThaiKedmaneeKeyboardProps {
   onToggleShift?: () => void;
   onBackspace?: () => void;
   onSpace?: () => void;
+  onEnter?: () => void;
   enablePhysicalKeyboard?: boolean;
   soundEnabled?: boolean;
   onToggleSound?: () => void;
@@ -85,6 +86,7 @@ export const ThaiKedmaneeKeyboard: React.FC<ThaiKedmaneeKeyboardProps> = ({
   onToggleShift,
   onBackspace,
   onSpace,
+  onEnter,
   enablePhysicalKeyboard = true,
   soundEnabled = true,
   onToggleSound,
@@ -104,20 +106,22 @@ export const ThaiKedmaneeKeyboard: React.FC<ThaiKedmaneeKeyboardProps> = ({
     return false;
   }, [highlightChar]);
 
-  // 触发击键核心动作：声学播报 + 回调
+  // 触发击键核心动作：声学播报 + 回调 (避免重复播放音效)
   const triggerKeyAction = (char: string) => {
     setActivePressedChar(char);
     setTimeout(() => setActivePressedChar(null), 180);
 
-    // 1. 发音（击键发字母全称）
-    if (soundEnabled) {
-      thaiAudio.speakKeyChar(char);
+    // 若有上层业务回调 (如 ThaiKeyboardPractice)，交由业务逻辑统一调度字符发音与通关判读
+    if (onKeyPress) {
+      onKeyPress(char);
     } else {
-      thaiAudio.playKeyTick();
+      // 独立键盘组件使用时的发声回退
+      if (soundEnabled) {
+        thaiAudio.speakKeyChar(char);
+      } else {
+        thaiAudio.playKeyTick();
+      }
     }
-
-    // 2. 传给业务逻辑组件
-    onKeyPress?.(char);
   };
 
   // 物理键盘联动监听 (当未在 input/textarea 聚焦时拦截)
@@ -138,14 +142,15 @@ export const ThaiKedmaneeKeyboard: React.FC<ThaiKedmaneeKeyboardProps> = ({
         return;
       }
 
-      if (e.key === ' ') {
+      if (e.key === ' ' || e.key === 'Spacebar') {
         e.preventDefault();
-        if (soundEnabled) {
-          thaiAudio.speakThai('วรรค', 1.0);
-        } else {
-          thaiAudio.playKeyTick();
-        }
         onSpace?.();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onEnter?.();
         return;
       }
 
@@ -180,7 +185,7 @@ export const ThaiKedmaneeKeyboard: React.FC<ThaiKedmaneeKeyboardProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [enablePhysicalKeyboard, isShifted, soundEnabled, onKeyPress, onBackspace, onSpace, onToggleShift]);
+  }, [enablePhysicalKeyboard, isShifted, soundEnabled, onKeyPress, onBackspace, onSpace, onEnter, onToggleShift]);
 
   // 判断是否为声调符号键位
   const isToneKey = (char: string) => ['่', '้', '๊', '๋'].includes(char);
@@ -399,16 +404,13 @@ export const ThaiKedmaneeKeyboard: React.FC<ThaiKedmaneeKeyboardProps> = ({
           <button
             type="button"
             onClick={() => {
-              if (soundEnabled) {
-                thaiAudio.speakThai('วรรค', 1.0);
-              } else {
-                thaiAudio.playKeyTick();
-              }
               onSpace?.();
             }}
             className="w-1/2 sm:w-2/5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold tracking-wider transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-2 shadow-md"
+            title="朗读泰文词 (按物理空格键或回车亦可触发)"
           >
-            <span>SPACE (空格 · 朗读已拼整词)</span>
+            <Volume2 className="w-4 h-4 text-amber-400" />
+            <span>SPACE (空格 · 朗读泰文词)</span>
           </button>
         </div>
       </div>

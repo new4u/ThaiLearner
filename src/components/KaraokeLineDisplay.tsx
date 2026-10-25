@@ -73,6 +73,7 @@ export const KaraokeLineDisplay: React.FC<KaraokeLineDisplayProps> = ({
                   onClick={() => {
                     onWordSeek(wordStart);
                     onWordClick(w);
+                    onSpeakWord(w.thai);
                   }}
                   className={`group relative flex flex-col items-center cursor-pointer p-2 rounded-xl transition-all duration-150 border ${
                     isWordActive

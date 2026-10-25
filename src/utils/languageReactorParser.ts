@@ -146,9 +146,45 @@ export function parseLanguageReactorText(rawText: string): {
     return { subtitles: [], totalParsed: 0 };
   }
 
-  const trimmed = rawText.trim();
+  // 去除 UTF-8 BOM 标记，防止大文件读取时首字符异常
+  const trimmed = rawText.replace(/^\uFEFF/, '').trim();
 
-  // 1. 如果包含 "-->"，按通用增强型/标准 SRT 格式解析
+  // 0. 支持导入 JSON 课件文件
+  if ((trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+    try {
+      const parsed = JSON.parse(trimmed);
+      const list = Array.isArray(parsed) ? parsed : (parsed.subtitles || parsed.lines || parsed.data || []);
+      if (Array.isArray(list) && list.length > 0) {
+        const subtitles: SubtitleLine[] = list.map((item: any, idx: number) => {
+          const thai = item.thai || item.text || item.original || '';
+          const chinese = item.chinese || item.translation || item.cn || '';
+          const secStart = typeof item.secondsStart === 'number' ? item.secondsStart : (parseTimeToSeconds(item.timeStart) || idx * 4);
+          const secEnd = typeof item.secondsEnd === 'number' ? item.secondsEnd : (parseTimeToSeconds(item.timeEnd) || secStart + 4);
+          const words = item.words && item.words.length > 0 ? item.words : tokenizeThaiWithChula(thai, chinese);
+          return {
+            id: item.id || idx + 1,
+            timeStart: item.timeStart || formatSecondsToTime(secStart),
+            timeEnd: item.timeEnd || formatSecondsToTime(secEnd),
+            secondsStart: secStart,
+            secondsEnd: secEnd,
+            thai,
+            romanization: item.romanization || words.map((w: any) => w.romanization).filter(Boolean).join(' ') || thai,
+            chinese,
+            words
+          };
+        });
+        return {
+          subtitles,
+          detectedTitle: parsed.title || subtitles[0]?.thai?.slice(0, 30),
+          totalParsed: subtitles.length
+        };
+      }
+    } catch {
+      // 容错继续往下按文本解析
+    }
+  }
+
+  // 1. 如果包含 "-->"，按通用增强型/标准 SRT/VTT 格式解析
   if (trimmed.includes('-->')) {
     try {
       const srtRes = parseSRTToSubtitles(trimmed);

@@ -2,8 +2,8 @@
 // 包含：朱拉隆功大学标准音标 (Chula Adapted IPA)、逐词泰中对照 (Interlinear Gloss) 及精确时间戳
 import { SubtitleLine } from '../types';
 
-export const LUANGPOR_OCT_18_TALK_TITLE = "แก้มิจฉาทิฎฐิด้วยสติปัฏฐาน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568";
-export const LUANGPOR_OCT_18_TALK_ZH_TITLE = "以四念处对治邪见（隆波帕默尊者 2026年10月18日开示）";
+export const LUANGPOR_OCT_18_TALK_TITLE = "แก้มิจฉาทิฏฐิด้วยสติปัฏฐาน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568";
+export const LUANGPOR_OCT_18_TALK_ZH_TITLE = "2026年10月18日隆波帕默尊者网络直播（中文同声翻译）";
 
 export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
   {

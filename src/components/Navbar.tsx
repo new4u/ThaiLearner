@@ -1,65 +1,140 @@
 import React from 'react';
-import { ActiveTab } from '../types';
-import { Video, Keyboard } from 'lucide-react';
+import { ActiveTab, RegisteredStudent } from '../types';
+import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
+  currentStudent?: RegisteredStudent | null;
+  onOpenAdmin?: () => void;
+  isAdminAuthenticated?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
-  onTabChange
+  onTabChange,
+  currentStudent,
+  onOpenAdmin,
+  isAdminAuthenticated = false
 }) => {
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none">
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-3 min-w-0">
+    <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4 min-w-0">
         
         {/* Brand */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div 
+          onClick={() => onTabChange('dual_sync_player')}
+          className="flex items-center gap-2 shrink-0 cursor-pointer"
+        >
           <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-md shadow-amber-500/20 text-base">
             📿
           </div>
-          <div className="flex items-center gap-2 whitespace-nowrap">
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
             <span className="font-extrabold text-base sm:text-lg text-white tracking-tight">
               泰学
             </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 hidden sm:inline-flex items-center">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 hidden md:inline-flex items-center">
               Tai Xue · 泰语共学
             </span>
           </div>
         </div>
 
-        {/* 仅保留：共学与打字两个核心入口 */}
-        <nav className="flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800/80 shrink-0">
+        {/* 核心三入口导航：双视频共学、泰语打字练习、免费注册与打卡 */}
+        <nav className="flex items-center gap-1 p-1 bg-slate-900/90 rounded-xl border border-slate-800/80 shrink-0 overflow-x-auto scrollbar-none">
           {/* 1. 双视频共学 */}
           <button
             onClick={() => onTabChange('dual_sync_player')}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'dual_sync_player'
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                 : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
             }`}
             title="泰中双视频同步共学放映机"
           >
-            <Video className="w-4 h-4 shrink-0" />
-            <span>双视频共学</span>
+            <Video className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden xs:inline">双视频共学</span>
+            <span className="xs:hidden">共学</span>
           </button>
 
           {/* 2. 泰语打字练习 */}
           <button
             onClick={() => onTabChange('keyboard_lab')}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'keyboard_lab'
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                 : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
             }`}
             title="Kedmanee 泰语键盘实战打卡与练习"
           >
-            <Keyboard className="w-4 h-4 shrink-0" />
-            <span>泰语打字练习</span>
+            <Keyboard className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden xs:inline">泰语打字练习</span>
+            <span className="xs:hidden">打字</span>
+          </button>
+
+          {/* 3. 每日打卡 */}
+          <button
+            onClick={() => onTabChange('registration_checkin')}
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'registration_checkin'
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                : 'text-emerald-300 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title="每日学习打卡与记录"
+          >
+            <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+            <span className="hidden xs:inline">每日打卡</span>
+            <span className="xs:hidden">打卡</span>
           </button>
         </nav>
+
+        {/* 右侧：学员身份徽章 / 快捷打卡入口 + 管理后台入口 */}
+        <div className="flex items-center gap-2 shrink-0">
+          {currentStudent ? (
+            <button
+              onClick={() => onTabChange('registration_checkin')}
+              className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 transition cursor-pointer"
+              title="查看个人打卡档案与学修记录"
+            >
+              <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 font-black text-xs flex items-center justify-center shrink-0">
+                {currentStudent.name.slice(0, 1)}
+              </div>
+              <span className="text-xs font-bold text-white max-w-[80px] sm:max-w-[110px] truncate hidden sm:inline">
+                {currentStudent.name}
+              </span>
+              <span className="text-[11px] font-bold text-amber-400 font-mono flex items-center gap-0.5">
+                <Flame className="w-3 h-3 fill-amber-400" />
+                <span>{currentStudent.streakDays}天</span>
+              </span>
+            </button>
+          ) : (
+            <button
+              onClick={() => onTabChange('registration_checkin')}
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>每日打卡</span>
+            </button>
+          )}
+
+          {/* 管理后台入口 */}
+          {onOpenAdmin && (
+            <button
+              onClick={onOpenAdmin}
+              className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                isAdminAuthenticated
+                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30'
+                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-amber-300 hover:border-amber-500/40'
+              }`}
+              title={isAdminAuthenticated ? '管理后台 (已解锁)' : '管理后台'}
+            >
+              <span className="text-xs">{isAdminAuthenticated ? '🔓' : '⚙️'}</span>
+              <span className="hidden md:inline">
+                {isAdminAuthenticated ? '管理后台' : '管理'}
+              </span>
+            </button>
+          )}
+        </div>
+
       </div>
     </header>
   );

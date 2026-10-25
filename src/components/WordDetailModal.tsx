@@ -6,7 +6,7 @@ interface WordDetailModalProps {
   word: WordToken | null;
   onClose: () => void;
   onUpdateStatus: (wordId: string, status: WordStatus) => void;
-  onPracticeInKeyboard: (thaiText: string) => void;
+  onPracticeInKeyboard: (word: WordToken) => void;
   onSpeak: (text: string) => void;
 }
 
@@ -29,7 +29,7 @@ export const WordDetailModal: React.FC<WordDetailModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
+          className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -59,7 +59,7 @@ export const WordDetailModal: React.FC<WordDetailModalProps> = ({
           </div>
           <button
             onClick={() => onSpeak(word.thai)}
-            className="p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium"
+            className="p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition hover:scale-105 active:scale-95 flex items-center gap-1.5 text-xs font-medium cursor-pointer"
             title="播放泰语发音"
           >
             <Volume2 className="w-5 h-5" />
@@ -102,7 +102,7 @@ export const WordDetailModal: React.FC<WordDetailModalProps> = ({
                 onUpdateStatus(word.id, 'learning');
                 onClose();
               }}
-              className={`flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition ${
+              className={`flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition cursor-pointer ${
                 word.status === 'learning'
                   ? 'bg-amber-500 text-slate-950 border-amber-400'
                   : 'bg-slate-800 text-amber-300 border-amber-500/30 hover:bg-slate-700'
@@ -117,7 +117,7 @@ export const WordDetailModal: React.FC<WordDetailModalProps> = ({
                 onUpdateStatus(word.id, 'mastered');
                 onClose();
               }}
-              className={`flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition ${
+              className={`flex-1 sm:flex-initial px-3 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 border transition cursor-pointer ${
                 word.status === 'mastered'
                   ? 'bg-emerald-500 text-slate-950 border-emerald-400'
                   : 'bg-slate-800 text-emerald-300 border-emerald-500/30 hover:bg-slate-700'
@@ -131,10 +131,10 @@ export const WordDetailModal: React.FC<WordDetailModalProps> = ({
           {/* Practice in Keyboard */}
           <button
             onClick={() => {
-              onPracticeInKeyboard(word.thai);
+              onPracticeInKeyboard(word);
               onClose();
             }}
-            className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-md shadow-blue-900/30 flex items-center justify-center gap-1.5 transition"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-md shadow-blue-900/30 flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
             <Keyboard className="w-4 h-4" />
             泰语键盘打字挑战

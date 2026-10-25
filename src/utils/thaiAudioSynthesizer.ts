@@ -97,6 +97,9 @@ export const THAI_KEY_SOUND_MAP: Record<string, KeySoundInfo> = {
 class ThaiAudioEngine {
   private audioCtx: AudioContext | null = null;
   private voices: SpeechSynthesisVoice[] = [];
+  private activeUtterance: SpeechSynthesisUtterance | null = null;
+  private currentFallbackAudio: HTMLAudioElement | null = null;
+  private cancelTimeoutId: any = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -109,8 +112,69 @@ class ThaiAudioEngine {
 
   private initVoices() {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
-      this.voices = window.speechSynthesis.getVoices();
+      const v = window.speechSynthesis.getVoices();
+      if (v && v.length > 0) {
+        this.voices = v;
+      }
     }
+  }
+
+  /**
+   * 查找系统中可用的泰语发音人
+   */
+  public getThaiVoice(): SpeechSynthesisVoice | null {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      const current = window.speechSynthesis.getVoices();
+      if (current && current.length > 0) {
+        this.voices = current;
+      }
+    }
+    return this.voices.find(v => 
+      v.lang === 'th-TH' || 
+      v.lang === 'th_TH' || 
+      v.lang.toLowerCase().startsWith('th') || 
+      v.name.toLowerCase().includes('thai')
+    ) || null;
+  }
+
+  /**
+   * 当浏览器无本地泰语语音包时的纯正真人流媒体发音回退 (Fallback Audio)
+   */
+  private playAudioFallback(text: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      try {
+        if (this.currentFallbackAudio) {
+          this.currentFallbackAudio.pause();
+          this.currentFallbackAudio = null;
+        }
+        const cleanText = text.trim();
+        if (!cleanText) {
+          resolve(false);
+          return;
+        }
+        const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${encodeURIComponent(cleanText)}`;
+        const audio = new Audio(url);
+        this.currentFallbackAudio = audio;
+        audio.onended = () => {
+          if (this.currentFallbackAudio === audio) {
+            this.currentFallbackAudio = null;
+          }
+          resolve(true);
+        };
+        audio.onerror = () => {
+          if (this.currentFallbackAudio === audio) {
+            this.currentFallbackAudio = null;
+          }
+          resolve(false);
+        };
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => resolve(true)).catch(() => resolve(false));
+        }
+      } catch {
+        resolve(false);
+      }
+    });
   }
 
   private getAudioContext(): AudioContext | null {
@@ -144,29 +208,87 @@ class ThaiAudioEngine {
   }
 
   /**
-   * 朗读泰文字符串 (Web Speech API)
+   * 朗读泰文字符串：具备防取消中断、V8回收防护、多重回退的高稳定性发声驱动
    */
   public speakThai(text: string, rate: number = 0.95): Promise<boolean> {
     return new Promise((resolve) => {
-      if (typeof window === 'undefined' || !window.speechSynthesis) {
+      if (typeof window === 'undefined') {
         resolve(false);
         return;
       }
 
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'th-TH';
-      utterance.rate = rate;
-
-      const thaiVoice = this.voices.find(v => v.lang === 'th-TH' || v.lang.startsWith('th'));
-      if (thaiVoice) {
-        utterance.voice = thaiVoice;
+      const cleanText = text.trim();
+      if (!cleanText) {
+        resolve(false);
+        return;
       }
 
-      utterance.onend = () => resolve(true);
-      utterance.onerror = () => resolve(false);
+      // 停止之前的音频回退实例
+      if (this.currentFallbackAudio) {
+        this.currentFallbackAudio.pause();
+        this.currentFallbackAudio = null;
+      }
 
-      window.speechSynthesis.speak(utterance);
+      // 若浏览器完全不支持 Web Speech API 则直接使用真人流媒体回退
+      if (!window.speechSynthesis) {
+        return this.playAudioFallback(cleanText).then(resolve);
+      }
+
+      // 清除前序未触发的防抖延时
+      if (this.cancelTimeoutId) {
+        clearTimeout(this.cancelTimeoutId);
+        this.cancelTimeoutId = null;
+      }
+
+      // 优雅中断上一段发音
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // speech synthesis safe
+      }
+
+      // Chromium 核心修复：cancel 之后必须预留微小事件循环帧 (40ms)，否则 speak 会被直接吞掉
+      this.cancelTimeoutId = setTimeout(() => {
+        try {
+          // 激活可能挂起的 SpeechSynthesis
+          window.speechSynthesis.resume();
+
+          const thaiVoice = this.getThaiVoice();
+
+          // 若操作系统未安装泰语语音库，无缝回退至纯正流式发音
+          if (!thaiVoice) {
+            this.playAudioFallback(cleanText).then(resolve);
+            return;
+          }
+
+          const utterance = new SpeechSynthesisUtterance(cleanText);
+          utterance.lang = 'th-TH';
+          utterance.rate = rate;
+          utterance.voice = thaiVoice;
+
+          // 保持成员引用，彻底杜绝 Chrome 垃圾回收机制导致的朗读半途中断
+          this.activeUtterance = utterance;
+
+          utterance.onend = () => {
+            this.activeUtterance = null;
+            resolve(true);
+          };
+
+          utterance.onerror = (e) => {
+            this.activeUtterance = null;
+            // 非用户主动中断错误时，使用回退音源保底
+            if (e.error !== 'canceled' && e.error !== 'interrupted') {
+              this.playAudioFallback(cleanText).then(resolve);
+            } else {
+              resolve(false);
+            }
+          };
+
+          window.speechSynthesis.speak(utterance);
+        } catch {
+          this.playAudioFallback(cleanText).then(resolve);
+        }
+      }, 40);
     });
   }
 

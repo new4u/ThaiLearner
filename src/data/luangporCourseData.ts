@@ -7,8 +7,9 @@ import {
   LUANGPOR_OCT_18_TALK_TITLE, 
   LUANGPOR_OCT_18_TALK_ZH_TITLE 
 } from './luangporTalk18Oct';
+import { DAILY_PRACTICE_SUBTITLES } from './luangporTalkDailyPractice';
 
-export { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_TALK_ZH_TITLE };
+export { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_TALK_ZH_TITLE, DAILY_PRACTICE_SUBTITLES };
 
 export const LUANGPOR_EXCERPT_METADATA = {
   title: '隆波帕默尊者开示实况共学（2026年10月18日）',
@@ -23,14 +24,22 @@ export const LUANGPOR_EXCERPT_METADATA = {
 export const OCT_18_LIVE_SUBTITLES: SubtitleLine[] = LUANGPOR_OCT_18_SUBTITLES;
 export const INITIAL_SUBTITLES: SubtitleLine[] = LUANGPOR_OCT_18_SUBTITLES;
 
-// 预置课件库（已彻底移除旧版无链接的虚构预设，仅保留官方实测双视频课件）
+// 预置课件库（仅包含 10月17日 与 10月18日 官方原版双视频）
 export const PRESET_COURSE_LIBRARY: CoursePreset[] = [
   {
-    id: 'oct_18_live_talk',
-    title: '隆波帕默尊者开示实况共学 (2026年10月18日)',
-    speaker: '隆波帕默尊者',
-    source: 'Wat Suan Santidham & 解脱园中文同传',
-    tag: '官方基准双视频范例 · 746句全篇精准对应 · 朱拉音标与逐词对照',
+    id: 'lesson_20261017',
+    title: '2026年10月17日隆波帕默尊者网络直播（中文同声翻译） ｜ ปฏิบัติในที่ทุกสถานในกาลทุกเมื่อ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 17 ต.ค. 2568',
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版直播 & 解脱园中文同传',
+    tag: '10月17日官方开示 · 1198句全篇精准对齐 · 双视频实测对齐',
+    subtitles: DAILY_PRACTICE_SUBTITLES
+  },
+  {
+    id: 'lesson_20261018',
+    title: '2026年10月18日隆波帕默尊者网络直播（中文同声翻译） ｜ แก้มิจฉาทิฏฐิด้วยสติปัฏฐาน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568',
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版直播 & 解脱园中文同传',
+    tag: '10月18日官方开示 · 746句全篇精准对齐 · 双视频实测对齐',
     subtitles: LUANGPOR_OCT_18_SUBTITLES
   }
 ];
@@ -179,7 +188,7 @@ export const SAMPLE_DHAMMA_PARAGRAPHS = [
 // 2026年10月18日 隆波法谈实况双视频同步基准 (Wat Suan Santidham & 解脱园同传)
 export const OCT_18_BENCHMARK_CONFIG: DualVideoConfig = {
   id: 'oct_18_live_benchmark',
-  title: '隆波帕默尊者开示实况共学与双视频同步研读 (2026年10月18日)',
+  title: '2026年10月18日隆波帕默尊者网络直播（中文同声翻译） ｜ แก้มิจฉาทิฏฐิด้วยสติปัฏฐาน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568',
   thaiVideoUrl: 'https://www.youtube.com/watch?v=F4-tJNYDpss',
   chineseVideoUrl: 'https://www.youtube.com/watch?v=HR-O2XYifbI',
   offsetSeconds: 0.0,

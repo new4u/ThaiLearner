@@ -10,6 +10,7 @@ interface ThaiKeyboardPracticeProps {
   initialTargetWord?: string;
   onSpeak: (text: string, rate?: number) => void;
   onBackToStudy?: () => void;
+  onPracticeCompleted?: (targetWord: string) => void;
 }
 
 // 常用共学核心法词快速切换选项 (均已清除旧的邪见等无关内容)
@@ -26,12 +27,17 @@ const CORE_DHAMMA_QUICK_PRESETS = [
 export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
   initialTargetWord = 'สัมมาสมาธิ',
   onSpeak,
-  onBackToStudy
+  onBackToStudy,
+  onPracticeCompleted
 }) => {
   // 当前打字目标文本 (支持从双视频传过来的词句，也支持自定义)
   const [targetText, setTargetText] = useState<string>(() => initialTargetWord.trim() || 'สัมมาสมาธิ');
   // 用户当前已敲击输入的文本
   const [inputVal, setInputVal] = useState<string>('');
+  // 引用最新输入值，防止高频击键时闭包过期
+  const inputValRef = React.useRef<string>(inputVal);
+  inputValRef.current = inputVal;
+
   // 是否启用敲击发声
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   // Shift 状态
@@ -52,7 +58,9 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
   // 监听双视频传来的外部目标词更新
   useEffect(() => {
     if (initialTargetWord && initialTargetWord.trim() !== targetText) {
-      setTargetText(initialTargetWord.trim());
+      const trimmed = initialTargetWord.trim();
+      setTargetText(trimmed);
+      inputValRef.current = '';
       setInputVal('');
       setIsCompleted(false);
     }
@@ -105,7 +113,7 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
     return null;
   }, [nextTargetChar]);
 
-  // 核心：单键敲击发声并上屏 (绝不运行复杂变调推导，绝不阻塞音频线程)
+  // 核心：单键敲击发声并上屏，打卡结束时干净朗读泰文词
   const handleKeyPress = useCallback((char: string) => {
     // 1. 获取字符发音信息并更新最近发声指示
     const info = thaiAudio.getCharInfo(char);
@@ -115,43 +123,57 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
       nameZh: info.nameZh
     });
 
-    // 2. 发出干净利落的单字符泰文发声
-    if (soundEnabled) {
-      thaiAudio.speakKeyChar(char);
-    } else {
-      thaiAudio.playKeyTick();
-    }
+    const nextVal = inputValRef.current + char;
+    inputValRef.current = nextVal;
+    setInputVal(nextVal);
 
-    // 3. 追加输入字符并校验通关
-    setInputVal((prev) => {
-      const next = prev + char;
-      // 检查是否完成打卡
-      if (next === targetText) {
-        setIsCompleted(true);
-        setTimeout(() => {
-          thaiAudio.playSuccessChime();
-          // 整词标准发音
-          onSpeak(targetText, 0.95);
-        }, 200);
+    // 2. 检查按键敲击结束之后是否完成目标词
+    if (nextVal === targetText) {
+      setIsCompleted(true);
+      // 键入结束，完成打卡！播放成功和弦音，并在 260ms 后清晰朗读泰文词整词 (避免字符音冲突)
+      thaiAudio.playSuccessChime();
+      onPracticeCompleted?.(targetText);
+      setTimeout(() => {
+        onSpeak(targetText, 0.95);
+      }, 260);
+    } else {
+      // 未达到整词，打字过程中发出干净利落的单字符泰文发声
+      if (soundEnabled) {
+        thaiAudio.speakKeyChar(char);
+      } else {
+        thaiAudio.playKeyTick();
       }
-      return next;
-    });
-  }, [soundEnabled, targetText, onSpeak]);
+    }
+  }, [soundEnabled, targetText, onSpeak, onPracticeCompleted]);
 
   // 退格处理
   const handleBackspace = useCallback(() => {
     thaiAudio.playKeyTick();
-    setInputVal((prev) => prev.slice(0, -1));
+    const nextVal = inputValRef.current.slice(0, -1);
+    inputValRef.current = nextVal;
+    setInputVal(nextVal);
     setIsCompleted(false);
   }, []);
 
-  // 空格键处理
+  // 空格键处理：优先朗读泰文词；若待打字符本身恰好是空格，则输入空格
   const handleSpace = useCallback(() => {
-    handleKeyPress(' ');
-  }, [handleKeyPress]);
+    if (nextTargetChar === ' ') {
+      handleKeyPress(' ');
+    } else {
+      thaiAudio.playKeyTick();
+      onSpeak(targetText || inputValRef.current, 0.95);
+    }
+  }, [nextTargetChar, handleKeyPress, onSpeak, targetText]);
+
+  // 回车键处理：朗读当前泰文词
+  const handleEnter = useCallback(() => {
+    thaiAudio.playKeyTick();
+    onSpeak(targetText || inputValRef.current, 0.95);
+  }, [onSpeak, targetText]);
 
   // 重置清空当前输入
   const handleReset = useCallback(() => {
+    inputValRef.current = '';
     setInputVal('');
     setIsCompleted(false);
   }, []);
@@ -166,6 +188,7 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
   // 切换目标词
   const handleSelectPreset = (thai: string) => {
     setTargetText(thai);
+    inputValRef.current = '';
     setInputVal('');
     setIsCompleted(false);
     onSpeak(thai, 0.95);
@@ -173,12 +196,14 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
 
   // 应用自定义输入的新目标
   const handleApplyCustomTarget = () => {
-    if (!customInputText.trim()) return;
-    setTargetText(customInputText.trim());
+    const trimmed = customInputText.trim();
+    if (!trimmed) return;
+    setTargetText(trimmed);
+    inputValRef.current = '';
     setInputVal('');
     setIsCompleted(false);
     setIsEditingTarget(false);
-    onSpeak(customInputText.trim(), 0.95);
+    onSpeak(trimmed, 0.95);
   };
 
   return (
@@ -355,11 +380,26 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
 
         {/* 输入进度与实时反馈提示 */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs border-t border-slate-800/80">
-          <div className="flex items-center gap-2">
-            <span className="text-stone-400">当前已键入：</span>
-            <span className="font-mono text-base font-bold text-white tracking-wider">
-              {inputVal || <span className="text-slate-600 text-xs font-normal">请敲击键盘开始打字...</span>}
-            </span>
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="text-stone-400">当前已键入：</span>
+              <span className="font-mono text-base font-bold text-white tracking-wider">
+                {inputVal || <span className="text-slate-600 text-xs font-normal">请敲击键盘开始打字...</span>}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onSpeak(targetText || inputVal, 0.95)}
+              className="px-2.5 py-1 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+              title="朗读泰文词 (按空格或回车亦可朗读)"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+              <span>朗读泰文词</span>
+              <span className="text-[10px] text-amber-400/80 bg-slate-950 px-1 py-0.5 rounded border border-amber-500/20 font-mono">
+                Space/Enter
+              </span>
+            </button>
           </div>
 
           {/* 实时按键声音反馈徽章 */}
@@ -382,12 +422,21 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
                   🎉 恭喜！完美打卡完成：{targetText}
                 </div>
                 <div className="text-xs text-stone-300">
-                  已准确敲击每一个字符并完成发音匹配
+                  已准确敲击每一个字符并朗读纯正泰语发音
                 </div>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => onSpeak(targetText, 0.95)}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow-sm"
+                title="再次朗读泰文词"
+              >
+                <Volume2 className="w-4 h-4 text-emerald-400" />
+                <span>再次朗读泰文词</span>
+              </button>
               <button
                 onClick={handleReset}
                 className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition cursor-pointer"
@@ -415,6 +464,7 @@ export const ThaiKeyboardPractice: React.FC<ThaiKeyboardPracticeProps> = ({
         onToggleShift={() => setIsShifted(!isShifted)}
         onBackspace={handleBackspace}
         onSpace={handleSpace}
+        onEnter={handleEnter}
         enablePhysicalKeyboard={true}
         soundEnabled={soundEnabled}
         onToggleSound={() => setSoundEnabled(!soundEnabled)}
