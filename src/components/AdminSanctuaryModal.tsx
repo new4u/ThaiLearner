@@ -767,14 +767,11 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                         <button
                           type="button"
                           onClick={() => {
-                            if (window.confirm('确认将管理员密码重置为出厂默认 (suan2026)？')) {
-                              adminAuthService.resetToDefaultPassphrase();
-                              alert('密码已恢复为出厂默认: suan2026');
-                            }
+                            alert('管理密码保存在数据库中。如遗忘密码，请在 Supabase SQL Editor 中运行：\n\nUPDATE public.admin_credentials SET password_hash = \'6b4e062d0ba9ea6c3dc947fb7d1217e132e4d0d04cce877399589d89bbd8b517\'\nWHERE id = \'admin\';\n\n(即恢复为默认密码 suan2026，登录后请立即重新设置)');
                           }}
                           className="text-[11px] text-slate-500 hover:text-slate-300 underline cursor-pointer"
                         >
-                          恢复默认密码
+                          忘记密码？查看重置方法
                         </button>
                       </div>
                     </form>

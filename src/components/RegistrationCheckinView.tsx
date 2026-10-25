@@ -36,7 +36,10 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
   const [inputName, setInputName] = useState('');
   const [inputContact, setInputContact] = useState('');
   const [inputGoal, setInputGoal] = useState('听懂尊者实况开示原声');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
   const [loginQuery, setLoginQuery] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // 云端同步状态
   const [isSyncing, setIsSyncing] = useState(false);
@@ -114,46 +117,62 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
     }
   };
 
-  // 提交登记并直接完成今日打卡
-  const handleSubmitRegisterAndCheckin = (e: React.FormEvent) => {
+  // 提交登记并直接完成今日打卡 (注册必须设置密码)
+  const handleSubmitRegisterAndCheckin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputName.trim()) {
       alert('请填写您的称呼');
       return;
     }
-
-    const newStudent = studentStudyService.registerStudent({
-      name: inputName.trim(),
-      wechatOrPhone: inputContact.trim(),
-      learningGoal: inputGoal.trim() || '随喜参加泰语共学，听懂法音原声'
-    });
-
-    onStudentChange(newStudent);
-    // 立即打卡
-    const res = studentStudyService.recordDailyCheckin(newStudent.id, checkinNotes);
-    if (res) {
-      onStudentChange(res.student);
+    if (!registerPassword || registerPassword.length < 4) {
+      alert('请设置登录密码（至少 4 位），以后每次打卡用它登录');
+      return;
     }
-    refreshData();
-    setShowAuthModal(false);
-    setInputName('');
-    setInputContact('');
-    setCheckinNotes('');
+    if (registerPassword !== registerConfirmPassword) {
+      alert('两次输入的密码不一致，请重新输入');
+      return;
+    }
+
+    try {
+      const newStudent = await studentStudyService.registerStudent({
+        name: inputName.trim(),
+        wechatOrPhone: inputContact.trim(),
+        learningGoal: inputGoal.trim() || '随喜参加泰语共学，听懂法音原声',
+        password: registerPassword
+      });
+
+      onStudentChange(newStudent);
+      // 立即打卡
+      const res = studentStudyService.recordDailyCheckin(newStudent.id, checkinNotes);
+      if (res) {
+        onStudentChange(res.student);
+      }
+      refreshData();
+      setShowAuthModal(false);
+      setInputName('');
+      setInputContact('');
+      setRegisterPassword('');
+      setRegisterConfirmPassword('');
+      setCheckinNotes('');
+    } catch (err: any) {
+      alert(err?.message || '登记失败，请重试');
+    }
   };
 
-  // 已有称呼查找登录
-  const handleLookupLogin = (e: React.FormEvent) => {
+  // 已有称呼查找登录 (称呼/联系方式 + 密码)
+  const handleLookupLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!loginQuery.trim()) return;
+    if (!loginQuery.trim() || !loginPassword) return;
 
-    const student = studentStudyService.loginStudent(loginQuery.trim());
+    const student = await studentStudyService.loginStudent(loginQuery.trim(), loginPassword);
     if (student) {
       onStudentChange(student);
       refreshData();
       setShowAuthModal(false);
       setLoginQuery('');
+      setLoginPassword('');
     } else {
-      alert('未找到该称呼记录，请直接在上方填写称呼登记即可。');
+      alert('未找到该称呼，或密码不正确。请核对后重试，也可直接登记新称呼。');
     }
   };
 
@@ -521,12 +540,12 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
                 <h3 className="text-base font-bold text-white">
-                  {isLoginLookup ? '输入称呼恢复打卡记录' : '登记称呼并打卡'}
+                  {isLoginLookup ? '登录以恢复打卡记录' : '登记称呼并打卡'}
                 </h3>
                 <p className="text-xs text-stone-400 mt-0.5">
                   {isLoginLookup 
-                    ? '输入您之前填写的称呼即可同步' 
-                    : '填写称呼即可保存连续打卡天数'}
+                    ? '输入称呼与密码，恢复您的连续打卡天数' 
+                    : '填写称呼并设置密码，提交即完成打卡'}
                 </p>
               </div>
               <button
@@ -552,6 +571,35 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
                     placeholder="输入您的称呼（如：林师兄）"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-300 mb-1">
+                      设置登录密码 <span className="text-amber-400">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={registerPassword}
+                      onChange={(e) => setRegisterPassword(e.target.value)}
+                      placeholder="至少 4 位，以后打卡用它登录"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-300 mb-1">
+                      确认密码 <span className="text-amber-400">*</span>
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={registerConfirmPassword}
+                      onChange={(e) => setRegisterConfirmPassword(e.target.value)}
+                      placeholder="再输入一次密码"
+                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -613,6 +661,20 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
                   />
                 </div>
 
+                <div>
+                  <label className="block text-xs font-bold text-stone-300 mb-1">
+                    登录密码 <span className="text-amber-400">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    required
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder="输入登记时设置的密码"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
                 <div className="pt-2 flex items-center justify-between gap-2">
                   <button
                     type="button"
@@ -626,7 +688,7 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
                     type="submit"
                     className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs transition cursor-pointer"
                   >
-                    查找并登录
+                    登录
                   </button>
                 </div>
               </form>

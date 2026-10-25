@@ -1,5 +1,6 @@
 import { RegisteredStudent, UserLoginLog, StudyCheckinRecord } from '../types';
 import { supabase, isSupabaseConfigured, SUPABASE_CONFIG_INFO } from './supabaseClient';
+import { hashPasswordWithSalt } from '../utils/hash';
 
 const STORAGE_KEYS = {
   STUDENTS: 'taixue_registered_students',
@@ -91,14 +92,19 @@ class StudentStudyService {
     }
   }
 
-  // 3. 免费注册新学员并自动登录 (同步更新本地与 Supabase)
-  public registerStudent(params: {
+  // 3. 免费注册新学员并自动登录 (同步更新本地与 Supabase；注册必须设置密码)
+  public async registerStudent(params: {
     name: string;
     wechatOrPhone: string;
     learningGoal: string;
     thaiLevel?: 'zero' | 'beginner' | 'intermediate';
     dailyTarget?: string;
-  }): RegisteredStudent {
+    password: string; // 必填：登录密码
+  }): Promise<RegisteredStudent> {
+    if (!params.password || params.password.trim().length < 4) {
+      throw new Error('密码至少需要 4 位字符');
+    }
+
     const nowStr = this.formatCurrentTime();
     const students = this.getAllStudents();
 
@@ -111,7 +117,12 @@ class StudentStudyService {
     );
 
     if (existing) {
-      return this.loginStudent(existing.wechatOrPhone || existing.name) || existing;
+      // 已存在同名/同联系方式：改为走登录验证密码
+      const logged = await this.loginWithPassword(existing, params.password);
+      if (!logged) {
+        throw new Error('该称呼已存在，请使用正确密码登录，或更换称呼重新登记');
+      }
+      return logged;
     }
 
     const newStudent: RegisteredStudent = {
@@ -133,6 +144,8 @@ class StudentStudyService {
       avatarSeed: ['amber', 'emerald', 'sky', 'rose', 'indigo'][Math.floor(Math.random() * 5)],
       role: 'student'
     };
+    // 用最终生成的 id 作为盐，保证稳定后计算密码哈希
+    newStudent.passwordHash = await hashPasswordWithSalt(params.password, newStudent.id);
 
     const updated = [newStudent, ...students];
     try {
@@ -156,17 +169,33 @@ class StudentStudyService {
     return newStudent;
   }
 
-  // 4. 学员登录 (支持微信号或姓名查找)
-  public loginStudent(query: string): RegisteredStudent | null {
+  // 4. 学员登录 (称呼/联系方式 + 密码验证)
+  public async loginStudent(query: string, password: string): Promise<RegisteredStudent | null> {
     const clean = query.trim().toLowerCase();
-    if (!clean) return null;
+    if (!clean || !password) return null;
 
     const students = this.getAllStudents();
     const student = students.find(
-      s => s.wechatOrPhone.toLowerCase() === clean || s.name.toLowerCase() === clean || s.id === clean
+      s => (s.wechatOrPhone || '').toLowerCase() === clean || s.name.toLowerCase() === clean || s.id === clean
     );
-
     if (!student) return null;
+
+    return this.loginWithPassword(student, password);
+  }
+
+  // 密码验证与登录（含老账号首次补设密码）
+  private async loginWithPassword(student: RegisteredStudent, password: string): Promise<RegisteredStudent | null> {
+    const cleanPassword = password.trim();
+    if (!cleanPassword) return null;
+
+    // 老账号尚未设置过密码：本次输入作为首次绑定密码 (视为该称呼持有者完成绑定)
+    if (!student.passwordHash) {
+      if (cleanPassword.length < 4) return null;
+      student.passwordHash = await hashPasswordWithSalt(cleanPassword, student.id);
+    } else {
+      const inputHash = await hashPasswordWithSalt(cleanPassword, student.id);
+      if (inputHash !== student.passwordHash) return null;
+    }
 
     const nowStr = this.formatCurrentTime();
     const updatedStudent: RegisteredStudent = {
@@ -175,7 +204,7 @@ class StudentStudyService {
       loginCount: (student.loginCount || 0) + 1
     };
 
-    const updatedList = students.map(s => s.id === student.id ? updatedStudent : s);
+    const updatedList = this.getAllStudents().map(s => s.id === student.id ? updatedStudent : s);
     try {
       localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(updatedList));
       localStorage.setItem(STORAGE_KEYS.CURRENT_ID, updatedStudent.id);
@@ -183,7 +212,7 @@ class StudentStudyService {
       console.error(e);
     }
 
-    // 写入登录日志
+    // 写入登录日志（首设密码时补一条更新日志）
     this.addLoginLog({
       studentId: updatedStudent.id,
       studentName: updatedStudent.name,
@@ -419,7 +448,8 @@ class StudentStudyService {
           wordsMasteredCount: row.words_mastered_count || 0,
           videoMinutesStudied: row.video_minutes_studied || 0,
           avatarSeed: row.avatar_seed || 'amber',
-          role: row.role || 'student'
+          role: row.role || 'student',
+          passwordHash: row.password_hash || undefined
         }));
 
         localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(mappedStudents));
@@ -502,7 +532,8 @@ class StudentStudyService {
         words_mastered_count: student.wordsMasteredCount,
         video_minutes_studied: student.videoMinutesStudied,
         avatar_seed: student.avatarSeed,
-        role: student.role
+        role: student.role,
+        password_hash: student.passwordHash || null
       });
     } catch (err) {
       console.warn('Push student error:', err);

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS public.students (
     video_minutes_studied INTEGER DEFAULT 0,
     avatar_seed TEXT DEFAULT 'amber',
     role TEXT DEFAULT 'student',
+    password_hash TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 

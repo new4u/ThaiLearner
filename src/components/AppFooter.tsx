@@ -24,7 +24,7 @@ export const AppFooter: React.FC = () => {
               每周仅需 1 小时，把隆波的殊胜法语映入日常生活。
             </p>
             <p className="text-[11px] text-stone-500">
-              共学完全免费、随喜发心，绝不收取任何费用。
+              共学随喜发心，绝不收取任何费用。
             </p>
           </div>
 
@@ -49,7 +49,7 @@ export const AppFooter: React.FC = () => {
                 <span>微信扫码加小助手</span>
               </div>
               <p className="text-[11px] text-stone-400 leading-relaxed">
-                扫码添加小助手，免费邀请进入微信群与自习室
+                扫码添加小助手，申请进入微信群与自习室
               </p>
               <button
                 type="button"
@@ -63,11 +63,11 @@ export const AppFooter: React.FC = () => {
           </div>
         </div>
 
-        {/* 版权与出处一行 */}
+        {/* 版权一行 */}
         <div className="mt-6 pt-4 border-t border-slate-800/60 text-center text-[11px] text-stone-600 flex items-center justify-center gap-1.5 flex-wrap">
           <span>© 2026 泰学 · 泰语声闻共学工作台</span>
           <span className="hidden sm:inline">·</span>
-          <span>法谈出处：dhamma.com</span>
+          <span>随喜共学 · 同修增上</span>
         </div>
       </div>
 

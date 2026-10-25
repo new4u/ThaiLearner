@@ -74,6 +74,7 @@ export interface RegisteredStudent {
   videoMinutesStudied: number;
   avatarSeed?: string;
   role: 'student' | 'ta' | 'guest';
+  passwordHash?: string; // 密码哈希 (客户端 sha256(password + '::' + id)，仅在本地与云端同步层内部使用)
 }
 
 // 学员登录记录 (包含每个人登录情况与轨迹)
