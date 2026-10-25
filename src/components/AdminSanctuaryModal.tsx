@@ -668,6 +668,23 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                       </p>
 
                       <div className="flex flex-wrap items-center gap-2">
+                        {/* 直接输入偏移量 */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] text-slate-400">直接输入：</span>
+                          <input
+                            type="number"
+                            step="0.1"
+                            value={calibratedOffset}
+                            onChange={(e) => {
+                              const v = parseFloat(e.target.value);
+                              if (!isNaN(v)) setCalibratedOffset(v);
+                            }}
+                            className="w-20 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs font-mono font-bold text-amber-400 focus:outline-none focus:border-amber-500"
+                            placeholder="0.0"
+                          />
+                          <span className="text-[11px] text-slate-400">秒</span>
+                        </div>
+
                         {[-1.0, -0.5, -0.1, 0.0, 0.1, 0.5, 1.0].map((step) => (
                           <button
                             key={step}

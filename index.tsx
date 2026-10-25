@@ -17,6 +17,10 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dual_sync_player');
   const [showAdminModal, setShowAdminModal] = useState(false);
 
+  // 播放器中文轨偏移量与锁定状态（顶层受控，与管理后台校准联动）
+  const [playerOffsetSeconds, setPlayerOffsetSeconds] = useState<number>(0.0);
+  const [playerIsOffsetLocked, setPlayerIsOffsetLocked] = useState<boolean>(false);
+
   const [currentStudent, setCurrentStudent] = useState<RegisteredStudent | null>(() => {
     return studentStudyService.getCurrentStudent();
   });
@@ -120,6 +124,12 @@ const App: React.FC = () => {
             onOpenKeyboard={handlePracticeInKeyboard}
             onSpeak={handleSpeak}
             onUpdateSubtitles={(newSubs) => setSubtitles(newSubs)}
+            offsetSeconds={playerOffsetSeconds}
+            isOffsetLocked={playerIsOffsetLocked}
+            onOffsetChange={(offset, locked) => {
+              setPlayerOffsetSeconds(offset);
+              setPlayerIsOffsetLocked(locked);
+            }}
           />
         )}
 
@@ -189,7 +199,9 @@ const App: React.FC = () => {
         isOpen={showAdminModal}
         onClose={() => setShowAdminModal(false)}
         onLessonCalibrated={(lessonId, offset) => {
-          console.log(`Lesson ${lessonId} calibrated to ${offset}s`);
+          // 管理后台校准后：更新播放器偏移量并自动锁定，立即同步生效
+          setPlayerOffsetSeconds(offset);
+          setPlayerIsOffsetLocked(true);
         }}
       />
     </div>

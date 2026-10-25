@@ -5,7 +5,6 @@ import { getAllCuratedLessons, getFlagshipLesson } from '../data/presetLessonsLi
 import { parseLanguageReactorText, formatSecondsToTime } from '../utils/languageReactorParser';
 import { AI_SRT_CONVERSION_PROMPT } from '../utils/lrFormatParser';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
-import { adminAuthService } from '../services/adminAuthService';
 import { 
   Play, Pause, RotateCcw, Volume2, Volume1, Settings, Sparkles, CheckCircle2,
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
@@ -26,6 +25,12 @@ interface DualVideoSyncAlignPlayerProps {
   onSpeak?: (text: string, rate?: number) => void;
   onGoToSlides?: () => void;
   onUpdateSubtitles?: (newSubs: SubtitleLine[]) => void;
+  /** 外部受控：中文轨基准偏移量（秒） */
+  offsetSeconds?: number;
+  /** 外部受控：是否锁定偏移量（锁定后调整将立即同步 seek） */
+  isOffsetLocked?: boolean;
+  /** 偏移量变化回调 */
+  onOffsetChange?: (offset: number, locked: boolean) => void;
 }
 
 declare global {
@@ -54,7 +59,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   onOpenKeyboard,
   onSpeak,
   onGoToSlides,
-  onUpdateSubtitles
+  onUpdateSubtitles,
+  offsetSeconds: propOffsetSeconds,
+  isOffsetLocked: propIsOffsetLocked,
+  onOffsetChange,
 }) => {
   // 1. 基础视频与校准配置
   const [config, setConfig] = useState<DualVideoConfig>(() => {
@@ -99,8 +107,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [isChinesePlaying, setIsChinesePlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0); // 泰文基准时间
   const [playbackRate, setPlaybackRate] = useState(1.0);
-  const [offsetSeconds, setOffsetSeconds] = useState(config.offsetSeconds ?? 0.0);
-  const [isOffsetLocked, setIsOffsetLocked] = useState(false);
+  const [offsetSeconds, setOffsetSeconds] = useState(
+    propOffsetSeconds ?? config.offsetSeconds ?? 0.0
+  );
+  const [isOffsetLocked, setIsOffsetLocked] = useState(
+    propIsOffsetLocked ?? false
+  );
 
   // 4. 声道管理与伴弱音量 (Dim)
   const [audioFocus, setAudioFocus] = useState<'thai' | 'chinese' | 'both'>('both');
@@ -465,22 +477,20 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setIsBothPlaying(isThaiPlaying && isChinesePlaying);
   }, [isThaiPlaying, isChinesePlaying]);
 
-  // 偏移量微调：更新 offsetSeconds，若未锁定则不自动 seek（避免劫持中文字幕）
+  // 偏移量微调：更新 offsetSeconds。
+  //   - 未锁定：只改数值，不自动 seek（避免劫持中文字幕）
+  //   - 已锁定：通过 onOffsetChange 通知外部，由外部 prop 回传触发 useEffect 立即同步 seek
   const handleNudgeOffset = useCallback((delta: number) => {
     const next = parseFloat((offsetSeconds + delta).toFixed(2));
     setOffsetSeconds(next);
-    try {
-      adminAuthService.recordAuditLog(
-        'offset_calibrated',
-        `中文轨偏移量调整为 ${next >= 0 ? '+' : ''}${next}s（锁定：${isOffsetLocked}）`
-      );
-    } catch {}
-    if (!isOffsetLocked) {
-      triggerToast(`中文轨偏移：${next >= 0 ? '+' : ''}${next}s（未锁定，下次跳转生效）`);
+    // 向外部通知偏移变化（用于与管理后台联动）
+    onOffsetChange?.(next, isOffsetLocked);
+    if (isOffsetLocked) {
+      triggerToast(`中文轨偏移已锁定并同步：${next >= 0 ? '+' : ''}${next}s`);
     } else {
-      triggerToast(`中文轨偏移已锁定：${next >= 0 ? '+' : ''}${next}s`);
+      triggerToast(`中文轨偏移：${next >= 0 ? '+' : ''}${next}s（未锁定，下次跳转生效）`);
     }
-  }, [offsetSeconds, isOffsetLocked]);
+  }, [offsetSeconds, isOffsetLocked, onOffsetChange]);
 
   // 泰文主控带中文随动：同步跳转到指定时间（尊重当前 offsetSeconds）
   const seekBothToTime = useCallback((thaiSec: number) => {
@@ -502,6 +512,34 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setCurrentLineIndex(idx);
     }
   }, [offsetSeconds, activeSubtitles]);
+
+  // 外部 offsetSeconds prop 变化时同步到内部 state（受控模式）
+  // 若已锁定，立即将新偏移应用到当前播放位置（同步 seek 中文视频）
+  useEffect(() => {
+    if (propOffsetSeconds !== undefined && propOffsetSeconds !== offsetSeconds) {
+      setOffsetSeconds(propOffsetSeconds);
+      if (isOffsetLocked) {
+        try {
+          seekBothToTime(currentTime);
+        } catch {}
+      }
+    }
+  }, [propOffsetSeconds, offsetSeconds, isOffsetLocked, currentTime, seekBothToTime]);
+
+  // 外部 isOffsetLocked prop 变化时同步到内部 state（受控模式）
+  // 锁定开启时：立即将当前偏移量应用到播放位置
+  useEffect(() => {
+    const prevLocked = isOffsetLocked;
+    if (propIsOffsetLocked !== undefined && propIsOffsetLocked !== isOffsetLocked) {
+      setIsOffsetLocked(propIsOffsetLocked);
+    }
+    // 当锁定状态变为 true，立即应用当前 offset
+    if (propIsOffsetLocked === true && !prevLocked) {
+      try {
+        seekBothToTime(currentTime);
+      } catch {}
+    }
+  }, [propIsOffsetLocked, isOffsetLocked, currentTime, seekBothToTime]);
 
   // 核心操作 1：双视频同时播放 / 同时暂停
   const handleToggleDualPlay = useCallback(() => {
@@ -1848,8 +1886,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           <div className="flex items-center gap-1 bg-stone-950/80 p-0.5 rounded-xl border border-stone-800">
             <button
               onClick={() => {
-                setIsOffsetLocked(!isOffsetLocked);
-                triggerToast(isOffsetLocked ? '偏移量已解锁' : '偏移量已锁定');
+                const nextLocked = !isOffsetLocked;
+                setIsOffsetLocked(nextLocked);
+                onOffsetChange?.(offsetSeconds, nextLocked);
+                if (nextLocked) {
+                  triggerToast('偏移量已锁定，正在同步到当前位置…');
+                } else {
+                  triggerToast('偏移量已解锁');
+                }
               }}
               className={`px-2 py-1 rounded-lg transition cursor-pointer flex items-center gap-1 ${
                 isOffsetLocked
