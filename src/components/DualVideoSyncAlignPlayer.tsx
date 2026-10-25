@@ -125,7 +125,6 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [toastMessage, setToastMessage] = useState('');
   // 默认不勾选自动滚动，避免列表频繁自动翻动打扰学习
   const [autoScroll, setAutoScroll] = useState(false);
-  const lastDriftCorrectionTimeRef = useRef<number>(0);
 
   // 选择预制课件（严格按视频原标题：中文在前，泰文在后）
   const handleSelectPresetLesson = (lesson: CuratedLesson) => {
@@ -494,15 +493,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setIsThaiPlaying(false);
       setIsChinesePlaying(false);
     } else {
-      try {
-        const thaiTime = thaiPlayerRef.current?.getCurrentTime?.() ?? currentTime;
-        const targetChinese = Math.max(0, thaiTime + offsetSeconds);
-        const chineseTime = chinesePlayerRef.current?.getCurrentTime?.() ?? 0;
-        if (Math.abs(chineseTime - targetChinese) > 0.25) {
-          chinesePlayerRef.current?.seekTo?.(targetChinese, true);
-        }
-      } catch {}
-
+      // 双轨齐播：保持用户手动对齐好的当前位置直接开播，中文轨迹不再做任何自动调整
       try { thaiPlayerRef.current?.playVideo?.(); } catch {}
       try { chinesePlayerRef.current?.playVideo?.(); } catch {}
       setIsBothPlaying(true);
@@ -510,7 +501,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setIsChinesePlaying(true);
       applyAudioSettings(audioFocus, thaiVol, chineseVol);
     }
-  }, [currentTime, offsetSeconds, audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings]);
 
   // 核心操作 2：泰文视频单独播放/暂停
   const handleToggleThaiAlone = useCallback(() => {
@@ -634,10 +625,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     } else if (mode === 'both') {
       triggerToast('已切换至：🎧 双轨齐播');
       if (isAnyActive) {
+        // 中文轨保持当前自由位置直接播放，不做自动对齐调整
         try {
-          const thaiTime = thaiPlayerRef.current?.getCurrentTime?.() ?? currentTime;
-          const targetChinese = Math.max(0, thaiTime + offsetSeconds);
-          chinesePlayerRef.current?.seekTo?.(targetChinese, true);
           thaiPlayerRef.current?.playVideo?.();
           chinesePlayerRef.current?.playVideo?.();
           setIsThaiPlaying(true);
@@ -652,16 +641,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setIsThaiPlaying(false);
       if (isAnyActive) {
         try {
-          const thaiTime = thaiPlayerRef.current?.getCurrentTime?.() ?? currentTime;
-          const targetChinese = Math.max(0, thaiTime + offsetSeconds);
-          chinesePlayerRef.current?.seekTo?.(targetChinese, true);
           chinesePlayerRef.current?.playVideo?.();
           setIsChinesePlaying(true);
         } catch {}
       }
       applyAudioSettings('chinese', thaiVol, chineseVol);
     }
-  }, [isThaiPlaying, isChinesePlaying, isBothPlaying, currentTime, offsetSeconds, thaiVol, chineseVol, applyAudioSettings]);
+  }, [isThaiPlaying, isChinesePlaying, isBothPlaying, audioFocus, thaiVol, chineseVol, applyAudioSettings]);
 
   // 倍速控制（直接调用 YT.Player 原生 API，音轨与媒体时间自然变速）
   const handleSetPlaybackRate = useCallback((rate: number) => {
@@ -784,22 +770,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
         setCurrentTime(realTime);
 
-        // B. 双视频长期播放微秒漂移自动纠偏 (核心修复：解决两台视频长时间播放各自计时脱节的问题)
-        // 两台 YouTube 播放器解码渲染速度略有差异，播 10-30 分钟会产生数秒微差
-        if (isThaiActivelyPlaying && isChineseActivelyPlaying && chinesePlayerRef.current) {
-          const now = Date.now();
-          if (now - lastDriftCorrectionTimeRef.current > 3000) {
-            const actualChineseTime = chinesePlayerRef.current.getCurrentTime?.() || 0;
-            const expectedChineseTime = Math.max(0, realTime + offsetSeconds);
-            const drift = Math.abs(actualChineseTime - expectedChineseTime);
-
-            // 漂移超过 0.45 秒时，平滑将中文视频对齐回泰文主视频进度
-            if (drift > 0.45) {
-              chinesePlayerRef.current.seekTo(expectedChineseTime, true);
-              lastDriftCorrectionTimeRef.current = now;
-            }
-          }
-        }
+        // 注：中文视频不做任何自动对齐调整（遵循用户操作准则：“中文随便它播”），
+        // 字幕高亮与时间基准始终以泰文原版为准，中文轨保持自由播放。
 
         const targetLine = activeSubtitles[currentLineIndex];
 
