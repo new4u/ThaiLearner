@@ -115,24 +115,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>每日打卡</span>
             </button>
           )}
-
-          {/* 管理后台入口 */}
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-                isAdminAuthenticated
-                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30'
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-amber-300 hover:border-amber-500/40'
-              }`}
-              title={isAdminAuthenticated ? '管理后台 (已解锁)' : '管理后台'}
-            >
-              <span className="text-xs">{isAdminAuthenticated ? '🔓' : '⚙️'}</span>
-              <span className="hidden md:inline">
-                {isAdminAuthenticated ? '管理后台' : '管理'}
-              </span>
-            </button>
-          )}
         </div>
 
       </div>

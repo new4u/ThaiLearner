@@ -11,27 +11,15 @@ import { INITIAL_SUBTITLES } from './src/data/luangporCourseData';
 import { SubtitleLine, WordToken, WordStatus, ActiveTab, RegisteredStudent } from './src/types';
 import { thaiAudio } from './src/utils/thaiAudioSynthesizer';
 import { studentStudyService } from './src/services/studentStudyService';
-import { adminAuthService } from './src/services/adminAuthService';
 
 const App: React.FC = () => {
   // 默认直接进入泰中双视频共学放映机
   const [activeTab, setActiveTab] = useState<ActiveTab>('dual_sync_player');
   const [showAdminModal, setShowAdminModal] = useState(false);
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
-    return adminAuthService.getSession().isAuthenticated;
-  });
 
   const [currentStudent, setCurrentStudent] = useState<RegisteredStudent | null>(() => {
     return studentStudyService.getCurrentStudent();
   });
-
-  // 监听管理员认证状态变动
-  useEffect(() => {
-    const unsub = adminAuthService.subscribe((s) => {
-      setIsAdminAuthenticated(s.isAuthenticated);
-    });
-    return unsub;
-  }, []);
 
   const [subtitles, setSubtitles] = useState<SubtitleLine[]>(() => {
     try {
@@ -114,13 +102,11 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       
-      {/* 顶部极简导航：共学、打字、注册打卡 + 独立暗号后台 */}
+      {/* 顶部极简导航：共学、打字、注册打卡 (管理入口已统一收敛到登录弹窗) */}
       <Navbar
         activeTab={activeTab}
         onTabChange={setActiveTab}
         currentStudent={currentStudent}
-        onOpenAdmin={() => setShowAdminModal(true)}
-        isAdminAuthenticated={isAdminAuthenticated}
       />
 
       {/* 主界面视窗 */}

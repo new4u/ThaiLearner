@@ -24,7 +24,7 @@ export const AppFooter: React.FC = () => {
               每周仅需 1 小时，把隆波的殊胜法语映入日常生活。
             </p>
             <p className="text-[11px] text-stone-500">
-              共学随喜发心，绝不收取任何费用。
+              共学随喜发心
             </p>
           </div>
 

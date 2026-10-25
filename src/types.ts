@@ -73,7 +73,7 @@ export interface RegisteredStudent {
   wordsMasteredCount: number;
   videoMinutesStudied: number;
   avatarSeed?: string;
-  role: 'student' | 'ta' | 'guest';
+  role: 'student' | 'ta' | 'guest' | 'admin';
   passwordHash?: string; // 密码哈希 (客户端 sha256(password + '::' + id)，仅在本地与云端同步层内部使用)
 }
 

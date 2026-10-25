@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { RegisteredStudent, StudyCheckinRecord } from '../types';
 import { studentStudyService } from '../services/studentStudyService';
+import { adminAuthService } from '../services/adminAuthService';
 import { 
   CheckCircle2, Calendar, Award, Flame, LogOut, 
   Sparkles, Keyboard, BookOpen, Clock, 
@@ -165,6 +166,20 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
     if (!loginQuery.trim() || !loginPassword) return;
 
     const student = await studentStudyService.loginStudent(loginQuery.trim(), loginPassword);
+    if (student && student.role === 'admin') {
+      // 超级管理员：登录即进入管理后台 (密码验证发生在数据库 RPC)
+      const authRes = await adminAuthService.unlock(loginPassword);
+      if (authRes.success) {
+        setShowAuthModal(false);
+        setLoginQuery('');
+        setLoginPassword('');
+        onOpenAdmin?.();
+      } else {
+        alert(authRes.message);
+      }
+      return;
+    }
+
     if (student) {
       onStudentChange(student);
       refreshData();

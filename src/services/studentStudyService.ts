@@ -15,6 +15,28 @@ const INITIAL_STUDENTS: RegisteredStudent[] = [];
 const INITIAL_LOGIN_LOGS: UserLoginLog[] = [];
 const INITIAL_STUDY_RECORDS: StudyCheckinRecord[] = [];
 
+// 超级管理员账号 —— 与学员登录共用同一入口 (输入 admin / 管理员 登录即进入后台)
+// 密码: suan2026 (密码哈希 = sha256("suan2026::super_admin"))
+export const SUPER_ADMIN_ACCOUNT: RegisteredStudent = {
+  id: 'super_admin',
+  name: '超级管理员',
+  wechatOrPhone: 'admin',
+  learningGoal: '',
+  thaiLevel: 'zero',
+  dailyTarget: '',
+  registeredAt: '',
+  lastLoginAt: '',
+  loginCount: 0,
+  streakDays: 0,
+  totalCheckins: 0,
+  keyboardPracticeCount: 0,
+  wordsMasteredCount: 0,
+  videoMinutesStudied: 0,
+  avatarSeed: 'emerald',
+  role: 'admin',
+  passwordHash: '9e58a324b56a7220a6bd30b49c3b0795a2e5da6a651c5852811c5d5da6d9b8f0'
+};
+
 class StudentStudyService {
   private syncListeners: Array<() => void> = [];
 
@@ -173,6 +195,15 @@ class StudentStudyService {
   public async loginStudent(query: string, password: string): Promise<RegisteredStudent | null> {
     const clean = query.trim().toLowerCase();
     if (!clean || !password) return null;
+
+    // 超级管理员账号：与学员登录共用同一入口，密码 suan2026 (哈希 + 固定盐)
+    if (['admin', 'super_admin', '管理员', '超级管理员'].includes(clean)) {
+      const adminHash = await hashPasswordWithSalt(password, SUPER_ADMIN_ACCOUNT.id);
+      if (adminHash === SUPER_ADMIN_ACCOUNT.passwordHash) {
+        return { ...SUPER_ADMIN_ACCOUNT };
+      }
+      return null;
+    }
 
     const students = this.getAllStudents();
     const student = students.find(

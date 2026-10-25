@@ -24,7 +24,7 @@ REVOKE ALL ON public.admin_credentials FROM anon, authenticated;
 
 -- 初始管理员密码哈希 = sha256("suan2026")，登录后台后请立即修改
 INSERT INTO public.admin_credentials (id, password_hash)
-VALUES ('admin', '6b4e062d0ba9ea6c3dc947fb7d1217e132e4d0d04cce877399589d89bbd8b517')
+VALUES ('admin', '16f35226c8fc732ea4d762d6d7ad3f949f28167c81b8eb377de7e3b6e009120d')
 ON CONFLICT (id) DO NOTHING;
 
 -- 3a. RPC: 验证管理员密码 (仅返回布尔, 不泄露任何信息)
