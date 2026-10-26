@@ -5,7 +5,7 @@ import { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_
 
 // 官方频道直接直达链接（供师兄师姐直接点击，避免复制粘贴繁琐步骤）
 export const OFFICIAL_THAI_STREAMS_URL = 'https://www.youtube.com/@luangpupramote/streams';
-export const OFFICIAL_CHINESE_SEARCH_URL = 'https://www.youtube.com/results?sp=mAEA&search_query=解脱园';
+export const OFFICIAL_CHINESE_SEARCH_URL = 'https://www.youtube.com/@JieTuoYuan';
 
 export interface OfficialPairedDiscourse {
   id: string;
@@ -67,5 +67,52 @@ export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
     offsetSeconds: 0.0,
     subtitles: DAILY_PRACTICE_SUBTITLES,
     description: 'Wat Suan Santidham 官方周六实况开示，已完成全篇 1,198 句逐词释义与毫秒双轨同步。'
+  }
+];
+
+export interface DhammaExternalPlatform {
+  id: string;
+  name: string;
+  domain: string;
+  url: string;
+}
+
+// 弘法资源平台汇总（严格保留用户指定的 6 大官方与权威站点，移除所有臆测小字说明）
+export const DHAMMA_EXTERNAL_PLATFORMS: DhammaExternalPlatform[] = [
+  {
+    id: 'yixin',
+    name: '一心',
+    domain: 'satipatthana.life',
+    url: 'https://www.satipatthana.life/'
+  },
+  {
+    id: 'fazang',
+    name: '法藏',
+    domain: 'dhamma.cn',
+    url: 'https://dhamma.cn'
+  },
+  {
+    id: 'jietuoyuan',
+    name: '解脱园',
+    domain: 'jietuoyuan.com',
+    url: 'https://www.jietuoyuan.com/'
+  },
+  {
+    id: 'ganluyu',
+    name: '甘露雨',
+    domain: 'ganluyu.net',
+    url: 'https://www.ganluyu.net/'
+  },
+  {
+    id: 'facebook',
+    name: 'Facebook',
+    domain: 'facebook.com/JieTuoYuan',
+    url: 'https://www.facebook.com/JieTuoYuan'
+  },
+  {
+    id: 'youtube',
+    name: 'YouTube',
+    domain: 'youtube.com/@JieTuoYuan',
+    url: 'https://www.youtube.com/@JieTuoYuan'
   }
 ];

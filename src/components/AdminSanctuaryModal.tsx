@@ -561,7 +561,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-red-500 font-bold">🇨🇳</span>
-                          <span className="text-slate-200 group-hover:text-amber-300 font-medium">解脱园中文同传最新视频检索</span>
+                          <span className="text-slate-200 group-hover:text-amber-300 font-medium">🇨🇳 解脱园中文官方频道 (@JieTuoYuan)</span>
                         </div>
                         <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-amber-400" />
                       </a>

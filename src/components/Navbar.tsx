@@ -24,11 +24,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand */}
         <div 
           onClick={() => onTabChange('dual_sync_player')}
-          className="flex items-center gap-2 shrink-0 cursor-pointer"
+          className="flex items-center gap-2.5 shrink-0 cursor-pointer group"
         >
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 flex items-center justify-center text-slate-950 font-black shadow-md shadow-amber-500/20 text-base">
-            📿
-          </div>
+          <img
+            src="/favicon.svg"
+            alt="太学"
+            className="w-8 h-8 rounded-xl shadow-md shadow-amber-500/20 object-contain group-hover:scale-105 transition-transform"
+          />
           <div className="flex items-center gap-1.5 whitespace-nowrap">
             <span className="font-extrabold text-base sm:text-lg text-white tracking-tight">
               泰学

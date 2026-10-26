@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="45%" stop-color="#0c0a09" />
+      <stop offset="100%" stop-color="#1c140d" />
+    </linearGradient>
+
+    <!-- Gold Radiance Gradient -->
+    <linearGradient id="goldGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="35%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#fef08a" />
+    </linearGradient>
+
+    <!-- Inner Flame Gradient -->
+    <linearGradient id="flameGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="90%" stop-color="#fef3c7" />
+    </linearGradient>
+
+    <!-- Filter for subtle luxury drop shadow -->
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Base Rounded Container -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Outer Golden Ring -->
+  <rect x="20" y="20" width="472" height="472" rx="96" fill="none" stroke="url(#goldGlow)" stroke-width="6" opacity="0.45" />
+
+  <!-- Inner Subtle Ring -->
+  <circle cx="256" cy="256" r="216" fill="none" stroke="url(#goldGlow)" stroke-width="2" stroke-dasharray="8 12" opacity="0.3" />
+
+  <!-- Radiance Rays -->
+  <g stroke="url(#goldGlow)" stroke-width="2.5" opacity="0.35" stroke-linecap="round">
+    <line x1="256" y1="56" x2="256" y2="88" />
+    <line x1="115" y1="115" x2="138" y2="138" />
+    <line x1="397" y1="115" x2="374" y2="138" />
+    <line x1="56" y1="256" x2="88" y2="256" />
+    <line x1="456" y1="256" x2="424" y2="256" />
+  </g>
+
+  <!-- Sacred Bodhi Leaf / Flame of Wisdom -->
+  <path d="M 256,92 C 290,150 360,210 360,296 C 360,356 312,400 256,400 C 200,400 152,356 152,296 C 152,210 222,150 256,92 Z"
+        fill="url(#goldGlow)" opacity="0.18" />
+
+  <!-- Open Dhamma Scripture Book / Lotus Base -->
+  <g fill="none" stroke="url(#goldGlow)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Left Book Page / Lotus Leaf -->
+    <path d="M 148,370 C 188,340 230,346 256,368 C 282,346 324,340 364,370" />
+    <!-- Lower Spine -->
+    <path d="M 156,396 C 196,366 234,372 256,392 C 278,372 316,366 356,396" opacity="0.6" stroke-width="10" />
+    <!-- Center Axis -->
+    <line x1="256" y1="368" x2="256" y2="400" stroke-width="8" />
+  </g>
+
+  <!-- Inner Sacred Flame / Flame Halo -->
+  <path d="M 256,128 C 282,180 334,228 334,292 C 334,338 298,368 256,368 C 214,368 178,338 178,292 C 178,228 230,180 256,128 Z"
+        fill="url(#flameGrad)" />
+
+  <!-- Core Flame Inner Heart -->
+  <path d="M 256,182 C 272,216 302,248 302,290 C 302,320 280,344 256,344 C 232,344 210,320 210,290 C 210,248 240,216 256,182 Z"
+        fill="#ffffff" opacity="0.9" filter="url(#subtleGlow)" />
+
+  <!-- Stylized "太学" / Wisdom Seal Point -->
+  <circle cx="256" cy="116" r="10" fill="url(#goldGlow)" />
+  <circle cx="256" cy="116" r="5" fill="#ffffff" />
+</svg>
