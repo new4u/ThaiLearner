@@ -28,17 +28,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <img
             src="/favicon.svg"
-            alt="太学"
+            alt="泰学"
             className="w-8 h-8 rounded-xl shadow-md shadow-amber-500/20 object-contain group-hover:scale-105 transition-transform"
           />
-          <div className="flex items-center gap-1.5 whitespace-nowrap">
-            <span className="font-extrabold text-base sm:text-lg text-white tracking-tight">
-              泰学
-            </span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 hidden md:inline-flex items-center">
-              Tai Xue · 泰语共学
-            </span>
-          </div>
+          <span className="font-extrabold text-base sm:text-lg text-white tracking-tight">
+            泰学
+          </span>
         </div>
 
         {/* 核心三入口导航：双视频共学、泰语打字练习、免费注册与打卡 */}

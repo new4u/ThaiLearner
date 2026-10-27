@@ -187,13 +187,19 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [isThaiPlaying, setIsThaiPlaying] = useState(false);
   const [isChinesePlaying, setIsChinesePlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0); // 泰文基准时间
-  const [playbackRate, setPlaybackRate] = useState(1.0);
-  const [offsetSeconds, setOffsetSeconds] = useState(
-    propOffsetSeconds ?? config.offsetSeconds ?? 0.0
-  );
-  const [isOffsetLocked, setIsOffsetLocked] = useState(
-    propIsOffsetLocked ?? false
-  );
+  const [offsetSeconds, setOffsetSeconds] = useState<number>(() => {
+    if (typeof propOffsetSeconds === 'number') return propOffsetSeconds;
+    if (typeof config?.offsetSeconds === 'number') return config.offsetSeconds;
+    return 0.0;
+  });
+  const [isOffsetLocked, setIsOffsetLocked] = useState<boolean>(() => {
+    if (typeof propIsOffsetLocked === 'boolean') return propIsOffsetLocked;
+    try {
+      const saved = localStorage.getItem('luangpor_offset_locked_v3');
+      if (saved !== null) return saved === 'true';
+    } catch {}
+    return true;
+  });
 
   // 4. 声道管理与伴弱音量 (Dim)
   const [audioFocus, setAudioFocus] = useState<'thai' | 'chinese' | 'both'>('both');
@@ -209,8 +215,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return 70; // 默认采用 70% 伴弱飘心音量 (-30% 递减)
   });
 
-  // 5. 纯净每一句循环
+  // 5. 纯净每一句循环与播放倍速
   const [isLoopSentence, setIsLoopSentence] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState<number>(1.0);
 
   // 6. 预制精品课件库与弹窗设置
   const [showPresetModal, setShowPresetModal] = useState(false);
@@ -235,6 +242,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     };
     saveConfig(newConf);
     setOffsetSeconds(lesson.defaultOffsetSeconds);
+    onOffsetChange?.(lesson.defaultOffsetSeconds, isOffsetLocked);
     setInputThaiUrl(lesson.thaiVideoUrl);
     setInputChineseUrl(lesson.chineseVideoUrl);
     setInputTitle(combinedTitle);
@@ -558,20 +566,46 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setIsBothPlaying(isThaiPlaying && isChinesePlaying);
   }, [isThaiPlaying, isChinesePlaying]);
 
-  // 偏移量微调：更新 offsetSeconds。
-  //   - 未锁定：只改数值，不自动 seek（避免劫持中文字幕）
-  //   - 已锁定：通过 onOffsetChange 通知外部，由外部 prop 回传触发 useEffect 立即同步 seek
+  // 外部传入 offset 与锁定状态同步（防止被重置为 0s）
+  useEffect(() => {
+    if (typeof propOffsetSeconds === 'number' && propOffsetSeconds !== offsetSeconds) {
+      setOffsetSeconds(propOffsetSeconds);
+    }
+  }, [propOffsetSeconds, offsetSeconds]);
+
+  useEffect(() => {
+    if (typeof propIsOffsetLocked === 'boolean' && propIsOffsetLocked !== isOffsetLocked) {
+      setIsOffsetLocked(propIsOffsetLocked);
+    }
+  }, [propIsOffsetLocked, isOffsetLocked]);
+
+  // 全量设置或直接输入时差（立即同步到 state、config、localStorage 与顶层 App）
+  const updateOffset = useCallback((nextVal: number, locked: boolean = isOffsetLocked) => {
+    const next = parseFloat(nextVal.toFixed(2));
+    setOffsetSeconds(next);
+    setConfig(prev => {
+      const updated = { ...prev, offsetSeconds: next };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    try {
+      localStorage.setItem('luangpor_offset_locked_v3', String(locked));
+    } catch {}
+    onOffsetChange?.(next, locked);
+  }, [isOffsetLocked, onOffsetChange]);
+
+  // 时差微调：更新 offsetSeconds 并立即持久化
   const handleNudgeOffset = useCallback((delta: number) => {
     const next = parseFloat((offsetSeconds + delta).toFixed(2));
-    setOffsetSeconds(next);
-    // 向外部通知偏移变化（用于与管理后台联动）
-    onOffsetChange?.(next, isOffsetLocked);
+    updateOffset(next, isOffsetLocked);
     if (isOffsetLocked) {
-      triggerToast(`中文轨偏移已锁定并同步：${next >= 0 ? '+' : ''}${next}s`);
+      triggerToast(`时差已锁定并同步：${next >= 0 ? '+' : ''}${next}s`);
     } else {
-      triggerToast(`中文轨偏移：${next >= 0 ? '+' : ''}${next}s（未锁定，下次跳转生效）`);
+      triggerToast(`时差：${next >= 0 ? '+' : ''}${next}s（未锁定，下次跳转生效）`);
     }
-  }, [offsetSeconds, isOffsetLocked, onOffsetChange]);
+  }, [offsetSeconds, isOffsetLocked, updateOffset]);
 
   // 泰文主控带中文随动：同步跳转到指定时间（尊重当前 offsetSeconds）
   const seekBothToTime = useCallback((thaiSec: number) => {
@@ -594,18 +628,19 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [offsetSeconds, activeSubtitles]);
 
-  // 外部 offsetSeconds prop 变化时同步到内部 state（受控模式）
+  // 外部 offsetSeconds prop 变化时同步到内部 state 与 config
   // 若已锁定，立即将新偏移应用到当前播放位置（同步 seek 中文视频）
   useEffect(() => {
     if (propOffsetSeconds !== undefined && propOffsetSeconds !== offsetSeconds) {
       setOffsetSeconds(propOffsetSeconds);
+      setConfig(prev => ({ ...prev, offsetSeconds: propOffsetSeconds }));
       if (isOffsetLocked) {
         try {
           seekBothToTime(currentTime);
         } catch {}
       }
     }
-  }, [propOffsetSeconds, offsetSeconds, isOffsetLocked, currentTime, seekBothToTime]);
+  }, [propOffsetSeconds, isOffsetLocked, currentTime, seekBothToTime]);
 
   // 外部 isOffsetLocked prop 变化时同步到内部 state（受控模式）
   // 锁定开启时：立即将当前偏移量应用到播放位置
@@ -1282,7 +1317,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                         ...config,
                         thaiVideoUrl: inputThaiUrl.trim(),
                         chineseVideoUrl: inputChineseUrl.trim(),
-                        title: inputTitle.trim() || '自定义法谈开示'
+                        title: inputTitle.trim() || '自定义法谈开示',
+                        offsetSeconds: offsetSeconds
                       };
                       saveConfig(updated);
                       setShowConfigDrawer(false);
@@ -1315,8 +1351,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     onClick={() => {
                       const nextLocked = !isOffsetLocked;
                       setIsOffsetLocked(nextLocked);
-                      onOffsetChange?.(offsetSeconds, nextLocked);
-                      triggerToast(nextLocked ? '偏置已锁定保存' : '偏置已解锁');
+                      updateOffset(offsetSeconds, nextLocked);
+                      triggerToast(nextLocked ? '时差已锁定保存' : '时差已解锁');
                     }}
                     className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer border ${
                       isOffsetLocked
@@ -1331,15 +1367,38 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               </div>
 
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-100">
-                <p className="text-[11px] text-stone-500 max-w-md leading-relaxed">
-                  微调中文同传视频相对于泰文原版的时间差。点击锁定后，播放器在切换句子时将自动毫秒级咬合对齐。
-                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-stone-700 font-medium">精确时差输入:</span>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={offsetSeconds}
+                      onChange={(e) => {
+                        const val = parseFloat(e.target.value);
+                        if (!isNaN(val)) {
+                          updateOffset(val);
+                        }
+                      }}
+                      className="w-20 px-2 py-1 text-xs font-mono font-bold rounded-lg border border-stone-300 bg-stone-50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                    <span className="ml-1 text-xs text-stone-500 font-mono">秒</span>
+                  </div>
+                </div>
 
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <button
                     type="button"
+                    onClick={() => handleNudgeOffset(-1.0)}
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    title="微调 -1.0s"
+                  >
+                    -1.0s
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => handleNudgeOffset(-0.5)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
                     title="微调 -0.5s"
                   >
                     -0.5s
@@ -1347,7 +1406,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   <button
                     type="button"
                     onClick={() => handleNudgeOffset(-0.1)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
                     title="微调 -0.1s"
                   >
                     -0.1s
@@ -1355,7 +1414,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   <button
                     type="button"
                     onClick={() => handleNudgeOffset(0.1)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
                     title="微调 +0.1s"
                   >
                     +0.1s
@@ -1363,17 +1422,24 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   <button
                     type="button"
                     onClick={() => handleNudgeOffset(0.5)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
                     title="微调 +0.5s"
                   >
                     +0.5s
                   </button>
                   <button
                     type="button"
+                    onClick={() => handleNudgeOffset(1.0)}
+                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
+                    title="微调 +1.0s"
+                  >
+                    +1.0s
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => {
-                      setOffsetSeconds(0);
-                      onOffsetChange?.(0, isOffsetLocked);
-                      triggerToast('偏置已归零 (0.0s)');
+                      updateOffset(0.0);
+                      triggerToast('时差已归零 (0.0s)');
                     }}
                     className="px-2.5 py-1 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-medium transition cursor-pointer"
                   >
@@ -1445,6 +1511,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                             };
                             saveConfig(newConf);
                             setOffsetSeconds(paired.offsetSeconds);
+                            onOffsetChange?.(paired.offsetSeconds, isOffsetLocked);
                             setInputThaiUrl(paired.thaiVideoUrl);
                             setInputChineseUrl(paired.chineseVideoUrl);
                             setInputTitle(paired.combinedTitle);
@@ -2101,30 +2168,34 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               <span className="hidden xs:inline text-stone-300">{formatSecondsToTime(currentTime)}</span>
             </button>
 
-            {/* 辅助操作群：循环与倍速 */}
-            <div className="flex items-center gap-1 shrink-0">
+            {/* 统一移动端控制框（循环 + 倍速 + 时差微调 + 抽屉，一体内嵌） */}
+            <div className="flex items-center bg-stone-950/90 p-1 rounded-lg border border-stone-800 gap-1 shrink-0">
               <button
+                type="button"
                 onClick={() => {
                   const nextVal = !isLoopSentence;
                   setIsLoopSentence(nextVal);
                   triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
                 }}
-                className={`p-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
+                className={`p-1 rounded text-xs transition cursor-pointer ${
                   isLoopSentence
-                    ? 'bg-amber-500 border-amber-400 text-slate-950 font-black'
-                    : 'bg-stone-800/80 text-stone-400 border-stone-700/60'
+                    ? 'bg-amber-500 text-slate-950 font-black'
+                    : 'text-stone-400 hover:text-stone-200'
                 }`}
                 title="单句循环"
               >
-                <Repeat className="w-3.5 h-3.5" />
+                <Repeat className="w-3 h-3" />
               </button>
 
-              <div className="flex items-center bg-stone-950/80 p-0.5 rounded-lg border border-stone-800 text-[10px] font-bold">
+              <span className="w-px h-3 bg-stone-800" />
+
+              <div className="flex items-center text-[10px] font-bold">
                 {[0.75, 1.0, 1.25].map(rate => (
                   <button
                     key={rate}
+                    type="button"
                     onClick={() => handleSetPlaybackRate(rate)}
-                    className={`px-1.5 py-0.5 rounded transition cursor-pointer ${
+                    className={`px-1 py-0.5 rounded transition cursor-pointer ${
                       playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black' : 'text-stone-400'
                     }`}
                   >
@@ -2132,17 +2203,59 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   </button>
                 ))}
               </div>
-            </div>
 
-            {/* 链接与校准抽屉快捷入口 (收纳校准工具，彻底避免在主控栏裸露) */}
-            <button
-              onClick={() => setShowConfigDrawer(prev => !prev)}
-              className="px-2 py-1 rounded-lg bg-stone-800/90 hover:bg-stone-700 text-stone-300 text-xs flex items-center gap-1 transition cursor-pointer border border-stone-700/60 shrink-0"
-              title="展开视频链接与时间差校准抽屉"
-            >
-              <Settings className="w-3 h-3 text-amber-400" />
-              <span className="text-[10px]">校准</span>
-            </button>
+              <span className="w-px h-3 bg-stone-800" />
+
+              {/* 移动端锁与时差微调 */}
+              <button
+                type="button"
+                onClick={() => {
+                  const nextLocked = !isOffsetLocked;
+                  setIsOffsetLocked(nextLocked);
+                  updateOffset(offsetSeconds, nextLocked);
+                  triggerToast(nextLocked ? '时差已锁定' : '时差已解锁');
+                }}
+                className="p-0.5 text-stone-400 hover:text-amber-300 cursor-pointer"
+                title={isOffsetLocked ? '时差已锁定' : '时差未锁定'}
+              >
+                {isOffsetLocked ? <Lock className="w-3 h-3 text-amber-400" /> : <LockOpen className="w-3 h-3 text-stone-500" />}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleNudgeOffset(-0.1)}
+                className="px-1 py-0.5 rounded text-[10px] font-mono bg-stone-900 text-stone-300 hover:text-amber-300 border border-stone-800 cursor-pointer"
+                title="-0.1s"
+              >
+                -
+              </button>
+
+              <span className="font-mono text-[10px] text-amber-300 px-0.5">
+                {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
+              </span>
+
+              <button
+                type="button"
+                onClick={() => handleNudgeOffset(0.1)}
+                className="px-1 py-0.5 rounded text-[10px] font-mono bg-stone-900 text-stone-300 hover:text-amber-300 border border-stone-800 cursor-pointer"
+                title="+0.1s"
+              >
+                +
+              </button>
+
+              <span className="w-px h-3 bg-stone-800" />
+
+              <button
+                type="button"
+                onClick={() => setShowConfigDrawer(prev => !prev)}
+                className={`p-1 rounded text-xs transition cursor-pointer ${
+                  showConfigDrawer ? 'text-amber-400' : 'text-stone-400 hover:text-stone-200'
+                }`}
+                title="展开视频链接与时间差校准抽屉"
+              >
+                <Settings className="w-3 h-3" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -2237,32 +2350,38 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
 
-          {/* 右侧：单句循环 + 倍速 + 偏移量调整 */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* 右侧：一体化收纳深色框（循环 + 倍速 + 时差锁定与微调 + 抽屉入口，严整收纳在框内，彻底杜绝外露悬浮） */}
+          <div className="flex items-center bg-stone-950/90 p-1 rounded-xl border border-stone-800 shadow-inner gap-1.5 shrink-0">
+            {/* 1. 单句循环 */}
             <button
+              type="button"
               onClick={() => {
                 const nextVal = !isLoopSentence;
                 setIsLoopSentence(nextVal);
                 triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
               }}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer border ${
+              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
                 isLoopSentence
-                  ? 'bg-amber-500 border-amber-400 text-slate-950 font-black'
-                  : 'bg-stone-800/80 hover:bg-stone-700 text-stone-300 border-stone-700/60'
+                  ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
+                  : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/80'
               }`}
               title="单句循环反复播放"
             >
               <Repeat className="w-3.5 h-3.5" />
-              <span>循环</span>
+              <span className="hidden lg:inline">循环</span>
             </button>
 
-            <div className="flex items-center bg-stone-950/80 p-0.5 rounded-xl border border-stone-800 text-[11px] font-bold">
+            <span className="w-px h-3.5 bg-stone-800" />
+
+            {/* 2. 倍速选择 */}
+            <div className="flex items-center gap-0.5 text-[11px] font-bold">
               {[0.75, 1.0, 1.25].map(rate => (
                 <button
                   key={rate}
+                  type="button"
                   onClick={() => handleSetPlaybackRate(rate)}
-                  className={`px-2 py-1 rounded-lg transition cursor-pointer ${
-                    playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black' : 'text-stone-400 hover:text-stone-200'
+                  className={`px-1.5 py-0.5 rounded transition cursor-pointer ${
+                    playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                   }`}
                 >
                   {rate}x
@@ -2270,19 +2389,75 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               ))}
             </div>
 
-            {/* 链接与校准抽屉快捷入口 (收纳校准工具，彻底避免在主控栏裸露) */}
+            <span className="w-px h-3.5 bg-stone-800" />
+
+            {/* 3. 中泰时差校准控制 (锁定 + 数值 + 微调，严丝合缝收纳在框内) */}
+            <div className="flex items-center gap-1">
+              {/* 锁定切换 */}
+              <button
+                type="button"
+                onClick={() => {
+                  const nextLocked = !isOffsetLocked;
+                  setIsOffsetLocked(nextLocked);
+                  updateOffset(offsetSeconds, nextLocked);
+                  triggerToast(nextLocked ? '时差已锁定咬合' : '时差已解锁');
+                }}
+                className={`p-1 rounded-md text-xs transition cursor-pointer ${
+                  isOffsetLocked
+                    ? 'text-amber-400 hover:bg-amber-500/20'
+                    : 'text-stone-500 hover:text-stone-300 hover:bg-stone-800/60'
+                }`}
+                title={isOffsetLocked ? '时差已锁定（跳转时两视频自动咬合）' : '时差未锁定（点击锁定）'}
+              >
+                {isOffsetLocked ? <Lock className="w-3.5 h-3.5" /> : <LockOpen className="w-3.5 h-3.5" />}
+              </button>
+
+              {/* 偏差读数 */}
+              <span
+                className={`px-1.5 py-0.5 rounded font-mono text-[11px] font-bold ${
+                  offsetSeconds !== 0
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-stone-900 text-stone-400 border border-stone-800'
+                }`}
+                title={`当前中泰校准时差: ${offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s`}
+              >
+                {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
+              </span>
+
+              {/* -0.1s / +0.1s 微调 */}
+              <button
+                type="button"
+                onClick={() => handleNudgeOffset(-0.1)}
+                className="px-1 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-stone-800 transition cursor-pointer"
+                title="微调中泰视频时差 -0.1 秒"
+              >
+                -0.1
+              </button>
+              <button
+                type="button"
+                onClick={() => handleNudgeOffset(0.1)}
+                className="px-1 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-stone-800 transition cursor-pointer"
+                title="微调中泰视频时差 +0.1 秒"
+              >
+                +0.1
+              </button>
+            </div>
+
+            <span className="w-px h-3.5 bg-stone-800" />
+
+            {/* 4. 课件与校准设置抽屉入口 (同样严整收纳在框内) */}
             <button
+              type="button"
               onClick={() => setShowConfigDrawer(prev => !prev)}
-              className="px-3 py-1.5 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-stone-300 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer border border-stone-700/60 shrink-0"
-              title="展开视频链接与时间差校准抽屉"
+              className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
+                showConfigDrawer
+                  ? 'bg-amber-500 text-slate-950 font-black'
+                  : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/80'
+              }`}
+              title="展开课件列表与详细校准抽屉"
             >
-              <Settings className="w-3.5 h-3.5 text-amber-400" />
-              <span>设置与校准</span>
-              {offsetSeconds !== 0 && (
-                <span className="text-[10px] font-mono text-amber-400 bg-amber-500/20 px-1.5 py-0.5 rounded">
-                  {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
-                </span>
-              )}
+              <Settings className="w-3.5 h-3.5" />
+              <span className="hidden xl:inline">校准</span>
             </button>
           </div>
         </div>
@@ -2417,6 +2592,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                         };
                         saveConfig(newConf);
                         setOffsetSeconds(discourse.offsetSeconds);
+                        onOffsetChange?.(discourse.offsetSeconds, isOffsetLocked);
                         setInputThaiUrl(discourse.thaiVideoUrl);
                         setInputChineseUrl(discourse.chineseVideoUrl);
                         setInputTitle(discourse.combinedTitle);

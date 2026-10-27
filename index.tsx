@@ -17,9 +17,28 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dual_sync_player');
   const [showAdminModal, setShowAdminModal] = useState(false);
 
-  // 播放器中文轨偏移量与锁定状态（顶层受控，与管理后台校准联动）
-  const [playerOffsetSeconds, setPlayerOffsetSeconds] = useState<number>(0.0);
-  const [playerIsOffsetLocked, setPlayerIsOffsetLocked] = useState<boolean>(false);
+  // 播放器中文轨偏移量与锁定状态（从持久化存储恢复，与校准中枢毫秒同步）
+  const [playerOffsetSeconds, setPlayerOffsetSeconds] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (typeof parsed?.offsetSeconds === 'number') {
+          return parsed.offsetSeconds;
+        }
+      }
+    } catch {}
+    return 0.0;
+  });
+  const [playerIsOffsetLocked, setPlayerIsOffsetLocked] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('luangpor_offset_locked_v3');
+      if (saved !== null) {
+        return saved === 'true';
+      }
+    } catch {}
+    return true;
+  });
 
   const [currentStudent, setCurrentStudent] = useState<RegisteredStudent | null>(() => {
     return studentStudyService.getCurrentStudent();
@@ -129,6 +148,13 @@ const App: React.FC = () => {
             onOffsetChange={(offset, locked) => {
               setPlayerOffsetSeconds(offset);
               setPlayerIsOffsetLocked(locked);
+              try {
+                localStorage.setItem('luangpor_offset_locked_v3', String(locked));
+                const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
+                const parsed = saved ? JSON.parse(saved) : {};
+                parsed.offsetSeconds = offset;
+                localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
+              } catch {}
             }}
           />
         )}
@@ -202,6 +228,13 @@ const App: React.FC = () => {
           // 管理后台校准后：更新播放器偏移量并自动锁定，立即同步生效
           setPlayerOffsetSeconds(offset);
           setPlayerIsOffsetLocked(true);
+          try {
+            localStorage.setItem('luangpor_offset_locked_v3', 'true');
+            const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
+            const parsed = saved ? JSON.parse(saved) : {};
+            parsed.offsetSeconds = offset;
+            localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
+          } catch {}
         }}
       />
     </div>

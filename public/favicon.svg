@@ -69,7 +69,7 @@
   <path d="M 256,182 C 272,216 302,248 302,290 C 302,320 280,344 256,344 C 232,344 210,320 210,290 C 210,248 240,216 256,182 Z"
         fill="#ffffff" opacity="0.9" filter="url(#subtleGlow)" />
 
-  <!-- Stylized "太学" / Wisdom Seal Point -->
+  <!-- Stylized "泰学" / Wisdom Seal Point -->
   <circle cx="256" cy="116" r="10" fill="url(#goldGlow)" />
   <circle cx="256" cy="116" r="5" fill="#ffffff" />
 </svg>
