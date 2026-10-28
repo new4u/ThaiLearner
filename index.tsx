@@ -123,7 +123,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 w-full max-w-full overflow-x-hidden">
       
       {/* 顶部极简导航：共学、打字、注册打卡 (管理入口已统一收敛到登录弹窗) */}
       <Navbar
@@ -133,7 +133,7 @@ const App: React.FC = () => {
       />
 
       {/* 主界面视窗 */}
-      <main className="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 lg:p-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 lg:p-6 overflow-x-hidden">
         
         {/* 1. 核心共学：泰中双视频同步对齐放映机 */}
         {activeTab === 'dual_sync_player' && (

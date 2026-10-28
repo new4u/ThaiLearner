@@ -1124,9 +1124,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   }, [activeSubtitles, searchQuery]);
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-[#faf7f2] text-[#2d2a26] pb-32 font-sans relative">
+    <div className="w-full max-w-full overflow-x-hidden min-h-[calc(100vh-4rem)] bg-[#faf7f2] text-[#2d2a26] pb-32 font-sans relative box-border">
       {/* 顶部工具条 (非置顶常规布局，节省宝贵视口垂直空间) */}
-      <div className="border-b border-[#e6d3ac]/60 bg-white/80 px-4 sm:px-6 py-2.5">
+      <div className="border-b border-[#e6d3ac]/60 bg-white/80 px-3 sm:px-6 py-2.5 max-w-full">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm">
@@ -1156,10 +1156,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setShowPresetModal(true)}
-              className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
               title="查看与调入官方预制课件（10月17日 1,198句 与 10月18日 746句原版对齐）"
             >
               <Library className="w-3.5 h-3.5" />
@@ -1168,16 +1168,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
             <button
               onClick={() => setShowPasteModal(true)}
-              className="px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
               title="导入或更换法谈字幕 (支持拖拽文件与格式粘贴)"
             >
               <ClipboardPaste className="w-3.5 h-3.5" />
-              <span>📋 导入法谈 (SRT / LR)</span>
+              <span className="hidden sm:inline">📋 导入法谈 (SRT / LR)</span>
+              <span className="sm:hidden">📋 导入法谈</span>
             </button>
 
             <button
               onClick={() => setShowConfigDrawer(!showConfigDrawer)}
-              className="px-3 py-1.5 rounded-lg bg-[#f0e6d2] hover:bg-[#e6d3ac] text-[#5b3f1e] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#f0e6d2] hover:bg-[#e6d3ac] text-[#5b3f1e] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
             >
               <Settings className="w-3.5 h-3.5" />
               <span>视频链接</span>
@@ -1186,7 +1187,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             {onGoToSlides && (
               <button
                 onClick={onGoToSlides}
-                className="hidden sm:flex px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold items-center gap-1.5 transition cursor-pointer"
+                className="hidden sm:flex px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>🎴 共学讲义</span>
@@ -1613,24 +1614,24 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       )}
 
       {/* 主界面内容 */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 space-y-6">
+      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-5 space-y-4 sm:space-y-6 max-w-full box-border">
 
         {/* 1. 双视频视窗区域 (带各自的独立暂停/播放快捷键，方便听完一句手动打点暂停) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           
           {/* 泰文视频视窗 */}
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
-            <div className="bg-[#3d3730] px-3.5 py-2.5 flex items-center justify-between text-xs text-amber-100">
-              <div className="flex items-center gap-2">
+            <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
+              <div className="flex items-center gap-1.5 min-w-0">
                 <span className={`w-2.5 h-2.5 rounded-full ${isThaiPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-stone-500'}`} />
-                <span className="font-bold">🇹🇭 泰文原版</span>
-                <span className="text-[10px] text-stone-300">
+                <span className="font-bold whitespace-nowrap">🇹🇭 泰文原版</span>
+                <span className="text-[10px] text-stone-300 whitespace-nowrap">
                   ({isThaiPlaying ? '播放中' : '已暂停'})
                 </span>
               </div>
               <button
                 onClick={handleToggleThaiAlone}
-                className="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                className="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
                 title="单独播放/暂停泰文视频，用于听完一句暂停对齐"
               >
                 {isThaiPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
@@ -1652,26 +1653,26 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
           {/* 中文视频视窗 */}
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
-            <div className="bg-[#3d3730] px-3.5 py-2 flex items-center justify-between text-xs text-amber-100 flex-wrap gap-2">
-              <div className="flex items-center gap-2">
+            <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
+              <div className="flex items-center gap-1.5 min-w-0">
                 <span className={`w-2.5 h-2.5 rounded-full ${isChinesePlaying ? 'bg-amber-400 animate-pulse' : 'bg-stone-500'}`} />
-                <span className="font-bold">🇨🇳 中文译版</span>
-                <span className="text-[10px] text-stone-300">
+                <span className="font-bold whitespace-nowrap">🇨🇳 中文译版</span>
+                <span className="text-[10px] text-stone-300 whitespace-nowrap">
                   ({isChinesePlaying ? '播放中' : '已暂停'})
                 </span>
                 {offsetSeconds !== 0 && (
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                    偏置 {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap">
+                    {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
                   </span>
                 )}
               </div>
 
               {/* 中文伴弱随听音量与画面控制 */}
-              <div className="flex items-center gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
                 <button
                   type="button"
                   onClick={handleCycleChineseDim}
-                  className="px-2 py-1 rounded bg-stone-900/90 hover:bg-stone-800 text-amber-200 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2 py-1 rounded bg-stone-900/90 hover:bg-stone-800 text-amber-200 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
                   title="点击以30%幅度循环切换伴弱音量 (100% → 70% → 40% → 10%)"
                 >
                   <Volume1 className="w-3 h-3 text-amber-400" />
@@ -1685,7 +1686,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     setChineseAudioOnlyMode(nextVal);
                     triggerToast(nextVal ? '已收起中文画面（仅保留声音随听）' : '已展开中文双视频画面');
                   }}
-                  className={`px-2 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition cursor-pointer border ${
+                  className={`px-2 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition cursor-pointer border whitespace-nowrap ${
                     chineseAudioOnlyMode
                       ? 'bg-amber-500 text-slate-950 border-amber-400 font-black'
                       : 'bg-stone-800 text-stone-300 hover:text-white border-stone-700'
@@ -1698,11 +1699,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
                 <button
                   onClick={handleToggleChineseAlone}
-                  className="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer"
+                  className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
                   title="单独播放/暂停中文视频，用于听完一句暂停对齐"
                 >
                   {isChinesePlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                  <span>{isChinesePlaying ? '暂停中文' : '播放中文'}</span>
+                  <span>{isChinesePlaying ? '暂停' : '播中文'}</span>
                 </button>
               </div>
             </div>
@@ -1947,6 +1948,66 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+              {/* ⏱️ 中泰时差校准控制模块 (移至对照表区域，直观清晰，彻底解放底部播放栏) */}
+              <div className="flex items-center bg-stone-50 hover:bg-stone-100/90 p-1 rounded-xl border border-stone-200/90 gap-1 text-xs shadow-2xs">
+                {/* 锁定切换与当前偏置 */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const nextLocked = !isOffsetLocked;
+                    setIsOffsetLocked(nextLocked);
+                    updateOffset(offsetSeconds, nextLocked);
+                    triggerToast(nextLocked ? '时差已锁定咬合' : '时差已解锁');
+                  }}
+                  className={`px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                    isOffsetLocked
+                      ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                      : 'bg-white text-stone-600 border border-stone-200 hover:text-stone-900'
+                  }`}
+                  title={isOffsetLocked ? '时差已锁定（跳转时两视频自动咬合）' : '时差未锁定（点击锁定）'}
+                >
+                  {isOffsetLocked ? <Lock className="w-3.5 h-3.5 text-amber-700" /> : <LockOpen className="w-3.5 h-3.5 text-stone-400" />}
+                  <span className="font-mono">{offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s</span>
+                </button>
+
+                {/* -0.1s 微调 */}
+                <button
+                  type="button"
+                  onClick={() => handleNudgeOffset(-0.1)}
+                  className="w-6 h-6 flex items-center justify-center rounded-lg text-xs font-mono font-bold bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 transition cursor-pointer shadow-2xs"
+                  title="微调时差 -0.1 秒"
+                >
+                  -0.1
+                </button>
+
+                {/* +0.1s 微调 */}
+                <button
+                  type="button"
+                  onClick={() => handleNudgeOffset(0.1)}
+                  className="w-6 h-6 flex items-center justify-center rounded-lg text-xs font-mono font-bold bg-white hover:bg-stone-100 text-stone-700 border border-stone-200 transition cursor-pointer shadow-2xs"
+                  title="微调时差 +0.1 秒"
+                >
+                  +0.1
+                </button>
+
+                <span className="w-px h-3.5 bg-stone-300 mx-0.5" />
+
+                {/* 齿轮/校准抽屉入口 */}
+                <button
+                  type="button"
+                  onClick={() => setShowConfigDrawer(prev => !prev)}
+                  className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
+                    showConfigDrawer
+                      ? 'bg-amber-600 text-white font-bold'
+                      : 'bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold shadow-2xs'
+                  }`}
+                  title="展开课件列表与详细校准抽屉"
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                  <span>校准</span>
+                </button>
+              </div>
+
               <div className="relative">
                 <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -2075,19 +2136,19 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
       </div>
 
-      {/* 4. 极简悬浮主控播放栏 (自适应响应式架构：手机/平板/电脑模式防溢出设计，Offset 永不遮挡) */}
-      <div className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-16px)] sm:w-[96%] max-w-4xl bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-2 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all">
+      {/* 4. 极简悬浮主控播放栏 (自适应响应式架构：手机/平板/电脑模式防溢出设计，精炼绝不突出) */}
+      <div className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-20px)] max-w-sm sm:w-auto sm:max-w-md xl:max-w-4xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-1.5 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all box-border overflow-hidden">
         
-        {/* 📱 移动端 / 竖屏 / 窄屏 / 手机端电脑模式：结构化分层布局 (两行清晰，绝不溢出) */}
-        <div className="flex flex-col md:hidden gap-2">
-          {/* 顶行：主播放操作 + 三档声道切换 */}
-          <div className="flex items-center justify-between gap-1.5 w-full">
-            <div className="flex items-center gap-1">
+        {/* 📱 移动端 / 平板端 (宽度 < 1280px，涵盖各类 iPad、Android 平板、折叠屏及手机)：高品质双行结构 (严控宽度，绝不溢出) */}
+        <div className="flex flex-col xl:hidden gap-1.5 sm:gap-2">
+          {/* 顶行：主播放操作 + 三档声道滑块 */}
+          <div className="flex items-center justify-between gap-1.5 sm:gap-2 w-full">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               {/* 上一句 */}
               <button
                 onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1))}
                 disabled={currentLineIndex === 0}
-                className="p-1.5 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
+                className="p-1 sm:p-2 rounded-lg bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
                 title="上一句"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -2096,17 +2157,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               {/* 主播控按键 */}
               <button
                 onClick={handleMasterPlayToggle}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black text-xs flex items-center gap-1 shadow-md shadow-amber-500/25 active:scale-95 transition cursor-pointer shrink-0"
+                className="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1 shadow-md shadow-amber-500/25 active:scale-95 transition cursor-pointer shrink-0"
               >
                 {isCurrentModePlaying ? (
                   <>
-                    <Pause className="w-3.5 h-3.5 fill-current" />
-                    <span>{audioFocus === 'both' ? '暂停' : audioFocus === 'thai' ? '泰语暂停' : '中文暂停'}</span>
+                    <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
+                    <span>{audioFocus === 'both' ? '双轨停' : audioFocus === 'thai' ? '外文停' : '中文停'}</span>
                   </>
                 ) : (
                   <>
-                    <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-                    <span>{audioFocus === 'both' ? '双轨播' : audioFocus === 'thai' ? '泰语播' : '中文播'}</span>
+                    <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current ml-0.5" />
+                    <span>{audioFocus === 'both' ? '双轨播' : audioFocus === 'thai' ? '外文播' : '中文播'}</span>
                   </>
                 )}
               </button>
@@ -2115,61 +2176,61 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               <button
                 onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1))}
                 disabled={currentLineIndex >= activeSubtitles.length - 1}
-                className="p-1.5 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
+                className="p-1 sm:p-2 rounded-lg bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
                 title="下一句"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
 
-            {/* 三档滑块 */}
-            <div className="flex items-center bg-stone-950/80 p-0.5 rounded-xl border border-stone-800 shrink-0">
+            {/* 三档滑块：外文 | 双轨 | 中文 (极简文本，保留精致滑块手感) */}
+            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shrink-0 text-xs gap-0.5 sm:gap-1">
               <button
                 onClick={() => handleSelectMode('thai')}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400'
+                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
-                title="单播泰语"
+                title="单播外文原声"
               >
-                🇹🇭 泰
+                外文
               </button>
               <button
                 onClick={() => handleSelectMode('both')}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400'
+                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
                 title="双轨齐播"
               >
-                🎧 双轨
+                双轨
               </button>
               <button
                 onClick={() => handleSelectMode('chinese')}
-                className={`px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400'
+                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                  audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
-                title="单播中文"
+                title="单播中文译声"
               >
-                🇨🇳 中
+                中文
               </button>
             </div>
           </div>
 
-          {/* 底行：句序对齐 + 循环/倍速 + 偏移量调整 (重点：Offset 胶囊牢牢锁定在右侧，永不溢出屏幕) */}
-          <div className="flex items-center justify-between gap-1 w-full pt-1 border-t border-stone-800/60">
+          {/* 底行：句序对齐 + 循环/倍速 (极简紧凑，绝不溢出) */}
+          <div className="flex items-center justify-between gap-2 w-full pt-1.5 border-t border-stone-800/60">
             {/* 紧凑句序与时间戳 (点击一键精确对齐) */}
             <button
               onClick={handleAlignCurrent}
-              className="flex items-center gap-1 px-2 py-1 rounded-lg bg-stone-800/90 hover:bg-stone-700 text-stone-200 text-[11px] font-mono tracking-tight shrink min-w-0 truncate cursor-pointer transition"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-stone-800/90 hover:bg-stone-700 text-stone-200 text-[11px] sm:text-xs font-mono tracking-tight shrink min-w-0 truncate cursor-pointer transition"
               title="点击快速一键对齐视频与当前字幕"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-              <span className="truncate">{currentLineIndex + 1}/{activeSubtitles.length}句</span>
-              <span className="text-stone-500 hidden xs:inline">·</span>
-              <span className="hidden xs:inline text-stone-300">{formatSecondsToTime(currentTime)}</span>
+              <span className="truncate">第 {currentLineIndex + 1} / {activeSubtitles.length} 句</span>
+              <span className="text-stone-500">·</span>
+              <span className="text-stone-300">{formatSecondsToTime(currentTime)}</span>
             </button>
 
-            {/* 统一移动端控制框（循环 + 倍速 + 时差微调 + 抽屉，一体内嵌） */}
-            <div className="flex items-center bg-stone-950/90 p-1 rounded-lg border border-stone-800 gap-1 shrink-0">
+            {/* 统一操作区：循环 + 倍速选择 (时差与校准已常驻上方对照表) */}
+            <div className="flex items-center bg-stone-950/90 p-0.5 sm:p-1 rounded-lg border border-stone-800 gap-1 sm:gap-1.5 shrink-0 text-xs">
               <button
                 type="button"
                 onClick={() => {
@@ -2177,90 +2238,54 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   setIsLoopSentence(nextVal);
                   triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
                 }}
-                className={`p-1 rounded text-xs transition cursor-pointer ${
+                className={`px-1.5 py-1 sm:px-2 rounded text-xs transition cursor-pointer flex items-center gap-1 ${
                   isLoopSentence
                     ? 'bg-amber-500 text-slate-950 font-black'
                     : 'text-stone-400 hover:text-stone-200'
                 }`}
                 title="单句循环"
               >
-                <Repeat className="w-3 h-3" />
+                <Repeat className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">循环</span>
               </button>
 
               <span className="w-px h-3 bg-stone-800" />
 
-              <div className="flex items-center text-[10px] font-bold">
+              {/* 手机窄屏端 (< sm): 单键循环倍速 (点击切换 0.75x -> 1.0x -> 1.25x) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const rates = [0.75, 1.0, 1.25];
+                  const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
+                  handleSetPlaybackRate(rates[nextIdx]);
+                }}
+                className="sm:hidden px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 text-amber-300 border border-stone-800 hover:bg-stone-800 transition cursor-pointer"
+                title={`当前倍速 ${playbackRate}x (点击切换 0.75x / 1.0x / 1.25x)`}
+              >
+                {playbackRate}x
+              </button>
+
+              {/* 平板端 (>= sm 且 < xl): 完整三档倍速切换按钮 */}
+              <div className="hidden sm:flex items-center gap-0.5 text-[11px] font-bold">
                 {[0.75, 1.0, 1.25].map(rate => (
                   <button
                     key={rate}
                     type="button"
                     onClick={() => handleSetPlaybackRate(rate)}
-                    className={`px-1 py-0.5 rounded transition cursor-pointer ${
-                      playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black' : 'text-stone-400'
+                    className={`px-1.5 py-0.5 rounded transition cursor-pointer ${
+                      playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                     }`}
                   >
                     {rate}x
                   </button>
                 ))}
               </div>
-
-              <span className="w-px h-3 bg-stone-800" />
-
-              {/* 移动端锁与时差微调 */}
-              <button
-                type="button"
-                onClick={() => {
-                  const nextLocked = !isOffsetLocked;
-                  setIsOffsetLocked(nextLocked);
-                  updateOffset(offsetSeconds, nextLocked);
-                  triggerToast(nextLocked ? '时差已锁定' : '时差已解锁');
-                }}
-                className="p-0.5 text-stone-400 hover:text-amber-300 cursor-pointer"
-                title={isOffsetLocked ? '时差已锁定' : '时差未锁定'}
-              >
-                {isOffsetLocked ? <Lock className="w-3 h-3 text-amber-400" /> : <LockOpen className="w-3 h-3 text-stone-500" />}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleNudgeOffset(-0.1)}
-                className="px-1 py-0.5 rounded text-[10px] font-mono bg-stone-900 text-stone-300 hover:text-amber-300 border border-stone-800 cursor-pointer"
-                title="-0.1s"
-              >
-                -
-              </button>
-
-              <span className="font-mono text-[10px] text-amber-300 px-0.5">
-                {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
-              </span>
-
-              <button
-                type="button"
-                onClick={() => handleNudgeOffset(0.1)}
-                className="px-1 py-0.5 rounded text-[10px] font-mono bg-stone-900 text-stone-300 hover:text-amber-300 border border-stone-800 cursor-pointer"
-                title="+0.1s"
-              >
-                +
-              </button>
-
-              <span className="w-px h-3 bg-stone-800" />
-
-              <button
-                type="button"
-                onClick={() => setShowConfigDrawer(prev => !prev)}
-                className={`p-1 rounded text-xs transition cursor-pointer ${
-                  showConfigDrawer ? 'text-amber-400' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="展开视频链接与时间差校准抽屉"
-              >
-                <Settings className="w-3 h-3" />
-              </button>
             </div>
           </div>
         </div>
 
-        {/* 💻 桌面端 / 宽屏：流畅单行自适应排布 */}
-        <div className="hidden md:flex items-center justify-between gap-3 w-full">
+        {/* 💻 宽屏桌面端 (>= 1280px)：流畅单行自适应排布 */}
+        <div className="hidden xl:flex items-center justify-between gap-3 w-full">
           {/* 左侧：句序与时间对齐 */}
           <div className="flex items-center gap-2 shrink-0">
             <button
@@ -2297,12 +2322,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               {isCurrentModePlaying ? (
                 <>
                   <Pause className="w-4 h-4 fill-current" />
-                  <span>{audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '泰语暂停' : '中文暂停'}</span>
+                  <span>{audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '外文暂停' : '中文暂停'}</span>
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 fill-current ml-0.5" />
-                  <span>{audioFocus === 'both' ? '双轨齐播' : audioFocus === 'thai' ? '泰语播放' : '中文播放'}</span>
+                  <span>{audioFocus === 'both' ? '双轨播放' : audioFocus === 'thai' ? '外文播放' : '中文播放'}</span>
                 </>
               )}
             </button>
@@ -2316,41 +2341,39 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shadow-inner">
+            {/* 三档滑块：外文 | 双轨 | 中文 */}
+            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shadow-inner gap-1">
               <button
                 onClick={() => handleSelectMode('thai')}
-                className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                   audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
-                title="单播泰语"
+                title="单播外文原声"
               >
-                <span>🇹🇭</span>
-                <span>仅泰语</span>
+                外文
               </button>
               <button
                 onClick={() => handleSelectMode('both')}
-                className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                   audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
                 title="双轨齐播"
               >
-                <span>🎧</span>
-                <span>双轨齐播</span>
+                双轨
               </button>
               <button
                 onClick={() => handleSelectMode('chinese')}
-                className={`px-2 py-1 sm:px-2.5 sm:py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1 ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
                   audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                 }`}
-                title="单播中文"
+                title="单播中文译声"
               >
-                <span>🇨🇳</span>
-                <span>仅中文</span>
+                中文
               </button>
             </div>
           </div>
 
-          {/* 右侧：一体化收纳深色框（循环 + 倍速 + 时差锁定与微调 + 抽屉入口，严整收纳在框内，彻底杜绝外露悬浮） */}
+          {/* 右侧：单句循环 + 倍速选择 */}
           <div className="flex items-center bg-stone-950/90 p-1 rounded-xl border border-stone-800 shadow-inner gap-1.5 shrink-0">
             {/* 1. 单句循环 */}
             <button
@@ -2360,7 +2383,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 setIsLoopSentence(nextVal);
                 triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
               }}
-              className={`px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
                 isLoopSentence
                   ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
                   : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/80'
@@ -2368,7 +2391,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               title="单句循环反复播放"
             >
               <Repeat className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">循环</span>
+              <span>循环</span>
             </button>
 
             <span className="w-px h-3.5 bg-stone-800" />
@@ -2380,7 +2403,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   key={rate}
                   type="button"
                   onClick={() => handleSetPlaybackRate(rate)}
-                  className={`px-1.5 py-0.5 rounded transition cursor-pointer ${
+                  className={`px-2 py-1 rounded-lg transition cursor-pointer ${
                     playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
                   }`}
                 >
@@ -2388,77 +2411,6 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </button>
               ))}
             </div>
-
-            <span className="w-px h-3.5 bg-stone-800" />
-
-            {/* 3. 中泰时差校准控制 (锁定 + 数值 + 微调，严丝合缝收纳在框内) */}
-            <div className="flex items-center gap-1">
-              {/* 锁定切换 */}
-              <button
-                type="button"
-                onClick={() => {
-                  const nextLocked = !isOffsetLocked;
-                  setIsOffsetLocked(nextLocked);
-                  updateOffset(offsetSeconds, nextLocked);
-                  triggerToast(nextLocked ? '时差已锁定咬合' : '时差已解锁');
-                }}
-                className={`p-1 rounded-md text-xs transition cursor-pointer ${
-                  isOffsetLocked
-                    ? 'text-amber-400 hover:bg-amber-500/20'
-                    : 'text-stone-500 hover:text-stone-300 hover:bg-stone-800/60'
-                }`}
-                title={isOffsetLocked ? '时差已锁定（跳转时两视频自动咬合）' : '时差未锁定（点击锁定）'}
-              >
-                {isOffsetLocked ? <Lock className="w-3.5 h-3.5" /> : <LockOpen className="w-3.5 h-3.5" />}
-              </button>
-
-              {/* 偏差读数 */}
-              <span
-                className={`px-1.5 py-0.5 rounded font-mono text-[11px] font-bold ${
-                  offsetSeconds !== 0
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                    : 'bg-stone-900 text-stone-400 border border-stone-800'
-                }`}
-                title={`当前中泰校准时差: ${offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s`}
-              >
-                {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
-              </span>
-
-              {/* -0.1s / +0.1s 微调 */}
-              <button
-                type="button"
-                onClick={() => handleNudgeOffset(-0.1)}
-                className="px-1 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-stone-800 transition cursor-pointer"
-                title="微调中泰视频时差 -0.1 秒"
-              >
-                -0.1
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNudgeOffset(0.1)}
-                className="px-1 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 hover:bg-stone-800 text-stone-300 hover:text-amber-300 border border-stone-800 transition cursor-pointer"
-                title="微调中泰视频时差 +0.1 秒"
-              >
-                +0.1
-              </button>
-            </div>
-
-            <span className="w-px h-3.5 bg-stone-800" />
-
-            {/* 4. 课件与校准设置抽屉入口 (同样严整收纳在框内) */}
-            <button
-              type="button"
-              onClick={() => setShowConfigDrawer(prev => !prev)}
-              className={`px-2 py-1 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer ${
-                showConfigDrawer
-                  ? 'bg-amber-500 text-slate-950 font-black'
-                  : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/80'
-              }`}
-              title="展开课件列表与详细校准抽屉"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span className="hidden xl:inline">校准</span>
-            </button>
           </div>
         </div>
       </div>
