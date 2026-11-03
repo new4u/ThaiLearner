@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab, RegisteredStudent } from '../types';
-import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus } from 'lucide-react';
+import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus, Settings } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: ActiveTab;
@@ -110,6 +110,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <UserPlus className="w-3.5 h-3.5" />
               <span>每日打卡</span>
+            </button>
+          )}
+
+          {/* 共学管理入口 (法工校对工作流、课件制作、开示与学员记录) */}
+          {onOpenAdmin && (
+            <button
+              onClick={onOpenAdmin}
+              className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-stone-300 hover:text-white border border-slate-700/80 shadow-xs"
+              title="共学管理 (法工校对工作流、课件、开示与学员管理)"
+            >
+              <Settings className="w-3.5 h-3.5 text-amber-400" />
+              <span>共学管理</span>
             </button>
           )}
         </div>

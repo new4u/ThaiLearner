@@ -318,7 +318,7 @@ class SecureStorageService {
     localStorage.removeItem(SECURE_STORAGE_KEYS.CONFIDENTIAL_VAULT_RECORDS);
     localStorage.removeItem(SECURE_STORAGE_KEYS.CONFIDENTIAL_VAULT_LOGS);
     this.ensureInitialized();
-    adminAuthService.recordAuditLog('record_deleted', '管理员执行了金库数据重置为演示基准');
+    adminAuthService.recordAuditLog('record_deleted', '法工重置学员数据为演示基准');
   }
 }
 

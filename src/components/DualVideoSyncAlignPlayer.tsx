@@ -10,8 +10,13 @@ import {
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
   SlidersHorizontal, Clock, Bot, Copy, ChevronLeft, ChevronRight,
   FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink,
-  Lock, LockOpen
+  Lock, LockOpen, Mic
 } from 'lucide-react';
+import { 
+  computeSentenceWordSlots, 
+  getKaraokeWordProgress, 
+  WordProgressInfo 
+} from '../utils/karaokeTiming';
 import { 
   OFFICIAL_THAI_STREAMS_URL, 
   OFFICIAL_CHINESE_SEARCH_URL, 
@@ -32,6 +37,8 @@ interface DualVideoSyncAlignPlayerProps {
   isOffsetLocked?: boolean;
   /** 偏移量变化回调 */
   onOffsetChange?: (offset: number, locked: boolean) => void;
+  /** 打开管理后台 */
+  onOpenAdmin?: () => void;
 }
 
 declare global {
@@ -137,6 +144,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   offsetSeconds: propOffsetSeconds,
   isOffsetLocked: propIsOffsetLocked,
   onOffsetChange,
+  onOpenAdmin,
 }) => {
   // 苹果 iOS 设备标记 (WebKit 单音频专属策略，安卓与电脑绝不受限)
   const [isAppleDevice] = useState(() => isIOSDevice());
@@ -152,6 +160,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && (parsed.thaiVideoUrl || parsed.chineseVideoUrl)) {
+          // 自动修复旧版失效的 synthetic 404 直链
+          if (parsed.chineseVideoUrl?.includes('/video/2026/20261025') || parsed.chineseVideoUrl?.includes('video/2026')) {
+            parsed.chineseVideoUrl = 'https://media.dhamma.cn/9/9b/D26.86%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B410%E6%9C%8825%E6%97%A5.mp4';
+          }
           return parsed;
         }
       }
@@ -276,10 +288,18 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   // YouTube 播放器引用与状态
   const thaiPlayerRef = useRef<any>(null);
   const chinesePlayerRef = useRef<any>(null);
+  const chineseHtml5MediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
+  const [chineseMediaError, setChineseMediaError] = useState<boolean>(false);
   const isThaiReadyRef = useRef<boolean>(false);
   const isChineseReadyRef = useRef<boolean>(false);
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
+
+  // 当视频链接改变时，自动重置媒体错误状态
+  useEffect(() => {
+    setChineseMediaError(false);
+  }, [config.chineseVideoUrl]);
+
 
   const thaiVideoId = extractYouTubeId(config.thaiVideoUrl);
   const chineseVideoId = extractYouTubeId(config.chineseVideoUrl);
@@ -292,6 +312,47 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       (chineseVideoId && l.chineseVideoId === chineseVideoId)
     ) || curatedLessons[0];
   }, [curatedLessons, config.title, thaiVideoId, chineseVideoId]);
+
+  // 🎤 卡拉OK逐词高亮与交互演练样板状态
+  const [isKaraokeDemoPlaying, setIsKaraokeDemoPlaying] = useState<boolean>(false);
+  const [karaokeDemoTime, setKaraokeDemoTime] = useState<number>(0);
+  const [karaokeDemoSpeed, setKaraokeDemoSpeed] = useState<number>(1.0);
+  const [isKaraokeEnabled] = useState<boolean>(true);
+
+  // 计算当前聚焦句子的所有单词时间槽 (按音节与泰文字符权重推演)
+  const currentWordSlots = useMemo(() => {
+    if (!currentLine) return [];
+    return computeSentenceWordSlots(currentLine);
+  }, [currentLine]);
+
+  // 当当前句改变时，将卡拉OK演示时间重置为新句起点
+  useEffect(() => {
+    if (currentLine) {
+      setKaraokeDemoTime(currentLine.secondsStart);
+    }
+  }, [currentLineIndex, currentLine?.secondsStart]);
+
+  // 决定用于卡拉OK高亮的有效播放时间戳
+  const effectiveKaraokeTime = useMemo(() => {
+    if (isKaraokeDemoPlaying) {
+      return karaokeDemoTime;
+    }
+    if (isThaiPlaying || isChinesePlaying) {
+      return currentTime;
+    }
+    if (karaokeDemoTime > 0) {
+      return karaokeDemoTime;
+    }
+    return currentLine ? currentLine.secondsStart : 0;
+  }, [isKaraokeDemoPlaying, karaokeDemoTime, isThaiPlaying, isChinesePlaying, currentTime, currentLine]);
+
+  // 计算各个词块的卡拉OK彩色线条进度与当前发音词索引
+  const { activeSlotIndex, wordProgressMap } = useMemo(() => {
+    if (!isKaraokeEnabled) {
+      return { activeSlotIndex: -1, wordProgressMap: {} };
+    }
+    return getKaraokeWordProgress(effectiveKaraokeTime, currentWordSlots);
+  }, [effectiveKaraokeTime, currentWordSlots, isKaraokeEnabled]);
 
   // 提示信息
   const triggerToast = (msg: string) => {
@@ -340,6 +401,15 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         thaiPlayerRef.current?.setVolume?.(tVol);
         chinesePlayerRef.current?.unMute?.();
         chinesePlayerRef.current?.setVolume?.(cVol);
+      }
+
+      if (chineseHtml5MediaRef.current) {
+        if (focus === 'thai') {
+          chineseHtml5MediaRef.current.muted = true;
+        } else {
+          chineseHtml5MediaRef.current.muted = false;
+          chineseHtml5MediaRef.current.volume = cVol / 100;
+        }
       }
     } catch {
       // ignore
@@ -619,6 +689,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     try {
       chinesePlayerRef.current?.seekTo?.(targetChinese, true);
     } catch {}
+    if (chineseHtml5MediaRef.current) {
+      try {
+        chineseHtml5MediaRef.current.currentTime = targetChinese;
+      } catch {}
+    }
 
     const idx = activeSubtitles.findIndex(
       (sub) => clampedThai >= sub.secondsStart && clampedThai < sub.secondsEnd
@@ -660,11 +735,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   // 核心操作 1：双视频同时播放 / 同时暂停
   const handleToggleDualPlay = useCallback(() => {
     const isThaiActive = thaiPlayerRef.current?.getPlayerState?.() === 1;
-    const isChineseActive = chinesePlayerRef.current?.getPlayerState?.() === 1;
+    const isChineseActive = chinesePlayerRef.current?.getPlayerState?.() === 1 || 
+      (chineseHtml5MediaRef.current && !chineseHtml5MediaRef.current.paused);
 
     if (isThaiActive || isChineseActive) {
       try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
       try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.pause(); } catch {}
       setIsBothPlaying(false);
       setIsThaiPlaying(false);
       setIsChinesePlaying(false);
@@ -672,6 +749,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       // 双轨齐播：保持用户手动对齐好的当前位置直接开播，中文轨迹不再做任何自动调整
       try { thaiPlayerRef.current?.playVideo?.(); } catch {}
       try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.play(); } catch {}
       setIsBothPlaying(true);
       setIsThaiPlaying(true);
       setIsChinesePlaying(true);
@@ -694,12 +772,15 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   // 核心操作 3：中文视频单独播放/暂停
   const handleToggleChineseAlone = useCallback(() => {
-    const isPlaying = chinesePlayerRef.current?.getPlayerState?.() === 1;
+    const isPlaying = chinesePlayerRef.current?.getPlayerState?.() === 1 ||
+      (chineseHtml5MediaRef.current && !chineseHtml5MediaRef.current.paused);
     if (isPlaying) {
       try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.pause(); } catch {}
       setIsChinesePlaying(false);
     } else {
       try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.play(); } catch {}
       setIsChinesePlaying(true);
       applyAudioSettings(audioFocus, thaiVol, chineseVol);
     }
@@ -715,11 +796,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     if (audioFocus === 'both') {
       try { thaiPlayerRef.current?.playVideo?.(); } catch {}
       try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.play(); } catch {}
       setIsBothPlaying(true);
       setIsThaiPlaying(true);
       setIsChinesePlaying(true);
     } else if (audioFocus === 'thai') {
       try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.pause(); } catch {}
       try { thaiPlayerRef.current?.playVideo?.(); } catch {}
       setIsBothPlaying(false);
       setIsChinesePlaying(false);
@@ -727,6 +810,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     } else {
       try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
       try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+      try { chineseHtml5MediaRef.current?.play(); } catch {}
       setIsBothPlaying(false);
       setIsThaiPlaying(false);
       setIsChinesePlaying(true);
@@ -854,6 +938,92 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       onOpenKeyboard(thaiText);
     }
   };
+
+  // 🎤 卡拉OK交互演练微步驱动器 (40ms 精确插值)
+  useEffect(() => {
+    if (!isKaraokeDemoPlaying || !currentLine) return;
+
+    const intervalMs = 40;
+    const stepSec = (intervalMs / 1000) * karaokeDemoSpeed;
+
+    const timer = setInterval(() => {
+      setKaraokeDemoTime(prev => {
+        const next = prev + stepSec;
+        if (next >= currentLine.secondsEnd) {
+          setIsKaraokeDemoPlaying(false);
+          return currentLine.secondsEnd;
+        }
+        return next;
+      });
+    }, intervalMs);
+
+    return () => clearInterval(timer);
+  }, [isKaraokeDemoPlaying, karaokeDemoSpeed, currentLine]);
+
+  // 当真实 YouTube 视频开播时，自动终止独立演练模式
+  useEffect(() => {
+    if (isThaiPlaying || isChinesePlaying) {
+      setIsKaraokeDemoPlaying(false);
+    }
+  }, [isThaiPlaying, isChinesePlaying]);
+
+  // 卡拉OK交互演练：开始/暂停演练
+  const handleToggleKaraokeDemo = useCallback(() => {
+    if (!currentLine) return;
+
+    if (isKaraokeDemoPlaying) {
+      setIsKaraokeDemoPlaying(false);
+      triggerToast('⏸️ 已暂停卡拉OK演练');
+      return;
+    }
+
+    // 若视频正在播放，先暂停视频
+    try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+    try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+    setIsThaiPlaying(false);
+    setIsChinesePlaying(false);
+    setIsBothPlaying(false);
+
+    // 若演练时间已在句末或不在本句内，从句首重新开始
+    let startFrom = karaokeDemoTime;
+    if (startFrom >= currentLine.secondsEnd || startFrom < currentLine.secondsStart) {
+      startFrom = currentLine.secondsStart;
+      setKaraokeDemoTime(startFrom);
+    }
+
+    setIsKaraokeDemoPlaying(true);
+    // 朗读当前句泰语发音
+    handleSpeakText(currentLine.thai);
+    triggerToast('🎤 开始卡拉OK逐词同步演练 (点击任意单词可单独精听)');
+  }, [isKaraokeDemoPlaying, currentLine, karaokeDemoTime, handleSpeakText]);
+
+  // 重置卡拉OK演练
+  const handleResetKaraokeDemo = useCallback(() => {
+    if (!currentLine) return;
+    setIsKaraokeDemoPlaying(false);
+    setKaraokeDemoTime(currentLine.secondsStart);
+    triggerToast('🔄 已重置到句首起点');
+  }, [currentLine]);
+
+  // 点击单个词槽：定位并高亮发音
+  const handleSelectKaraokeSlot = useCallback((slotIndex: number) => {
+    if (!currentWordSlots || !currentWordSlots[slotIndex]) return;
+    const targetSlot = currentWordSlots[slotIndex];
+    setKaraokeDemoTime(targetSlot.startSec + 0.05);
+    handleSpeakText(targetSlot.word.thai);
+    if (onSelectWord) {
+      onSelectWord(targetSlot.word);
+    }
+  }, [currentWordSlots, handleSpeakText, onSelectWord]);
+
+  // 上一词 / 下一词步进
+  const handleStepKaraokeSlot = useCallback((direction: -1 | 1) => {
+    if (!currentWordSlots || currentWordSlots.length === 0) return;
+    let nextIdx = (activeSlotIndex === -1 ? 0 : activeSlotIndex) + direction;
+    if (nextIdx < 0) nextIdx = 0;
+    if (nextIdx >= currentWordSlots.length) nextIdx = currentWordSlots.length - 1;
+    handleSelectKaraokeSlot(nextIdx);
+  }, [currentWordSlots, activeSlotIndex, handleSelectKaraokeSlot]);
 
   // 智能无气口盲区字幕索引定位：覆盖句子间静音气口与轻微时间误差
   const findActiveSubtitleIndex = useCallback((timeSec: number, subs: SubtitleLine[]): number => {
@@ -1078,22 +1248,35 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setParseResult({ subtitles: [], totalParsed: 0 });
   };
 
-  // 应用粘贴的内容
-  const handleApplyPastedSubtitles = () => {
-    if (parseResult.totalParsed === 0) {
-      alert('未能识别到有效的法谈字幕行，请确认包含双语文本！');
-      return;
+  // 统一应用装载：同时更新双视频链接与法谈字幕
+  const handleApplyDiscourseAndMedia = () => {
+    // 1. 更新双视频链接与标题
+    const newThaiUrl = inputThaiUrl.trim() || config.thaiVideoUrl;
+    const newChineseUrl = inputChineseUrl.trim() || config.chineseVideoUrl;
+    const newTitle = inputTitle.trim() || parseResult.detectedTitle || config.title;
+
+    const updatedConf: DualVideoConfig = {
+      ...config,
+      thaiVideoUrl: newThaiUrl,
+      chineseVideoUrl: newChineseUrl,
+      title: newTitle,
+      offsetSeconds: offsetSeconds
+    };
+    saveConfig(updatedConf);
+
+    // 2. 如果解析出了有效字幕，则应用新字幕
+    if (parseResult.totalParsed > 0) {
+      saveSubtitles(parseResult.subtitles);
+      setCurrentLineIndex(0);
+      seekBothToTime(parseResult.subtitles[0].secondsStart);
     }
-    saveSubtitles(parseResult.subtitles);
-    if (parseResult.detectedTitle) {
-      const updatedConf = { ...config, title: parseResult.detectedTitle };
-      saveConfig(updatedConf);
-      setInputTitle(parseResult.detectedTitle);
-    }
-    setCurrentLineIndex(0);
-    seekBothToTime(parseResult.subtitles[0].secondsStart);
+
     setShowPasteModal(false);
-    triggerToast(`成功载入 ${parseResult.totalParsed} 句法谈！`);
+    triggerToast(
+      parseResult.totalParsed > 0 
+        ? `已成功装载双播视频链接与 ${parseResult.totalParsed} 句法谈字幕！`
+        : '已成功装载双播视频链接！'
+    );
   };
 
   // 还原默认课件
@@ -1157,46 +1340,33 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {/* 1. 装载法谈与视频链接 (核心一键弹窗，整合链接与字幕) */}
             <button
-              onClick={() => setShowPresetModal(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-              title="查看与调入官方预制课件（10月17日 1,198句 与 10月18日 746句原版对齐）"
-            >
-              <Library className="w-3.5 h-3.5" />
-              <span>📚 预制课件库</span>
-            </button>
-
-            <button
-              onClick={() => setShowPasteModal(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-              title="导入或更换法谈字幕 (支持拖拽文件与格式粘贴)"
+              onClick={() => {
+                setInputThaiUrl(config.thaiVideoUrl);
+                setInputChineseUrl(config.chineseVideoUrl);
+                setInputTitle(config.title);
+                setShowPasteModal(true);
+              }}
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+              title="点击装载双视频链接与法谈字幕"
             >
               <ClipboardPaste className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">📋 导入法谈 (SRT / LR)</span>
-              <span className="sm:hidden">📋 导入法谈</span>
+              <span>📥 装载法谈</span>
             </button>
 
+            {/* 2. 预制课件库 */}
             <button
-              onClick={() => setShowConfigDrawer(!showConfigDrawer)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#f0e6d2] hover:bg-[#e6d3ac] text-[#5b3f1e] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+              onClick={() => setShowPresetModal(true)}
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+              title="挑选官方及社群共学课件"
             >
-              <Settings className="w-3.5 h-3.5" />
-              <span>视频链接</span>
+              <Library className="w-3.5 h-3.5" />
+              <span>📚 课件库</span>
             </button>
-
-            {onGoToSlides && (
-              <button
-                onClick={onGoToSlides}
-                className="hidden sm:flex px-3 py-1.5 rounded-lg bg-[#b58940] hover:bg-[#9a7332] text-white text-xs font-semibold items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>🎴 共学讲义</span>
-              </button>
-            )}
           </div>
         </div>
       </div>
-
 
       {/* 提示气泡 */}
       {showSaveToast && (
@@ -1206,415 +1376,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
       )}
 
-      {/* 视频链接设置抽屉 */}
-      {showConfigDrawer && (
-        <div className="bg-[#fcfaf7] border-b border-[#e6d3ac] px-4 sm:px-6 py-4 shadow-inner">
-          <div className="max-w-7xl mx-auto space-y-4">
-            
-            {/* 抽屉头部 */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#e6d3ac]/60 pb-2.5">
-              <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4 text-[#b58940]" />
-                <h3 className="text-sm font-bold text-[#2d2a26]">
-                  中泰双视频链接与实况对照
-                </h3>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleRestoreDefault18Oct}
-                  className="text-xs text-amber-800 hover:text-amber-900 underline font-medium cursor-pointer"
-                >
-                  恢复 10月18日默认
-                </button>
-                <button
-                  onClick={() => setShowConfigDrawer(false)}
-                  className="px-2 py-1 rounded-md text-xs text-stone-600 hover:text-stone-900 hover:bg-stone-200/60 font-bold cursor-pointer transition"
-                >
-                  ✕ 关闭抽屉
-                </button>
-              </div>
-            </div>
-
-            {/* 1. 🎯 核心主功能：自定义填入视频链接与课题 (置顶显赫显示，拒绝折叠埋没) */}
-            <div className="p-4 rounded-2xl bg-white border border-[#d9c8a9] shadow-xs space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
-                  <h4 className="text-xs sm:text-sm font-bold text-stone-900">
-                    🎯 填入视频链接与法谈课题 (支持任意 YouTube、甘露雨、解脱园等视频)
-                  </h4>
-                </div>
-                <span className="text-[11px] text-stone-500">
-                  可任意更换中泰双轨链接，系统将自动加载视频并接入毫秒级同步器
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div>
-                  <label className="text-[11px] font-bold text-stone-700 flex items-center justify-between mb-1">
-                    <span>🇹🇭 泰文原版视频链接 / ID</span>
-                    <span className="text-[10px] text-amber-800 font-normal">主控基准</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={inputThaiUrl}
-                    onChange={(e) => setInputThaiUrl(e.target.value)}
-                    placeholder="例如: https://www.youtube.com/watch?v=F4-tJNYDpss 或 ID"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 font-mono transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold text-stone-700 flex items-center justify-between mb-1">
-                    <span>🇨🇳 中文同传视频链接 / ID</span>
-                    <span className="text-[10px] text-blue-700 font-normal">同步对照</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={inputChineseUrl}
-                    onChange={(e) => setInputChineseUrl(e.target.value)}
-                    placeholder="例如: https://www.youtube.com/watch?v=HR-O2XYifbI 或 ID"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-mono transition"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[11px] font-bold text-stone-700 flex items-center justify-between mb-1">
-                    <span>🏷️ 法谈课题名称 / 编号</span>
-                    <span className="text-[10px] text-stone-500 font-normal">界面抬头</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={inputTitle}
-                    onChange={(e) => setInputTitle(e.target.value)}
-                    placeholder="例如: 2026年10月18日实况开示"
-                    className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 transition"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-stone-100">
-                <div className="text-[11px] text-stone-500 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                  <span>支持 YouTube 完整链接、短链接 (youtu.be) 或 11 位纯视频 ID。</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setInputThaiUrl('');
-                      setInputChineseUrl('');
-                      setInputTitle('');
-                    }}
-                    className="px-3 py-1.5 rounded-xl text-stone-500 hover:text-stone-800 hover:bg-stone-100 text-xs font-medium transition cursor-pointer"
-                  >
-                    清空输入
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const updated = {
-                        ...config,
-                        thaiVideoUrl: inputThaiUrl.trim(),
-                        chineseVideoUrl: inputChineseUrl.trim(),
-                        title: inputTitle.trim() || '自定义法谈开示',
-                        offsetSeconds: offsetSeconds
-                      };
-                      saveConfig(updated);
-                      setShowConfigDrawer(false);
-                      triggerToast('已成功更新并装载自定义视频链接！');
-                    }}
-                    className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm hover:shadow transition cursor-pointer flex items-center gap-1.5"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>⚡ 保存并立即装载播放</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 2. ⏱️ 中泰视频毫秒级时间差校准与锁定中枢 (收纳在抽屉内部，不再外露在播放栏) */}
-            <div className="p-4 rounded-2xl bg-white border border-[#d9c8a9] shadow-xs space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-4 h-4 text-amber-600" />
-                  <h4 className="text-xs sm:text-sm font-bold text-stone-900">
-                    ⏱️ 中泰双视频时间差毫秒微调与锁定校准
-                  </h4>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono font-bold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-lg border border-amber-300">
-                    当前偏置: {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const nextLocked = !isOffsetLocked;
-                      setIsOffsetLocked(nextLocked);
-                      updateOffset(offsetSeconds, nextLocked);
-                      triggerToast(nextLocked ? '时差已锁定保存' : '时差已解锁');
-                    }}
-                    className={`px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer border ${
-                      isOffsetLocked
-                        ? 'bg-amber-500 border-amber-400 text-slate-950 font-black shadow-xs'
-                        : 'bg-stone-100 border-stone-300 text-stone-700 hover:bg-stone-200'
-                    }`}
-                  >
-                    {isOffsetLocked ? <Lock className="w-3.5 h-3.5" /> : <LockOpen className="w-3.5 h-3.5" />}
-                    <span>{isOffsetLocked ? '已锁定对齐' : '未锁定 (点击锁定)'}</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-100">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-stone-700 font-medium">精确时差输入:</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={offsetSeconds}
-                      onChange={(e) => {
-                        const val = parseFloat(e.target.value);
-                        if (!isNaN(val)) {
-                          updateOffset(val);
-                        }
-                      }}
-                      className="w-20 px-2 py-1 text-xs font-mono font-bold rounded-lg border border-stone-300 bg-stone-50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    />
-                    <span className="ml-1 text-xs text-stone-500 font-mono">秒</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(-1.0)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 -1.0s"
-                  >
-                    -1.0s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(-0.5)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 -0.5s"
-                  >
-                    -0.5s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(-0.1)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 -0.1s"
-                  >
-                    -0.1s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(0.1)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 +0.1s"
-                  >
-                    +0.1s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(0.5)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 +0.5s"
-                  >
-                    +0.5s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleNudgeOffset(1.0)}
-                    className="px-2 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-mono font-bold border border-stone-300 transition cursor-pointer"
-                    title="微调 +1.0s"
-                  >
-                    +1.0s
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      updateOffset(0.0);
-                      triggerToast('时差已归零 (0.0s)');
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-800 text-xs font-medium transition cursor-pointer"
-                  >
-                    归零
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. 🌟 官方实况精校对照列表 (一键装载官方已校准课件) */}
-            <div className="p-3.5 rounded-2xl bg-white border border-[#e6d3ac] space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-xs text-stone-900">
-                    🌟 官方实况精校对照列表 (点击直接装载双视频与字幕)
-                  </span>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-bold">
-                    官方精校
-                  </span>
-                </div>
-                <span className="text-[11px] text-stone-500">
-                  点击卡片立即同步调入中泰视频、基准时间差与逐句精校字幕
-                </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {OFFICIAL_PAIRED_DISCOURSES.map((paired) => {
-                  const isCurrentlyLoaded = config.thaiVideoUrl === paired.thaiVideoUrl || config.title.includes(paired.date);
-                  return (
-                    <div
-                      key={paired.id}
-                      className={`p-3.5 rounded-xl border transition ${
-                        isCurrentlyLoaded
-                          ? 'bg-amber-500/10 border-amber-500/60 ring-1 ring-amber-500/30'
-                          : 'bg-stone-50/70 border-stone-200 hover:border-amber-400 hover:bg-white'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-1.5 text-xs">
-                        <span className="font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded text-[11px]">
-                          📅 {paired.dateDisplay} 实况
-                        </span>
-                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded border border-emerald-300">
-                          {paired.subtitleStatusLabel}
-                        </span>
-                      </div>
-
-                      <div className="text-xs font-bold text-stone-900 line-clamp-1 mb-1">
-                        🇨🇳 {paired.chineseTitle}
-                      </div>
-                      <div className="text-[11px] text-amber-800 font-serif line-clamp-1 mb-2.5">
-                        🇹🇭 {paired.thaiTitle}
-                      </div>
-
-                      <div className="flex items-center justify-between pt-2 border-t border-stone-200/60 text-xs">
-                        <div className="text-[10px] font-mono text-stone-500">
-                          ID: {paired.thaiVideoId} ↔ {paired.chineseVideoId}
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newConf: DualVideoConfig = {
-                              title: paired.combinedTitle,
-                              thaiVideoUrl: paired.thaiVideoUrl,
-                              chineseVideoUrl: paired.chineseVideoUrl,
-                              offsetSeconds: paired.offsetSeconds,
-                              thaiVolume: 1.0,
-                              chineseVolume: chineseVol / 100
-                            };
-                            saveConfig(newConf);
-                            setOffsetSeconds(paired.offsetSeconds);
-                            onOffsetChange?.(paired.offsetSeconds, isOffsetLocked);
-                            setInputThaiUrl(paired.thaiVideoUrl);
-                            setInputChineseUrl(paired.chineseVideoUrl);
-                            setInputTitle(paired.combinedTitle);
-                            saveSubtitles(paired.subtitles);
-                            setCurrentLineIndex(0);
-                            setShowConfigDrawer(false);
-                            triggerToast(`已成功装载【${paired.dateDisplay}】双视频与${paired.sentenceCount}句全篇字幕！`);
-                          }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs ${
-                            isCurrentlyLoaded
-                              ? 'bg-amber-600 text-white'
-                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                          }`}
-                        >
-                          <Play className="w-3.5 h-3.5 fill-current" />
-                          <span>{isCurrentlyLoaded ? '正在放映此场' : '▶ 一键装载同步播放'}</span>
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 3. 🌿 弘法平台资源合集 (默认折叠，收录用户指定的 6 大官方与权威平台) */}
-            <details className="group rounded-2xl border border-stone-300/80 bg-white p-3.5 shadow-2xs">
-              <summary className="text-xs font-bold text-stone-800 hover:text-amber-900 cursor-pointer list-none flex items-center justify-between select-none">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">🌿</span>
-                  <span className="font-bold">解脱园及尊者法音平台资源直达（6 大权威官方平台 · 点击展开）</span>
-                </div>
-                <span className="text-amber-800 group-open:rotate-180 transition-transform text-xs font-bold">
-                  ▼
-                </span>
-              </summary>
-              <div className="pt-3 border-t border-stone-200 mt-2.5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                  {DHAMMA_EXTERNAL_PLATFORMS.map((platform) => (
-                    <a
-                      key={platform.id}
-                      href={platform.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="p-3 rounded-xl border border-stone-200 hover:border-amber-400 bg-stone-50/70 hover:bg-white transition flex items-center justify-between group shadow-2xs hover:shadow-xs"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        {renderPlatformIcon(platform.id)}
-                        <div className="min-w-0">
-                          <div className="font-bold text-xs text-stone-900 group-hover:text-amber-900 truncate">
-                            {platform.name}
-                          </div>
-                          <div className="text-[11px] font-mono text-stone-400 group-hover:text-stone-600 truncate mt-0.5">
-                            {platform.domain}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center text-stone-400 group-hover:text-amber-700 pl-2 shrink-0 transition">
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </details>
-
-            {/* 4. 泰文字幕两阶段演进与智能拉取指引 (默认折叠) */}
-            <details className="group rounded-2xl border border-amber-200/70 bg-amber-50/40 p-3.5">
-              <summary className="text-xs font-bold text-amber-900 hover:text-amber-950 cursor-pointer list-none flex items-center justify-between select-none">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                  <span>📖 泰文字幕演进机制与自动 ASR/人工精校说明（点击展开）</span>
-                </div>
-                <span className="text-amber-800 group-open:rotate-180 transition-transform text-xs">
-                  ▼
-                </span>
-              </summary>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-[11px] leading-relaxed pt-2.5 border-t border-amber-200/60 mt-2">
-                <div className="bg-white/90 p-2.5 rounded-xl border border-amber-200/60">
-                  <span className="font-bold text-stone-900 block mb-0.5">
-                    1. 新直播刚结束时 (自动生成字幕 / Auto ASR)：
-                  </span>
-                  <span className="text-stone-600">
-                    YouTube 系统会自动识别出泰语音轨，虽有断句，但生僻佛教巴利词汇可能不够精准。急需学习时，可从 YouTube 复制字幕文本直接导入，本放映机会自动补全朱拉音标与词典切词。
-                  </span>
-                </div>
-                <div className="bg-white/90 p-2.5 rounded-xl border border-emerald-200/60">
-                  <span className="font-bold text-emerald-900 block mb-0.5">
-                    2. 直播后数天 (官方人工精校字幕 / Manual CC)：
-                  </span>
-                  <span className="text-stone-600">
-                    寺庙基金会发布人工校准泰文字幕后，巴利术语 100% 严谨。预制课件库会自动更新收录，您无需任何繁琐操作，在「📚 预制课件库」或本抽屉一键载入即可享受人工精校体验。
-                  </span>
-                </div>
-              </div>
-            </details>
-
-          </div>
-        </div>
-      )}
-
       {/* 主界面内容 */}
-      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-5 space-y-4 sm:space-y-6 max-w-full box-border">
+      <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-4 space-y-4 sm:space-y-5 max-w-full box-border">
 
         {/* 1. 双视频视窗区域 (带各自的独立暂停/播放快捷键，方便听完一句手动打点暂停) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1743,10 +1506,122 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     </div>
                   )}
                 </>
+              ) : config.chineseVideoUrl?.includes('.mp4') ? (
+                <div className="w-full h-full flex items-center justify-center bg-black relative">
+                  {chineseMediaError ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-stone-900 text-stone-300 text-center space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl">
+                        ⚠️
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-white">该视频直链在当前窗口无法直接内嵌播放</h4>
+                        <p className="text-xs text-stone-400 max-w-sm">
+                          源站跨域防盗链策略限制直接渲染。您可以点击在新窗口打开源视频，或恢复官方基准伴播源。
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 pt-2">
+                        <a
+                          href={config.chineseVideoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          在新窗口打开源视频
+                        </a>
+                        <button
+                          onClick={handleRestoreDefault18Oct}
+                          className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold transition border border-stone-700 cursor-pointer"
+                        >
+                          恢复官方基准课件
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <video
+                      key={config.chineseVideoUrl}
+                      ref={chineseHtml5MediaRef as any}
+                      src={encodeURI(config.chineseVideoUrl)}
+                      controls
+                      playsInline
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain"
+                      onPlay={() => setIsChinesePlaying(true)}
+                      onPause={() => setIsChinesePlaying(false)}
+                      onError={() => {
+                        console.warn('HTML5 Video load failed:', config.chineseVideoUrl);
+                        setChineseMediaError(true);
+                      }}
+                    />
+                  )}
+                </div>
+              ) : config.chineseVideoUrl?.includes('.mp3') ? (
+                <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-stone-900 to-slate-900 text-amber-200">
+                  {chineseMediaError ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center space-y-3">
+                      <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl">
+                        ⚠️
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-bold text-white">该音频直链无法在当前窗口直接推流</h4>
+                        <p className="text-xs text-stone-400 max-w-sm">
+                          源站跨域策略限制，建议在新窗口打开收听或切换回官方基准课件。
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 pt-2">
+                        <a
+                          href={config.chineseVideoUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition flex items-center gap-1.5"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          在新窗口打开音频
+                        </a>
+                        <button
+                          onClick={handleRestoreDefault18Oct}
+                          className="px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold transition border border-stone-700"
+                        >
+                          恢复官方基准课件
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-3 bg-stone-800/80 p-3 rounded-2xl border border-stone-700 max-w-md w-full">
+                        <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                          🎧
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-xs font-bold text-white truncate">
+                            {config.title || '中文同传随动音频 (MP3)'}
+                          </div>
+                          <div className="text-[10px] text-amber-400 font-mono mt-0.5">
+                            {isChinesePlaying ? '▶ 正在伴随发声' : '⏸ 已就绪 / 暂停'}
+                          </div>
+                        </div>
+                      </div>
+                      <audio
+                        key={config.chineseVideoUrl}
+                        ref={chineseHtml5MediaRef as any}
+                        src={encodeURI(config.chineseVideoUrl)}
+                        controls
+                        referrerPolicy="no-referrer"
+                        className="w-full max-w-md mt-3 h-8"
+                        onPlay={() => setIsChinesePlaying(true)}
+                        onPause={() => setIsChinesePlaying(false)}
+                        onError={() => {
+                          console.warn('HTML5 Audio load failed:', config.chineseVideoUrl);
+                          setChineseMediaError(true);
+                        }}
+                      />
+                    </>
+                  )}
+                </div>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 p-6 text-center text-xs">
                   <Video className="w-8 h-8 text-stone-600 mb-2" />
-                  <p>请输入有效的中文 YouTube 视频链接</p>
+                  <p>请输入有效的中文 YouTube 视频链接或 MP4/MP3 直链</p>
                 </div>
               )}
             </div>
@@ -1840,7 +1715,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
         )}
 
-        {/* 2. 当前聚焦精读句大卡 (Hero Active Sentence Stage) */}
+        {/* 2. 当前聚焦精读句大卡 (Hero Active Sentence Stage: 集成卡拉OK交互演练与逐词彩色进度线条) */}
         {currentLine && (
           <div className="bg-gradient-to-r from-amber-50/80 via-white to-amber-50/50 rounded-2xl p-5 sm:p-6 shadow-sm border border-amber-200/90 relative">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
@@ -1885,38 +1760,209 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               </div>
             </div>
 
-            {/* 泰文超大字符 */}
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#2d2a26] leading-relaxed tracking-wide my-2">
-              {currentLine.thai}
+            {/* 🎤 卡拉OK逐词高亮与交互演练样板栏 (满足用户直接试听、点击、测试彩色线条的需求) */}
+            <div className="my-3 p-3 rounded-xl bg-amber-500/10 border border-amber-300/80 flex flex-wrap items-center justify-between gap-2.5">
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* 试听演练主控按钮 */}
+                <button
+                  type="button"
+                  onClick={handleToggleKaraokeDemo}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer ${
+                    isKaraokeDemoPlaying
+                      ? 'bg-amber-600 hover:bg-amber-700 text-white ring-2 ring-amber-400 animate-pulse'
+                      : 'bg-[#b58940] hover:bg-[#9a7231] text-white'
+                  }`}
+                  title="点击立即开始当前句的卡拉OK彩色逐词高亮演练"
+                >
+                  {isKaraokeDemoPlaying ? (
+                    <>
+                      <Pause className="w-3.5 h-3.5" />
+                      <span>暂停演练</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="w-3.5 h-3.5" />
+                      <span>🎤 试听卡拉OK</span>
+                    </>
+                  )}
+                </button>
+
+                {/* 重置回句首 */}
+                <button
+                  type="button"
+                  onClick={handleResetKaraokeDemo}
+                  className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-amber-100 text-stone-700 border border-stone-300 text-xs font-semibold flex items-center gap-1 shadow-xs transition cursor-pointer"
+                  title="重置演练进度回句首起点"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-stone-500" />
+                  <span>重置</span>
+                </button>
+
+                {/* 上一词 / 下一词 */}
+                <div className="flex items-center rounded-lg bg-white border border-stone-300 overflow-hidden shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleStepKaraokeSlot(-1)}
+                    className="px-2 py-1 hover:bg-amber-50 text-stone-700 text-xs font-semibold border-r border-stone-200 transition cursor-pointer flex items-center gap-0.5"
+                    title="高亮上一词并朗读"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    <span>上词</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleStepKaraokeSlot(1)}
+                    className="px-2 py-1 hover:bg-amber-50 text-stone-700 text-xs font-semibold transition cursor-pointer flex items-center gap-0.5"
+                    title="高亮下一词并朗读"
+                  >
+                    <span>下词</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* 演练倍速选择 */}
+                <div className="flex items-center bg-white rounded-lg border border-stone-300 p-0.5 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={() => setKaraokeDemoSpeed(0.75)}
+                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition cursor-pointer ${
+                      karaokeDemoSpeed === 0.75 ? 'bg-amber-500 text-white' : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    0.75x 慢速
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setKaraokeDemoSpeed(1.0)}
+                    className={`px-2 py-0.5 rounded text-[11px] font-bold transition cursor-pointer ${
+                      karaokeDemoSpeed === 1.0 ? 'bg-amber-500 text-white' : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    1.0x 标准
+                  </button>
+                </div>
+              </div>
+
+              {/* 实时状态提示 */}
+              <div className="flex items-center gap-2 text-xs">
+                {activeSlotIndex >= 0 && currentWordSlots[activeSlotIndex] ? (
+                  <span className="flex items-center gap-1.5 font-medium text-amber-900 bg-white/90 px-2.5 py-1 rounded-full border border-amber-300/80 shadow-xs">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                    <span>第 {activeSlotIndex + 1}/{currentWordSlots.length} 词:</span>
+                    <span className="font-bold text-[#2d2a26]">{currentWordSlots[activeSlotIndex].word.thai}</span>
+                    <span className="text-[#b58940] font-mono text-[11px]">/{currentWordSlots[activeSlotIndex].word.romanization}/</span>
+                  </span>
+                ) : (
+                  <span className="text-stone-500 text-[11px]">
+                    💡 点击任意单词或按“试听卡拉OK”立即体验逐词彩色线条
+                  </span>
+                )}
+              </div>
             </div>
 
-            {/* 逐词泰中对照与朱拉隆功音标 */}
+            {/* 泰文超大字符与句内卡拉OK高亮 */}
+            <div className="text-2xl sm:text-3xl font-extrabold text-[#2d2a26] leading-relaxed tracking-wide my-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+              {currentWordSlots.length > 0 ? (
+                currentWordSlots.map((slot, sIdx) => {
+                  const pInfo = wordProgressMap[slot.wordId] || { progress: 0, status: 'pending' };
+                  const isActive = pInfo.status === 'active';
+                  const isDone = pInfo.status === 'completed';
+                  return (
+                    <span
+                      key={slot.wordId}
+                      onClick={() => handleSelectKaraokeSlot(sIdx)}
+                      className={`relative inline-block cursor-pointer transition-all duration-150 group ${
+                        isActive
+                          ? 'text-amber-900 scale-[1.03] font-black'
+                          : isDone
+                          ? 'text-stone-800'
+                          : 'text-stone-700 hover:text-stone-900'
+                      }`}
+                      title={`点击定格并朗读：${slot.word.thai}`}
+                    >
+                      <span>{slot.word.thai}</span>
+                      {/* 文字下方彩色卡拉OK进度线条 */}
+                      <span className="block w-full h-[3px] bg-stone-200/60 rounded-full overflow-hidden mt-0.5 relative">
+                        <span
+                          className={`block h-full rounded-full transition-all duration-75 ${
+                            isActive
+                              ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 shadow-[0_0_8px_rgba(245,158,11,0.9)]'
+                              : isDone
+                              ? 'bg-emerald-500'
+                              : 'bg-transparent'
+                          }`}
+                          style={{ width: `${pInfo.progress}%` }}
+                        />
+                      </span>
+                    </span>
+                  );
+                })
+              ) : (
+                <span>{currentLine.thai}</span>
+              )}
+            </div>
+
+            {/* 逐词泰中对照与朱拉隆功音标 (卡拉OK彩色线条强化) */}
             {currentLine.words && currentLine.words.length > 0 && (
               <div className="my-3.5 flex flex-wrap gap-2 items-end">
-                {currentLine.words.map(w => (
-                  <button
-                    key={w.id}
-                    onClick={() => {
-                      if (onSelectWord) onSelectWord(w);
-                      else handleSpeakText(w.thai);
-                    }}
-                    className={`group relative flex flex-col items-center border rounded-xl px-2.5 py-1.5 shadow-sm transition text-left cursor-pointer ${
-                      w.isCore
-                        ? 'bg-amber-500/10 border-amber-500/40 hover:bg-amber-500/20'
-                        : 'bg-white hover:bg-amber-50/80 border-amber-200/80'
-                    }`}
-                    title={`点击查看生词释义并朗读: ${w.thai}`}
-                  >
-                    <span className="font-bold text-base text-[#2d2a26] leading-tight">{w.thai}</span>
-                    <span className="text-[11px] font-mono text-[#b58940] mt-0.5">/{w.romanization}/</span>
-                    <span className="text-[11px] font-medium text-[#7a6f5f] group-hover:text-amber-900 mt-0.5">{w.chinese}</span>
-                    {w.isCore && (
-                      <span className="mt-0.5 px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-800">
-                        核心
+                {currentLine.words.map((w, wIdx) => {
+                  const pInfo = wordProgressMap[w.id || `word_${wIdx}`] || { progress: 0, status: 'pending' };
+                  const isActive = pInfo.status === 'active';
+                  const isDone = pInfo.status === 'completed';
+                  return (
+                    <button
+                      key={w.id || `w_${wIdx}`}
+                      onClick={() => handleSelectKaraokeSlot(wIdx)}
+                      className={`group relative flex flex-col items-center border rounded-xl px-2.5 py-1.5 shadow-sm transition-all duration-150 text-left cursor-pointer min-w-[72px] ${
+                        isActive
+                          ? 'bg-gradient-to-b from-amber-50 to-amber-100/90 border-amber-500 ring-2 ring-amber-400/80 shadow-md shadow-amber-200/50 scale-[1.04]'
+                          : isDone
+                          ? 'bg-emerald-50/40 border-emerald-300/80 hover:bg-emerald-50/70'
+                          : w.isCore
+                          ? 'bg-amber-500/10 border-amber-500/40 hover:bg-amber-500/20'
+                          : 'bg-white hover:bg-amber-50/80 border-amber-200/80'
+                      }`}
+                      title={`点击查看生词释义并朗读: ${w.thai}`}
+                    >
+                      <span className={`font-bold text-base leading-tight transition-colors ${
+                        isActive ? 'text-amber-950 font-extrabold' : 'text-[#2d2a26]'
+                      }`}>
+                        {w.thai}
                       </span>
-                    )}
-                  </button>
-                ))}
+                      <span className="text-[11px] font-mono text-[#b58940] mt-0.5">/{w.romanization}/</span>
+                      <span className="text-[11px] font-medium text-[#7a6f5f] group-hover:text-amber-900 mt-0.5">{w.chinese}</span>
+                      
+                      {/* 核心词标记或正在发音发光标记 */}
+                      <div className="flex items-center gap-1 mt-1">
+                        {isActive && (
+                          <span className="px-1.5 py-0.2 rounded text-[8px] font-extrabold bg-amber-500 text-white animate-pulse shadow-xs flex items-center gap-0.5">
+                            <Mic className="w-2.5 h-2.5" />
+                            <span>发音中</span>
+                          </span>
+                        )}
+                        {w.isCore && (
+                          <span className="px-1 py-0.2 rounded text-[8px] font-bold bg-amber-500/20 text-amber-800">
+                            核心
+                          </span>
+                        )}
+                      </div>
+
+                      {/* 文字下方彩色卡拉OK进度线条 (满足用户要求) */}
+                      <div className="w-full h-1.5 bg-stone-200/90 rounded-full overflow-hidden mt-1.5 relative">
+                        <div
+                          className={`h-full rounded-full transition-all duration-75 ${
+                            isActive
+                              ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 shadow-[0_0_8px_rgba(245,158,11,0.9)]'
+                              : isDone
+                              ? 'bg-emerald-500'
+                              : 'bg-transparent'
+                          }`}
+                          style={{ width: `${pInfo.progress}%` }}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
 
@@ -2076,22 +2122,45 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
                     {sub.words && sub.words.length > 0 && isActive && (
                       <div className="my-2 flex flex-wrap gap-1.5 items-end">
-                        {sub.words.map(w => (
-                          <span
-                            key={w.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (onSelectWord) onSelectWord(w);
-                              else handleSpeakText(w.thai);
-                            }}
-                            className="inline-flex flex-col items-center bg-white/90 border border-amber-300/80 px-2 py-1 rounded-lg text-left shadow-xs cursor-pointer hover:bg-amber-100 transition"
-                            title={`点击查看生词: ${w.thai}`}
-                          >
-                            <span className="font-bold text-xs text-[#2d2a26]">{w.thai}</span>
-                            <span className="text-[10px] font-mono text-[#b58940]">/{w.romanization}/</span>
-                            <span className="text-[10px] text-[#7a6f5f] font-medium">{w.chinese}</span>
-                          </span>
-                        ))}
+                        {sub.words.map((w, wIdx) => {
+                          const pInfo = wordProgressMap[w.id || `word_${wIdx}`] || { progress: 0, status: 'pending' };
+                          const isWordActive = pInfo.status === 'active';
+                          const isWordDone = pInfo.status === 'completed';
+                          return (
+                            <span
+                              key={w.id || `sub_w_${wIdx}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectKaraokeSlot(wIdx);
+                              }}
+                              className={`inline-flex flex-col items-center px-2 py-1 rounded-lg text-left shadow-xs cursor-pointer transition ${
+                                isWordActive
+                                  ? 'bg-amber-100/90 border border-amber-500 ring-1 ring-amber-400 scale-[1.02]'
+                                  : isWordDone
+                                  ? 'bg-emerald-50/50 border border-emerald-300'
+                                  : 'bg-white/90 border border-amber-300/80 hover:bg-amber-100'
+                              }`}
+                              title={`点击查看生词并跟读: ${w.thai}`}
+                            >
+                              <span className="font-bold text-xs text-[#2d2a26]">{w.thai}</span>
+                              <span className="text-[10px] font-mono text-[#b58940]">/{w.romanization}/</span>
+                              <span className="text-[10px] text-[#7a6f5f] font-medium">{w.chinese}</span>
+                              {/* 列表中的微型卡拉OK彩色线条 */}
+                              <div className="w-full h-1 bg-stone-200/80 rounded-full overflow-hidden mt-1 relative">
+                                <div
+                                  className={`h-full rounded-full transition-all duration-75 ${
+                                    isWordActive
+                                      ? 'bg-gradient-to-r from-amber-500 to-amber-600'
+                                      : isWordDone
+                                      ? 'bg-emerald-500'
+                                      : 'bg-transparent'
+                                  }`}
+                                  style={{ width: `${pInfo.progress}%` }}
+                                />
+                              </div>
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
 
@@ -2415,22 +2484,22 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
       </div>
 
-      {/* 5. 导入新法谈弹窗 (支持本地文件直接读取与手动粘贴) */}
+      {/* 5. 装载法谈与双视频弹窗 (统一整合链接装载与法谈字幕于同一弹窗) */}
       {showPasteModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-[#d9c8a9] p-5 sm:p-6 space-y-4">
             {/* 弹窗头部 */}
             <div className="flex items-center justify-between border-b border-stone-200 pb-3">
               <div className="flex items-center gap-2.5">
-                <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                  <FolderOpen className="w-4 h-4" />
+                <span className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                  <ClipboardPaste className="w-5 h-5" />
                 </span>
                 <div>
-                  <h3 className="text-base font-bold text-[#2d2a26]">
-                    导入法谈课件 / 字幕文件
+                  <h3 className="text-base font-bold text-stone-900">
+                    装载法谈与双视频 (Load Discourse & Media)
                   </h3>
-                  <p className="text-[11px] text-[#7a6f5f]">
-                    支持官方精校一键拉取、直通官方合集与本地文件秒级解析
+                  <p className="text-xs text-stone-500">
+                    录入双播链接与法谈字幕，确认后一键秒级装载并同步开播
                   </p>
                 </div>
               </div>
@@ -2442,335 +2511,205 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               </button>
             </div>
 
-            {/* 1. 官方频道直接直达链接 (方便师兄师姐直接点击进入浏览最新直播，零复制粘贴困扰) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <a
-                href={OFFICIAL_THAI_STREAMS_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="p-3 rounded-xl bg-amber-50/90 hover:bg-amber-100 border border-amber-300 flex items-center justify-between group transition shadow-2xs"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
-                    ▶
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-stone-900 group-hover:text-amber-950 flex items-center gap-1">
-                      <span>🇹🇭 尊者泰文直播合集</span>
-                      <ExternalLink className="w-3 h-3 text-stone-400 group-hover:text-amber-700" />
-                    </div>
-                    <p className="text-[10px] text-stone-600 mt-0.5">
-                      @luangpupramote/streams 官方原版
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[11px] font-bold text-amber-900 bg-white px-2 py-0.5 rounded-md border border-amber-200">
-                  直接点进 ↗
+            {/* 1. 双视频音频源链接装载 */}
+            <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                  <Video className="w-4 h-4 text-amber-700" />
+                  <span>1. 双视频 / 音频链接</span>
                 </span>
-              </a>
-
-              <a
-                href={OFFICIAL_CHINESE_SEARCH_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="p-3 rounded-xl bg-red-50/90 hover:bg-red-100 border border-red-200 flex items-center justify-between group transition shadow-2xs"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
-                    🇨🇳
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-stone-900 group-hover:text-red-950 flex items-center gap-1">
-                      <span>🇨🇳 解脱园中文最新合集</span>
-                      <ExternalLink className="w-3 h-3 text-stone-400 group-hover:text-red-700" />
-                    </div>
-                    <p className="text-[10px] text-stone-600 mt-0.5">
-                      解脱园 @JieTuoYuan 官方频道
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[11px] font-bold text-red-900 bg-white px-2 py-0.5 rounded-md border border-red-200">
-                  直接点进 ↗
-                </span>
-              </a>
-            </div>
-
-            {/* 2. 🌟 一键拉取官方人工精校字幕 */}
-            <div className="p-3.5 rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50/50 to-stone-50 border border-emerald-300 space-y-2.5 shadow-2xs">
-              <div className="flex flex-wrap items-center justify-between gap-1.5">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-950">
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <span>🌟 官方人工精校字幕直通拉取</span>
-                </div>
-                <span className="text-[10px] bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-full font-bold">
-                  官方人工审定 · 术语100%校准
+                <span className="text-[10px] text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-bold">
+                  支持 YouTube / MP4 / MP3
                 </span>
               </div>
-              <p className="text-[11px] text-stone-600 leading-relaxed">
-                官方人工精校字幕已与视频精准对齐，点击下方卡片可直接调入播放器：
-              </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-0.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label className="text-[11px] font-bold text-stone-700 block mb-1">
+                    🇹🇭 泰文原版母带 (YouTube 链接 / ID)
+                  </label>
+                  <input
+                    type="text"
+                    value={inputThaiUrl}
+                    onChange={(e) => setInputThaiUrl(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=F4-tJNYDpss"
+                    className="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[11px] font-bold text-stone-700 block mb-1">
+                    🇨🇳 中文随动伴播 (YouTube / MP4 / MP3 直链)
+                  </label>
+                  <input
+                    type="text"
+                    value={inputChineseUrl}
+                    onChange={(e) => setInputChineseUrl(e.target.value)}
+                    placeholder="例如: https://media.dhamma.cn/video/xxx.mp4"
+                    className="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. 官方精选课件一键快速填充 (同时填入链接与精校字幕) */}
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-1.5">
+              <span className="text-[11px] font-bold text-stone-600 block">
+                🌟 快捷填入官方精校双播课件:
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {OFFICIAL_PAIRED_DISCOURSES.map((discourse) => (
-                  <div
+                  <button
                     key={discourse.id}
-                    className="p-3 rounded-xl bg-white/95 border border-emerald-200 hover:border-emerald-400 transition flex flex-col justify-between gap-2.5 shadow-2xs"
+                    type="button"
+                    onClick={() => {
+                      setInputThaiUrl(discourse.thaiVideoUrl);
+                      setInputChineseUrl(discourse.chineseVideoUrl);
+                      setInputTitle(discourse.combinedTitle);
+                      setOffsetSeconds(discourse.offsetSeconds);
+                      onOffsetChange?.(discourse.offsetSeconds, isOffsetLocked);
+                      // 填充到解析结果中
+                      setParseResult({
+                        subtitles: discourse.subtitles,
+                        totalParsed: discourse.subtitles.length,
+                        detectedTitle: discourse.combinedTitle
+                      });
+                      setPastedText(
+                        discourse.subtitles.slice(0, 50).map((s, idx) => 
+                          `${idx + 1}\n${s.timeStart} --> ${s.timeEnd}\n${s.thai}\n${s.chinese}`
+                        ).join('\n\n')
+                      );
+                      triggerToast(`已调入【${discourse.dateDisplay}】双视频链接与精校字幕！`);
+                    }}
+                    className="p-2 rounded-lg bg-white hover:bg-amber-50/80 border border-stone-200 hover:border-amber-400 text-left transition cursor-pointer flex items-center justify-between"
                   >
                     <div>
-                      <div className="flex items-center justify-between text-[11px] font-bold mb-1">
-                        <span className="text-emerald-900 font-mono">📅 {discourse.dateDisplay}</span>
-                        <span className="text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded text-[10px] font-bold">
-                          {discourse.sentenceCount} 句全篇
-                        </span>
-                      </div>
                       <div className="text-xs font-bold text-stone-900 line-clamp-1">
-                        🇨🇳 {discourse.chineseTitle}
+                        📅 {discourse.dateDisplay} {discourse.chineseTitle}
                       </div>
-                      <div className="text-[10px] text-amber-800 font-serif line-clamp-1 mt-0.5">
-                        🇹🇭 {discourse.thaiTitle}
+                      <div className="text-[10px] text-stone-500">
+                        {discourse.sentenceCount} 句全篇对齐
                       </div>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newConf: DualVideoConfig = {
-                          title: discourse.combinedTitle,
-                          thaiVideoUrl: discourse.thaiVideoUrl,
-                          chineseVideoUrl: discourse.chineseVideoUrl,
-                          offsetSeconds: discourse.offsetSeconds,
-                          thaiVolume: 1.0,
-                          chineseVolume: chineseVol / 100
-                        };
-                        saveConfig(newConf);
-                        setOffsetSeconds(discourse.offsetSeconds);
-                        onOffsetChange?.(discourse.offsetSeconds, isOffsetLocked);
-                        setInputThaiUrl(discourse.thaiVideoUrl);
-                        setInputChineseUrl(discourse.chineseVideoUrl);
-                        setInputTitle(discourse.combinedTitle);
-                        saveSubtitles(discourse.subtitles);
-                        setCurrentLineIndex(0);
-                        setShowPasteModal(false);
-                        triggerToast(`已一键拉取装载【${discourse.dateDisplay}】${discourse.sentenceCount}句官方人工精校字幕！`);
-                      }}
-                      className="w-full py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-200" />
-                      <span>一键载入此篇精校 ({discourse.sentenceCount}句)</span>
-                    </button>
-                  </div>
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100/70 px-1.5 py-0.5 rounded">
+                      填入
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* 3. 泰文字幕两阶段演进与智能拉取指引 */}
-            <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/90 text-xs text-stone-700 space-y-1.5">
-              <div className="font-bold text-amber-900 flex items-center gap-1.5 text-xs">
-                <span>💡</span>
-                <span>泰文字幕两阶段演进逻辑（为什么优先推荐官方人工字幕）：</span>
+            {/* 3. 本地文件上传与字幕内容 */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                  <FileText className="w-4 h-4 text-amber-700" />
+                  <span>2. 法谈字幕文件 / 文本</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(AI_SRT_CONVERSION_PROMPT);
+                    triggerToast('已复制 AI 转换提示词！可发给 AI 批量生成朱拉音标字幕');
+                  }}
+                  className="text-[11px] text-amber-800 hover:underline cursor-pointer flex items-center gap-1"
+                >
+                  <Copy className="w-3 h-3" />
+                  <span>复制 AI 转换提示词</span>
+                </button>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] leading-relaxed">
-                <div className="bg-white/90 p-2 rounded-lg border border-amber-200/60">
-                  <span className="font-bold text-stone-900 block mb-0.5">
-                    1. 初期自动字幕 (Auto-generated ASR)：
-                  </span>
-                  <span className="text-stone-600">
-                    直播刚结束时由 YouTube 自动生成，虽有时间轴，但对佛学巴利术语常有断句或识别误差。若急需学习，可直接拖入或粘贴进下方，本机会自动用朱拉音标和词典补齐。
-                  </span>
-                </div>
-                <div className="bg-white/90 p-2 rounded-lg border border-emerald-200/60">
-                  <span className="font-bold text-emerald-900 block mb-0.5">
-                    2. 后期人工精校 (Official Manual CC)：
-                  </span>
-                  <span className="text-stone-600">
-                    数天后寺庙团队发布人工听写审校字幕，巴利佛学术语严谨无误。本放映机已自动集成，直接点击上方【一键载入】即可享受高品质对齐体验。
-                  </span>
-                </div>
-              </div>
-            </div>
 
-            {/* 本地文件拖拽上传区 (核心推荐区) */}
-            <input
-              type="file"
-              ref={modalFileInputRef}
-              className="hidden"
-              accept=".srt,.txt,.vtt,.tsv,.csv,.json,.lrc,.sub,.ass,.ssa,text/plain,text/*,application/json"
-              onChange={handleFileInputChange}
-            />
+              {/* 上传文件区域 */}
+              <input
+                type="file"
+                ref={modalFileInputRef}
+                className="hidden"
+                accept=".srt,.txt,.vtt,.tsv,.csv,.json,.lrc,text/plain"
+                onChange={handleFileInputChange}
+              />
 
-            <div
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => modalFileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-2xl p-6 text-center transition cursor-pointer ${
-                isDragging
-                  ? 'border-emerald-500 bg-emerald-50/80 scale-[1.01]'
-                  : uploadedFileInfo
-                  ? 'border-emerald-400 bg-emerald-50/30 hover:bg-emerald-50/50'
-                  : 'border-[#d9c8a9] bg-stone-50/60 hover:bg-amber-50/40 hover:border-amber-400'
-              }`}
-            >
-              {uploadedFileInfo ? (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
-                  <div className="flex items-center gap-3">
-                    <span className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                      <FileCheck2 className="w-6 h-6" />
-                    </span>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-stone-800 truncate max-w-[240px] sm:max-w-xs">
-                          {uploadedFileInfo.name}
-                        </span>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
-                          {uploadedFileInfo.size}
-                        </span>
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => modalFileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-xl p-4 text-center transition cursor-pointer ${
+                  isDragging
+                    ? 'border-emerald-500 bg-emerald-50/80 scale-[1.01]'
+                    : uploadedFileInfo
+                    ? 'border-emerald-400 bg-emerald-50/30 hover:bg-emerald-50/50'
+                    : 'border-[#d9c8a9] bg-stone-50/50 hover:bg-amber-50/30'
+                }`}
+              >
+                {uploadedFileInfo ? (
+                  <div className="flex items-center justify-between gap-3 text-left">
+                    <div className="flex items-center gap-3">
+                      <span className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                        <FileCheck2 className="w-5 h-5" />
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-stone-800 truncate max-w-xs">
+                            {uploadedFileInfo.name}
+                          </span>
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">
+                            {uploadedFileInfo.size}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-stone-500 mt-0.5">
+                          识别到 <strong className="text-emerald-700">{parseResult.totalParsed}</strong> 句法谈字幕
+                        </p>
                       </div>
-                      <p className="text-xs text-stone-500 mt-0.5">
-                        本地文本读取完成 • 识别到 <strong className="text-emerald-700">{parseResult.totalParsed}</strong> 句双语对齐字幕
-                      </p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     <button
                       type="button"
-                      onClick={() => modalFileInputRef.current?.click()}
-                      className="px-3 py-1.5 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs font-semibold transition cursor-pointer"
-                    >
-                      重新选文件
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleClearUploadedFile}
-                      className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
-                      title="清除"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClearUploadedFile();
+                      }}
+                      className="p-1 rounded text-stone-400 hover:text-red-600 cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                </div>
-              ) : (
-                <div className="space-y-2.5">
-                  <div className="w-12 h-12 mx-auto rounded-full bg-amber-100 text-amber-800 flex items-center justify-center">
-                    <Upload className="w-6 h-6" />
+                ) : (
+                  <div className="flex items-center justify-center gap-2 text-xs text-stone-600">
+                    <Upload className="w-4 h-4 text-amber-700" />
+                    <span className="font-bold text-stone-800">点击上传 或 拖拽字幕文件 (.srt / .txt) 到此处</span>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-stone-800">
-                      点击浏览 或 将字幕文件拖拽到此处
-                    </p>
-                    <p className="text-xs text-stone-500 mt-1">
-                      大文件秒级读取，解析方式与粘贴完全一致（纯 TXT / UTF-8 解码）
-                    </p>
-                  </div>
-                  {/* 支持格式气泡 */}
-                  <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-                    {['.SRT (推荐)', '.TXT', '.VTT', '.TSV', '.CSV', '.JSON', '.LRC', '.ASS'].map((fmt) => (
-                      <span
-                        key={fmt}
-                        className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-white border border-stone-200 text-stone-600"
-                      >
-                        {fmt}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* 解析成功预览条 */}
-            {parseResult.totalParsed > 0 && (
-              <div className="bg-emerald-50/90 border border-emerald-300/80 rounded-xl p-3.5 text-xs text-emerald-900 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="font-bold flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>成功识别 {parseResult.totalParsed} 句法谈！</span>
-                  </div>
-                  {parseResult.detectedTitle && (
-                    <span className="text-[11px] text-emerald-800 truncate max-w-[200px] font-medium">
-                      {parseResult.detectedTitle}
+              {/* 粘贴文本框 */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[11px] font-bold text-stone-600">
+                    或直接在此粘贴 SRT 字幕文本:
+                  </label>
+                  {parseResult.totalParsed > 0 && (
+                    <span className="text-[11px] text-emerald-700 font-bold">
+                      ✓ 已就绪 {parseResult.totalParsed} 句
                     </span>
                   )}
                 </div>
-
-                {/* 前两句快速预览，让用户放心 */}
-                <div className="bg-white/80 rounded-lg p-2.5 space-y-1 text-[11px] text-stone-700 border border-emerald-200/60 max-h-24 overflow-y-auto">
-                  {parseResult.subtitles.slice(0, 2).map((s, idx) => (
-                    <div key={idx} className="flex items-start gap-2 border-b last:border-b-0 border-stone-100 pb-1 last:pb-0">
-                      <span className="font-mono text-[10px] text-amber-700 shrink-0 pt-0.5">{s.timeStart}</span>
-                      <div className="truncate">
-                        <span className="font-semibold text-stone-900">{s.thai}</span>
-                        {s.chinese && <span className="text-stone-500 ml-2">({s.chinese})</span>}
-                      </div>
-                    </div>
-                  ))}
-                  {parseResult.totalParsed > 2 && (
-                    <div className="text-[10px] text-stone-400 text-center pt-0.5">
-                      ... 其余 {parseResult.totalParsed - 2} 句已准备就绪 ...
-                    </div>
-                  )}
-                </div>
+                <textarea
+                  value={pastedText}
+                  onChange={(e) => handlePastedTextChange(e.target.value)}
+                  placeholder="在此直接粘贴 SRT 格式字幕内容..."
+                  rows={4}
+                  className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed"
+                />
               </div>
-            )}
-
-            {/* 可折叠的手动粘贴 / AI 提示词辅助区 */}
-            <div className="border border-stone-200 rounded-xl overflow-hidden">
-              <button
-                type="button"
-                onClick={() => setShowRawTextarea(!showRawTextarea)}
-                className="w-full px-3.5 py-2.5 bg-stone-50 hover:bg-stone-100 text-xs font-semibold text-stone-700 flex items-center justify-between transition cursor-pointer"
-              >
-                <span className="flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-amber-700" />
-                  <span>{showRawTextarea ? '收起文本输入与编辑框' : '📝 手动粘贴文本 / 查看原始字幕文本 / 复制 AI 转换 Prompt'}</span>
-                </span>
-                <span className="text-[11px] text-stone-400">{showRawTextarea ? '▲ 收起' : '▼ 展开'}</span>
-              </button>
-
-              {showRawTextarea && (
-                <div className="p-3.5 space-y-3 bg-white border-t border-stone-200">
-                  <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
-                    <span className="text-stone-500 text-[11px]">可直接修改或在此粘贴文本：</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(AI_SRT_CONVERSION_PROMPT);
-                        setCopiedPromptInModal(true);
-                        setTimeout(() => setCopiedPromptInModal(false), 2500);
-                      }}
-                      className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-xs transition cursor-pointer"
-                    >
-                      {copiedPromptInModal ? (
-                        <>
-                          <Check className="w-3.5 h-3.5 text-emerald-300" />
-                          <span>已复制 AI 批量转换 Prompt！</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>复制 AI 批量转换 Prompt</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  <textarea
-                    value={pastedText}
-                    onChange={(e) => handlePastedTextChange(e.target.value)}
-                    placeholder="可在此直接粘贴文本内容，或查看已上传文件的纯文本..."
-                    className="w-full h-36 text-xs font-mono p-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-[#b58940]"
-                  />
-                </div>
-              )}
             </div>
 
             {/* 弹窗底部操作按钮 */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-200">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-stone-200">
               <button
                 type="button"
                 onClick={handleRestoreDefault18Oct}
                 className="text-xs text-amber-800 hover:underline font-medium cursor-pointer"
               >
-                还原为官方 10月18日 (746句完整版)
+                还原为官方 10月18日基准
               </button>
 
               <div className="flex items-center gap-2">
@@ -2783,17 +2722,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </button>
                 <button
                   type="button"
-                  onClick={handleApplyPastedSubtitles}
-                  disabled={parseResult.totalParsed === 0}
-                  className={`px-5 py-2 rounded-xl text-xs font-bold text-white transition cursor-pointer ${
-                    parseResult.totalParsed > 0
-                      ? 'bg-emerald-600 hover:bg-emerald-700 shadow-md'
-                      : 'bg-stone-300 cursor-not-allowed'
-                  }`}
+                  onClick={handleApplyDiscourseAndMedia}
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold transition cursor-pointer shadow-md flex items-center gap-1.5"
                 >
-                  {parseResult.totalParsed > 0
-                    ? `应用并载入播放器 (${parseResult.totalParsed} 句)`
-                    : '请先导入或粘贴字幕'}
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>🚀 确认装载并开播</span>
                 </button>
               </div>
             </div>
@@ -2917,6 +2850,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
         </div>
       )}
+
+
     </div>
   );
 };

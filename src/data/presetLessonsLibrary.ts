@@ -142,14 +142,111 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
 
 const PRESET_STORAGE_KEY = 'taixue_calibrated_preset_lessons_v1';
 
-// 获取所有课件（融合本地管理员校准后的时间差与链接，标题严格遵循视频原名：中文在前、泰文在后）
+export const COMMUNITY_LESSONS_STORAGE_KEY = 'taixue_community_lessons_pool_v2';
+
+// 读取本地已保存的全部社区课件（包括待审核、已批准、草稿）
+export function getAllCommunityLessons(): CuratedLesson[] {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem(COMMUNITY_LESSONS_STORAGE_KEY);
+      if (raw) {
+        const parsed: CuratedLesson[] = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to load community lessons from storage', e);
+  }
+  return [];
+}
+
+// 获取待管理员审核的课件列表
+export function getPendingCommunityLessons(): CuratedLesson[] {
+  return getAllCommunityLessons().filter(l => l.status === 'pending');
+}
+
+// 提交或保存社区课件（可标记为 pending 待审，或 admin 直接 approved）
+export function saveCommunityLesson(lesson: CuratedLesson): CuratedLesson[] {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const all = getAllCommunityLessons();
+      const existingIdx = all.findIndex(l => l.id === lesson.id);
+      if (existingIdx >= 0) {
+        all[existingIdx] = lesson;
+      } else {
+        all.unshift(lesson);
+      }
+      localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      return all;
+    }
+  } catch (e) {
+    console.error('Failed to save community lesson', e);
+  }
+  return getAllCommunityLessons();
+}
+
+// 管理员批准课件上线（状态设为 approved）
+export function approveCommunityLesson(lessonId: string, adminName: string = 'Admin'): CuratedLesson[] {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const all = getAllCommunityLessons();
+      const target = all.find(l => l.id === lessonId);
+      if (target) {
+        target.status = 'approved';
+        target.approvedBy = adminName;
+        target.approvedAt = new Date().toISOString();
+        localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      }
+      return all;
+    }
+  } catch (e) {
+    console.error('Failed to approve community lesson', e);
+  }
+  return getAllCommunityLessons();
+}
+
+// 驳回或拒绝社区课件
+export function rejectCommunityLesson(lessonId: string, note?: string): CuratedLesson[] {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const all = getAllCommunityLessons();
+      const target = all.find(l => l.id === lessonId);
+      if (target) {
+        target.status = 'rejected';
+        target.reviewNote = note || '未通过审核';
+        localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      }
+      return all;
+    }
+  } catch (e) {
+    console.error('Failed to reject community lesson', e);
+  }
+  return getAllCommunityLessons();
+}
+
+// 删除社区课件
+export function deleteCommunityLesson(lessonId: string): CuratedLesson[] {
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const all = getAllCommunityLessons().filter(l => l.id !== lessonId);
+      localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      return all;
+    }
+  } catch (e) {
+    console.error('Failed to delete community lesson', e);
+  }
+  return getAllCommunityLessons();
+}
+
+// 获取所有课件（融合预设官方课件与已批准上线的社区精品共学课件）
 export function getAllCuratedLessons(): CuratedLesson[] {
+  let basePresets = CURATED_LESSONS_PRESETS;
   try {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(PRESET_STORAGE_KEY);
       if (saved) {
         const overrides: Record<string, Partial<CuratedLesson>> = JSON.parse(saved);
-        return CURATED_LESSONS_PRESETS.map(lesson => {
+        basePresets = CURATED_LESSONS_PRESETS.map(lesson => {
           const override = overrides[lesson.id] || 
             (lesson.id === 'lesson_20261017' ? (overrides['lesson_daily_life_practice'] as any) : undefined) ||
             (lesson.id === 'lesson_20261018' ? (overrides['lesson_20261018_flagship'] as any) : undefined);
@@ -157,21 +254,25 @@ export function getAllCuratedLessons(): CuratedLesson[] {
             return {
               ...lesson,
               ...override,
-              // 权威锁定原版视频抬头（中文在前，泰文在后，不使用旧版自拟标题）
               title: lesson.title,
               chineseTitle: lesson.chineseTitle,
-              // 确保全篇字幕不丢失
               subtitles: lesson.subtitles
             };
           }
           return lesson;
         });
       }
+
+      // 追加所有经管理员批准上线的社区课件
+      const approvedCommunity = getAllCommunityLessons().filter(l => l.status === 'approved');
+      if (approvedCommunity.length > 0) {
+        return [...basePresets, ...approvedCommunity];
+      }
     }
   } catch (e) {
     console.error('Failed to load calibrated presets from storage', e);
   }
-  return CURATED_LESSONS_PRESETS;
+  return basePresets;
 }
 
 // 获取旗舰课件

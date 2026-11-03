@@ -125,17 +125,18 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 w-full max-w-full overflow-x-hidden">
       
-      {/* 顶部极简导航：共学、打字、注册打卡 (管理入口已统一收敛到登录弹窗) */}
+      {/* 顶部极简导航：共学、打字、注册打卡、管理后台 */}
       <Navbar
         activeTab={activeTab}
         onTabChange={setActiveTab}
         currentStudent={currentStudent}
+        onOpenAdmin={() => setShowAdminModal(true)}
       />
 
       {/* 主界面视窗 */}
       <main className="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 lg:p-6 overflow-x-hidden">
         
-        {/* 1. 核心共学：泰中双视频同步对齐放映机 */}
+        {/* 1. 核心共学：泰中双视频同步对齐放映机 (学员端极简体验) */}
         {activeTab === 'dual_sync_player' && (
           <DualVideoSyncAlignPlayer
             subtitles={subtitles}
@@ -145,6 +146,7 @@ const App: React.FC = () => {
             onUpdateSubtitles={(newSubs) => setSubtitles(newSubs)}
             offsetSeconds={playerOffsetSeconds}
             isOffsetLocked={playerIsOffsetLocked}
+            onOpenAdmin={() => setShowAdminModal(true)}
             onOffsetChange={(offset, locked) => {
               setPlayerOffsetSeconds(offset);
               setPlayerIsOffsetLocked(locked);
@@ -220,12 +222,12 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* 独立机密管理后台与暗号解锁金库 (Admin Sanctuary) */}
+      {/* 共学管理 · 法工校对工作流 (AdminSanctuaryModal) */}
       <AdminSanctuaryModal
         isOpen={showAdminModal}
         onClose={() => setShowAdminModal(false)}
         onLessonCalibrated={(lessonId, offset) => {
-          // 管理后台校准后：更新播放器偏移量并自动锁定，立即同步生效
+          // 共学管理校准后：更新播放器偏移量并自动锁定，立即同步生效
           setPlayerOffsetSeconds(offset);
           setPlayerIsOffsetLocked(true);
           try {
@@ -235,6 +237,23 @@ const App: React.FC = () => {
             parsed.offsetSeconds = offset;
             localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
           } catch {}
+        }}
+        onLoadLessonToPlayer={(lesson) => {
+          // 从后台课件库或检索结果载入双播播放器
+          setSubtitles(lesson.subtitles);
+          setPlayerOffsetSeconds(lesson.defaultOffsetSeconds);
+          setPlayerIsOffsetLocked(true);
+          try {
+            const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
+            const parsed = saved ? JSON.parse(saved) : {};
+            parsed.thaiVideoUrl = lesson.thaiVideoUrl;
+            parsed.chineseVideoUrl = lesson.chineseVideoUrl;
+            parsed.title = `${lesson.chineseTitle} ｜ ${lesson.title}`;
+            parsed.offsetSeconds = lesson.defaultOffsetSeconds;
+            localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
+          } catch {}
+          setActiveTab('dual_sync_player');
+          setShowAdminModal(false);
         }}
       />
     </div>

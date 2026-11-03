@@ -209,6 +209,18 @@ export interface CuratedLesson {
     shortcutKey?: string;
   }>;
   subtitles: SubtitleLine[];
+  // 课件多态媒体与协同审核流程字段
+  chineseMediaType?: 'youtube' | 'mp4' | 'mp3';
+  status?: 'draft' | 'pending' | 'approved' | 'rejected';
+  submittedBy?: {
+    id: string;
+    name: string;
+    emailOrPhone?: string;
+  };
+  submittedAt?: string;
+  approvedBy?: string;
+  approvedAt?: string;
+  reviewNote?: string;
 }
 
 // 独立安全管理后台审计日志
@@ -227,6 +239,7 @@ export interface AdminSessionState {
   unlockedAt: number | null;
   expiresAt: number | null;
   adminName: string;
+  email?: string;
 }
 
 // 公共前台脱敏共学动态流
