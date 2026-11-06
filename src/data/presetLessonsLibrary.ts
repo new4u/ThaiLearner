@@ -9,6 +9,18 @@ import {
   DAILY_PRACTICE_TALK_TITLE,
   DAILY_PRACTICE_TALK_ZH_TITLE
 } from './luangporTalkDailyPractice';
+import {
+  TALK_10OCT_TITLE,
+  TALK_10OCT_ZH_TITLE,
+  TALK_10OCT_KEY_TERMS,
+  LUANGPOR_OCT_10_SUBTITLES
+} from './luangporTalk10OctChantha';
+import {
+  LUANGPOR_OCT_31_TALK_TITLE,
+  LUANGPOR_OCT_31_TALK_ZH_TITLE,
+  LUANGPOR_OCT_31_KEY_TERMS,
+  LUANGPOR_OCT_31_SUBTITLES
+} from './luangporTalk31Oct';
 
 // 2026 最新《在日常生活与工作中修行》开示 6 大核心巴利法词
 export const DAILY_PRACTICE_KEY_TERMS = [
@@ -102,8 +114,42 @@ export const FLAGSHIP_20261018_KEY_TERMS = [
   }
 ];
 
-// 预设精品课件总库：仅保留 10月17日 与 10月18日 官方原版实况双视频
+// 预设精品课件总库：含 10月10日单视频原声、10月31日最新双播、10月17日与10月18日经典课件
 export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
+  {
+    id: 'lesson_20261010',
+    date: '2026-10-10',
+    title: TALK_10OCT_TITLE,
+    chineseTitle: TALK_10OCT_ZH_TITLE,
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版开示 (朱拉隆功标准五调音标 · 单播精研)',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=xEKmQRulTgg',
+    chineseVideoUrl: '',
+    thaiVideoId: 'xEKmQRulTgg',
+    chineseVideoId: '',
+    defaultOffsetSeconds: 0.0,
+    totalSentences: 29,
+    tags: ['10月10日精选开示', '朱拉隆功五调音标', '纯泰原声精进', '善法欲与精进修行'],
+    keyTerms: TALK_10OCT_KEY_TERMS,
+    subtitles: LUANGPOR_OCT_10_SUBTITLES
+  },
+  {
+    id: 'lesson_20261031',
+    date: '2026-10-31',
+    title: LUANGPOR_OCT_31_TALK_TITLE,
+    chineseTitle: LUANGPOR_OCT_31_TALK_ZH_TITLE,
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版直播 & 解脱园中文同传 (1195句全篇精准对齐)',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=Ydoxq7Hw-8Y',
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=Zf07tYbYG9g',
+    thaiVideoId: 'Ydoxq7Hw-8Y',
+    chineseVideoId: 'Zf07tYbYG9g',
+    defaultOffsetSeconds: 0.0,
+    totalSentences: 1195,
+    tags: ['10月31日最新开示', '1195句全篇精准对齐', '莫停留在空', '双视频实测校准'],
+    keyTerms: LUANGPOR_OCT_31_KEY_TERMS,
+    subtitles: LUANGPOR_OCT_31_SUBTITLES
+  },
   {
     id: 'lesson_20261017',
     date: '2026-10-17',
@@ -278,7 +324,7 @@ export function getAllCuratedLessons(): CuratedLesson[] {
 // 获取旗舰课件
 export function getFlagshipLesson(): CuratedLesson {
   const all = getAllCuratedLessons();
-  return all.find(l => l.id === 'lesson_20261017') || all.find(l => l.id === 'lesson_20261018') || all[0];
+  return all.find(l => l.id === 'lesson_20261010') || all.find(l => l.id === 'lesson_20261031') || all.find(l => l.id === 'lesson_20261017') || all[0];
 }
 
 // 管理员校准更新课件配置（保存时间轴偏移量、视频链接）

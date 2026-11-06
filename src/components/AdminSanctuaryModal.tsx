@@ -63,6 +63,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
     chineseVideoUrl?: string;
     snippet?: string;
     pageId?: number;
+    subtitles?: SubtitleLine[];
   } | null>(null);
 
   // dhamma.cn 检索与嗅探状态
@@ -434,12 +435,15 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                                     title: lesson.title,
                                     thaiVideoUrl: lesson.thaiVideoUrl,
                                     chineseVideoUrl: lesson.chineseVideoUrl,
+                                    subtitles: lesson.subtitles,
                                   });
                                   setShowStudioModal(true);
                                 }}
-                                className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-medium text-[11px] transition cursor-pointer"
+                                className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 font-medium text-[11px] transition cursor-pointer flex items-center gap-1"
+                                title="载入全篇字幕到工坊编辑区（包含 [GLOSS] 逐词拆词与注音），可修改或复制到外部 AI"
                               >
-                                编辑副本
+                                <FileText className="w-3 h-3 text-amber-400" />
+                                <span>编辑全文课件</span>
                               </button>
                               {onLoadLessonToPlayer && (
                                 <button
@@ -1157,10 +1161,10 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                     <button
                       onClick={handleExportCsv}
                       className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition cursor-pointer shrink-0"
-                      title="导出完整机密档案为 CSV，原生支持 Excel、Numbers 与 WPS 打开"
+                      title="导出完整学员名册为 CSV，原生支持 Excel、Numbers 与 WPS 打开"
                     >
                       <Download className="w-3.5 h-3.5" />
-                      <span>导出机密 CSV (UTF-8 BOM)</span>
+                      <span>导出学员名册 CSV (UTF-8 BOM)</span>
                     </button>
                   </div>
 
@@ -1217,7 +1221,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                                   <button
                                     onClick={() => handleDeleteStudent(s.id, s.name)}
                                     className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition cursor-pointer"
-                                    title="删除此学员机密记录"
+                                    title="删除此学员记录"
                                   >
                                     <Trash2 className="w-3.5 h-3.5" />
                                   </button>

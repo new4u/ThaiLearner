@@ -3,7 +3,7 @@ import { SubtitleLine, WordToken, DualVideoConfig, CuratedLesson } from '../type
 import { OCT_18_BENCHMARK_CONFIG, OCT_18_LIVE_SUBTITLES } from '../data/luangporCourseData';
 import { getAllCuratedLessons, getFlagshipLesson } from '../data/presetLessonsLibrary';
 import { parseLanguageReactorText, formatSecondsToTime } from '../utils/languageReactorParser';
-import { AI_SRT_CONVERSION_PROMPT } from '../utils/lrFormatParser';
+import { AI_SRT_CONVERSION_PROMPT, exportToEnhancedSRT } from '../utils/lrFormatParser';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { 
   Play, Pause, RotateCcw, Volume2, Volume1, Settings, Sparkles, CheckCircle2,
@@ -303,6 +303,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   const thaiVideoId = extractYouTubeId(config.thaiVideoUrl);
   const chineseVideoId = extractYouTubeId(config.chineseVideoUrl);
+  const hasChineseMedia = Boolean(chineseVideoId || (config.chineseVideoUrl && config.chineseVideoUrl.trim() !== ''));
+
+  useEffect(() => {
+    if (!hasChineseMedia && audioFocus !== 'thai') {
+      setAudioFocus('thai');
+    }
+  }, [hasChineseMedia, audioFocus]);
+
   const currentLine = activeSubtitles[currentLineIndex] || activeSubtitles[0];
 
   const currentCuratedLesson = useMemo(() => {
@@ -1248,11 +1256,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setParseResult({ subtitles: [], totalParsed: 0 });
   };
 
-  // 统一应用装载：同时更新双视频链接与法谈字幕
+  // 统一应用装载：同时更新双视频链接字幕
   const handleApplyDiscourseAndMedia = () => {
     // 1. 更新双视频链接与标题
     const newThaiUrl = inputThaiUrl.trim() || config.thaiVideoUrl;
-    const newChineseUrl = inputChineseUrl.trim() || config.chineseVideoUrl;
+    const newChineseUrl = inputChineseUrl.trim(); // 允许清空进入单视频模式
     const newTitle = inputTitle.trim() || parseResult.detectedTitle || config.title;
 
     const updatedConf: DualVideoConfig = {
@@ -1274,8 +1282,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setShowPasteModal(false);
     triggerToast(
       parseResult.totalParsed > 0 
-        ? `已成功装载双播视频链接与 ${parseResult.totalParsed} 句法谈字幕！`
-        : '已成功装载双播视频链接！'
+        ? `已成功装载视频与 ${parseResult.totalParsed} 句字幕！`
+        : '已成功装载视频！'
     );
   };
 
@@ -1318,14 +1326,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-sm sm:text-base font-bold text-[#2d2a26]">
-                  泰中双视频同步对齐放映机
+                  {hasChineseMedia ? '泰中双视频同步对齐放映机' : '泰文原声精进共学放映机'}
                 </h1>
                 <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100/80 text-amber-900 border border-amber-300/60 font-mono">
                   第 {currentLineIndex + 1} 句 / 共 {activeSubtitles.length} 句
                 </span>
-                {activeSubtitles.length === 746 || activeSubtitles.length === 1198 ? (
+                {activeSubtitles.length === 746 || activeSubtitles.length === 1198 || activeSubtitles.length === 1195 || activeSubtitles.length === 29 ? (
                   <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
-                    <span>🌟 官方人工精校字幕</span>
+                    <span>🌟 官方精校课件</span>
                   </span>
                 ) : (
                   <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
@@ -1340,7 +1348,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {/* 1. 装载法谈与视频链接 (核心一键弹窗，整合链接与字幕) */}
+            {/* 1. 装载视频链接 (核心一键弹窗，整合链接与字幕) */}
             <button
               onClick={() => {
                 setInputThaiUrl(config.thaiVideoUrl);
@@ -1349,10 +1357,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 setShowPasteModal(true);
               }}
               className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-              title="点击装载双视频链接与法谈字幕"
+              title="点击装载视频链接与字幕"
             >
               <ClipboardPaste className="w-3.5 h-3.5" />
-              <span>📥 装载法谈</span>
+              <span>📥 装载字幕</span>
             </button>
 
             {/* 2. 预制课件库 */}
@@ -1379,8 +1387,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       {/* 主界面内容 */}
       <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-4 space-y-4 sm:space-y-5 max-w-full box-border">
 
-        {/* 1. 双视频视窗区域 (带各自的独立暂停/播放快捷键，方便听完一句手动打点暂停) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* 1. 视频视窗区域 (单播自适应全景，双播智能并列) */}
+        <div className={hasChineseMedia ? "grid grid-cols-1 lg:grid-cols-2 gap-4" : "max-w-4xl mx-auto w-full"}>
           
           {/* 泰文视频视窗 */}
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
@@ -1391,6 +1399,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 <span className="text-[10px] text-stone-300 whitespace-nowrap">
                   ({isThaiPlaying ? '播放中' : '已暂停'})
                 </span>
+                {!hasChineseMedia && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    纯泰原声精研
+                  </span>
+                )}
               </div>
               <button
                 onClick={handleToggleThaiAlone}
@@ -1414,7 +1427,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
 
-          {/* 中文视频视窗 */}
+          {/* 中文视频视窗 (仅在有中文音视频源时展示) */}
+          {hasChineseMedia && (
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
             <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
@@ -1626,10 +1640,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               )}
             </div>
           </div>
+          )}
         </div>
 
-        {/* 🍎 苹果 iOS 设备专属温馨提示 (仅在真机 iOS/iPadOS 展示，安卓/PC 绝不出现) */}
-        {isIOS && (
+        {/* 🍎 苹果 iOS 设备专属温馨提示 (仅在真机 iOS/iPadOS 且有双播时展示，安卓/PC 绝不出现) */}
+        {isIOS && hasChineseMedia && (
           <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 sm:p-4 text-xs text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
             <div className="flex items-start sm:items-center gap-2.5">
               <span className="text-xl shrink-0">🍎</span>
@@ -2231,12 +2246,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 {isCurrentModePlaying ? (
                   <>
                     <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                    <span>{audioFocus === 'both' ? '双轨停' : audioFocus === 'thai' ? '外文停' : '中文停'}</span>
+                    <span>{!hasChineseMedia ? '暂停' : (audioFocus === 'both' ? '双轨停' : audioFocus === 'thai' ? '外文停' : '中文停')}</span>
                   </>
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current ml-0.5" />
-                    <span>{audioFocus === 'both' ? '双轨播' : audioFocus === 'thai' ? '外文播' : '中文播'}</span>
+                    <span>{!hasChineseMedia ? '播放' : (audioFocus === 'both' ? '双轨播' : audioFocus === 'thai' ? '外文播' : '中文播')}</span>
                   </>
                 )}
               </button>
@@ -2252,36 +2267,38 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               </button>
             </div>
 
-            {/* 三档滑块：外文 | 双轨 | 中文 (极简文本，保留精致滑块手感) */}
-            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shrink-0 text-xs gap-0.5 sm:gap-1">
-              <button
-                onClick={() => handleSelectMode('thai')}
-                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="单播外文原声"
-              >
-                外文
-              </button>
-              <button
-                onClick={() => handleSelectMode('both')}
-                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="双轨齐播"
-              >
-                双轨
-              </button>
-              <button
-                onClick={() => handleSelectMode('chinese')}
-                className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="单播中文译声"
-              >
-                中文
-              </button>
-            </div>
+            {/* 三档滑块：外文 | 双轨 | 中文 (仅在双播模式下展示) */}
+            {hasChineseMedia && (
+              <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shrink-0 text-xs gap-0.5 sm:gap-1">
+                <button
+                  onClick={() => handleSelectMode('thai')}
+                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="单播外文原声"
+                >
+                  外文
+                </button>
+                <button
+                  onClick={() => handleSelectMode('both')}
+                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="双轨齐播"
+                >
+                  双轨
+                </button>
+                <button
+                  onClick={() => handleSelectMode('chinese')}
+                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="单播中文译声"
+                >
+                  中文
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 底行：句序对齐 + 循环/倍速 (极简紧凑，绝不溢出) */}
@@ -2391,12 +2408,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               {isCurrentModePlaying ? (
                 <>
                   <Pause className="w-4 h-4 fill-current" />
-                  <span>{audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '外文暂停' : '中文暂停'}</span>
+                  <span>{!hasChineseMedia ? '暂停' : (audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '外文暂停' : '中文暂停')}</span>
                 </>
               ) : (
                 <>
                   <Play className="w-4 h-4 fill-current ml-0.5" />
-                  <span>{audioFocus === 'both' ? '双轨播放' : audioFocus === 'thai' ? '外文播放' : '中文播放'}</span>
+                  <span>{!hasChineseMedia ? '播放' : (audioFocus === 'both' ? '双轨播放' : audioFocus === 'thai' ? '外文播放' : '中文播放')}</span>
                 </>
               )}
             </button>
@@ -2410,36 +2427,38 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            {/* 三档滑块：外文 | 双轨 | 中文 */}
-            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shadow-inner gap-1">
-              <button
-                onClick={() => handleSelectMode('thai')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="单播外文原声"
-              >
-                外文
-              </button>
-              <button
-                onClick={() => handleSelectMode('both')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="双轨齐播"
-              >
-                双轨
-              </button>
-              <button
-                onClick={() => handleSelectMode('chinese')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                  audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="单播中文译声"
-              >
-                中文
-              </button>
-            </div>
+            {/* 三档滑块：外文 | 双轨 | 中文 (仅在双播模式下展示) */}
+            {hasChineseMedia && (
+              <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shadow-inner gap-1">
+                <button
+                  onClick={() => handleSelectMode('thai')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="单播外文原声"
+                >
+                  外文
+                </button>
+                <button
+                  onClick={() => handleSelectMode('both')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="双轨齐播"
+                >
+                  双轨
+                </button>
+                <button
+                  onClick={() => handleSelectMode('chinese')}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
+                  }`}
+                  title="单播中文译声"
+                >
+                  中文
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 右侧：单句循环 + 倍速选择 */}
@@ -2496,10 +2515,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </span>
                 <div>
                   <h3 className="text-base font-bold text-stone-900">
-                    装载法谈与双视频 (Load Discourse & Media)
+                    装载法坛 (链接与字幕合一)
                   </h3>
                   <p className="text-xs text-stone-500">
-                    录入双播链接与法谈字幕，确认后一键秒级装载并同步开播
+                    在此配置视频链接与法坛字幕，确认后一键秒级装载并开播
                   </p>
                 </div>
               </div>
@@ -2511,15 +2530,15 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               </button>
             </div>
 
-            {/* 1. 双视频音频源链接装载 */}
+            {/* 1. 视频音频源链接装载 */}
             <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 space-y-2.5">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
                   <Video className="w-4 h-4 text-amber-700" />
-                  <span>1. 双视频 / 音频链接</span>
+                  <span>1. 视频 / 音频链接</span>
                 </span>
                 <span className="text-[10px] text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full font-bold">
-                  支持 YouTube / MP4 / MP3
+                  支持单播原声 / 双播并列
                 </span>
               </div>
 
@@ -2532,14 +2551,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     type="text"
                     value={inputThaiUrl}
                     onChange={(e) => setInputThaiUrl(e.target.value)}
-                    placeholder="https://www.youtube.com/watch?v=F4-tJNYDpss"
+                    placeholder="https://www.youtube.com/watch?v=xEKmQRulTgg"
                     className="w-full text-xs px-3 py-2 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 font-mono"
                   />
                 </div>
 
                 <div>
                   <label className="text-[11px] font-bold text-stone-700 block mb-1">
-                    🇨🇳 中文随动伴播 (YouTube / MP4 / MP3 直链)
+                    🇨🇳 中文伴播 (YouTube / MP4 / MP3 直链，单播请留空)
                   </label>
                   <input
                     type="text"
@@ -2575,11 +2594,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                         detectedTitle: discourse.combinedTitle
                       });
                       setPastedText(
-                        discourse.subtitles.slice(0, 50).map((s, idx) => 
-                          `${idx + 1}\n${s.timeStart} --> ${s.timeEnd}\n${s.thai}\n${s.chinese}`
-                        ).join('\n\n')
+                        exportToEnhancedSRT(discourse.subtitles)
                       );
-                      triggerToast(`已调入【${discourse.dateDisplay}】双视频链接与精校字幕！`);
+                      triggerToast(`已调入【${discourse.dateDisplay}】双视频链接与精校字幕（共 ${discourse.subtitles.length} 句全篇带 [GLOSS] 拆词）！`);
                     }}
                     className="p-2 rounded-lg bg-white hover:bg-amber-50/80 border border-stone-200 hover:border-amber-400 text-left transition cursor-pointer flex items-center justify-between"
                   >
@@ -2682,22 +2699,35 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
               {/* 粘贴文本框 */}
               <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="text-[11px] font-bold text-stone-600">
-                    或直接在此粘贴 SRT 字幕文本:
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-[11px] font-bold text-stone-600 flex items-center gap-1.5">
+                    <span>或直接在此粘贴 SRT 字幕文本 (支持 [GLOSS] 拆词行):</span>
+                    {parseResult.totalParsed > 0 && (
+                      <span className="text-[11px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                        ✓ 已就绪 {parseResult.totalParsed} 句
+                      </span>
+                    )}
                   </label>
-                  {parseResult.totalParsed > 0 && (
-                    <span className="text-[11px] text-emerald-700 font-bold">
-                      ✓ 已就绪 {parseResult.totalParsed} 句
-                    </span>
+                  {pastedText && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(pastedText);
+                        triggerToast('已复制文本框中全部字幕！');
+                      }}
+                      className="text-[11px] text-amber-800 hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>复制全文</span>
+                    </button>
                   )}
                 </div>
                 <textarea
                   value={pastedText}
                   onChange={(e) => handlePastedTextChange(e.target.value)}
-                  placeholder="在此直接粘贴 SRT 格式字幕内容..."
-                  rows={4}
-                  className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed"
+                  placeholder="在此直接粘贴包含 [GLOSS] 拆词或普通生肉 SRT 的字幕全文..."
+                  rows={8}
+                  className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed shadow-inner"
                 />
               </div>
             </div>
@@ -2749,7 +2779,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     官方预制精品课件库 (Curated Lessons Library)
                   </h3>
                   <p className="text-xs text-slate-400">
-                    一键调入尊者原版双视频与全篇精准对齐（仅预制 10月17日 1,198句 与 10月18日 746句）
+                    一键调入尊者原版视频与全篇精准对齐（含 10-10 原声精研、10-31 双播等）
                   </p>
                 </div>
               </div>
@@ -2839,7 +2869,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
             {/* 弹窗底部提示 */}
             <div className="px-5 py-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span>* 如需微调双视频毫秒级时间差，请在顶部导航点击 🔒 管理后台 进入校准中枢</span>
+              <span>* 如需微调双视频毫秒级时间差，请在顶部导航点击「共学管理」进入校准工作流</span>
               <button
                 onClick={() => setShowPresetModal(false)}
                 className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium cursor-pointer"

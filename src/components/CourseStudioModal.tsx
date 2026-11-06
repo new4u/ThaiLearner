@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, Upload, FileText, CheckCircle2, Sparkles, Copy, Check, 
-  Trash2, FileCheck2, Bot, Play, Save
+  Trash2, FileCheck2, Bot, Play, Save, Info
 } from 'lucide-react';
 import { CuratedLesson, SubtitleLine } from '../types';
 import { parseLanguageReactorText } from '../utils/languageReactorParser';
-import { AI_SRT_CONVERSION_PROMPT } from '../utils/lrFormatParser';
+import { AI_SRT_CONVERSION_PROMPT, exportToEnhancedSRT } from '../utils/lrFormatParser';
 import { saveCommunityLesson } from '../data/presetLessonsLibrary';
 
 interface CourseStudioModalProps {
@@ -19,6 +19,7 @@ interface CourseStudioModalProps {
     chineseVideoUrl?: string;
     snippet?: string;
     pageId?: number;
+    subtitles?: SubtitleLine[];
   };
   onLessonCreatedAndLoaded?: (lesson: CuratedLesson) => void;
 }
@@ -26,11 +27,15 @@ interface CourseStudioModalProps {
 const DEFAULT_SAMPLE_SRT = `1
 00:00:01,200 --> 00:00:10,300
 เวลาของพวกเราแต่ละคนมีไม่มาก มีโอกาสเรียนธรรมะรีบเรียน
+[GLOSS] เวลา:时间 | ของ:的 | พวกเรา:我们 | แต่ละคน:每个人 | มี:有 | ไม่มาก:不多 | มีโอกาส:有机会 | เรียน:学习 | ธรรมะ:佛法 | รีบ:赶快/抓紧 | เรียน:学
+[ROMAN] wee-laa kʰɔ̌ɔŋ pʰûak-raw tɛ̀ɛ-lá-kʰon mii mâj mâak, mii oo-kàat rian tʰam-má rîip rian
 我们每个人的时间都不多，有机会学习佛法就赶紧去学。
 
 2
 00:00:10,300 --> 00:00:18,500
 สมาธิมี ๒ อย่าง คือ สัมมาสมาธิ กับ มิจฉาสมาธิ
+[GLOSS] สมาธิ:禅定 | มี:有 | ๒:2 | อย่าง:种 | คือ:即是 | สัมมาสมาธิ:正定 | กับ:与/和 | มิจฉาสมาธิ:邪定
+[ROMAN] sa-maa-tʰí mii sɔ̌ɔŋ jàaŋ kʰɯɯ sǎm-maa-sa-maa-tʰí kàp mìt-cʰǎa-sa-maa-tʰí
 禅定有两种：正定与邪定。`;
 
 export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
@@ -44,17 +49,31 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
   const isAdmin = true;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const getInitialText = () => {
+    if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
+      return exportToEnhancedSRT(prefillConfig.subtitles);
+    }
+    if (prefillConfig?.snippet) {
+      return `1\n00:00:01,000 --> 00:00:15,000\n${prefillConfig.title || '法谈开示'}\n${prefillConfig.snippet}`;
+    }
+    return DEFAULT_SAMPLE_SRT;
+  };
+
   // 1. 粘贴区域文本
-  const [rawText, setRawText] = useState(prefillConfig?.snippet ? `1\n00:00:01,000 --> 00:00:15,000\n${prefillConfig.title || '法谈开示'}\n${prefillConfig.snippet}` : DEFAULT_SAMPLE_SRT);
+  const [rawText, setRawText] = useState<string>(getInitialText);
   const [uploadedFileInfo, setUploadedFileInfo] = useState<{ name: string; size: string } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [copiedRawText, setCopiedRawText] = useState(false);
   
   // 2. 状态与提示
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [showPromptDetails, setShowPromptDetails] = useState(false);
   const [parseResult, setParseResult] = useState<{ total: number; lines: SubtitleLine[] }>(() => {
+    if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
+      return { total: prefillConfig.subtitles.length, lines: prefillConfig.subtitles };
+    }
     try {
-      const parsed = parseLanguageReactorText(DEFAULT_SAMPLE_SRT);
+      const parsed = parseLanguageReactorText(getInitialText());
       return { total: parsed.totalParsed, lines: parsed.subtitles };
     } catch {
       return { total: 0, lines: [] };
@@ -66,6 +85,27 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
   };
+
+  // 当外部传入 prefillConfig 变动或弹窗打开时，自动同步全篇内容
+  useEffect(() => {
+    if (!isOpen) return;
+    if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
+      const fullText = exportToEnhancedSRT(prefillConfig.subtitles);
+      setRawText(fullText);
+      setParseResult({ total: prefillConfig.subtitles.length, lines: prefillConfig.subtitles });
+      setUploadedFileInfo(null);
+    } else if (prefillConfig?.snippet) {
+      const snippetText = `1\n00:00:01,000 --> 00:00:15,000\n${prefillConfig.title || '法谈开示'}\n${prefillConfig.snippet}`;
+      setRawText(snippetText);
+      try {
+        const parsed = parseLanguageReactorText(snippetText);
+        setParseResult({ total: parsed.totalParsed, lines: parsed.subtitles });
+      } catch {
+        setParseResult({ total: 0, lines: [] });
+      }
+      setUploadedFileInfo(null);
+    }
+  }, [isOpen, prefillConfig]);
 
   // 文本变化时解析字幕
   const handleTextChange = (text: string) => {
@@ -319,31 +359,72 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
           </div>
 
           {/* 3. 下面能粘贴的区域 */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-bold text-stone-800 flex items-center gap-1.5">
-                <span>📝 字幕粘贴与编辑区</span>
+                <span>📝 字幕粘贴与编辑区 (增强型 SRT / 生肉 SRT)</span>
                 {parseResult.total > 0 && (
-                  <span className="text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 font-normal">
-                    已识别 {parseResult.total} 句
+                  <span className="text-[11px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 font-bold">
+                    ✓ 已识别全部 {parseResult.total} 句
                   </span>
                 )}
               </label>
-              <button
-                type="button"
-                onClick={() => handleTextChange(DEFAULT_SAMPLE_SRT)}
-                className="text-[11px] text-amber-800 hover:underline cursor-pointer"
-              >
-                填入示范样本
-              </button>
+
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(rawText);
+                    setCopiedRawText(true);
+                    showToast('已复制编辑区全部字幕内容（含 [GLOSS] 拆词与音标）！');
+                    setTimeout(() => setCopiedRawText(false), 2000);
+                  }}
+                  disabled={!rawText.trim()}
+                  className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-[11px] font-semibold flex items-center gap-1 transition cursor-pointer disabled:opacity-40"
+                  title="将当前编辑框中的全部字幕复制到剪贴板，方便发送给第三方 AI 进行校对或微调"
+                >
+                  {copiedRawText ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedRawText ? '已复制全文' : '📋 复制编辑区全文'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTextChange(DEFAULT_SAMPLE_SRT)}
+                  className="text-[11px] text-amber-800 hover:underline cursor-pointer"
+                >
+                  填入示范样本
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleTextChange('')}
+                  className="text-[11px] text-stone-400 hover:text-red-600 cursor-pointer"
+                >
+                  清空
+                </button>
+              </div>
+            </div>
+
+            {/* 机制透明说明 */}
+            <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-[11px] text-stone-700 leading-relaxed flex items-start gap-2">
+              <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-stone-900 mb-0.5">
+                  💡 拆词与导入机制说明（完全透明，支持第三方 AI 双向互导）：
+                </p>
+                <div className="text-[11px] text-stone-600 space-y-0.5">
+                  <div>• <strong>推荐格式（第三方 AI 完整输出）</strong>：在 SRT 时间戳下方包含 <code>[GLOSS] 词:释义 | 词:释义</code> 拆词行与 <code>[ROMAN] 音标</code> 行。系统将 100% 精确保留 AI 的拆词与释义，不漏一词。</div>
+                  <div>• <strong>普通生肉格式（无拆词标注）</strong>：若仅输入泰文与中文翻译，系统会自动调用本地 <strong>1,120+ 尊者法谈专有词库与朱拉隆功音标引擎</strong> 进行智能切词与注音。</div>
+                </div>
+              </div>
             </div>
 
             <textarea
-              rows={8}
+              rows={11}
               value={rawText}
               onChange={(e) => handleTextChange(e.target.value)}
-              placeholder="在此粘贴 SRT 格式字幕内容，或点击上方【上传文件】自动载入..."
-              className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed"
+              placeholder="在此粘贴包含 [GLOSS] 拆词或普通生肉 SRT 的字幕全文，支持外部 AI (ChatGPT/Claude/DeepSeek) 生成结果直接全篇导入..."
+              className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed shadow-inner"
             />
           </div>
 
@@ -388,7 +469,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
               className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold transition cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-1.5"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>⚡ 装载到双播播放器</span>
+              <span>⚡ 装载到双播播放器 ({parseResult.total} 句)</span>
             </button>
           </div>
         </div>

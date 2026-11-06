@@ -2,6 +2,8 @@
 import { SubtitleLine } from '../types';
 import { DAILY_PRACTICE_SUBTITLES, DAILY_PRACTICE_TALK_TITLE, DAILY_PRACTICE_TALK_ZH_TITLE } from './luangporTalkDailyPractice';
 import { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_TALK_ZH_TITLE } from './luangporTalk18Oct';
+import { TALK_10OCT_TITLE, TALK_10OCT_ZH_TITLE, LUANGPOR_OCT_10_SUBTITLES } from './luangporTalk10OctChantha';
+import { LUANGPOR_OCT_31_TALK_TITLE, LUANGPOR_OCT_31_TALK_ZH_TITLE, LUANGPOR_OCT_31_SUBTITLES } from './luangporTalk31Oct';
 
 // 官方频道直接直达链接（供师兄师姐直接点击，避免复制粘贴繁琐步骤）
 export const OFFICIAL_THAI_STREAMS_URL = 'https://www.youtube.com/@luangpupramote/streams';
@@ -32,6 +34,42 @@ export interface OfficialPairedDiscourse {
 
 // 官方已完成双轨对照与人工精校对齐的课件列表
 export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
+  {
+    id: 'lesson_20261010',
+    date: '2026-10-10',
+    dateDisplay: '2026年10月10日',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=xEKmQRulTgg',
+    thaiVideoId: 'xEKmQRulTgg',
+    thaiTitle: TALK_10OCT_TITLE,
+    chineseVideoUrl: '',
+    chineseVideoId: '',
+    chineseTitle: TALK_10OCT_ZH_TITLE,
+    combinedTitle: `${TALK_10OCT_ZH_TITLE} ｜ ${TALK_10OCT_TITLE}`,
+    subtitleType: 'manual_verified',
+    subtitleStatusLabel: '官方原声精研 (29句朱拉隆功音标)',
+    sentenceCount: 29,
+    offsetSeconds: 0.0,
+    subtitles: LUANGPOR_OCT_10_SUBTITLES,
+    description: 'Wat Suan Santidham 官方原声精选，全篇 29 句朱拉隆功实用五调音标、佛法拆词与深研释义。'
+  },
+  {
+    id: 'lesson_20261031',
+    date: '2026-10-31',
+    dateDisplay: '2026年10月31日',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=Ydoxq7Hw-8Y',
+    thaiVideoId: 'Ydoxq7Hw-8Y',
+    thaiTitle: LUANGPOR_OCT_31_TALK_TITLE,
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=Zf07tYbYG9g',
+    chineseVideoId: 'Zf07tYbYG9g',
+    chineseTitle: LUANGPOR_OCT_31_TALK_ZH_TITLE,
+    combinedTitle: `${LUANGPOR_OCT_31_TALK_ZH_TITLE} ｜ ${LUANGPOR_OCT_31_TALK_TITLE}`,
+    subtitleType: 'manual_verified',
+    subtitleStatusLabel: '官方人工精校字幕 (1,195句全篇)',
+    sentenceCount: 1195,
+    offsetSeconds: 0.0,
+    subtitles: LUANGPOR_OCT_31_SUBTITLES,
+    description: 'Wat Suan Santidham 官方最新开示《不要满足于仅仅停留在空》，已完成全篇 1,195 句双视频毫秒对齐。'
+  },
   {
     id: 'lesson_20261018',
     date: '2026-10-18',
