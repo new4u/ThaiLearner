@@ -373,7 +373,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                         </span>
                       </div>
                       <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                        在此将生肉双语/单语 SRT 导入，系统将自动基于内置 1120+ 佛学大词典与朱拉隆功实用音标进行逐词拆解断词，可直接测试卡拉OK并发布为全员共学课件。
+                        在此将生肉双语/单语 SRT 导入，系统将自动基于内置 1120+ 佛学大词典与朱拉隆功实用音标进行逐词拆解断词，可直接测试逐词显示并发布为全员共学课件。
                       </p>
                     </div>
 

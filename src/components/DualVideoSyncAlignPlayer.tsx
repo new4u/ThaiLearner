@@ -39,6 +39,8 @@ interface DualVideoSyncAlignPlayerProps {
   onOffsetChange?: (offset: number, locked: boolean) => void;
   /** 打开管理后台 */
   onOpenAdmin?: () => void;
+  /** 切换到极简沉浸版 */
+  onSwitchToMinimal?: () => void;
 }
 
 declare global {
@@ -145,6 +147,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   isOffsetLocked: propIsOffsetLocked,
   onOffsetChange,
   onOpenAdmin,
+  onSwitchToMinimal,
 }) => {
   // 苹果 iOS 设备标记 (WebKit 单音频专属策略，安卓与电脑绝不受限)
   const [isAppleDevice] = useState(() => isIOSDevice());
@@ -981,7 +984,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
     if (isKaraokeDemoPlaying) {
       setIsKaraokeDemoPlaying(false);
-      triggerToast('⏸️ 已暂停卡拉OK演练');
+      triggerToast('⏸️ 已暂停逐词显示演练');
       return;
     }
 
@@ -1002,7 +1005,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setIsKaraokeDemoPlaying(true);
     // 朗读当前句泰语发音
     handleSpeakText(currentLine.thai);
-    triggerToast('🎤 开始卡拉OK逐词同步演练 (点击任意单词可单独精听)');
+    triggerToast('🎤 开始逐词显示同步演练 (点击任意单词可单独精听)');
   }, [isKaraokeDemoPlaying, currentLine, karaokeDemoTime, handleSpeakText]);
 
   // 重置卡拉OK演练
@@ -1348,6 +1351,19 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            {/* 0. 极简沉浸版快捷切换 */}
+            {onSwitchToMinimal && (
+              <button
+                type="button"
+                onClick={onSwitchToMinimal}
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+                title="切换到单泰文视频·嵌入式音标与连续进度条极简沉浸版"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>极简沉浸版</span>
+              </button>
+            )}
+
             {/* 1. 装载视频链接 (核心一键弹窗，整合链接与字幕) */}
             <button
               onClick={() => {
@@ -1787,7 +1803,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                       ? 'bg-amber-600 hover:bg-amber-700 text-white ring-2 ring-amber-400 animate-pulse'
                       : 'bg-[#b58940] hover:bg-[#9a7231] text-white'
                   }`}
-                  title="点击立即开始当前句的卡拉OK彩色逐词高亮演练"
+                  title="点击立即开始当前句的逐词显示高亮演练"
                 >
                   {isKaraokeDemoPlaying ? (
                     <>
@@ -1797,7 +1813,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   ) : (
                     <>
                       <Mic className="w-3.5 h-3.5" />
-                      <span>🎤 试听卡拉OK</span>
+                      <span>🎤 逐词显示试听</span>
                     </>
                   )}
                 </button>
@@ -1869,7 +1885,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   </span>
                 ) : (
                   <span className="text-stone-500 text-[11px]">
-                    💡 点击任意单词或按“试听卡拉OK”立即体验逐词彩色线条
+                    💡 点击任意单词或按“逐词显示试听”体验逐词高亮线条
                   </span>
                 )}
               </div>

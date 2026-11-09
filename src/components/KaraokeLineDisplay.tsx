@@ -36,7 +36,7 @@ export const KaraokeLineDisplay: React.FC<KaraokeLineDisplayProps> = ({
           <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
             <span className="flex items-center gap-1.5 font-medium">
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              卡拉OK 逐字点亮视听流 (点击任意词即可精准跳转/查看法义)
+              逐词显示点亮视听流 (点击任意词即可精准跳转/查看法义)
             </span>
             <span className="font-mono text-amber-300">
               {currentLineElapsedSeconds.toFixed(1)}s / {totalDuration.toFixed(1)}s

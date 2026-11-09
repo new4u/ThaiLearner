@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActiveTab, RegisteredStudent } from '../types';
-import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus, Settings } from 'lucide-react';
+import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus, Settings, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: ActiveTab;
@@ -18,7 +18,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isAdminAuthenticated = false
 }) => {
   return (
-    <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-2.5 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none max-w-full overflow-hidden">
+    <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-2.5 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none max-w-full">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-4 min-w-0">
         
         {/* Brand */}
@@ -49,8 +49,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="泰中双视频同步共学放映机"
           >
             <Video className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">双视频共学</span>
-            <span className="sm:hidden">共学</span>
+            <span className="hidden sm:inline">双视频研读</span>
+            <span className="sm:hidden">研读</span>
+          </button>
+
+          {/* 1.5 极简沉浸版 */}
+          <button
+            onClick={() => onTabChange('minimal_player')}
+            className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+              activeTab === 'minimal_player'
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title="单泰文视频·嵌入式音标与连续进度条极简沉浸版"
+          >
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">极简沉浸</span>
+            <span className="sm:hidden">沉浸</span>
           </button>
 
           {/* 2. 泰语打字练习 */}
@@ -84,8 +99,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* 右侧：学员身份徽章 / 桌面端快捷打卡入口 */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* 右侧：学员身份徽章 / 共学管理 */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {currentStudent ? (
             <button
               onClick={() => onTabChange('registration_checkin')}
@@ -121,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="共学管理 (法工校对工作流、课件、开示与学员管理)"
             >
               <Settings className="w-3.5 h-3.5 text-amber-400" />
-              <span>共学管理</span>
+              <span className="hidden md:inline">共学管理</span>
             </button>
           )}
         </div>

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Navbar } from './src/components/Navbar';
 import { DualVideoSyncAlignPlayer } from './src/components/DualVideoSyncAlignPlayer';
+import { MinimalImmersionPlayer } from './src/components/MinimalImmersionPlayer';
 import { ThaiKeyboardPractice } from './src/components/ThaiKeyboardPractice';
 import { WordDetailModal } from './src/components/WordDetailModal';
 import { RegistrationCheckinView } from './src/components/RegistrationCheckinView';
@@ -136,7 +137,15 @@ const App: React.FC = () => {
       {/* 主界面视窗 */}
       <main className="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 lg:p-6 overflow-x-hidden">
         
-        {/* 1. 核心共学：泰中双视频同步对齐放映机 (学员端极简体验) */}
+        {/* 0. 极简沉浸版：单泰文视频·嵌入式音标与连续进度条 */}
+        {activeTab === 'minimal_player' && (
+          <MinimalImmersionPlayer
+            subtitles={subtitles}
+            onSwitchToDualPlayer={() => setActiveTab('dual_sync_player')}
+          />
+        )}
+
+        {/* 1. 核心共学：泰中双视频同步对齐放映机 (学员端研读工作台) */}
         {activeTab === 'dual_sync_player' && (
           <DualVideoSyncAlignPlayer
             subtitles={subtitles}
@@ -147,6 +156,7 @@ const App: React.FC = () => {
             offsetSeconds={playerOffsetSeconds}
             isOffsetLocked={playerIsOffsetLocked}
             onOpenAdmin={() => setShowAdminModal(true)}
+            onSwitchToMinimal={() => setActiveTab('minimal_player')}
             onOffsetChange={(offset, locked) => {
               setPlayerOffsetSeconds(offset);
               setPlayerIsOffsetLocked(locked);
