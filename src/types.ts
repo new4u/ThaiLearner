@@ -82,7 +82,7 @@ export interface UserLoginLog {
   wechatOrPhone: string;
   timestamp: number;
   timeStr: string;
-  action: 'register' | 'login' | 'auto_login';
+  action: 'register' | 'login' | 'auto_login' | 'auto_device_registered' | 'statement_claim_login';
   device: string;
 }
 
@@ -95,7 +95,7 @@ export interface StudyCheckinRecord {
   timeStr: string;
   streakDay: number;
   notes: string;
-  type: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone';
+  type: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone' | 'identity_statement';
   summary: string;
 }
 
@@ -243,7 +243,7 @@ export interface AdminSessionState {
 export interface PublicZenActivity {
   id: string;
   maskedStudentName: string;
-  activityType: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone';
+  activityType: 'daily_checkin' | 'keyboard_finish' | 'word_mastery' | 'video_milestone' | 'identity_statement';
   summary: string;
   timeAgo: string;
   timestamp: number;

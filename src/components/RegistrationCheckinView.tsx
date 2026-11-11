@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { RegisteredStudent, StudyCheckinRecord } from '../types';
 import { studentStudyService } from '../services/studentStudyService';
 import { adminAuthService } from '../services/adminAuthService';
+import { StatementIdentityModal } from './StatementIdentityModal';
 import { 
   CheckCircle2, Calendar, Award, Flame, LogOut, 
   Sparkles, Keyboard, BookOpen, Clock, 
@@ -31,12 +32,16 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
   const [checkinNotes, setCheckinNotes] = useState('');
   const [copiedReport, setCopiedReport] = useState(false);
 
+  // 语句身份标识与找回认领弹窗
+  const [showIdentityPrompt, setShowIdentityPrompt] = useState(false);
+  const [identityPromptMode, setIdentityPromptMode] = useState<'set_statement' | 'claim_statement'>('set_statement');
+
   // 注册/登录弹窗控制（只有在特定场景如点击打卡时，才弹出）
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLoginLookup, setIsLoginLookup] = useState(false);
   const [inputName, setInputName] = useState('');
   const [inputContact, setInputContact] = useState('');
-  const [inputGoal, setInputGoal] = useState('听懂尊者实况开示原声');
+  const [inputGoal, setInputGoal] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
   const [loginQuery, setLoginQuery] = useState('');
@@ -243,12 +248,21 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
 
               <p className="text-xs sm:text-sm text-stone-400 mt-1">
                 {currentStudent ? (
-                  <span>
-                    学习目标：{currentStudent.learningGoal || '随喜学习，听懂尊者开示原声'}
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span>
+                      我的发心：{currentStudent.learningGoal ? `“${currentStudent.learningGoal}”` : '尚未写入您的真实发心'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowIdentityPrompt(true)}
+                      className="text-[11px] text-amber-300 hover:text-amber-200 underline cursor-pointer"
+                    >
+                      {currentStudent.learningGoal ? '修改发心' : '点此写下您的发心'}
+                    </button>
                   </span>
                 ) : (
                   <span>
-                    每日坚持打卡闻思开示与键盘练习，沉淀学习足迹。
+                    系统已自动为您建立设备档案，写下一句真实发心即可作为专属印记！
                   </span>
                 )}
               </p>
@@ -256,16 +270,41 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
           </div>
 
           {/* 右侧动作 */}
-          <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+          <div className="flex items-center gap-2 self-start sm:self-center shrink-0 flex-wrap">
+            <button
+              type="button"
+              onClick={() => {
+                setIdentityPromptMode('set_statement');
+                setShowIdentityPrompt(true);
+              }}
+              className="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+              title="写一段话作为您的真实发心"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{currentStudent?.learningGoal ? '我的发心' : '写下真实发心'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setIdentityPromptMode('claim_statement');
+                setShowIdentityPrompt(true);
+              }}
+              className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-stone-300 hover:text-white text-xs font-semibold transition border border-slate-700 cursor-pointer"
+              title="点击自己写过的话，一键认领找回记录"
+            >
+              找回记录
+            </button>
+
             {currentStudent ? (
               <button
                 type="button"
                 onClick={handleLogout}
-                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-stone-300 hover:text-white text-xs font-semibold transition flex items-center gap-1.5 border border-slate-700 cursor-pointer"
+                className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-stone-400 hover:text-white text-xs font-semibold transition flex items-center gap-1 border border-slate-700 cursor-pointer"
                 title="切换其他称呼账号"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>切换称呼</span>
+                <span>退出</span>
               </button>
             ) : (
               <button
@@ -583,7 +622,6 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
                     required
                     value={inputName}
                     onChange={(e) => setInputName(e.target.value)}
-                    placeholder="输入您的称呼（如：林师兄）"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
                   />
                 </div>
@@ -638,7 +676,6 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
                     type="text"
                     value={inputGoal}
                     onChange={(e) => setInputGoal(e.target.value)}
-                    placeholder="例如：听懂尊者开示原声"
                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
                   />
                 </div>
@@ -712,6 +749,18 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
           </div>
         </div>
       )}
+
+      {/* 语句身份标识与辨识认领弹窗 */}
+      <StatementIdentityModal
+        currentStudent={currentStudent}
+        isOpen={showIdentityPrompt}
+        initialMode={identityPromptMode}
+        onClose={() => setShowIdentityPrompt(false)}
+        onStudentUpdated={(updated) => {
+          onStudentChange(updated);
+          refreshData();
+        }}
+      />
 
     </div>
   );

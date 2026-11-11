@@ -7,6 +7,7 @@ import { ThaiKeyboardPractice } from './src/components/ThaiKeyboardPractice';
 import { WordDetailModal } from './src/components/WordDetailModal';
 import { RegistrationCheckinView } from './src/components/RegistrationCheckinView';
 import { AdminSanctuaryModal } from './src/components/AdminSanctuaryModal';
+import { StatementIdentityModal } from './src/components/StatementIdentityModal';
 import { AppFooter } from './src/components/AppFooter';
 import { INITIAL_SUBTITLES } from './src/data/luangporCourseData';
 import { SubtitleLine, WordToken, WordStatus, ActiveTab, RegisteredStudent } from './src/types';
@@ -44,6 +45,25 @@ const App: React.FC = () => {
   const [currentStudent, setCurrentStudent] = useState<RegisteredStudent | null>(() => {
     return studentStudyService.getCurrentStudent();
   });
+
+  // 语句身份认领弹窗状态
+  const [showIdentityModal, setShowIdentityModal] = useState(false);
+  const [identityModalMode, setIdentityModalMode] = useState<'set_statement' | 'claim_statement'>('set_statement');
+
+  // 网页端访问：根据时间和浏览器指纹自动识读/注册账户，并持续保活 Supabase 数据库
+  useEffect(() => {
+    studentStudyService.autoEnsureFingerprintStudent().then(student => {
+      setCurrentStudent(student);
+    }).catch(err => {
+      console.warn('Auto fingerprint registration warning:', err);
+    });
+
+    const unsubscribe = studentStudyService.subscribeSync(() => {
+      const refreshed = studentStudyService.getCurrentStudent();
+      if (refreshed) setCurrentStudent(refreshed);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [subtitles, setSubtitles] = useState<SubtitleLine[]>(() => {
     try {
@@ -132,6 +152,10 @@ const App: React.FC = () => {
         onTabChange={setActiveTab}
         currentStudent={currentStudent}
         onOpenAdmin={() => setShowAdminModal(true)}
+        onOpenIdentityModal={(m) => {
+          setIdentityModalMode(m || 'set_statement');
+          setShowIdentityModal(true);
+        }}
       />
 
       {/* 主界面视窗 */}
@@ -264,6 +288,17 @@ const App: React.FC = () => {
           } catch {}
           setActiveTab('dual_sync_player');
           setShowAdminModal(false);
+        }}
+      />
+
+      {/* 法缘发心语句身份标识与认领弹窗 */}
+      <StatementIdentityModal
+        currentStudent={currentStudent}
+        isOpen={showIdentityModal}
+        initialMode={identityModalMode}
+        onClose={() => setShowIdentityModal(false)}
+        onStudentUpdated={(updated) => {
+          setCurrentStudent(updated);
         }}
       />
     </div>

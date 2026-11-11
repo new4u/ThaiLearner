@@ -1,6 +1,7 @@
 import { RegisteredStudent, UserLoginLog, StudyCheckinRecord } from '../types';
 import { supabase, isSupabaseConfigured, SUPABASE_CONFIG_INFO } from './supabaseClient';
 import { hashPasswordWithSalt } from '../utils/hash';
+import { getOrCreateDeviceFingerprint } from '../utils/browserFingerprint';
 
 const STORAGE_KEYS = {
   STUDENTS: 'taixue_registered_students',
@@ -108,10 +109,201 @@ class StudentStudyService {
         const found = students.find(s => s.id === currentId);
         if (found) return found;
       }
+      // 若当前没有登录且本地有学员列表，取第一个
+      if (students.length > 0) {
+        return students[0];
+      }
       return null;
     } catch {
       return null;
     }
+  }
+
+  // 2.1 浏览器指纹与时间零门槛自动注册/识读（首次访问网页全自动执行，同时同步保活 Supabase）
+  public async autoEnsureFingerprintStudent(): Promise<RegisteredStudent> {
+    const existing = this.getCurrentStudent();
+    if (existing) {
+      // 触达 Supabase 刷新最后访问时间，保持数据库活跃
+      this.pushStudentToSupabase({
+        ...existing,
+        lastLoginAt: this.formatCurrentTime()
+      });
+      return existing;
+    }
+
+    const fp = getOrCreateDeviceFingerprint();
+    const students = this.getAllStudents();
+    // 查找指纹关联的历史账号
+    const matched = students.find(s => s.id === fp.fingerprintId);
+    if (matched) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.CURRENT_ID, matched.id);
+      } catch {}
+      this.pushStudentToSupabase({
+        ...matched,
+        lastLoginAt: this.formatCurrentTime()
+      });
+      return matched;
+    }
+
+    // 自动为新访客根据时间和浏览器指纹创建轻量账号
+    const nowStr = this.formatCurrentTime();
+    const newStudent: RegisteredStudent = {
+      id: fp.fingerprintId,
+      name: fp.defaultDisplayName,
+      wechatOrPhone: '', // 留空，通过写一段话标识身份
+      learningGoal: '',  // 用户尚未输入自己的发心语句
+      thaiLevel: 'zero',
+      dailyTarget: '每天精进共学 15 分钟',
+      registeredAt: nowStr,
+      lastLoginAt: nowStr,
+      loginCount: 1,
+      streakDays: 1,
+      lastCheckinDate: undefined,
+      totalCheckins: 0,
+      keyboardPracticeCount: 0,
+      wordsMasteredCount: 0,
+      videoMinutesStudied: 0,
+      avatarSeed: ['amber', 'emerald', 'sky', 'rose', 'indigo'][Math.floor(Math.random() * 5)],
+      role: 'student'
+    };
+
+    const updated = [newStudent, ...students];
+    try {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(updated));
+      localStorage.setItem(STORAGE_KEYS.CURRENT_ID, newStudent.id);
+    } catch (e) {
+      console.error(e);
+    }
+
+    this.addLoginLog({
+      studentId: newStudent.id,
+      studentName: newStudent.name,
+      wechatOrPhone: fp.deviceLabel,
+      action: 'auto_device_registered'
+    });
+
+    // 实时推送到 Supabase，并激活/保活数据库
+    await this.pushStudentToSupabase(newStudent);
+    return newStudent;
+  }
+
+  // 2.2 更新/写入学员“作为身份标识的一段话”（参加共学的发心/需求）
+  public async updateStudentIdentityStatement(
+    studentId: string, 
+    statement: string, 
+    customName?: string
+  ): Promise<RegisteredStudent | null> {
+    const cleanStatement = statement.trim();
+    if (!cleanStatement) return null;
+
+    const students = this.getAllStudents();
+    const student = students.find(s => s.id === studentId);
+    if (!student) return null;
+
+    const updated: RegisteredStudent = {
+      ...student,
+      learningGoal: cleanStatement,
+      name: customName?.trim() ? customName.trim() : student.name,
+      lastLoginAt: this.formatCurrentTime()
+    };
+
+    const updatedList = students.map(s => s.id === studentId ? updated : s);
+    try {
+      localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(updatedList));
+      localStorage.setItem(STORAGE_KEYS.CURRENT_ID, updated.id);
+    } catch (e) {
+      console.error(e);
+    }
+
+    this.recordStudyEvent(
+      updated.id,
+      'identity_statement',
+      '更新参加共学发心标识',
+      `身份标识发心语: “${cleanStatement}”`
+    );
+
+    // 实时推送到 Supabase
+    await this.pushStudentToSupabase(updated);
+    this.notifyListeners();
+    return updated;
+  }
+
+  // 2.3 生成“找回账号 / 身份认领”的选择题选项 (只从数据库真实用户已写发心中抓取，绝无预设题词)
+  public async getIdentityChallengeOptions(targetStudentId?: string): Promise<{
+    options: Array<{ id: string; statement: string; isTarget?: boolean }>;
+    allStudentsWithGoals: RegisteredStudent[];
+  }> {
+    // 优先从云端拉取全量学员，以获取大家真实写下的发心语句
+    await this.syncWithSupabase().catch(() => {});
+    const allStudents = this.getAllStudents().filter(s => s.learningGoal && s.learningGoal.trim().length > 0);
+
+    let targetStudent: RegisteredStudent | undefined;
+    if (targetStudentId) {
+      targetStudent = allStudents.find(s => s.id === targetStudentId);
+    }
+
+    const correctStatement = targetStudent?.learningGoal;
+    // 从其他用户真实提交的发心中抽取干扰项
+    const otherPool = allStudents
+      .map(s => s.learningGoal.trim())
+      .filter(g => g && g !== correctStatement?.trim());
+
+    // 去重
+    const uniquePool = Array.from(new Set(otherPool));
+    const shuffledDistractors = uniquePool.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    const candidateList = correctStatement 
+      ? [correctStatement.trim(), ...shuffledDistractors]
+      : uniquePool.slice(0, 4);
+
+    const randomized = candidateList
+      .sort(() => 0.5 - Math.random())
+      .map((stmt, idx) => ({
+        id: `opt_${idx}`,
+        statement: stmt,
+        isTarget: Boolean(correctStatement && stmt === correctStatement.trim())
+      }));
+
+    return {
+      options: randomized,
+      allStudentsWithGoals: allStudents
+    };
+  }
+
+  // 2.4 通过用户点选认领的“一段话”，直接找回并切换账号
+  public async claimAccountByStatement(statement: string): Promise<RegisteredStudent | null> {
+    const clean = statement.trim();
+    if (!clean) return null;
+
+    // 先做一次云端同步，防止本地未缓存
+    await this.syncWithSupabase().catch(() => {});
+    const students = this.getAllStudents();
+    const matched = students.find(s => (s.learningGoal || '').trim() === clean);
+
+    if (matched) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.CURRENT_ID, matched.id);
+      } catch (e) {
+        console.error(e);
+      }
+      const nowStr = this.formatCurrentTime();
+      const updated: RegisteredStudent = {
+        ...matched,
+        lastLoginAt: nowStr,
+        loginCount: (matched.loginCount || 0) + 1
+      };
+      this.pushStudentToSupabase(updated);
+      this.addLoginLog({
+        studentId: updated.id,
+        studentName: updated.name,
+        wechatOrPhone: '语句认领登录',
+        action: 'statement_claim_login'
+      });
+      this.notifyListeners();
+      return updated;
+    }
+    return null;
   }
 
   // 3. 免费注册新学员并自动登录 (同步更新本地与 Supabase；注册必须设置密码)
@@ -151,7 +343,7 @@ class StudentStudyService {
       id: `stu_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
       name: cleanName,
       wechatOrPhone: cleanWechat,
-      learningGoal: params.learningGoal.trim() || '随喜参加泰语共学，听懂法音原声',
+      learningGoal: params.learningGoal.trim(),
       thaiLevel: params.thaiLevel || 'zero',
       dailyTarget: params.dailyTarget || '每天精进共学 15 分钟',
       registeredAt: nowStr,
@@ -324,10 +516,10 @@ class StudentStudyService {
     return { student: updatedStudent, record: checkinRecord };
   }
 
-  // 7. 记录各类学习动作 (键盘打卡完成、掌握生词、视频共学时长)
+  // 7. 记录各类学习动作 (键盘打卡完成、掌握生词、视频共学时长、身份标识更新)
   public recordStudyEvent(
     studentId: string,
-    type: 'keyboard_finish' | 'word_mastery' | 'video_milestone',
+    type: 'keyboard_finish' | 'word_mastery' | 'video_milestone' | 'identity_statement',
     summary: string,
     detailNotes?: string
   ): void {
@@ -389,7 +581,7 @@ class StudentStudyService {
     studentId: string;
     studentName: string;
     wechatOrPhone: string;
-    action: 'register' | 'login' | 'auto_login';
+    action: 'register' | 'login' | 'auto_login' | 'auto_device_registered' | 'statement_claim_login';
   }): void {
     const logs = this.getAllLoginLogs();
     const newLog: UserLoginLog = {
