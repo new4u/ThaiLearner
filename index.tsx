@@ -60,7 +60,21 @@ const App: React.FC = () => {
 
     const unsubscribe = studentStudyService.subscribeSync(() => {
       const refreshed = studentStudyService.getCurrentStudent();
-      if (refreshed) setCurrentStudent(refreshed);
+      if (refreshed) {
+        setCurrentStudent(prev => {
+          if (
+            prev &&
+            prev.id === refreshed.id &&
+            prev.name === refreshed.name &&
+            prev.learningGoal === refreshed.learningGoal &&
+            prev.streakDays === refreshed.streakDays &&
+            prev.totalCheckins === refreshed.totalCheckins
+          ) {
+            return prev;
+          }
+          return refreshed;
+        });
+      }
     });
     return () => unsubscribe();
   }, []);

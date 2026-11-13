@@ -32,6 +32,7 @@ export const StatementIdentityModal: React.FC<StatementIdentityModalProps> = ({
   const [challengeOptions, setChallengeOptions] = useState<Array<{ id: string; statement: string; isTarget?: boolean }>>([]);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const [selectedStatement, setSelectedStatement] = useState<string | null>(null);
+  const loadingLockRef = React.useRef(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,19 +47,32 @@ export const StatementIdentityModal: React.FC<StatementIdentityModalProps> = ({
         loadChallengeOptions();
       }
     }
-  }, [isOpen, initialMode, currentStudent]);
+  }, [isOpen, initialMode]);
 
   // 加载发心选项列表（用于做选择题认领）
   const loadChallengeOptions = async () => {
+    if (loadingLockRef.current) return;
+    loadingLockRef.current = true;
     setIsLoadingOptions(true);
     setSelectedStatement(null);
     setErrorMsg(null);
+
+    // 双重超时安全锁：无论网络发生何种迟滞，最多等待 2 秒立即收工解脱，决不长时间转圈
+    const safetyTimer = setTimeout(() => {
+      if (loadingLockRef.current) {
+        loadingLockRef.current = false;
+        setIsLoadingOptions(false);
+      }
+    }, 2000);
+
     try {
       const { options } = await studentStudyService.getIdentityChallengeOptions(currentStudent?.id);
       setChallengeOptions(options);
     } catch {
-      setErrorMsg('拉取共学发心选项失败，请重试');
+      setErrorMsg('拉取共学发心选项失败，已切为本地数据');
     } finally {
+      clearTimeout(safetyTimer);
+      loadingLockRef.current = false;
       setIsLoadingOptions(false);
     }
   };
@@ -294,8 +308,15 @@ export const StatementIdentityModal: React.FC<StatementIdentityModalProps> = ({
                     );
                   })
                 ) : (
-                  <div className="py-6 text-center text-xs text-stone-500">
-                    暂无可比对记录
+                  <div className="py-6 px-4 rounded-2xl bg-slate-950/50 border border-slate-800 text-center text-xs text-stone-400 space-y-2">
+                    <div>数据库中暂无已提交的发心记录</div>
+                    <button
+                      type="button"
+                      onClick={() => setMode('set_statement')}
+                      className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold cursor-pointer transition"
+                    >
+                      先去写下我的发心
+                    </button>
                   </div>
                 )}
               </div>

@@ -71,7 +71,7 @@ export const RegistrationCheckinView: React.FC<RegistrationCheckinViewProps> = (
     });
 
     return () => unsubscribe();
-  }, [currentStudent]);
+  }, []);
 
   // 检查今日是否已打卡
   const todayStr = useMemo(() => {

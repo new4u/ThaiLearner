@@ -234,8 +234,16 @@ class StudentStudyService {
     options: Array<{ id: string; statement: string; isTarget?: boolean }>;
     allStudentsWithGoals: RegisteredStudent[];
   }> {
-    // 优先从云端拉取全量学员，以获取大家真实写下的发心语句
-    await this.syncWithSupabase().catch(() => {});
+    // 优先尝试快速云端同步 (带 1.5 秒超时保护，防止网络阻塞导致前端无限卡在正在提取)
+    try {
+      await Promise.race([
+        this.syncWithSupabase(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+      ]);
+    } catch {
+      // 超时或离线直接平滑降级，读取本地现有数据，绝不阻塞 UI
+    }
+
     const allStudents = this.getAllStudents().filter(s => s.learningGoal && s.learningGoal.trim().length > 0);
 
     let targetStudent: RegisteredStudent | undefined;
@@ -276,8 +284,14 @@ class StudentStudyService {
     const clean = statement.trim();
     if (!clean) return null;
 
-    // 先做一次云端同步，防止本地未缓存
-    await this.syncWithSupabase().catch(() => {});
+    // 先尝试云端快速同步 (带 1.5 秒超时)，防止本地未缓存
+    try {
+      await Promise.race([
+        this.syncWithSupabase(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+      ]);
+    } catch {}
+
     const students = this.getAllStudents();
     const matched = students.find(s => (s.learningGoal || '').trim() === clean);
 
@@ -634,104 +648,134 @@ class StudentStudyService {
   // Supabase 异步后台静默数据同步与容灾机制 (Graceful Sync)
   // ========================================================================
 
-  public async syncWithSupabase(): Promise<{ success: boolean; message: string; count?: number }> {
+  private isSyncingWithSupabase = false;
+  private lastSyncTimestamp = 0;
+
+  public async syncWithSupabase(force: boolean = false): Promise<{ success: boolean; message: string; count?: number }> {
     if (!supabase || !isSupabaseConfigured()) {
       return { success: false, message: 'Supabase 尚未配置或处于离线模式' };
     }
 
+    const now = Date.now();
+    if (!force && now - this.lastSyncTimestamp < 4000) {
+      return { success: true, message: '已是最新数据' };
+    }
+
+    if (this.isSyncingWithSupabase) {
+      return { success: true, message: '正在同步中' };
+    }
+
+    this.isSyncingWithSupabase = true;
     try {
-      // 1. 同步学员列表
-      const { data: dbStudents, error: stuError } = await supabase
-        .from('students')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const syncTask = (async () => {
+        // 1. 同步学员列表
+        const { data: dbStudents, error: stuError } = await supabase
+          .from('students')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (stuError) {
-        if (stuError.code === '42P01') {
-          return { success: false, message: 'Supabase 数据表尚未创建，请在 SQL Editor 执行初始化脚本' };
+        if (stuError) {
+          if (stuError.code === '42P01') {
+            return { success: false, message: 'Supabase 数据表尚未创建，请在 SQL Editor 执行初始化脚本' };
+          }
+          return { success: false, message: `同步学员失败: ${stuError.message}` };
         }
-        return { success: false, message: `同步学员失败: ${stuError.message}` };
-      }
 
-      if (Array.isArray(dbStudents) && dbStudents.length > 0) {
-        const mappedStudents: RegisteredStudent[] = dbStudents.map((row: any) => ({
-          id: row.id,
-          name: row.name,
-          wechatOrPhone: row.wechat_or_phone || '',
-          learningGoal: row.learning_goal || '',
-          thaiLevel: row.thai_level || 'zero',
-          dailyTarget: row.daily_target || '',
-          registeredAt: row.registered_at || '',
-          lastLoginAt: row.last_login_at || '',
-          loginCount: row.login_count || 1,
-          streakDays: row.streak_days || 1,
-          lastCheckinDate: row.last_checkin_date || undefined,
-          totalCheckins: row.total_checkins || 0,
-          keyboardPracticeCount: row.keyboard_practice_count || 0,
-          wordsMasteredCount: row.words_mastered_count || 0,
-          videoMinutesStudied: row.video_minutes_studied || 0,
-          avatarSeed: row.avatar_seed || 'amber',
-          role: row.role || 'student',
-          passwordHash: row.password_hash || undefined
-        }));
+        let hasDataChange = false;
+        if (Array.isArray(dbStudents) && dbStudents.length > 0) {
+          const mappedStudents: RegisteredStudent[] = dbStudents.map((row: any) => ({
+            id: row.id,
+            name: row.name,
+            wechatOrPhone: row.wechat_or_phone || '',
+            learningGoal: row.learning_goal || '',
+            thaiLevel: row.thai_level || 'zero',
+            dailyTarget: row.daily_target || '',
+            registeredAt: row.registered_at || '',
+            lastLoginAt: row.last_login_at || '',
+            loginCount: row.login_count || 1,
+            streakDays: row.streak_days || 1,
+            lastCheckinDate: row.last_checkin_date || undefined,
+            totalCheckins: row.total_checkins || 0,
+            keyboardPracticeCount: row.keyboard_practice_count || 0,
+            wordsMasteredCount: row.words_mastered_count || 0,
+            videoMinutesStudied: row.video_minutes_studied || 0,
+            avatarSeed: row.avatar_seed || 'amber',
+            role: row.role || 'student',
+            passwordHash: row.password_hash || undefined
+          }));
+          const prevRaw = localStorage.getItem(STORAGE_KEYS.STUDENTS) || '';
+          const newRaw = JSON.stringify(mappedStudents);
+          if (prevRaw !== newRaw) {
+            localStorage.setItem(STORAGE_KEYS.STUDENTS, newRaw);
+            hasDataChange = true;
+          }
+        }
 
-        localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(mappedStudents));
-      }
+        // 2. 同步登录日志
+        const { data: dbLogs } = await supabase
+          .from('login_logs')
+          .select('*')
+          .order('timestamp', { ascending: false })
+          .limit(100);
 
-      // 2. 同步登录日志
-      const { data: dbLogs } = await supabase
-        .from('login_logs')
-        .select('*')
-        .order('timestamp', { ascending: false })
-        .limit(100);
+        if (Array.isArray(dbLogs) && dbLogs.length > 0) {
+          const mappedLogs: UserLoginLog[] = dbLogs.map((row: any) => ({
+            id: row.id,
+            studentId: row.student_id,
+            studentName: row.student_name,
+            wechatOrPhone: row.wechat_or_phone,
+            timestamp: row.timestamp,
+            timeStr: row.time_str,
+            action: row.action,
+            device: row.device
+          }));
+          localStorage.setItem(STORAGE_KEYS.LOGIN_LOGS, JSON.stringify(mappedLogs));
+        }
 
-      if (Array.isArray(dbLogs) && dbLogs.length > 0) {
-        const mappedLogs: UserLoginLog[] = dbLogs.map((row: any) => ({
-          id: row.id,
-          studentId: row.student_id,
-          studentName: row.student_name,
-          wechatOrPhone: row.wechat_or_phone,
-          timestamp: row.timestamp,
-          timeStr: row.time_str,
-          action: row.action,
-          device: row.device
-        }));
-        localStorage.setItem(STORAGE_KEYS.LOGIN_LOGS, JSON.stringify(mappedLogs));
-      }
+        // 3. 同步学修记录
+        const { data: dbRecords } = await supabase
+          .from('study_records')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(150);
 
-      // 3. 同步学修记录
-      const { data: dbRecords } = await supabase
-        .from('study_records')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(150);
+        if (Array.isArray(dbRecords) && dbRecords.length > 0) {
+          const mappedRecords: StudyCheckinRecord[] = dbRecords.map((row: any) => ({
+            id: row.id,
+            studentId: row.student_id,
+            studentName: row.student_name,
+            date: row.date,
+            timeStr: row.time_str,
+            streakDay: row.streak_day,
+            notes: row.notes,
+            type: row.type,
+            summary: row.summary
+          }));
+          localStorage.setItem(STORAGE_KEYS.STUDY_RECORDS, JSON.stringify(mappedRecords));
+        }
 
-      if (Array.isArray(dbRecords) && dbRecords.length > 0) {
-        const mappedRecords: StudyCheckinRecord[] = dbRecords.map((row: any) => ({
-          id: row.id,
-          studentId: row.student_id,
-          studentName: row.student_name,
-          date: row.date,
-          timeStr: row.time_str,
-          streakDay: row.streak_day,
-          notes: row.notes,
-          type: row.type,
-          summary: row.summary
-        }));
-        localStorage.setItem(STORAGE_KEYS.STUDY_RECORDS, JSON.stringify(mappedRecords));
-      }
+        this.lastSyncTimestamp = Date.now();
+        localStorage.setItem(STORAGE_KEYS.LAST_SYNC, new Date().toISOString());
+        if (hasDataChange) {
+          this.notifyListeners();
+        }
+        return { 
+          success: true, 
+          message: '已成功从 Supabase 云端拉取最新共学数据',
+          count: dbStudents?.length || 0 
+        };
+      })();
 
-      localStorage.setItem(STORAGE_KEYS.LAST_SYNC, new Date().toISOString());
-      this.notifyListeners();
+      const timeoutTask = new Promise<{ success: boolean; message: string }>((_, reject) => {
+        setTimeout(() => reject(new Error('云端连接响应超时，已平滑切为本地数据')), 3000);
+      });
 
-      return { 
-        success: true, 
-        message: '已成功从 Supabase 云端拉取最新共学数据',
-        count: dbStudents?.length || 0 
-      };
+      return await Promise.race([syncTask, timeoutTask]);
     } catch (e: any) {
       console.warn('Supabase sync warning:', e);
       return { success: false, message: e?.message || '连接超时或网络受限，已切换为本地存储' };
+    } finally {
+      this.isSyncingWithSupabase = false;
     }
   }
 
