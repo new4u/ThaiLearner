@@ -10,8 +10,15 @@ import {
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
   SlidersHorizontal, Clock, Bot, Copy, ChevronLeft, ChevronRight,
   FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink,
-  Lock, LockOpen, Mic
+  Lock, LockOpen, Mic, Globe
 } from 'lucide-react';
+import {
+  offlineAudioStorage,
+  OfflineAudioMeta,
+  OfflineTrackType,
+  formatBytes,
+} from '../services/offlineAudioStorage';
+import { OfflineAudioModal } from './OfflineAudioModal';
 import { 
   computeSentenceWordSlots, 
   getKaraokeWordProgress, 
@@ -291,6 +298,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   // YouTube 播放器引用与状态
   const thaiPlayerRef = useRef<any>(null);
   const chinesePlayerRef = useRef<any>(null);
+  const thaiHtml5AudioRef = useRef<HTMLAudioElement | null>(null);
   const chineseHtml5MediaRef = useRef<HTMLVideoElement | HTMLAudioElement | null>(null);
   const [chineseMediaError, setChineseMediaError] = useState<boolean>(false);
   const isThaiReadyRef = useRef<boolean>(false);
@@ -298,15 +306,67 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
 
+  // 离线纯音频与录音弹窗状态
+  const [showOfflineModal, setShowOfflineModal] = useState(false);
+  const [thaiOfflineAudio, setThaiOfflineAudio] = useState<{
+    url: string;
+    fileName: string;
+    sizeBytes: number;
+    offsetSeconds: number;
+    lessonId: string;
+    trackType: OfflineTrackType;
+  } | null>(null);
+  const [chineseOfflineAudio, setChineseOfflineAudio] = useState<{
+    url: string;
+    fileName: string;
+    sizeBytes: number;
+    offsetSeconds: number;
+    lessonId: string;
+    trackType: OfflineTrackType;
+  } | null>(null);
+  const [useOfflineThai, setUseOfflineThai] = useState(false);
+  const [useOfflineChinese, setUseOfflineChinese] = useState(false);
+  const thaiOfflineUrlRef = useRef<string | null>(null);
+  const chineseOfflineUrlRef = useRef<string | null>(null);
+
+  const isThaiOfflineActive = Boolean(useOfflineThai && thaiOfflineAudio);
+  const isChineseOfflineActive = Boolean(useOfflineChinese && chineseOfflineAudio);
+
+  const replaceThaiOfflineAudio = useCallback((next: typeof thaiOfflineAudio) => {
+    if (thaiOfflineUrlRef.current && thaiOfflineUrlRef.current !== next?.url) {
+      URL.revokeObjectURL(thaiOfflineUrlRef.current);
+    }
+    thaiOfflineUrlRef.current = next ? next.url : null;
+    setThaiOfflineAudio(next);
+  }, []);
+
+  const replaceChineseOfflineAudio = useCallback((next: typeof chineseOfflineAudio) => {
+    if (chineseOfflineUrlRef.current && chineseOfflineUrlRef.current !== next?.url) {
+      URL.revokeObjectURL(chineseOfflineUrlRef.current);
+    }
+    chineseOfflineUrlRef.current = next ? next.url : null;
+    setChineseOfflineAudio(next);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (thaiOfflineUrlRef.current) URL.revokeObjectURL(thaiOfflineUrlRef.current);
+      if (chineseOfflineUrlRef.current) URL.revokeObjectURL(chineseOfflineUrlRef.current);
+    };
+  }, []);
+
   // 当视频链接改变时，自动重置媒体错误状态
   useEffect(() => {
     setChineseMediaError(false);
   }, [config.chineseVideoUrl]);
 
-
   const thaiVideoId = extractYouTubeId(config.thaiVideoUrl);
   const chineseVideoId = extractYouTubeId(config.chineseVideoUrl);
-  const hasChineseMedia = Boolean(chineseVideoId || (config.chineseVideoUrl && config.chineseVideoUrl.trim() !== ''));
+  const hasChineseMedia = Boolean(
+    chineseVideoId ||
+    (config.chineseVideoUrl && config.chineseVideoUrl.trim() !== '') ||
+    isChineseOfflineActive
+  );
 
   useEffect(() => {
     if (!hasChineseMedia && audioFocus !== 'thai') {
@@ -318,11 +378,59 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   const currentCuratedLesson = useMemo(() => {
     return curatedLessons.find(l => 
+      config.title.includes(l.chineseTitle) ||
       l.chineseTitle === config.title || 
       (thaiVideoId && l.thaiVideoId === thaiVideoId) || 
       (chineseVideoId && l.chineseVideoId === chineseVideoId)
     ) || curatedLessons[0];
   }, [curatedLessons, config.title, thaiVideoId, chineseVideoId]);
+
+  // 切换课程时自动检索 IndexedDB 中的离线纯音频
+  useEffect(() => {
+    let cancelled = false;
+    offlineAudioStorage
+      .getLessonTracks(currentCuratedLesson.id)
+      .then((tracks) => {
+        if (cancelled) return;
+        if (tracks.thai_audio) {
+          const rec = tracks.thai_audio;
+          replaceThaiOfflineAudio({
+            url: URL.createObjectURL(rec.blob),
+            fileName: rec.fileName,
+            sizeBytes: rec.sizeBytes,
+            offsetSeconds: rec.offsetSeconds || 0,
+            lessonId: rec.lessonId,
+            trackType: rec.trackType,
+          });
+          setUseOfflineThai(true);
+        } else {
+          replaceThaiOfflineAudio(null);
+          setUseOfflineThai(false);
+        }
+
+        if (tracks.chinese_audio) {
+          const rec = tracks.chinese_audio;
+          replaceChineseOfflineAudio({
+            url: URL.createObjectURL(rec.blob),
+            fileName: rec.fileName,
+            sizeBytes: rec.sizeBytes,
+            offsetSeconds: rec.offsetSeconds || 0,
+            lessonId: rec.lessonId,
+            trackType: rec.trackType,
+          });
+          setUseOfflineChinese(true);
+        } else {
+          replaceChineseOfflineAudio(null);
+          setUseOfflineChinese(false);
+        }
+      })
+      .catch(() => {
+        // ignore IndexedDB unavailable
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [currentCuratedLesson.id, replaceThaiOfflineAudio, replaceChineseOfflineAudio]);
 
   // 🎤 卡拉OK逐词高亮与交互演练样板状态
   const [isKaraokeDemoPlaying, setIsKaraokeDemoPlaying] = useState<boolean>(false);
@@ -396,7 +504,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [onUpdateSubtitles]);
 
-  // 应用声道设置与音量
+  // 应用声道设置与音量 (同步支持 YouTube 与 HTML5 离线纯音频)
   const applyAudioSettings = useCallback((focus: 'thai' | 'chinese' | 'both', tVol: number, cVol: number) => {
     try {
       if (focus === 'thai') {
@@ -414,12 +522,21 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         chinesePlayerRef.current?.setVolume?.(cVol);
       }
 
+      if (thaiHtml5AudioRef.current) {
+        if (focus === 'chinese') {
+          thaiHtml5AudioRef.current.muted = true;
+        } else {
+          thaiHtml5AudioRef.current.muted = false;
+          thaiHtml5AudioRef.current.volume = Math.max(0, Math.min(1, tVol / 100));
+        }
+      }
+
       if (chineseHtml5MediaRef.current) {
         if (focus === 'thai') {
           chineseHtml5MediaRef.current.muted = true;
         } else {
           chineseHtml5MediaRef.current.muted = false;
-          chineseHtml5MediaRef.current.volume = cVol / 100;
+          chineseHtml5MediaRef.current.volume = Math.max(0, Math.min(1, cVol / 100));
         }
       }
     } catch {
@@ -429,7 +546,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   useEffect(() => {
     applyAudioSettings(audioFocus, thaiVol, chineseVol);
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isThaiOfflineActive, isChineseOfflineActive]);
+
+  // 离线 HTML5 音频播放倍速同步
+  useEffect(() => {
+    if (thaiHtml5AudioRef.current) {
+      thaiHtml5AudioRef.current.playbackRate = playbackRate;
+    }
+    if (chineseHtml5MediaRef.current) {
+      chineseHtml5MediaRef.current.playbackRate = playbackRate;
+    }
+  }, [playbackRate, isThaiOfflineActive, isChineseOfflineActive, thaiOfflineAudio?.url, chineseOfflineAudio?.url]);
 
   // 调整中文伴弱音量 (以 30% 幅度递减：100% -> 70% -> 40% -> 10%)
   const handleSetChineseVol = useCallback((vol: number) => {
@@ -471,15 +598,26 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [chineseVol, handleSetChineseVol]);
 
-  // 初始化与挂载 YouTube IFrame 官方受控播放器
+  // 初始化与挂载 YouTube IFrame 官方受控播放器 (离线纯音频激活时安全卸载对应 YT 实例)
   useEffect(() => {
     let isMounted = true;
+
+    if (isThaiOfflineActive && thaiPlayerRef.current) {
+      try { thaiPlayerRef.current.destroy?.(); } catch {}
+      thaiPlayerRef.current = null;
+      isThaiReadyRef.current = false;
+    }
+    if (isChineseOfflineActive && chinesePlayerRef.current) {
+      try { chinesePlayerRef.current.destroy?.(); } catch {}
+      chinesePlayerRef.current = null;
+      isChineseReadyRef.current = false;
+    }
 
     const initPlayers = () => {
       if (!isMounted || !window.YT || !window.YT.Player) return;
 
-      // 泰文主控播放器
-      if (thaiVideoId && document.getElementById('thai-yt-player') && !thaiPlayerRef.current) {
+      // 泰文主控播放器 (仅在非离线音频模式下挂载)
+      if (!isThaiOfflineActive && thaiVideoId && document.getElementById('thai-yt-player') && !thaiPlayerRef.current) {
         try {
           thaiPlayerRef.current = new window.YT.Player('thai-yt-player', {
             width: '100%',
@@ -515,8 +653,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         }
       }
 
-      // 中文对照播放器
-      if (chineseVideoId && document.getElementById('chinese-yt-player') && !chinesePlayerRef.current) {
+      // 中文对照播放器 (仅在非离线音频模式下挂载)
+      if (!isChineseOfflineActive && chineseVideoId && document.getElementById('chinese-yt-player') && !chinesePlayerRef.current) {
         try {
           chinesePlayerRef.current = new window.YT.Player('chinese-yt-player', {
             width: '100%',
@@ -541,19 +679,6 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 if (!isMounted) return;
                 if (event.data === 1) {
                   setIsChinesePlaying(true);
-                  // 防脱轨回正：已移除自动 seek，避免劫持中文字幕。
-                  // 中文轨保持自由播放，偏移仅在用户显式跳转或加载课件时生效。
-                  try {
-                    const thaiT = thaiPlayerRef.current?.getCurrentTime?.() ?? 0;
-                    const chineseT = event.target.getCurrentTime?.() ?? 0;
-                    const targetC = thaiT + offsetSeconds;
-                    if (Math.abs(chineseT - targetC) > 0.25) {
-                      // 自动 seek 已中立化：仅记录偏差，不强制回正中文视频
-                      void targetC;
-                    }
-                  } catch {
-                    // ignore
-                  }
                 } else if (event.data === 2) {
                   setIsChinesePlaying(false);
                 }
@@ -597,7 +722,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return () => {
       isMounted = false;
     };
-  }, [thaiVideoId, chineseVideoId, applyAudioSettings, audioFocus, chineseVol, offsetSeconds, playbackRate, thaiVol]);
+  }, [thaiVideoId, chineseVideoId, isThaiOfflineActive, isChineseOfflineActive, applyAudioSettings, audioFocus, chineseVol, offsetSeconds, playbackRate, thaiVol]);
 
   // 动态更换视频链接时自动切片
   useEffect(() => {
@@ -688,21 +813,75 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [offsetSeconds, isOffsetLocked, updateOffset]);
 
-  // 泰文主控带中文随动：同步跳转到指定时间（尊重当前 offsetSeconds）
+  // 统一音轨控制辅助函数 (兼容在线 YouTube 与离线纯音频 HTML5)
+  const isThaiTrackPlaying = useCallback((): boolean => {
+    if (isThaiOfflineActive && thaiHtml5AudioRef.current) {
+      return !thaiHtml5AudioRef.current.paused;
+    }
+    return thaiPlayerRef.current?.getPlayerState?.() === 1;
+  }, [isThaiOfflineActive]);
+
+  const isChineseTrackPlaying = useCallback((): boolean => {
+    if (chineseHtml5MediaRef.current) {
+      return !chineseHtml5MediaRef.current.paused;
+    }
+    return chinesePlayerRef.current?.getPlayerState?.() === 1;
+  }, []);
+
+  const playThaiTrack = useCallback(() => {
+    if (isThaiOfflineActive && thaiHtml5AudioRef.current) {
+      thaiHtml5AudioRef.current.play().catch(() => {});
+    } else {
+      try { thaiPlayerRef.current?.playVideo?.(); } catch {}
+    }
+  }, [isThaiOfflineActive]);
+
+  const pauseThaiTrack = useCallback(() => {
+    if (thaiHtml5AudioRef.current) {
+      try { thaiHtml5AudioRef.current.pause(); } catch {}
+    }
+    try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+  }, []);
+
+  const playChineseTrack = useCallback(() => {
+    if (chineseHtml5MediaRef.current) {
+      chineseHtml5MediaRef.current.play().catch(() => {});
+    } else {
+      try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+    }
+  }, []);
+
+  const pauseChineseTrack = useCallback(() => {
+    if (chineseHtml5MediaRef.current) {
+      try { chineseHtml5MediaRef.current.pause(); } catch {}
+    }
+    try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+  }, []);
+
+  // 泰文主控带中文随动：同步跳转到指定时间（尊重当前 offsetSeconds 与离线音频偏置）
   const seekBothToTime = useCallback((thaiSec: number) => {
     const clampedThai = Math.max(0, thaiSec);
     const targetChinese = Math.max(0, clampedThai + offsetSeconds);
 
     setCurrentTime(clampedThai);
-    try {
-      thaiPlayerRef.current?.seekTo?.(clampedThai, true);
-    } catch {}
-    try {
-      chinesePlayerRef.current?.seekTo?.(targetChinese, true);
-    } catch {}
+    if (isThaiOfflineActive && thaiHtml5AudioRef.current) {
+      try {
+        thaiHtml5AudioRef.current.currentTime = Math.max(0, clampedThai + (thaiOfflineAudio?.offsetSeconds || 0));
+      } catch {}
+    } else {
+      try {
+        thaiPlayerRef.current?.seekTo?.(clampedThai, true);
+      } catch {}
+    }
+
     if (chineseHtml5MediaRef.current) {
       try {
-        chineseHtml5MediaRef.current.currentTime = targetChinese;
+        const chOfflineOffset = isChineseOfflineActive ? (chineseOfflineAudio?.offsetSeconds || 0) : 0;
+        chineseHtml5MediaRef.current.currentTime = Math.max(0, targetChinese + chOfflineOffset);
+      } catch {}
+    } else {
+      try {
+        chinesePlayerRef.current?.seekTo?.(targetChinese, true);
       } catch {}
     }
 
@@ -712,10 +891,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     if (idx !== -1) {
       setCurrentLineIndex(idx);
     }
-  }, [offsetSeconds, activeSubtitles]);
+  }, [offsetSeconds, activeSubtitles, isThaiOfflineActive, thaiOfflineAudio?.offsetSeconds, isChineseOfflineActive, chineseOfflineAudio?.offsetSeconds]);
 
   // 外部 offsetSeconds prop 变化时同步到内部 state 与 config
-  // 若已锁定，立即将新偏移应用到当前播放位置（同步 seek 中文视频）
   useEffect(() => {
     if (propOffsetSeconds !== undefined && propOffsetSeconds !== offsetSeconds) {
       setOffsetSeconds(propOffsetSeconds);
@@ -728,14 +906,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [propOffsetSeconds, isOffsetLocked, currentTime, seekBothToTime]);
 
-  // 外部 isOffsetLocked prop 变化时同步到内部 state（受控模式）
-  // 锁定开启时：立即将当前偏移量应用到播放位置
+  // 外部 isOffsetLocked prop 变化时同步到内部 state
   useEffect(() => {
     const prevLocked = isOffsetLocked;
     if (propIsOffsetLocked !== undefined && propIsOffsetLocked !== isOffsetLocked) {
       setIsOffsetLocked(propIsOffsetLocked);
     }
-    // 当锁定状态变为 true，立即应用当前 offset
     if (propIsOffsetLocked === true && !prevLocked) {
       try {
         seekBothToTime(currentTime);
@@ -743,59 +919,50 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [propIsOffsetLocked, isOffsetLocked, currentTime, seekBothToTime]);
 
-  // 核心操作 1：双视频同时播放 / 同时暂停
+  // 核心操作 1：双轨同时播放 / 同时暂停
   const handleToggleDualPlay = useCallback(() => {
-    const isThaiActive = thaiPlayerRef.current?.getPlayerState?.() === 1;
-    const isChineseActive = chinesePlayerRef.current?.getPlayerState?.() === 1 || 
-      (chineseHtml5MediaRef.current && !chineseHtml5MediaRef.current.paused);
+    const isThaiActive = isThaiTrackPlaying();
+    const isChineseActive = isChineseTrackPlaying();
 
     if (isThaiActive || isChineseActive) {
-      try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
-      try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.pause(); } catch {}
+      pauseThaiTrack();
+      pauseChineseTrack();
       setIsBothPlaying(false);
       setIsThaiPlaying(false);
       setIsChinesePlaying(false);
     } else {
-      // 双轨齐播：保持用户手动对齐好的当前位置直接开播，中文轨迹不再做任何自动调整
-      try { thaiPlayerRef.current?.playVideo?.(); } catch {}
-      try { chinesePlayerRef.current?.playVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.play(); } catch {}
+      playThaiTrack();
+      playChineseTrack();
       setIsBothPlaying(true);
       setIsThaiPlaying(true);
       setIsChinesePlaying(true);
       applyAudioSettings(audioFocus, thaiVol, chineseVol);
     }
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, isChineseTrackPlaying, pauseThaiTrack, pauseChineseTrack, playThaiTrack, playChineseTrack]);
 
-  // 核心操作 2：泰文视频单独播放/暂停
+  // 核心操作 2：泰文轨道单独播放/暂停
   const handleToggleThaiAlone = useCallback(() => {
-    const isPlaying = thaiPlayerRef.current?.getPlayerState?.() === 1;
-    if (isPlaying) {
-      try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+    if (isThaiTrackPlaying()) {
+      pauseThaiTrack();
       setIsThaiPlaying(false);
     } else {
-      try { thaiPlayerRef.current?.playVideo?.(); } catch {}
+      playThaiTrack();
       setIsThaiPlaying(true);
       applyAudioSettings(audioFocus, thaiVol, chineseVol);
     }
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, pauseThaiTrack, playThaiTrack]);
 
-  // 核心操作 3：中文视频单独播放/暂停
+  // 核心操作 3：中文轨道单独播放/暂停
   const handleToggleChineseAlone = useCallback(() => {
-    const isPlaying = chinesePlayerRef.current?.getPlayerState?.() === 1 ||
-      (chineseHtml5MediaRef.current && !chineseHtml5MediaRef.current.paused);
-    if (isPlaying) {
-      try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.pause(); } catch {}
+    if (isChineseTrackPlaying()) {
+      pauseChineseTrack();
       setIsChinesePlaying(false);
     } else {
-      try { chinesePlayerRef.current?.playVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.play(); } catch {}
+      playChineseTrack();
       setIsChinesePlaying(true);
       applyAudioSettings(audioFocus, thaiVol, chineseVol);
     }
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isChineseTrackPlaying, pauseChineseTrack, playChineseTrack]);
 
   // 跳转到指定句子 (遵循当前声道/单播模式)
   const handleJumpToSentence = (index: number) => {
@@ -805,23 +972,20 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     seekBothToTime(target.secondsStart);
 
     if (audioFocus === 'both') {
-      try { thaiPlayerRef.current?.playVideo?.(); } catch {}
-      try { chinesePlayerRef.current?.playVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.play(); } catch {}
+      playThaiTrack();
+      playChineseTrack();
       setIsBothPlaying(true);
       setIsThaiPlaying(true);
       setIsChinesePlaying(true);
     } else if (audioFocus === 'thai') {
-      try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.pause(); } catch {}
-      try { thaiPlayerRef.current?.playVideo?.(); } catch {}
+      pauseChineseTrack();
+      playThaiTrack();
       setIsBothPlaying(false);
       setIsChinesePlaying(false);
       setIsThaiPlaying(true);
     } else {
-      try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
-      try { chinesePlayerRef.current?.playVideo?.(); } catch {}
-      try { chineseHtml5MediaRef.current?.play(); } catch {}
+      pauseThaiTrack();
+      playChineseTrack();
       setIsBothPlaying(false);
       setIsThaiPlaying(false);
       setIsChinesePlaying(true);
@@ -845,41 +1009,29 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     if (audioFocus === 'both') {
       handleToggleDualPlay();
     } else if (audioFocus === 'thai') {
-      const isThaiActive = thaiPlayerRef.current?.getPlayerState?.() === 1;
-      if (isThaiActive) {
-        try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+      if (isThaiTrackPlaying()) {
+        pauseThaiTrack();
         setIsThaiPlaying(false);
       } else {
-        try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+        pauseChineseTrack();
         setIsChinesePlaying(false);
-        try { thaiPlayerRef.current?.playVideo?.(); } catch {}
+        playThaiTrack();
         setIsThaiPlaying(true);
         applyAudioSettings('thai', thaiVol, chineseVol);
       }
     } else {
-      const isChineseActive = chinesePlayerRef.current?.getPlayerState?.() === 1;
-      if (isChineseActive) {
-        try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+      if (isChineseTrackPlaying()) {
+        pauseChineseTrack();
         setIsChinesePlaying(false);
       } else {
-        try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+        pauseThaiTrack();
         setIsThaiPlaying(false);
-        try {
-          const thaiT = thaiPlayerRef.current?.getCurrentTime?.() ?? currentTime;
-          const targetC = Math.max(0, thaiT + offsetSeconds);
-          const chineseT = chinesePlayerRef.current?.getCurrentTime?.() ?? 0;
-          if (Math.abs(chineseT - targetC) > 0.4) {
-            // 自动 seek 已中立化：不强制回正中文视频，避免劫持中文字幕
-            void targetC;
-            void chineseT;
-          }
-        } catch {}
-        try { chinesePlayerRef.current?.playVideo?.(); } catch {}
+        playChineseTrack();
         setIsChinesePlaying(true);
         applyAudioSettings('chinese', thaiVol, chineseVol);
       }
     }
-  }, [audioFocus, handleToggleDualPlay, currentTime, offsetSeconds, thaiVol, chineseVol, applyAudioSettings]);
+  }, [audioFocus, handleToggleDualPlay, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, isChineseTrackPlaying, pauseThaiTrack, pauseChineseTrack, playThaiTrack, playChineseTrack]);
 
   // 三档分段滑块切换处理：无缝过渡播放与声道状态
   const handleSelectMode = useCallback((mode: 'thai' | 'both' | 'chinese') => {
@@ -888,41 +1040,36 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
     if (mode === 'thai') {
       triggerToast('已切换至：🇹🇭 仅播泰语');
-      try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+      pauseChineseTrack();
       setIsChinesePlaying(false);
       if (isAnyActive) {
-        try { thaiPlayerRef.current?.playVideo?.(); } catch {}
+        playThaiTrack();
         setIsThaiPlaying(true);
       }
       applyAudioSettings('thai', thaiVol, chineseVol);
     } else if (mode === 'both') {
       triggerToast('已切换至：🎧 双轨齐播');
       if (isAnyActive) {
-        // 中文轨保持当前自由位置直接播放，不做自动对齐调整
-        try {
-          thaiPlayerRef.current?.playVideo?.();
-          chinesePlayerRef.current?.playVideo?.();
-          setIsThaiPlaying(true);
-          setIsChinesePlaying(true);
-          setIsBothPlaying(true);
-        } catch {}
+        playThaiTrack();
+        playChineseTrack();
+        setIsThaiPlaying(true);
+        setIsChinesePlaying(true);
+        setIsBothPlaying(true);
       }
       applyAudioSettings('both', thaiVol, chineseVol);
     } else if (mode === 'chinese') {
       triggerToast('已切换至：🇨🇳 仅播中文');
-      try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
+      pauseThaiTrack();
       setIsThaiPlaying(false);
       if (isAnyActive) {
-        try {
-          chinesePlayerRef.current?.playVideo?.();
-          setIsChinesePlaying(true);
-        } catch {}
+        playChineseTrack();
+        setIsChinesePlaying(true);
       }
       applyAudioSettings('chinese', thaiVol, chineseVol);
     }
-  }, [isThaiPlaying, isChinesePlaying, isBothPlaying, audioFocus, thaiVol, chineseVol, applyAudioSettings]);
+  }, [isThaiPlaying, isChinesePlaying, isBothPlaying, thaiVol, chineseVol, applyAudioSettings, pauseChineseTrack, pauseThaiTrack, playThaiTrack, playChineseTrack]);
 
-  // 倍速控制（直接调用 YT.Player 原生 API，音轨与媒体时间自然变速）
+  // 倍速控制（同步驱动 YT.Player 与 HTML5 离线音频）
   const handleSetPlaybackRate = useCallback((rate: number) => {
     setPlaybackRate(rate);
     try {
@@ -931,6 +1078,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     try {
       chinesePlayerRef.current?.setPlaybackRate?.(rate);
     } catch {}
+    if (thaiHtml5AudioRef.current) {
+      thaiHtml5AudioRef.current.playbackRate = rate;
+    }
+    if (chineseHtml5MediaRef.current) {
+      chineseHtml5MediaRef.current.playbackRate = rate;
+    }
     triggerToast(`倍速已设为 ${rate}x`);
   }, []);
 
@@ -971,7 +1124,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return () => clearInterval(timer);
   }, [isKaraokeDemoPlaying, karaokeDemoSpeed, currentLine]);
 
-  // 当真实 YouTube 视频开播时，自动终止独立演练模式
+  // 当真实视频或离线音频开播时，自动终止独立演练模式
   useEffect(() => {
     if (isThaiPlaying || isChinesePlaying) {
       setIsKaraokeDemoPlaying(false);
@@ -988,14 +1141,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       return;
     }
 
-    // 若视频正在播放，先暂停视频
-    try { thaiPlayerRef.current?.pauseVideo?.(); } catch {}
-    try { chinesePlayerRef.current?.pauseVideo?.(); } catch {}
+    // 若音视频正在播放，先暂停
+    pauseThaiTrack();
+    pauseChineseTrack();
     setIsThaiPlaying(false);
     setIsChinesePlaying(false);
     setIsBothPlaying(false);
 
-    // 若演练时间已在句末或不在本句内，从句首重新开始
     let startFrom = karaokeDemoTime;
     if (startFrom >= currentLine.secondsEnd || startFrom < currentLine.secondsStart) {
       startFrom = currentLine.secondsStart;
@@ -1003,10 +1155,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
 
     setIsKaraokeDemoPlaying(true);
-    // 朗读当前句泰语发音
     handleSpeakText(currentLine.thai);
     triggerToast('🎤 开始逐词显示同步演练 (点击任意单词可单独精听)');
-  }, [isKaraokeDemoPlaying, currentLine, karaokeDemoTime, handleSpeakText]);
+  }, [isKaraokeDemoPlaying, currentLine, karaokeDemoTime, handleSpeakText, pauseThaiTrack, pauseChineseTrack]);
 
   // 重置卡拉OK演练
   const handleResetKaraokeDemo = useCallback(() => {
@@ -1064,14 +1215,101 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return 0;
   }, []);
 
-  // 核心对齐操作：一键纠偏，根据当前视频真实播放时间，强制同步对齐字幕与双视频
+  // 离线音频单轨校准微调与弹窗回调
+  const handleNudgeTrackOfflineOffset = useCallback(
+    async (trackType: 'thai_audio' | 'chinese_audio', delta: number) => {
+      if (trackType === 'thai_audio' && thaiOfflineAudio) {
+        const nextVal = parseFloat((thaiOfflineAudio.offsetSeconds + delta).toFixed(2));
+        setThaiOfflineAudio(prev => (prev ? { ...prev, offsetSeconds: nextVal } : null));
+        await offlineAudioStorage.updateAudioOffset(thaiOfflineAudio.lessonId, thaiOfflineAudio.trackType, nextVal);
+      } else if (trackType === 'chinese_audio' && chineseOfflineAudio) {
+        const nextVal = parseFloat((chineseOfflineAudio.offsetSeconds + delta).toFixed(2));
+        setChineseOfflineAudio(prev => (prev ? { ...prev, offsetSeconds: nextVal } : null));
+        await offlineAudioStorage.updateAudioOffset(chineseOfflineAudio.lessonId, chineseOfflineAudio.trackType, nextVal);
+      }
+    },
+    [thaiOfflineAudio, chineseOfflineAudio]
+  );
+
+  const handleOfflineAudioActivated = useCallback(
+    (lessonId: string, trackType: OfflineTrackType, blob: Blob, meta: OfflineAudioMeta) => {
+      // 如果选择了另一个预制课件，先切入对应课件配置
+      if (lessonId !== currentCuratedLesson.id) {
+        const target = curatedLessons.find(l => l.id === lessonId);
+        if (target) {
+          const combinedTitle = `${target.chineseTitle} ｜ ${target.title}`;
+          const newConf: DualVideoConfig = {
+            title: combinedTitle,
+            thaiVideoUrl: target.thaiVideoUrl,
+            chineseVideoUrl: target.chineseVideoUrl,
+            offsetSeconds: target.defaultOffsetSeconds,
+            thaiVolume: 1.0,
+            chineseVolume: chineseVol / 100,
+          };
+          saveConfig(newConf);
+          setOffsetSeconds(target.defaultOffsetSeconds);
+          onOffsetChange?.(target.defaultOffsetSeconds, isOffsetLocked);
+          setInputThaiUrl(target.thaiVideoUrl);
+          setInputChineseUrl(target.chineseVideoUrl);
+          setInputTitle(combinedTitle);
+          saveSubtitles(target.subtitles);
+          setCurrentLineIndex(0);
+        }
+      }
+
+      const blobUrl = URL.createObjectURL(blob);
+      if (trackType === 'chinese_audio') {
+        replaceChineseOfflineAudio({
+          url: blobUrl,
+          fileName: meta.fileName,
+          sizeBytes: meta.sizeBytes,
+          offsetSeconds: meta.offsetSeconds || 0,
+          lessonId,
+          trackType,
+        });
+        setUseOfflineChinese(true);
+      } else {
+        replaceThaiOfflineAudio({
+          url: blobUrl,
+          fileName: meta.fileName,
+          sizeBytes: meta.sizeBytes,
+          offsetSeconds: meta.offsetSeconds || 0,
+          lessonId,
+          trackType,
+        });
+        setUseOfflineThai(true);
+      }
+      setShowOfflineModal(false);
+      triggerToast(`已挂载离线纯音频：${meta.fileName}`);
+    },
+    [
+      currentCuratedLesson.id,
+      curatedLessons,
+      chineseVol,
+      saveConfig,
+      onOffsetChange,
+      isOffsetLocked,
+      saveSubtitles,
+      replaceChineseOfflineAudio,
+      replaceThaiOfflineAudio,
+    ]
+  );
+
+  // 核心对齐操作：一键纠偏，根据当前视频或离线音频真实播放时间，强制同步对齐字幕
   const handleAlignCurrent = useCallback(() => {
     try {
-      // 优先获取当前正在发声/主控的真实播放时间
       let playerTime = 0;
-      if (audioFocus === 'chinese' && chinesePlayerRef.current && typeof chinesePlayerRef.current.getCurrentTime === 'function') {
-        const cTime = chinesePlayerRef.current.getCurrentTime() || 0;
-        playerTime = Math.max(0, cTime - offsetSeconds);
+      if (audioFocus === 'chinese') {
+        if (chineseHtml5MediaRef.current) {
+          const cTime = chineseHtml5MediaRef.current.currentTime || 0;
+          const chOfflineOffset = isChineseOfflineActive ? (chineseOfflineAudio?.offsetSeconds || 0) : 0;
+          playerTime = Math.max(0, cTime - chOfflineOffset - offsetSeconds);
+        } else if (chinesePlayerRef.current && typeof chinesePlayerRef.current.getCurrentTime === 'function') {
+          const cTime = chinesePlayerRef.current.getCurrentTime() || 0;
+          playerTime = Math.max(0, cTime - offsetSeconds);
+        }
+      } else if (isThaiOfflineActive && thaiHtml5AudioRef.current) {
+        playerTime = Math.max(0, (thaiHtml5AudioRef.current.currentTime || 0) - (thaiOfflineAudio?.offsetSeconds || 0));
       } else if (thaiPlayerRef.current && typeof thaiPlayerRef.current.getCurrentTime === 'function') {
         playerTime = thaiPlayerRef.current.getCurrentTime() || 0;
       }
@@ -1092,9 +1330,20 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     } catch (e) {
       console.warn('Align error:', e);
     }
-  }, [audioFocus, offsetSeconds, currentTime, activeSubtitles, findActiveSubtitleIndex, seekBothToTime]);
+  }, [
+    audioFocus,
+    offsetSeconds,
+    currentTime,
+    activeSubtitles,
+    findActiveSubtitleIndex,
+    seekBothToTime,
+    isThaiOfflineActive,
+    thaiOfflineAudio?.offsetSeconds,
+    isChineseOfflineActive,
+    chineseOfflineAudio?.offsetSeconds,
+  ]);
 
-  // 真实时间核心驱动与双视频长期播放漂移自动纠偏 (解决播放时间久了字幕脱节的深层根本原因)
+  // 真实时间核心驱动 (统一支持 YouTube 与 HTML5 离线纯音频)
   useEffect(() => {
     let isSubscribed = true;
 
@@ -1102,49 +1351,49 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       if (!isSubscribed) return;
 
       try {
-        const thaiState = thaiPlayerRef.current?.getPlayerState?.();
-        const chineseState = chinesePlayerRef.current?.getPlayerState?.();
-        const isThaiActivelyPlaying = thaiState === 1;
-        const isChineseActivelyPlaying = chineseState === 1;
+        const isThaiActivelyPlaying = isThaiTrackPlaying();
+        const isChineseActivelyPlaying = isChineseTrackPlaying();
 
         setIsThaiPlaying(isThaiActivelyPlaying);
         setIsChinesePlaying(isChineseActivelyPlaying);
 
-        // A. 真实时间基准获取：
-        // 若泰文正在播放，以泰文为绝对时间戳基准；
-        // 若泰文暂停而中文单独播放，以中文时间倒推泰文基准时间
         let realTime = 0;
-        if (thaiPlayerRef.current && typeof thaiPlayerRef.current.getCurrentTime === 'function') {
+        if (isThaiOfflineActive && thaiHtml5AudioRef.current) {
+          realTime = Math.max(0, (thaiHtml5AudioRef.current.currentTime || 0) - (thaiOfflineAudio?.offsetSeconds || 0));
+        } else if (thaiPlayerRef.current && typeof thaiPlayerRef.current.getCurrentTime === 'function') {
           realTime = thaiPlayerRef.current.getCurrentTime() || 0;
+        } else if (chineseHtml5MediaRef.current) {
+          const cTime = chineseHtml5MediaRef.current.currentTime || 0;
+          const chOfflineOffset = isChineseOfflineActive ? (chineseOfflineAudio?.offsetSeconds || 0) : 0;
+          realTime = Math.max(0, cTime - chOfflineOffset - offsetSeconds);
         } else if (chinesePlayerRef.current && typeof chinesePlayerRef.current.getCurrentTime === 'function') {
           const cTime = chinesePlayerRef.current.getCurrentTime() || 0;
           realTime = Math.max(0, cTime - offsetSeconds);
         }
 
-        // 如果泰文卡顿暂停但中文在放，且用户在听中文
         if (!isThaiActivelyPlaying && isChineseActivelyPlaying && audioFocus === 'chinese') {
-          const cTime = chinesePlayerRef.current?.getCurrentTime?.() || 0;
-          realTime = Math.max(0, cTime - offsetSeconds);
+          if (chineseHtml5MediaRef.current) {
+            const cTime = chineseHtml5MediaRef.current.currentTime || 0;
+            const chOfflineOffset = isChineseOfflineActive ? (chineseOfflineAudio?.offsetSeconds || 0) : 0;
+            realTime = Math.max(0, cTime - chOfflineOffset - offsetSeconds);
+          } else {
+            const cTime = chinesePlayerRef.current?.getCurrentTime?.() || 0;
+            realTime = Math.max(0, cTime - offsetSeconds);
+          }
         }
 
         setCurrentTime(realTime);
 
-        // 注：中文视频不做任何自动对齐调整（遵循用户操作准则：“中文随便它播”），
-        // 字幕高亮与时间基准始终以泰文原版为准，中文轨保持自由播放。
-
         const targetLine = activeSubtitles[currentLineIndex];
 
-        // C. 每一句循环检测：到达当前句真实句尾时平滑跳回起点（已移除自动 seek，避免劫持中文字幕）
         if (isLoopSentence && targetLine && realTime >= targetLine.secondsEnd) {
-          // seekBothToTime(targetLine.secondsStart); — 已禁用自动跳转
           if (isThaiActivelyPlaying || isChineseActivelyPlaying) {
-            thaiPlayerRef.current?.playVideo?.();
-            chinesePlayerRef.current?.playVideo?.();
+            playThaiTrack();
+            playChineseTrack();
           }
           return;
         }
 
-        // D. 真实时间驱动字幕高亮同步 (采用全覆盖无盲区定位，解决停顿气口造成的识别中断)
         if (!targetLine || realTime < targetLine.secondsStart || realTime >= targetLine.secondsEnd) {
           const newIdx = findActiveSubtitleIndex(realTime, activeSubtitles);
           if (newIdx !== -1 && newIdx !== currentLineIndex) {
@@ -1160,7 +1409,22 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       isSubscribed = false;
       clearInterval(timer);
     };
-  }, [activeSubtitles, currentLineIndex, isLoopSentence, seekBothToTime, audioFocus, offsetSeconds, findActiveSubtitleIndex]);
+  }, [
+    activeSubtitles,
+    currentLineIndex,
+    isLoopSentence,
+    audioFocus,
+    offsetSeconds,
+    findActiveSubtitleIndex,
+    isThaiTrackPlaying,
+    isChineseTrackPlaying,
+    isThaiOfflineActive,
+    thaiOfflineAudio?.offsetSeconds,
+    isChineseOfflineActive,
+    chineseOfflineAudio?.offsetSeconds,
+    playThaiTrack,
+    playChineseTrack,
+  ]);
 
   // 自动滚动列表
   useEffect(() => {
@@ -1356,13 +1620,28 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               <button
                 type="button"
                 onClick={onSwitchToMinimal}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
                 title="切换到单泰文视频·嵌入式音标与连续进度条极简沉浸版"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>极简沉浸版</span>
               </button>
             )}
+
+            {/* 离线纯音频与录音按钮 */}
+            <button
+              type="button"
+              onClick={() => setShowOfflineModal(true)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0 border ${
+                isThaiOfflineActive || isChineseOfflineActive
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500'
+                  : 'bg-slate-900 hover:bg-slate-800 text-amber-200 border-slate-700'
+              }`}
+              title="导入本地音频、缓存寺院公开 MP3 或纯音频录制分享"
+            >
+              <Headphones className="w-3.5 h-3.5" />
+              <span>{isThaiOfflineActive || isChineseOfflineActive ? '离线音频已挂载' : '离线音频与录音'}</span>
+            </button>
 
             {/* 1. 装载视频链接 (核心一键弹窗，整合链接与字幕) */}
             <button
@@ -1372,7 +1651,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 setInputTitle(config.title);
                 setShowPasteModal(true);
               }}
-              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
               title="点击装载视频链接与字幕"
             >
               <ClipboardPaste className="w-3.5 h-3.5" />
@@ -1382,7 +1661,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             {/* 2. 预制课件库 */}
             <button
               onClick={() => setShowPresetModal(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
               title="挑选官方及社群共学课件"
             >
               <Library className="w-3.5 h-3.5" />
@@ -1432,18 +1711,80 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
 
             <div className="relative aspect-video w-full bg-black [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0">
-              {thaiVideoId ? (
-                <div id="thai-yt-player" className="w-full h-full" />
+              {isThaiOfflineActive && thaiOfflineAudio ? (
+                <div className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-5 bg-gradient-to-br from-slate-900 via-stone-900 to-slate-950 text-amber-100 gap-3">
+                  <div className="w-full max-w-md flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Headphones className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="font-bold text-white truncate">{thaiOfflineAudio.fileName}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setUseOfflineThai(false)}
+                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-semibold flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                      <Globe className="w-3 h-3 text-amber-400" />
+                      <span>切回在线画面</span>
+                    </button>
+                  </div>
+
+                  <div className="w-full max-w-md text-[11px] text-slate-400 font-mono">
+                    免翻离线泰语纯音频 · {formatBytes(thaiOfflineAudio.sizeBytes)} · 正在驱动下方全篇字幕同步
+                  </div>
+
+                  <audio
+                    key={thaiOfflineAudio.url}
+                    ref={thaiHtml5AudioRef}
+                    src={thaiOfflineAudio.url}
+                    controls
+                    className="w-full max-w-md h-10"
+                    onPlay={() => setIsThaiPlaying(true)}
+                    onPause={() => setIsThaiPlaying(false)}
+                    onEnded={() => setIsThaiPlaying(false)}
+                  />
+
+                  <div className="w-full max-w-md flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                    <span>
+                      本轨字幕偏置: {thaiOfflineAudio.offsetSeconds >= 0 ? `+${thaiOfflineAudio.offsetSeconds}` : thaiOfflineAudio.offsetSeconds}s
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {[-0.5, -0.1, 0.1, 0.5].map(delta => (
+                        <button
+                          key={delta}
+                          type="button"
+                          onClick={() => handleNudgeTrackOfflineOffset('thai_audio', delta)}
+                          className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer"
+                        >
+                          {delta > 0 ? `+${delta}` : delta}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : thaiVideoId ? (
+                <>
+                  <div id="thai-yt-player" className="w-full h-full" />
+                  {thaiOfflineAudio && (
+                    <button
+                      type="button"
+                      onClick={() => setUseOfflineThai(true)}
+                      className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-slate-950/90 hover:bg-slate-900 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1 shadow-md cursor-pointer z-20"
+                    >
+                      <Headphones className="w-3 h-3" />
+                      <span>切回离线音频</span>
+                    </button>
+                  )}
+                </>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 p-6 text-center text-xs">
                   <Video className="w-8 h-8 text-stone-600 mb-2" />
-                  <p>请输入有效的泰文 YouTube 视频链接</p>
+                  <p>请输入有效的泰文 YouTube 视频链接，或点击顶部「离线音频与录音」载入本地纯音频</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* 中文视频视窗 (仅在有中文音视频源时展示) */}
+          {/* 中文视频视窗 (仅在有中文音视频源或已挂载离线中文音频时展示) */}
           {hasChineseMedia && (
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
             <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
@@ -1502,12 +1843,74 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
 
             <div className={`relative ${chineseAudioOnlyMode ? 'min-h-[100px] p-4 bg-stone-900 flex items-center justify-between border-t border-stone-800' : 'aspect-video'} w-full bg-black [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0 transition-all`}>
-              {chineseVideoId ? (
+              {isChineseOfflineActive && chineseOfflineAudio ? (
+                <div className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-5 bg-gradient-to-br from-slate-900 via-stone-900 to-slate-950 text-amber-100 gap-3">
+                  <div className="w-full max-w-md flex items-center justify-between gap-2 text-xs">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Headphones className="w-4 h-4 text-cyan-400 shrink-0" />
+                      <span className="font-bold text-white truncate">{chineseOfflineAudio.fileName}</span>
+                    </div>
+                    {chineseVideoId && (
+                      <button
+                        type="button"
+                        onClick={() => setUseOfflineChinese(false)}
+                        className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-semibold flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
+                      >
+                        <Globe className="w-3 h-3 text-amber-400" />
+                        <span>切回在线画面</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="w-full max-w-md text-[11px] text-slate-400 font-mono">
+                    免翻离线中文同传纯音频 · {formatBytes(chineseOfflineAudio.sizeBytes)}
+                  </div>
+
+                  <audio
+                    key={chineseOfflineAudio.url}
+                    ref={chineseHtml5MediaRef as any}
+                    src={chineseOfflineAudio.url}
+                    controls
+                    className="w-full max-w-md h-10"
+                    onPlay={() => setIsChinesePlaying(true)}
+                    onPause={() => setIsChinesePlaying(false)}
+                    onEnded={() => setIsChinesePlaying(false)}
+                  />
+
+                  <div className="w-full max-w-md flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                    <span>
+                      本轨字幕偏置: {chineseOfflineAudio.offsetSeconds >= 0 ? `+${chineseOfflineAudio.offsetSeconds}` : chineseOfflineAudio.offsetSeconds}s
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {[-0.5, -0.1, 0.1, 0.5].map(delta => (
+                        <button
+                          key={delta}
+                          type="button"
+                          onClick={() => handleNudgeTrackOfflineOffset('chinese_audio', delta)}
+                          className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 cursor-pointer"
+                        >
+                          {delta > 0 ? `+${delta}` : delta}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : chineseVideoId ? (
                 <>
                   <div 
                     id="chinese-yt-player" 
                     className={chineseAudioOnlyMode ? 'w-0 h-0 opacity-0 pointer-events-none absolute' : 'w-full h-full'} 
                   />
+                  {chineseOfflineAudio && !chineseAudioOnlyMode && (
+                    <button
+                      type="button"
+                      onClick={() => setUseOfflineChinese(true)}
+                      className="absolute top-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-slate-950/90 hover:bg-slate-900 text-cyan-300 border border-cyan-500/40 text-[11px] font-bold flex items-center gap-1 shadow-md cursor-pointer z-20"
+                    >
+                      <Headphones className="w-3 h-3" />
+                      <span>切回离线音频</span>
+                    </button>
+                  )}
                   {chineseAudioOnlyMode && (
                     <div className="flex items-center justify-between w-full">
                       <div className="flex items-center gap-3">
@@ -2898,6 +3301,27 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       )}
 
 
+      {/* 离线纯音频与录音弹窗 */}
+      <OfflineAudioModal
+        isOpen={showOfflineModal}
+        onClose={() => setShowOfflineModal(false)}
+        lessons={curatedLessons}
+        currentLesson={currentCuratedLesson}
+        activeOfflineTracks={{
+          thai: thaiOfflineAudio ? { fileName: thaiOfflineAudio.fileName, lessonId: thaiOfflineAudio.lessonId } : undefined,
+          chinese: chineseOfflineAudio ? { fileName: chineseOfflineAudio.fileName, lessonId: chineseOfflineAudio.lessonId } : undefined,
+        }}
+        onAudioActivated={handleOfflineAudioActivated}
+        onClearActiveTrack={(trackType) => {
+          if (trackType === 'thai_audio') {
+            replaceThaiOfflineAudio(null);
+            setUseOfflineThai(false);
+          } else if (trackType === 'chinese_audio') {
+            replaceChineseOfflineAudio(null);
+            setUseOfflineChinese(false);
+          }
+        }}
+      />
     </div>
   );
 };
