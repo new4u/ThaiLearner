@@ -129,6 +129,8 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     chineseVideoId: '',
     defaultOffsetSeconds: 0.0,
     totalSentences: 29,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
     tags: ['10月10日精选开示', '朱拉隆功五调音标', '纯泰原声精进', '善法欲与精进修行'],
     keyTerms: TALK_10OCT_KEY_TERMS,
     subtitles: LUANGPOR_OCT_10_SUBTITLES
@@ -146,6 +148,8 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     chineseVideoId: 'Zf07tYbYG9g',
     defaultOffsetSeconds: 0.0,
     totalSentences: 1195,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
     tags: ['10月31日最新开示', '1195句全篇精准对齐', '莫停留在空', '双视频实测校准'],
     keyTerms: LUANGPOR_OCT_31_KEY_TERMS,
     subtitles: LUANGPOR_OCT_31_SUBTITLES
@@ -163,6 +167,8 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     chineseVideoId: 'HfYrKhJh_SU',
     defaultOffsetSeconds: 0.0,
     totalSentences: 1198,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
     tags: ['10月17日官方开示', '1198句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: DAILY_PRACTICE_KEY_TERMS,
     subtitles: DAILY_PRACTICE_SUBTITLES
@@ -180,6 +186,8 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     chineseVideoId: 'HR-O2XYifbI',
     defaultOffsetSeconds: 0.0,
     totalSentences: 746,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
     tags: ['10月18日官方开示', '746句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: FLAGSHIP_20261018_KEY_TERMS,
     subtitles: LUANGPOR_OCT_18_SUBTITLES
@@ -189,6 +197,45 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
 const PRESET_STORAGE_KEY = 'taixue_calibrated_preset_lessons_v1';
 
 export const COMMUNITY_LESSONS_STORAGE_KEY = 'taixue_community_lessons_pool_v2';
+
+const LESSONS_UPDATED_EVENT = 'taixue_lessons_updated';
+
+function emitLessonsUpdated() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(LESSONS_UPDATED_EVENT));
+  }
+}
+
+export function subscribeLessonsUpdate(listener: () => void): () => void {
+  if (typeof window === 'undefined') return () => {};
+  window.addEventListener(LESSONS_UPDATED_EVENT, listener);
+  return () => window.removeEventListener(LESSONS_UPDATED_EVENT, listener);
+}
+
+export function getLessonProvenance(lesson?: Partial<CuratedLesson>): {
+  type: 'official' | 'community';
+  label: string;
+  contributorName?: string;
+} {
+  if (!lesson) {
+    return { type: 'official', label: '官方精校' };
+  }
+  const isOfficialPreset =
+    lesson.curationType === 'official' ||
+    Boolean(lesson.id && CURATED_LESSONS_PRESETS.some((p) => p.id === lesson.id));
+  if (isOfficialPreset) {
+    return {
+      type: 'official',
+      label: '官方精校',
+    };
+  }
+  const contributorName = lesson.submittedBy?.name?.trim() || lesson.alignedBy?.trim() || '共学学友';
+  return {
+    type: 'community',
+    label: `学友贡献 · ${contributorName}`,
+    contributorName,
+  };
+}
 
 // 读取本地已保存的全部社区课件（包括待审核、已批准、草稿）
 export function getAllCommunityLessons(): CuratedLesson[] {
@@ -223,6 +270,7 @@ export function saveCommunityLesson(lesson: CuratedLesson): CuratedLesson[] {
         all.unshift(lesson);
       }
       localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      emitLessonsUpdated();
       return all;
     }
   } catch (e) {
@@ -242,6 +290,7 @@ export function approveCommunityLesson(lessonId: string, adminName: string = 'Ad
         target.approvedBy = adminName;
         target.approvedAt = new Date().toISOString();
         localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+        emitLessonsUpdated();
       }
       return all;
     }
@@ -261,6 +310,7 @@ export function rejectCommunityLesson(lessonId: string, note?: string): CuratedL
         target.status = 'rejected';
         target.reviewNote = note || '未通过审核';
         localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+        emitLessonsUpdated();
       }
       return all;
     }
@@ -276,6 +326,7 @@ export function deleteCommunityLesson(lessonId: string): CuratedLesson[] {
     if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
       const all = getAllCommunityLessons().filter(l => l.id !== lessonId);
       localStorage.setItem(COMMUNITY_LESSONS_STORAGE_KEY, JSON.stringify(all));
+      emitLessonsUpdated();
       return all;
     }
   } catch (e) {
@@ -347,6 +398,7 @@ export function updateCuratedLessonCalibration(
         ...updates
       };
       localStorage.setItem(PRESET_STORAGE_KEY, JSON.stringify(overrides));
+      emitLessonsUpdated();
     }
   } catch (e) {
     console.error('Failed to save calibration', e);

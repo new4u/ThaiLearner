@@ -1,12 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, Upload, FileText, CheckCircle2, Sparkles, Copy, Check, 
-  Trash2, FileCheck2, Bot, Play, Save, Info
+  Trash2, FileCheck2, Bot, Play, Save, Info, Eraser
 } from 'lucide-react';
 import { CuratedLesson, SubtitleLine } from '../types';
-import { parseLanguageReactorText } from '../utils/languageReactorParser';
+import { parseLanguageReactorText, extractThaiAndTimestampsOnly } from '../utils/languageReactorParser';
 import { AI_SRT_CONVERSION_PROMPT, exportToEnhancedSRT } from '../utils/lrFormatParser';
 import { saveCommunityLesson } from '../data/presetLessonsLibrary';
+import {
+  extractYouTubeVideoId,
+  getVideoMediaKey,
+  saveBoundSubtitlesForMedia,
+} from '../utils/mediaSubtitleBinding';
 
 interface CourseStudioModalProps {
   isOpen: boolean;
@@ -16,8 +21,12 @@ interface CourseStudioModalProps {
   currentUserName?: string;
   prefillConfig?: {
     title?: string;
+    date?: string;
     thaiVideoUrl?: string;
     chineseVideoUrl?: string;
+    audioMediaKey?: string;
+    audioFileName?: string;
+    audioUrl?: string;
     snippet?: string;
     pageId?: number;
     subtitles?: SubtitleLine[];
@@ -50,7 +59,10 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [lessonTitle, setLessonTitle] = useState<string>(prefillConfig?.title || '共学互助校对课件');
-  const [lessonDate, setLessonDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [lessonDate, setLessonDate] = useState<string>(prefillConfig?.date || new Date().toISOString().slice(0, 10));
+  const [contributorName, setContributorName] = useState<string>(currentUserName || '共学学友');
+  const [thaiVideoUrlInput, setThaiVideoUrlInput] = useState<string>(prefillConfig?.thaiVideoUrl || '');
+  const [chineseVideoUrlInput, setChineseVideoUrlInput] = useState<string>(prefillConfig?.chineseVideoUrl || '');
 
   const getInitialText = () => {
     if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
@@ -93,6 +105,10 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
     setLessonTitle(prefillConfig?.title || '共学互助校对课件');
+    if (prefillConfig?.date) setLessonDate(prefillConfig.date);
+    setThaiVideoUrlInput(prefillConfig?.thaiVideoUrl || '');
+    setChineseVideoUrlInput(prefillConfig?.chineseVideoUrl || '');
+    if (currentUserName) setContributorName(currentUserName);
     if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
       const fullText = exportToEnhancedSRT(prefillConfig.subtitles);
       setRawText(fullText);
@@ -109,7 +125,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
       }
       setUploadedFileInfo(null);
     }
-  }, [isOpen, prefillConfig]);
+  }, [isOpen, prefillConfig, currentUserName]);
 
   // 文本变化时解析字幕
   const handleTextChange = (text: string) => {
@@ -161,6 +177,18 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     setTimeout(() => setCopiedPrompt(false), 2500);
   };
 
+  // 仅保留泰文与时间戳，剥离 HTML 与机器翻译
+  const handleStripMachineTranslation = () => {
+    if (!rawText.trim()) return;
+    const { cleanedText, blockCount, removedLinesCount } = extractThaiAndTimestampsOnly(rawText);
+    if (!cleanedText.trim()) {
+      showToast('未检测到有效泰文内容，请确认文本内包含泰文开示原文');
+      return;
+    }
+    handleTextChange(cleanedText);
+    showToast(`已剥离 HTML 与剔除 ${removedLinesCount} 行机翻/杂项，保留 ${blockCount} 段纯泰文+时间戳！`);
+  };
+
   // 装载或上传至共学互助库
   const handleApply = (saveToCommunityPool: boolean = false) => {
     const subs = parseResult.lines.length > 0 ? parseResult.lines : parseLanguageReactorText(rawText).subtitles;
@@ -170,38 +198,75 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     }
 
     const finalTitle = lessonTitle.trim() || prefillConfig?.title || '共学互助校对课件';
+    const signerName = contributorName.trim() || currentUserName || '共学学友';
+    const finalThaiVideoUrl = thaiVideoUrlInput.trim();
+    const finalChineseVideoUrl = chineseVideoUrlInput.trim();
+    const extractedThaiId = extractYouTubeVideoId(finalThaiVideoUrl);
+    const extractedChineseId = extractYouTubeVideoId(finalChineseVideoUrl);
+    const finalDate = lessonDate || new Date().toISOString().slice(0, 10);
+
     const newLesson: CuratedLesson = {
       id: `lesson_${Date.now()}`,
-      date: lessonDate || new Date().toISOString().slice(0, 10),
+      date: finalDate,
       title: finalTitle,
       chineseTitle: finalTitle,
       speaker: '隆波帕默尊者',
-      source: '共学互助校对',
-      thaiVideoUrl: prefillConfig?.thaiVideoUrl || 'https://www.youtube.com/watch?v=F4-tJNYDpss',
-      chineseVideoUrl: prefillConfig?.chineseVideoUrl || 'https://www.youtube.com/watch?v=HR-O2XYifbI',
-      thaiVideoId: prefillConfig?.thaiVideoUrl || 'F4-tJNYDpss',
-      chineseVideoId: prefillConfig?.chineseVideoUrl || 'HR-O2XYifbI',
+      source: isAdmin ? '官方周度精校' : `共学互助 · ${signerName}`,
+      thaiVideoUrl: finalThaiVideoUrl,
+      chineseVideoUrl: finalChineseVideoUrl,
+      thaiVideoId: extractedThaiId,
+      chineseVideoId: extractedChineseId,
       chineseMediaType: 'youtube',
       defaultOffsetSeconds: 0,
       totalSentences: subs.length,
-      tags: ['共学互助', '字幕校对'],
+      curationType: isAdmin ? 'official' : 'community',
+      alignedBy: isAdmin ? '官方周度精校' : signerName,
+      tags: isAdmin ? ['官方精校', '全篇对齐'] : ['共学互助', '学友贡献'],
       keyTerms: [],
       subtitles: subs,
       status: isAdmin ? 'approved' : 'pending',
       submittedBy: {
         id: currentUserEmail || 'community_user',
-        name: currentUserName || '共学学友',
+        name: isAdmin ? '官方精校' : signerName,
         emailOrPhone: currentUserEmail || '共学互助提交',
       },
       submittedAt: new Date().toISOString(),
     };
 
+    const videoMediaKey = getVideoMediaKey(finalThaiVideoUrl);
+    if (videoMediaKey) {
+      saveBoundSubtitlesForMedia({
+        mediaKey: videoMediaKey,
+        mediaKind: 'thai_video',
+        thaiVideoId: extractedThaiId || undefined,
+        thaiVideoUrl: finalThaiVideoUrl,
+        chineseVideoUrl: finalChineseVideoUrl || undefined,
+        date: finalDate,
+        title: finalTitle,
+        subtitles: subs,
+        updatedAt: Date.now(),
+      });
+    }
+
+    if (prefillConfig?.audioMediaKey) {
+      saveBoundSubtitlesForMedia({
+        mediaKey: prefillConfig.audioMediaKey,
+        mediaKind: 'thai_audio',
+        thaiAudioUrl: prefillConfig.audioUrl,
+        thaiAudioFileName: prefillConfig.audioFileName,
+        date: finalDate,
+        title: finalTitle,
+        subtitles: subs,
+        updatedAt: Date.now(),
+      });
+    }
+
     if (saveToCommunityPool) {
       saveCommunityLesson(newLesson);
       showToast(
         isAdmin
-          ? '✅ 已直接保存并发布至公共课件库！'
-          : '📤 已上传提交至共学互助库，本机已为您立即载入学习！'
+          ? '✅ 已直接保存并发布至官方精校课件库！'
+          : `📤 已以「学友贡献 · ${signerName}」上传提交至共学互助库，并立即载入学习！`
       );
     }
 
@@ -249,8 +314,8 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
 
         {/* 主体内容 */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-          {/* 课件名称与开示日期 */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* 课件名称、开示日期与贡献署名 */}
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
             <div className="sm:col-span-2">
               <label className="text-xs font-bold text-stone-800 block mb-1">
                 🏷️ 课件名称 / 开示标题
@@ -271,6 +336,47 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
                 type="date"
                 value={lessonDate}
                 onChange={(e) => setLessonDate(e.target.value)}
+                className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-stone-800 block mb-1">
+                ✍️ 贡献署名
+              </label>
+              <input
+                type="text"
+                value={isAdmin ? '官方精校' : contributorName}
+                disabled={isAdmin}
+                onChange={(e) => setContributorName(e.target.value)}
+                placeholder="共学昵称 / 署名"
+                className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500 disabled:bg-amber-50 disabled:text-amber-900 disabled:font-bold"
+              />
+            </div>
+          </div>
+
+          {/* 绑定对应的泰/中视频链接（严格关联泰文视频，不对应不出字幕） */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 rounded-xl bg-amber-50/70 border border-amber-200/80">
+            <div>
+              <label className="text-[11px] font-bold text-stone-800 block mb-1">
+                🇹🇭 对应泰文原版 YouTube 链接（严格绑定字幕显示）
+              </label>
+              <input
+                type="text"
+                value={thaiVideoUrlInput}
+                onChange={(e) => setThaiVideoUrlInput(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=...（须对应本字幕泰语视频）"
+                className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-bold text-stone-800 block mb-1">
+                🇨🇳 对应中文同传视频链接（可选）
+              </label>
+              <input
+                type="text"
+                value={chineseVideoUrlInput}
+                onChange={(e) => setChineseVideoUrlInput(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=...（单播可留空）"
                 className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
@@ -318,13 +424,13 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
           {/* 2. 上传文件区 */}
           <div>
             <label className="text-xs font-bold text-stone-800 block mb-1.5">
-              📁 上传字幕文件 (.srt, .txt)
+              📁 上传字幕或 Language Reactor 导出文件 (.srt, .html, .htm, .txt, .tsv)
             </label>
             <input
               type="file"
               ref={fileInputRef}
               className="hidden"
-              accept=".srt,.txt,text/plain"
+              accept=".srt,.txt,.html,.htm,.tsv,.vtt,.json,text/plain,text/html"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
                   handleFileProcess(e.target.files[0]);
@@ -386,7 +492,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
                     点击选择 或 将字幕文件拖入此处
                   </p>
                   <p className="text-[11px] text-stone-500">
-                    支持 .SRT 与 .TXT 文件，读取后自动填入下方粘贴区
+                    支持 .SRT / .HTML（Language Reactor 导出）/ .TXT，读取后自动填入下方编辑区
                   </p>
                 </div>
               )}
@@ -397,7 +503,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
           <div className="space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <label className="text-xs font-bold text-stone-800 flex items-center gap-1.5">
-                <span>📝 字幕粘贴与编辑区 (增强型 SRT / 生肉 SRT)</span>
+                <span>📝 字幕粘贴与编辑区 (增强型 SRT / LR HTML / 生肉 SRT)</span>
                 {parseResult.total > 0 && (
                   <span className="text-[11px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300 font-bold">
                     ✓ 已识别全部 {parseResult.total} 句
@@ -405,18 +511,29 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
                 )}
               </label>
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleStripMachineTranslation}
+                  disabled={!rawText.trim()}
+                  className="px-2.5 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer disabled:opacity-40"
+                  title="自动剥离 HTML 标签与机器翻译，仅保留带时间戳的泰文原文，方便直接复制进 AI Studio 或第三方 AI 生产精校字幕"
+                >
+                  <Eraser className="w-3.5 h-3.5 text-amber-700" />
+                  <span>🧹 仅留泰文+时间戳（去机翻）</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => {
                     navigator.clipboard.writeText(rawText);
                     setCopiedRawText(true);
-                    showToast('已复制编辑区全部字幕内容（含 [GLOSS] 拆词与音标）！');
+                    showToast('已复制编辑区全部字幕内容！');
                     setTimeout(() => setCopiedRawText(false), 2000);
                   }}
                   disabled={!rawText.trim()}
                   className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-[11px] font-semibold flex items-center gap-1 transition cursor-pointer disabled:opacity-40"
-                  title="将当前编辑框中的全部字幕复制到剪贴板，方便发送给第三方 AI 进行校对或微调"
+                  title="将当前编辑框中的全部内容复制到剪贴板，方便贴入 AI Studio 或第三方 AI 生产音标与拆词"
                 >
                   {copiedRawText ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedRawText ? '已复制全文' : '📋 复制编辑区全文'}</span>

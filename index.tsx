@@ -15,7 +15,7 @@ import {
   MAINLAND_TOUR_STEPS,
 } from './src/components/SpotlightTourOverlay';
 import { AppFooter } from './src/components/AppFooter';
-import { getAllCuratedLessons } from './src/data/presetLessonsLibrary';
+import { getAllCuratedLessons, subscribeLessonsUpdate } from './src/data/presetLessonsLibrary';
 import { SubtitleLine, WordToken, WordStatus, ActiveTab, RegisteredStudent } from './src/types';
 import { thaiAudio } from './src/utils/thaiAudioSynthesizer';
 import { getOrCreateDeviceFingerprint } from './src/utils/browserFingerprint';
@@ -62,6 +62,16 @@ const App: React.FC = () => {
       if (window.location.hash === '#/mainland' || window.location.hash === '#/audio') {
         return 'mainland_offline';
       }
+    }
+    const prefs = readOnboardingPrefs();
+    if (prefs?.completed && prefs.canUseYouTube === true) {
+      return 'dual_sync_player';
+    }
+    return 'mainland_offline';
+  });
+  const [lastMediaTab, setLastMediaTab] = useState<'mainland_offline' | 'dual_sync_player'>(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#/video') {
+      return 'dual_sync_player';
     }
     const prefs = readOnboardingPrefs();
     if (prefs?.completed && prefs.canUseYouTube === true) {
@@ -164,6 +174,9 @@ const App: React.FC = () => {
   // 同步 URL Hash 路由 (#/video 与 #/audio，兼容旧版 #/mainland) 与浏览器前进后退
   const navigateToTab = useCallback((tab: ActiveTab) => {
     setActiveTab(tab);
+    if (tab === 'mainland_offline' || tab === 'dual_sync_player') {
+      setLastMediaTab(tab);
+    }
     if (typeof window !== 'undefined') {
       if (tab === 'dual_sync_player') {
         if (window.location.hash !== '#/video') {
@@ -227,7 +240,11 @@ const App: React.FC = () => {
   }, [activeTab]);
 
   // 音频与视频两大学习岔路共用同一套课件与字幕状态
-  const allLessons = useMemo(() => getAllCuratedLessons(), []);
+  const [lessonsVersion, setLessonsVersion] = useState(0);
+  useEffect(() => {
+    return subscribeLessonsUpdate(() => setLessonsVersion((v) => v + 1));
+  }, []);
+  const allLessons = useMemo(() => getAllCuratedLessons(), [lessonsVersion]);
   const [currentLessonId, setCurrentLessonId] = useState<string>(() => {
     try {
       const savedId = localStorage.getItem(ACTIVE_LESSON_STORAGE_KEY);
@@ -248,6 +265,21 @@ const App: React.FC = () => {
   });
 
   const [sharedLineIndex, setSharedLineIndex] = useState<number>(0);
+  const [lessonSyncNonce, setLessonSyncNonce] = useState<number>(0);
+  const [pendingAudioSelection, setPendingAudioSelection] = useState<{
+    mp3Url: string;
+    fileName: string;
+    fileCode?: string;
+    dateLabel?: string;
+    trackType: 'thai_audio' | 'chinese_audio';
+    nonce: number;
+  } | null>(null);
+  const [pendingVideoSelection, setPendingVideoSelection] = useState<{
+    thaiVideoUrl: string;
+    chineseVideoUrl?: string;
+    title?: string;
+    nonce: number;
+  } | null>(null);
 
   const handleSelectLessonId = useCallback(
     (lessonId: string) => {
@@ -258,6 +290,7 @@ const App: React.FC = () => {
       setSharedLineIndex(0);
       setPlayerOffsetSeconds(lesson.defaultOffsetSeconds);
       setPlayerIsOffsetLocked(true);
+      setLessonSyncNonce((n) => n + 1);
       try {
         localStorage.setItem(ACTIVE_LESSON_STORAGE_KEY, lesson.id);
         localStorage.setItem('luangpor_course_subtitles', JSON.stringify(lesson.subtitles));
@@ -344,6 +377,7 @@ const App: React.FC = () => {
       {/* 顶部极简导航 */}
       <Navbar
         activeTab={activeTab}
+        lastMediaTab={lastMediaTab}
         onTabChange={navigateToTab}
         currentStudent={currentStudent}
         isAdminAuthenticated={isAdminAuthenticated}
@@ -353,7 +387,7 @@ const App: React.FC = () => {
           setShowIdentityModal(true);
         }}
         onStartTour={() =>
-          triggerTour(activeTab === 'mainland_offline' ? 'mainland' : 'youtube')
+          triggerTour(lastMediaTab === 'dual_sync_player' ? 'youtube' : 'mainland')
         }
       />
 
@@ -371,6 +405,7 @@ const App: React.FC = () => {
             onSelectWord={setSelectedWord}
             onOpenKeyboard={handlePracticeInKeyboard}
             onSpeak={handleSpeak}
+            pendingAudioSelection={pendingAudioSelection}
             onSwitchToYouTubeMode={() => {
               const existing = readOnboardingPrefs();
               saveOnboardingPrefs({
@@ -379,6 +414,17 @@ const App: React.FC = () => {
                 tourCompleted: existing?.tourCompleted ?? true,
                 updatedAt: Date.now(),
               });
+              navigateToTab('dual_sync_player');
+            }}
+            onOpenVideoWithPair={(pair) => {
+              const existing = readOnboardingPrefs();
+              saveOnboardingPrefs({
+                completed: true,
+                canUseYouTube: true,
+                tourCompleted: existing?.tourCompleted ?? true,
+                updatedAt: Date.now(),
+              });
+              setPendingVideoSelection({ ...pair, nonce: Date.now() });
               navigateToTab('dual_sync_player');
             }}
             onStartTour={() => triggerTour('mainland')}
@@ -390,12 +436,36 @@ const App: React.FC = () => {
           <DualVideoSyncAlignPlayer
             subtitles={subtitles}
             currentLessonId={currentLessonId}
+            lessonSyncNonce={lessonSyncNonce}
             onSelectLessonId={handleSelectLessonId}
             currentLineIndex={sharedLineIndex}
             onLineIndexChange={setSharedLineIndex}
             onSelectWord={setSelectedWord}
             onOpenKeyboard={handlePracticeInKeyboard}
             onSpeak={handleSpeak}
+            pendingVideoSelection={pendingVideoSelection}
+            onSwitchToAudioMode={() => {
+              const existing = readOnboardingPrefs();
+              saveOnboardingPrefs({
+                completed: true,
+                canUseYouTube: false,
+                tourCompleted: existing?.tourCompleted ?? true,
+                updatedAt: Date.now(),
+              });
+              navigateToTab('mainland_offline');
+            }}
+            onOpenAudioWithTrack={(track) => {
+              const existing = readOnboardingPrefs();
+              saveOnboardingPrefs({
+                completed: true,
+                canUseYouTube: false,
+                tourCompleted: existing?.tourCompleted ?? true,
+                updatedAt: Date.now(),
+              });
+              setPendingAudioSelection({ ...track, nonce: Date.now() });
+              navigateToTab('mainland_offline');
+            }}
+            onStartTour={() => triggerTour('youtube')}
             onUpdateSubtitles={(newSubs) => {
               setSubtitles(newSubs);
               try {
@@ -436,10 +506,10 @@ const App: React.FC = () => {
                   查看打卡记录
                 </button>
                 <button
-                  onClick={() => navigateToTab('mainland_offline')}
+                  onClick={() => navigateToTab(lastMediaTab)}
                   className="text-xs text-stone-300 hover:text-white px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 transition cursor-pointer"
                 >
-                  ← 返回音频学习
+                  ← 返回法谈学习
                 </button>
               </div>
             </div>
@@ -447,7 +517,7 @@ const App: React.FC = () => {
             <ThaiKeyboardPractice
               initialTargetWord={keyboardTargetWord}
               onSpeak={handleSpeak}
-              onBackToStudy={() => navigateToTab('mainland_offline')}
+              onBackToStudy={() => navigateToTab(lastMediaTab)}
               onPracticeCompleted={handlePracticeCompleted}
             />
           </div>
@@ -459,7 +529,7 @@ const App: React.FC = () => {
             currentStudent={currentStudent}
             onStudentChange={setCurrentStudent}
             onNavigateToKeyboard={handlePracticeInKeyboard}
-            onNavigateToPlayer={() => navigateToTab('mainland_offline')}
+            onNavigateToPlayer={() => navigateToTab(lastMediaTab)}
             onOpenAdmin={() => setShowAdminModal(true)}
           />
         )}
@@ -503,6 +573,7 @@ const App: React.FC = () => {
           setSharedLineIndex(0);
           setPlayerOffsetSeconds(lesson.defaultOffsetSeconds);
           setPlayerIsOffsetLocked(true);
+          setLessonSyncNonce((n) => n + 1);
           try {
             localStorage.setItem(ACTIVE_LESSON_STORAGE_KEY, lesson.id);
             localStorage.setItem('luangpor_course_subtitles', JSON.stringify(lesson.subtitles));

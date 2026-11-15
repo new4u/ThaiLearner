@@ -10,15 +10,16 @@
    - 网站默认主页为 **音频学习**（`mainland_offline`），因为不仅中国大陆学友顺畅可用，海外学友同样适用、轻量便捷。
    - 另一主学习岔路为 **视频学习**（`dual_sync_player`，YouTube 双视频同步）。
 
-2. **极简四项顶部导航**
-   - 顶部主导航永远保持干净的 4 项：**音频学习** | **视频学习** | **泰语打字** | **每日打卡**。
+2. **极简三项顶部导航 + 页内音/视频一体滑块**
+   - 顶部主导航永远保持干净的 3 项：**法谈学习**（点击自动回到上次使用的音频或视频模式）| **泰语打字** | **每日打卡**，不与页内滑块重复堆叠“音频/视频”按钮。
+   - 音频与视频的切换通过主工作台上方 **`UnifiedMediaSelectorBar`** 内的 **「🎧 音频学习 | 🎬 视频学习」** 滑块直接切换。
    - **不再单设独立的「极简沉浸」分页**：沉浸体验通过音频/视频主播放器右上角的 **「全屏沉浸」按钮（一键切换）** 直接实现。
    - 音频学习与视频学习 **共用同一套课件、同一套字幕数组与当前句子进度**（`index.tsx` 统一状态）。
 
 3. **产品化视觉与交互一致性**
    - **禁止把音频学习做成简陋说明书**：音频区与视频区保持同等的正式产品级打磨。
    - **统一色系与材质**：温暖米白底色（`#faf7f2`）+ 深咖黑媒体播放框（`#2d2a26` / `#3d3730`）+ 琥珀金点缀（`#b58940`）。
-   - 视频是大双框，音频是 **轻量紧凑双音频框**（泰语原声 MP3 与中文同传 MP3 左右并排），次要工具（目录浏览、本地导入、录音缓存）收纳进按需弹窗。
+   - 视频是左右并列双框（即使暂无中文同传，右侧「中文译版」框也始终保留定位并提供一键关联同日/目录/链接按钮，不凭空消失），音频是 **轻量紧凑双音频框**（泰语原声 MP3 与中文同传 MP3 左右并排），选课与按日目录收纳进主界面可原地展开的 **`UnifiedMediaSelectorBar`**。
    - **半自动日期匹配**：选定课件或日期后，优先按日期（如 `YYYY-MM-DD` / 佛历 `YYMMDD`）半自动匹配 `dhamma.com` 泰语开示 MP3 与中文同传音频；未把握精准对应时不瞎编乱给，而是提供清晰的目录检索或官方网址让学友核对选取。
 
 4. **第一步优先聚焦「隆波的开示」**
@@ -72,14 +73,39 @@
 | :--- | :--- | :--- |
 | 应用入口与共享状态 | `/index.tsx`, `/server.ts` | 管理统一课件/字幕/句子索引状态、音画偏好、`#/admin` 隐藏入口，及代理/流媒体 API (`/api/audio-proxy`, `/api/thai-tts`, `/api/luangpor-catalog`) |
 | 顶部导航与导览 | `/src/components/Navbar.tsx`, `/src/components/FirstVisitOnboardingModal.tsx`, `/src/components/SpotlightTourOverlay.tsx`, `/src/hooks/useFullscreenStage.ts` | 极简 4 项导航、Tour 高亮导览（随 UI 改动同步维护）、一键全屏沉浸 Hook |
-| 两大学习主视图 | `/src/components/MainlandOfflinePage.tsx`, `/src/components/DualVideoSyncAlignPlayer.tsx` | 音频学习（默认，紧凑双音频框 + 半自动日期匹配）与视频学习（YouTube 双播），共用同一字幕与逐句进度 |
+| 两大学习主视图与复用底座 | `/src/components/MainlandOfflinePage.tsx`, `/src/components/DualVideoSyncAlignPlayer.tsx`, `/src/components/UnifiedMediaSelectorBar.tsx`, `/src/components/UnmatchedSubtitleBanner.tsx`, `/src/components/UnifiedPlayerDock.tsx` | 音频学习（默认）与视频学习共用主界面选课/音视频切换条、严格绑定空字幕横幅与底部悬浮主控台 |
 | 共学互助与 `admin` 后台 | `/src/components/AdminSanctuaryModal.tsx`, `/src/components/CourseStudioModal.tsx` | 普通用户仅见互助校对与上传、开示检索、AI 优化词、学习资源；仅 `admin` 登录后解锁审核/校准/学员档案/日志 |
 | 权限、隐私与学员体系 | `/src/services/adminAuthService.ts`, `/src/services/secureStorageService.ts`, `/src/services/studentStudyService.ts`, `/src/components/RegistrationCheckinView.tsx` | `admin` 会话认证、防爆破锁定、学员隐私金库、打卡与发心认领 |
-| 字幕解析、词库与语音 | `/src/utils/lrFormatParser.ts`, `/src/utils/chulaIpaDict.ts`, `/src/utils/thaiAudioSynthesizer.ts`, `/src/utils/dhammaLookup.ts`, `/src/data/presetLessonsLibrary.ts` | 朱拉音标分词、1120+ 佛法词典、开示目录与 MediaWiki 检索、预置及社区课件库 |
+| 字幕解析、词库与语音 | `/src/utils/lrFormatParser.ts`, `/src/utils/languageReactorParser.ts`, `/src/utils/chulaIpaDict.ts`, `/src/utils/thaiAudioSynthesizer.ts`, `/src/utils/dhammaLookup.ts`, `/src/utils/mediaSubtitleBinding.ts`, `/src/data/presetLessonsLibrary.ts` | 朱拉音标分词、LR HTML 去机翻清洗、1120+ 佛法词典、开示目录与 MediaWiki 检索、泰文音/视频唯一绑定字幕校验 |
 
 ---
 
-## 五、工程质量红线
+## 五、YouTube 双频道按日对照与周度精校生态
+
+1. **YouTube 官方频道自动对照 (`/api/luangpor-youtube-catalog` + `/api/youtube-resolve`)**
+   - 同时爬取 **`@luangpupramote/videos`**（正式精编版）、**`@luangpupramote/streams`**（直播/回放/重播）与 **`@JieTuoYuan/streams` + `@JieTuoYuan/videos`**（严格过滤普通话同传，排除 Cantonese/粵語/English/Rerun）。
+   - 准确识别 **正在直播 (`🔴 直播中`)**、**正式精编版 (`🎬 正式版`)**、**直播回放 (`📺 直播回放`)** 与 **重播 (`🔁 重播`)**，保留同日多版本候选并优先以正式版/直播原版压过重播。
+   - 若粘贴动态 `/live` 频道入口，通过 `/api/youtube-resolve` 自动解析并固定为该场唯一 11 位 `videoId`，确保字幕唯一绑定不随直播状态漂移。
+   - 泰文字幕检测遵循如实原则：若配置了 `YOUTUBE_API_KEY` 则由服务端调官方 Captions API 识别人工/自动字幕；未配置时不在服务端伪造状态，由学习者浏览器端 `YT.Player` 播放状态检测并直通 YouTube 原网页核对。
+
+2. **主理人 + 共学互助字幕生产工作流**
+   - 有泰文字幕的新视频：可直接导出或进入校对。
+   - 尚无泰文字幕的新视频：通过 Language Reactor 导出带时间戳的 `.html` / 文本 -> 在「共学互助校对」或「装载字幕」一键点击 **「仅留泰文+时间戳（去机翻）」** 剔除机器翻译与 HTML 杂项 -> 复制进 AI Studio 从代码底层生产标准朱拉音标、逐词卡拉 OK 与鼠标“打伞”词卡。
+   - 主理人每周可在 `admin`「时间轴调校」一键复制 **「本周官方对齐配置」** 发回 AI Studio 固化到底层；共学学友也可自由上传校对课件。
+
+3. **课件来源透明标识（官方精校 vs 学友贡献）**
+   - 所有官方内置与主理人周度精校课件标记为 **`🌟 官方精校`**（`curationType: 'official'`）。
+   - 社群学友互助上传的课件标记为 **`🤝 学友贡献 · {上传者署名}`**（`curationType: 'community'`），不对外暴露 `admin` 术语。
+
+4. **泰文音/视频唯一绑定字幕原则（不匹配不出字幕）**
+   - 字幕只属于对应的 **原泰语视频 / 原泰语音频**（由 `src/utils/mediaSubtitleBinding.ts` 按 YouTube Video ID、官方音频网址或文件名/佛历日期严格校验，并持久化于带媒体主键的绑定表 `taixue_bound_subtitles_by_media_v1`）。
+   - 切换或加载一个新的泰语 YouTube 视频或新的泰语 MP3/本地音频时，若该泰语媒体既不对应任何已有精校/共学课件，也没有为该媒体键显式导入过字幕，**严禁沿用上一场课件的字幕**，必须清空并展示空字幕引导卡片（可正常播放收听，或一键为当前音/视频导入专属字幕、或切回已有字幕课件）。
+   - 仅切换中文同传视频或中文同传音频时，不清除当前已正确绑定的泰语字幕。
+
+---
+
+## 六、工程质量红线
 
 - 修改 React 回调/受控状态时，严禁在 `setState(prev => ...)` 纯函数内部触发父组件 `setState`（使用 `ref` 计算并在外部调用回调）。
+- 禁止使用 `window.alert` / `window.open`，外链一律使用 `<a target="_blank" rel="noreferrer">` 或状态提示。
 - 每次改动后必须同时执行生产构建（`vite build`）与 TypeScript 类型检查（`tsc --noEmit`），确保零报错后再重启服务交付。

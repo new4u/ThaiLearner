@@ -1,8 +1,31 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { SubtitleLine, WordToken, DualVideoConfig, CuratedLesson } from '../types';
+import {
+  SubtitleLine,
+  WordToken,
+  DualVideoConfig,
+  CuratedLesson,
+  YouTubePairedCatalogResponse,
+  YouTubePairedTalkItem,
+} from '../types';
 import { OCT_18_BENCHMARK_CONFIG, OCT_18_LIVE_SUBTITLES } from '../data/luangporCourseData';
-import { getAllCuratedLessons, getFlagshipLesson } from '../data/presetLessonsLibrary';
-import { parseLanguageReactorText, formatSecondsToTime } from '../utils/languageReactorParser';
+import {
+  getAllCuratedLessons,
+  getFlagshipLesson,
+  getLessonProvenance,
+  subscribeLessonsUpdate,
+} from '../data/presetLessonsLibrary';
+import {
+  parseLanguageReactorText,
+  formatSecondsToTime,
+  extractThaiAndTimestampsOnly,
+} from '../utils/languageReactorParser';
+import {
+  extractYouTubeVideoId,
+  getVideoMediaKey,
+  resolveVideoSubtitlesBinding,
+  saveBoundSubtitlesForMedia,
+  removeBoundSubtitlesForMedia,
+} from '../utils/mediaSubtitleBinding';
 import { AI_SRT_CONVERSION_PROMPT, exportToEnhancedSRT } from '../utils/lrFormatParser';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { 
@@ -10,7 +33,7 @@ import {
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
   SlidersHorizontal, Clock, Bot, Copy, ChevronLeft, ChevronRight,
   FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink,
-  Lock, LockOpen, Mic, Globe, Maximize2, Minimize2
+  Lock, LockOpen, Mic, Globe, Maximize2, Minimize2, RefreshCw, Eraser, Compass
 } from 'lucide-react';
 import { useFullscreenStage } from '../hooks/useFullscreenStage';
 import {
@@ -20,6 +43,9 @@ import {
   formatBytes,
 } from '../services/offlineAudioStorage';
 import { OfflineAudioModal } from './OfflineAudioModal';
+import { UnifiedMediaSelectorBar } from './UnifiedMediaSelectorBar';
+import { UnmatchedSubtitleBanner } from './UnmatchedSubtitleBanner';
+import { UnifiedPlayerDock } from './UnifiedPlayerDock';
 import { 
   computeSentenceWordSlots, 
   getKaraokeWordProgress, 
@@ -35,6 +61,7 @@ import {
 interface DualVideoSyncAlignPlayerProps {
   subtitles?: SubtitleLine[];
   currentLessonId?: string;
+  lessonSyncNonce?: number;
   onSelectLessonId?: (lessonId: string) => void;
   currentLineIndex?: number;
   onLineIndexChange?: (idx: number) => void;
@@ -51,6 +78,21 @@ interface DualVideoSyncAlignPlayerProps {
   onOffsetChange?: (offset: number, locked: boolean) => void;
   /** 打开管理后台 */
   onOpenAdmin?: () => void;
+  pendingVideoSelection?: {
+    thaiVideoUrl: string;
+    chineseVideoUrl?: string;
+    title?: string;
+    nonce: number;
+  } | null;
+  onSwitchToAudioMode?: () => void;
+  onOpenAudioWithTrack?: (track: {
+    mp3Url: string;
+    fileName: string;
+    fileCode?: string;
+    dateLabel?: string;
+    trackType: 'thai_audio' | 'chinese_audio';
+  }) => void;
+  onStartTour?: () => void;
 }
 
 declare global {
@@ -62,12 +104,7 @@ declare global {
 
 // 提取 YouTube Video ID 辅助函数
 export function extractYouTubeId(url: string): string {
-  if (!url) return '';
-  const trimmed = url.trim();
-  const match = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|live\/))([\w-]{11})/);
-  if (match && match[1]) return match[1];
-  if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
-  return '';
+  return extractYouTubeVideoId(url);
 }
 
 // 检测是否为苹果 iOS / iPadOS 设备 (WebKit 单一音频输出通道限制，坚决确保安卓与PC绝不误伤)
@@ -149,6 +186,7 @@ const SUBTITLES_STORAGE_KEY = 'luangpor_active_subtitles_v3';
 export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> = ({
   subtitles: propsSubtitles,
   currentLessonId: propLessonId,
+  lessonSyncNonce,
   onSelectLessonId,
   currentLineIndex: propLineIndex,
   onLineIndexChange,
@@ -161,6 +199,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   isOffsetLocked: propIsOffsetLocked,
   onOffsetChange,
   onOpenAdmin,
+  pendingVideoSelection,
+  onSwitchToAudioMode,
+  onOpenAudioWithTrack,
+  onStartTour,
 }) => {
   const { stageRef: fullscreenStageRef, isFullscreen, toggleFullscreen, exitFullscreen } = useFullscreenStage();
 
@@ -195,20 +237,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [inputChineseUrl, setInputChineseUrl] = useState(config.chineseVideoUrl);
   const [inputTitle, setInputTitle] = useState(config.title);
 
-  // 2. 字幕轨数据（与「音频学习」共用同一套字幕）
-  const [activeSubtitles, setActiveSubtitles] = useState<SubtitleLine[]>(() => {
-    if (propsSubtitles && propsSubtitles.length > 0) return propsSubtitles;
-    try {
-      const savedSubs = localStorage.getItem(SUBTITLES_STORAGE_KEY);
-      if (savedSubs) {
-        const parsed = JSON.parse(savedSubs);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.words?.length > 0) return parsed;
-      }
-    } catch {
-      // fallback
-    }
-    return OCT_18_LIVE_SUBTITLES;
-  });
+  // 2. 字幕绑定版本控制（严格按当前泰文视频匹配对应字幕，绝不串用其他视频字幕）
+  const [bindingVersion, setBindingVersion] = useState(0);
 
   const [currentLineIndex, setCurrentLineIndexState] = useState<number>(propLineIndex ?? 0);
   const currentLineIndexRef = useRef<number>(currentLineIndex);
@@ -230,12 +260,6 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setCurrentLineIndexState(propLineIndex);
     }
   }, [propLineIndex]);
-
-  useEffect(() => {
-    if (propsSubtitles && propsSubtitles.length > 0) {
-      setActiveSubtitles(propsSubtitles);
-    }
-  }, [propsSubtitles]);
 
   // 3. 独立与协同播放状态
   const [isBothPlaying, setIsBothPlaying] = useState(false);
@@ -274,15 +298,26 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [isLoopSentence, setIsLoopSentence] = useState(false);
   const [playbackRate, setPlaybackRate] = useState<number>(1.0);
 
-  // 6. 预制精品课件库与弹窗设置
-  const [showPresetModal, setShowPresetModal] = useState(false);
+  // 6. 预制精品课件库与 YouTube 官方双频道按日对照
   const [curatedLessons, setCuratedLessons] = useState<CuratedLesson[]>(() => getAllCuratedLessons());
+  const [thaiCaptionLiveStatus, setThaiCaptionLiveStatus] = useState<'idle' | 'checking' | 'has_thai' | 'none_or_unloaded'>('idle');
   const [showConfigDrawer, setShowConfigDrawer] = useState(false);
   const [showPasteModal, setShowPasteModal] = useState(false);
+  const [videoSelectorExpandSignal, setVideoSelectorExpandSignal] = useState<{
+    tab?: 'catalog' | 'link';
+    sourceKind?: 'audio' | 'video';
+    nonce: number;
+  } | null>(null);
   const [showSaveToast, setShowSaveToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   // 默认不勾选自动滚动，避免列表频繁自动翻动打扰学习
   const [autoScroll, setAutoScroll] = useState(false);
+
+  useEffect(() => {
+    return subscribeLessonsUpdate(() => {
+      setCuratedLessons(getAllCuratedLessons());
+    });
+  }, []);
 
   // 选择预制课件（同步通知父级，保证与音频模式共用同一套课件与字幕）
   const handleSelectPresetLesson = (lesson: CuratedLesson) => {
@@ -295,17 +330,121 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       thaiVolume: 1.0,
       chineseVolume: chineseVol / 100
     };
+    removeBoundSubtitlesForMedia(getVideoMediaKey(lesson.thaiVideoUrl));
+    setBindingVersion(v => v + 1);
     saveConfig(newConf);
     setOffsetSeconds(lesson.defaultOffsetSeconds);
     onOffsetChange?.(lesson.defaultOffsetSeconds, isOffsetLocked);
     setInputThaiUrl(lesson.thaiVideoUrl);
     setInputChineseUrl(lesson.chineseVideoUrl);
     setInputTitle(combinedTitle);
-    saveSubtitles(lesson.subtitles);
     onSelectLessonId?.(lesson.id);
     setCurrentLineIndex(0);
-    setShowPresetModal(false);
-    triggerToast(`已成功调入官方预制课件: ${lesson.chineseTitle}`);
+    triggerToast(`已成功调入课件: ${lesson.chineseTitle}`);
+  };
+
+  // 从主页面统一选源栏或跨模式载入双视频（严格按泰文视频校验字幕）
+  const handleLoadCustomVideoPair = useCallback((params: {
+    thaiUrl: string;
+    chineseUrl?: string;
+    title?: string;
+  }) => {
+    const thaiUrl = (params.thaiUrl || '').trim();
+    const chineseUrl = (params.chineseUrl || '').trim();
+    const matchedLesson = thaiUrl
+      ? resolveVideoSubtitlesBinding({ thaiVideoUrl: thaiUrl, lessons: curatedLessons }).matchedLesson
+      : undefined;
+
+    if (matchedLesson && !chineseUrl) {
+      handleSelectPresetLesson(matchedLesson);
+      return;
+    }
+
+    const displayTitle = (params.title || '').trim() || matchedLesson?.chineseTitle || '自定义对照视频';
+    const newConf: DualVideoConfig = {
+      title: displayTitle,
+      thaiVideoUrl: thaiUrl,
+      chineseVideoUrl: chineseUrl,
+      offsetSeconds: matchedLesson ? matchedLesson.defaultOffsetSeconds : 0,
+      thaiVolume: 1.0,
+      chineseVolume: chineseVol / 100,
+    };
+    saveConfig(newConf);
+    setOffsetSeconds(newConf.offsetSeconds);
+    onOffsetChange?.(newConf.offsetSeconds, isOffsetLocked);
+    setInputThaiUrl(thaiUrl);
+    setInputChineseUrl(chineseUrl);
+    setInputTitle(displayTitle);
+    setCurrentLineIndex(0);
+    setBindingVersion(v => v + 1);
+
+    const checkBinding = resolveVideoSubtitlesBinding({ thaiVideoUrl: thaiUrl, lessons: curatedLessons });
+    triggerToast(
+      checkBinding.isMatched
+        ? `已载入视频并严格匹配到对应字幕（${checkBinding.subtitles.length} 句）`
+        : thaiUrl
+        ? '已载入新泰文视频；本视频暂未匹配字幕（已自动隐藏其他场次字幕）'
+        : '已更新中文伴播视频'
+    );
+  }, [curatedLessons, chineseVol, isOffsetLocked, onOffsetChange]);
+
+  // 响应从「音频学习」跨模式传入的视频链接
+  const lastHandledVideoNonceRef = useRef<number>(0);
+  useEffect(() => {
+    if (!pendingVideoSelection || pendingVideoSelection.nonce === lastHandledVideoNonceRef.current) return;
+    lastHandledVideoNonceRef.current = pendingVideoSelection.nonce;
+    handleLoadCustomVideoPair({
+      thaiUrl: pendingVideoSelection.thaiVideoUrl,
+      chineseUrl: pendingVideoSelection.chineseVideoUrl,
+      title: pendingVideoSelection.title,
+    });
+  }, [pendingVideoSelection, handleLoadCustomVideoPair]);
+
+  // 从 YouTube 官方双频道对照目录一键载入某天双视频
+  const handleLoadYouTubePair = (item: YouTubePairedTalkItem) => {
+    const matchedByCuratedId = item.matchedLessonId
+      ? curatedLessons.find((l) => l.id === item.matchedLessonId)
+      : undefined;
+    const thaiUrl = item.thai?.url || '';
+    const chineseUrl = item.chinese?.url || '';
+    const matchedByThaiVideo = thaiUrl
+      ? resolveVideoSubtitlesBinding({ thaiVideoUrl: thaiUrl, lessons: curatedLessons }).matchedLesson
+      : undefined;
+    const matchedLesson = matchedByCuratedId || matchedByThaiVideo;
+
+    if (matchedLesson) {
+      handleSelectPresetLesson(matchedLesson);
+      return;
+    }
+
+    const displayTitle = item.chinese?.title
+      ? `${item.date} ${item.chinese.title}${item.thai?.title ? ` ｜ ${item.thai.title}` : ''}`
+      : `${item.date} ${item.thai?.title || '隆波帕默尊者开示'}`;
+
+    const newConf: DualVideoConfig = {
+      title: displayTitle,
+      thaiVideoUrl: thaiUrl,
+      chineseVideoUrl: chineseUrl,
+      offsetSeconds: 0,
+      thaiVolume: 1.0,
+      chineseVolume: chineseVol / 100,
+    };
+    saveConfig(newConf);
+    setOffsetSeconds(0);
+    onOffsetChange?.(0, isOffsetLocked);
+    setInputThaiUrl(thaiUrl);
+    setInputChineseUrl(chineseUrl);
+    setInputTitle(displayTitle);
+    setCurrentLineIndex(0);
+    setBindingVersion(v => v + 1);
+    const checkBinding = resolveVideoSubtitlesBinding({ thaiVideoUrl: thaiUrl, lessons: curatedLessons });
+    triggerToast(
+      checkBinding.isMatched
+        ? `已载入 ${item.date} 泰中双播视频，并自动匹配到本场字幕（${checkBinding.subtitles.length} 句）！`
+        : thaiUrl
+        ? `已载入 ${item.date} 泰中对照视频；本泰文视频暂未匹配到字幕（已隐藏其他场次字幕，可点「导入字幕」装载）`
+        : `已载入 ${item.date} 视频源（当前无泰文视频链接，暂不显示字幕）`
+    );
   };
 
   // 7. 搜索过滤
@@ -408,33 +547,57 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [hasChineseMedia, audioFocus]);
 
-  const currentLine = activeSubtitles[currentLineIndex] || activeSubtitles[0];
+  const videoSubtitleBinding = useMemo(
+    () => resolveVideoSubtitlesBinding({ thaiVideoUrl: config.thaiVideoUrl, lessons: curatedLessons }),
+    [config.thaiVideoUrl, curatedLessons, bindingVersion]
+  );
 
-  const currentCuratedLesson = useMemo(() => {
-    if (propLessonId) {
-      const byId = curatedLessons.find(l => l.id === propLessonId);
-      if (byId) return byId;
+  const currentCuratedLesson = videoSubtitleBinding.matchedLesson;
+
+  const activeSubtitles = useMemo<SubtitleLine[]>(() => {
+    if (videoSubtitleBinding.source === 'custom_bound') {
+      return videoSubtitleBinding.subtitles;
     }
-    return curatedLessons.find(l => 
-      config.title.includes(l.chineseTitle) ||
-      l.chineseTitle === config.title || 
-      (thaiVideoId && l.thaiVideoId === thaiVideoId) || 
-      (chineseVideoId && l.chineseVideoId === chineseVideoId)
-    ) || curatedLessons[0];
-  }, [propLessonId, curatedLessons, config.title, thaiVideoId, chineseVideoId]);
+    if (videoSubtitleBinding.source === 'curated' && videoSubtitleBinding.matchedLesson) {
+      if (
+        propLessonId &&
+        propLessonId === videoSubtitleBinding.matchedLesson.id &&
+        propsSubtitles &&
+        propsSubtitles.length === videoSubtitleBinding.matchedLesson.subtitles.length
+      ) {
+        return propsSubtitles;
+      }
+      return videoSubtitleBinding.subtitles;
+    }
+    return [];
+  }, [videoSubtitleBinding, propLessonId, propsSubtitles]);
 
-  // 外部切换课件时自动同步双视频链接与标题，保证音/视频两条岔路同一套课件对齐
+  const safeLineIndex = activeSubtitles.length > 0
+    ? Math.max(0, Math.min(activeSubtitles.length - 1, currentLineIndex))
+    : 0;
+  const currentLine = activeSubtitles.length > 0 ? activeSubtitles[safeLineIndex] : undefined;
+
+  // 仅当外部显式切换课件（或管理员载入课件）时同步双视频链接与标题
+  const prevExternalLessonSyncRef = useRef<{ propLessonId?: string; lessonSyncNonce?: number }>({
+    propLessonId,
+    lessonSyncNonce,
+  });
   useEffect(() => {
+    const prev = prevExternalLessonSyncRef.current;
+    if (prev.propLessonId === propLessonId && prev.lessonSyncNonce === lessonSyncNonce) {
+      return;
+    }
+    prevExternalLessonSyncRef.current = { propLessonId, lessonSyncNonce };
     if (!propLessonId) return;
     const target = curatedLessons.find(l => l.id === propLessonId);
     if (!target) return;
     const combinedTitle = `${target.chineseTitle} ｜ ${target.title}`;
-    setConfig(prev => {
-      if (prev.thaiVideoUrl === target.thaiVideoUrl && prev.chineseVideoUrl === target.chineseVideoUrl) {
-        return prev;
+    setConfig(prevConf => {
+      if (prevConf.thaiVideoUrl === target.thaiVideoUrl && prevConf.chineseVideoUrl === target.chineseVideoUrl) {
+        return prevConf;
       }
       const next: DualVideoConfig = {
-        ...prev,
+        ...prevConf,
         title: combinedTitle,
         thaiVideoUrl: target.thaiVideoUrl,
         chineseVideoUrl: target.chineseVideoUrl,
@@ -449,11 +612,18 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputChineseUrl(target.chineseVideoUrl);
     setInputTitle(combinedTitle);
     setOffsetSeconds(target.defaultOffsetSeconds);
-  }, [propLessonId, curatedLessons]);
+  }, [propLessonId, lessonSyncNonce, curatedLessons]);
 
   // 切换课程时自动检索 IndexedDB 中的离线纯音频
   useEffect(() => {
     let cancelled = false;
+    if (!currentCuratedLesson) {
+      replaceThaiOfflineAudio(null);
+      setUseOfflineThai(false);
+      replaceChineseOfflineAudio(null);
+      setUseOfflineChinese(false);
+      return;
+    }
     offlineAudioStorage
       .getLessonTracks(currentCuratedLesson.id)
       .then((tracks) => {
@@ -496,7 +666,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return () => {
       cancelled = true;
     };
-  }, [currentCuratedLesson.id, replaceThaiOfflineAudio, replaceChineseOfflineAudio]);
+  }, [currentCuratedLesson?.id, replaceThaiOfflineAudio, replaceChineseOfflineAudio]);
 
   // 🎤 卡拉OK逐词高亮与交互演练样板状态
   const [isKaraokeDemoPlaying, setIsKaraokeDemoPlaying] = useState<boolean>(false);
@@ -557,10 +727,24 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, []);
 
-  // 保存字幕
-  const saveSubtitles = useCallback((newSubs: SubtitleLine[]) => {
-    setActiveSubtitles(newSubs);
-    if (onUpdateSubtitles) {
+  // 保存当前泰文视频与字幕的严格绑定
+  const saveSubtitles = useCallback((newSubs: SubtitleLine[], targetThaiUrl?: string, targetChineseUrl?: string, targetTitle?: string) => {
+    const thaiUrl = (targetThaiUrl ?? config.thaiVideoUrl ?? '').trim();
+    const mediaKey = getVideoMediaKey(thaiUrl);
+    if (mediaKey && newSubs.length > 0) {
+      saveBoundSubtitlesForMedia({
+        mediaKey,
+        mediaKind: 'thai_video',
+        thaiVideoId: extractYouTubeVideoId(thaiUrl) || undefined,
+        thaiVideoUrl: thaiUrl,
+        chineseVideoUrl: (targetChineseUrl ?? config.chineseVideoUrl ?? '').trim() || undefined,
+        title: (targetTitle ?? config.title ?? '').trim() || undefined,
+        subtitles: newSubs,
+        updatedAt: Date.now(),
+      });
+      setBindingVersion(v => v + 1);
+    }
+    if (onUpdateSubtitles && currentCuratedLesson && (!propLessonId || currentCuratedLesson.id === propLessonId)) {
       onUpdateSubtitles(newSubs);
     }
     try {
@@ -568,7 +752,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     } catch (e) {
       console.error(e);
     }
-  }, [onUpdateSubtitles]);
+  }, [onUpdateSubtitles, config.thaiVideoUrl, config.chineseVideoUrl, config.title, currentCuratedLesson, propLessonId]);
 
   // 应用声道设置与音量 (同步支持 YouTube 与 HTML5 离线纯音频)
   const applyAudioSettings = useCallback((focus: 'thai' | 'chinese' | 'both', tVol: number, cVol: number) => {
@@ -664,19 +848,47 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [chineseVol, handleSetChineseVol]);
 
+  const inspectThaiPlayerCaptions = useCallback((player: any) => {
+    try {
+      player?.loadModule?.('captions');
+      const tracklist = player?.getOption?.('captions', 'tracklist');
+      if (Array.isArray(tracklist) && tracklist.length > 0) {
+        const hasTh = tracklist.some((t: any) =>
+          String(t?.languageCode || t?.language_code || '').toLowerCase().startsWith('th')
+        );
+        setThaiCaptionLiveStatus(hasTh ? 'has_thai' : 'none_or_unloaded');
+      } else {
+        setThaiCaptionLiveStatus('none_or_unloaded');
+      }
+    } catch {
+      setThaiCaptionLiveStatus('none_or_unloaded');
+    }
+  }, []);
+
   // 初始化与挂载 YouTube IFrame 官方受控播放器 (离线纯音频激活时安全卸载对应 YT 实例)
   useEffect(() => {
     let isMounted = true;
+    setThaiCaptionLiveStatus(thaiVideoId ? 'checking' : 'idle');
 
-    if (isThaiOfflineActive && thaiPlayerRef.current) {
+    const isDetached = (player: any) => {
+      try {
+        const iframe = player?.getIframe?.();
+        return Boolean(iframe && !document.contains(iframe));
+      } catch {
+        return false;
+      }
+    };
+
+    if ((!thaiVideoId || isThaiOfflineActive || isDetached(thaiPlayerRef.current)) && thaiPlayerRef.current) {
       try { thaiPlayerRef.current.destroy?.(); } catch {}
       thaiPlayerRef.current = null;
       isThaiReadyRef.current = false;
     }
-    if (isChineseOfflineActive && chinesePlayerRef.current) {
+    if ((!chineseVideoId || isChineseOfflineActive || isDetached(chinesePlayerRef.current)) && chinesePlayerRef.current) {
       try { chinesePlayerRef.current.destroy?.(); } catch {}
       chinesePlayerRef.current = null;
       isChineseReadyRef.current = false;
+      setIsChinesePlaying(false);
     }
 
     const initPlayers = () => {
@@ -703,11 +915,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   event.target.setPlaybackRate(playbackRate);
                 } catch {}
                 applyAudioSettings(audioFocus, thaiVol, chineseVol);
+                inspectThaiPlayerCaptions(event.target);
+              },
+              onApiChange: (event: any) => {
+                if (!isMounted) return;
+                inspectThaiPlayerCaptions(event.target);
               },
               onStateChange: (event: any) => {
                 if (!isMounted) return;
                 if (event.data === 1) {
                   setIsThaiPlaying(true);
+                  inspectThaiPlayerCaptions(event.target);
                 } else if (event.data === 2) {
                   setIsThaiPlaying(false);
                 }
@@ -792,18 +1010,26 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   // 动态更换视频链接时自动切片
   useEffect(() => {
-    if (thaiPlayerRef.current && typeof thaiPlayerRef.current.cueVideoById === 'function') {
+    if (thaiVideoId && thaiPlayerRef.current && typeof thaiPlayerRef.current.cueVideoById === 'function') {
       try {
+        const iframe = thaiPlayerRef.current.getIframe?.();
+        if (iframe && !document.contains(iframe)) return;
+        setThaiCaptionLiveStatus('checking');
         thaiPlayerRef.current.cueVideoById(thaiVideoId);
+        window.setTimeout(() => {
+          inspectThaiPlayerCaptions(thaiPlayerRef.current);
+        }, 700);
       } catch (e) {
         console.warn('Failed to cue Thai video', e);
       }
     }
-  }, [thaiVideoId]);
+  }, [thaiVideoId, inspectThaiPlayerCaptions]);
 
   useEffect(() => {
-    if (chinesePlayerRef.current && typeof chinesePlayerRef.current.cueVideoById === 'function') {
+    if (chineseVideoId && chinesePlayerRef.current && typeof chinesePlayerRef.current.cueVideoById === 'function') {
       try {
+        const iframe = chinesePlayerRef.current.getIframe?.();
+        if (iframe && !document.contains(iframe)) return;
         chinesePlayerRef.current.cueVideoById(chineseVideoId);
       } catch (e) {
         console.warn('Failed to cue Chinese video', e);
@@ -1300,7 +1526,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const handleOfflineAudioActivated = useCallback(
     (lessonId: string, trackType: OfflineTrackType, blob: Blob, meta: OfflineAudioMeta) => {
       // 如果选择了另一个预制课件，先切入对应课件配置
-      if (lessonId !== currentCuratedLesson.id) {
+      if (lessonId !== currentCuratedLesson?.id) {
         const target = curatedLessons.find(l => l.id === lessonId);
         if (target) {
           const combinedTitle = `${target.chineseTitle} ｜ ${target.title}`;
@@ -1318,7 +1544,6 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           setInputThaiUrl(target.thaiVideoUrl);
           setInputChineseUrl(target.chineseVideoUrl);
           setInputTitle(combinedTitle);
-          saveSubtitles(target.subtitles);
           onSelectLessonId?.(target.id);
           setCurrentLineIndex(0);
         }
@@ -1350,13 +1575,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       triggerToast(`已挂载离线纯音频：${meta.fileName}`);
     },
     [
-      currentCuratedLesson.id,
+      currentCuratedLesson?.id,
       curatedLessons,
       chineseVol,
       saveConfig,
       onOffsetChange,
       isOffsetLocked,
-      saveSubtitles,
+      onSelectLessonId,
+      setCurrentLineIndex,
       replaceChineseOfflineAudio,
       replaceThaiOfflineAudio,
     ]
@@ -1364,6 +1590,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   // 核心对齐操作：一键纠偏，根据当前视频或离线音频真实播放时间，强制同步对齐字幕
   const handleAlignCurrent = useCallback(() => {
+    if (activeSubtitles.length === 0) {
+      triggerToast('当前泰文视频暂未匹配到字幕，请先点「装载字幕」为本视频导入对应字幕');
+      return;
+    }
     try {
       let playerTime = 0;
       if (audioFocus === 'chinese') {
@@ -1590,12 +1820,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setParseResult({ subtitles: [], totalParsed: 0 });
   };
 
-  // 统一应用装载：同时更新双视频链接字幕
+  // 统一应用装载：同时更新双视频链接与严格绑定到该泰文视频的字幕
   const handleApplyDiscourseAndMedia = () => {
-    // 1. 更新双视频链接与标题
-    const newThaiUrl = inputThaiUrl.trim() || config.thaiVideoUrl;
+    // 1. 更新双视频链接与标题（注意：若用户主动改了泰文链接但没粘贴新字幕，旧视频的字幕会自动失效隐藏）
+    const newThaiUrl = inputThaiUrl.trim();
     const newChineseUrl = inputChineseUrl.trim(); // 允许清空进入单视频模式
     const newTitle = inputTitle.trim() || parseResult.detectedTitle || config.title;
+
+    if (!newThaiUrl) {
+      triggerToast('请先填写泰文原版 YouTube 链接（字幕必须绑定泰文视频）');
+      return;
+    }
 
     const updatedConf: DualVideoConfig = {
       ...config,
@@ -1606,31 +1841,39 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     };
     saveConfig(updatedConf);
 
-    // 2. 如果解析出了有效字幕，则应用新字幕
+    // 2. 如果解析出了有效字幕，则将其严格绑定到当前泰文视频链接/ID 上
     if (parseResult.totalParsed > 0) {
-      saveSubtitles(parseResult.subtitles);
+      saveSubtitles(parseResult.subtitles, newThaiUrl, newChineseUrl, newTitle);
       setCurrentLineIndex(0);
       seekBothToTime(parseResult.subtitles[0].secondsStart);
+    } else {
+      setCurrentLineIndex(0);
+      setBindingVersion(v => v + 1);
     }
 
     setShowPasteModal(false);
+    const afterBinding = resolveVideoSubtitlesBinding({ thaiVideoUrl: newThaiUrl, lessons: curatedLessons });
     triggerToast(
-      parseResult.totalParsed > 0 
-        ? `已成功装载视频与 ${parseResult.totalParsed} 句字幕！`
-        : '已成功装载视频！'
+      parseResult.totalParsed > 0
+        ? `已将 ${parseResult.totalParsed} 句字幕严格绑定至当前泰文视频！`
+        : afterBinding.isMatched
+        ? `已装载视频，并自动匹配到对应泰文视频的 ${afterBinding.subtitles.length} 句字幕！`
+        : '已装载视频（本泰文视频尚无绑定字幕，已隐藏其他视频字幕以免错配）'
     );
   };
 
   // 还原默认课件
   const handleRestoreDefault18Oct = () => {
-    saveSubtitles(OCT_18_LIVE_SUBTITLES);
     const defaultConf = { ...OCT_18_BENCHMARK_CONFIG, offsetSeconds: 0 };
+    removeBoundSubtitlesForMedia(getVideoMediaKey(defaultConf.thaiVideoUrl));
+    setBindingVersion(v => v + 1);
     saveConfig(defaultConf);
     setInputThaiUrl(defaultConf.thaiVideoUrl);
     setInputChineseUrl(defaultConf.chineseVideoUrl);
     setInputTitle(defaultConf.title);
     setOffsetSeconds(0);
     setCurrentLineIndex(0);
+    onSelectLessonId?.('lesson_20261018');
     seekBothToTime(0);
     setShowPasteModal(false);
     setShowConfigDrawer(false);
@@ -1650,30 +1893,34 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   return (
     <div className="w-full max-w-full overflow-x-hidden min-h-[calc(100vh-4rem)] bg-[#faf7f2] text-[#2d2a26] pb-32 font-sans relative box-border">
-      {/* 顶部工具条 (非置顶常规布局，节省宝贵视口垂直空间) */}
+      {/* 顶部工具条（与「音频学习」保持完全对称一致） */}
       <div className="border-b border-[#e6d3ac]/60 bg-white/80 px-3 sm:px-6 py-2.5 max-w-full">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-sm shrink-0">
               <Video className="w-4 h-4" />
             </span>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-sm sm:text-base font-bold text-[#2d2a26]">
-                  {hasChineseMedia ? '泰中双视频同步对齐放映机' : '泰文原声精进共学放映机'}
+                <h1 className="text-sm sm:text-base font-bold text-[#2d2a26] whitespace-nowrap">
+                  {hasChineseMedia ? '泰中双视频同步对齐' : '泰文原版视频同步对齐'}
                 </h1>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100/80 text-amber-900 border border-amber-300/60 font-mono">
-                  第 {currentLineIndex + 1} 句 / 共 {activeSubtitles.length} 句
+                <span className="text-xs font-mono tabular-nums text-[#7a6f5f]">
+                  {activeSubtitles.length > 0
+                    ? `第 ${safeLineIndex + 1} / ${activeSubtitles.length} 句`
+                    : '暂无对应字幕'}
                 </span>
-                {activeSubtitles.length === 746 || activeSubtitles.length === 1198 || activeSubtitles.length === 1195 || activeSubtitles.length === 29 ? (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
-                    <span>🌟 官方精校课件</span>
-                  </span>
-                ) : (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
-                    <span>⚡ 自定义导入字幕</span>
-                  </span>
-                )}
+                <span className="hidden sm:inline text-stone-300" aria-hidden="true">·</span>
+                <span className="hidden sm:inline text-xs font-medium text-[#5b3f1e]">
+                  {(() => {
+                    if (activeSubtitles.length === 0) return '字幕严格绑定泰文视频';
+                    if (videoSubtitleBinding.source === 'curated' && currentCuratedLesson) {
+                      const prov = getLessonProvenance(currentCuratedLesson);
+                      return `${prov.type === 'official' ? '🌟' : '🤝'} ${prov.label}`;
+                    }
+                    return '已绑定本泰文视频导入字幕';
+                  })()}
+                </span>
               </div>
               <p className="text-xs text-[#7a6f5f] truncate max-w-md sm:max-w-xl">
                 {config.title}
@@ -1681,59 +1928,29 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {/* 0. 一键全屏沉浸学习 */}
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             <button
               type="button"
               data-tour-id="tour-yt-fullscreen"
               onClick={toggleFullscreen}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
+              className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
               title="一键进入全屏沉浸模式（视频与字幕同屏聚焦）"
             >
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               <span>{isFullscreen ? '退出全屏' : '全屏沉浸'}</span>
             </button>
 
-            {/* 离线纯音频与录音按钮 */}
-            <button
-              type="button"
-              data-tour-id="tour-offline-btn"
-              onClick={() => setShowOfflineModal(true)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0 border ${
-                isThaiOfflineActive || isChineseOfflineActive
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500'
-                  : 'bg-slate-900 hover:bg-slate-800 text-amber-200 border-slate-700'
-              }`}
-              title="导入本地音频、缓存寺院公开 MP3 或纯音频录制分享"
-            >
-              <Headphones className="w-3.5 h-3.5" />
-              <span>{isThaiOfflineActive || isChineseOfflineActive ? '离线音频已挂载' : '离线音频与录音'}</span>
-            </button>
-
-            {/* 1. 装载视频链接 (核心一键弹窗，整合链接与字幕) */}
-            <button
-              onClick={() => {
-                setInputThaiUrl(config.thaiVideoUrl);
-                setInputChineseUrl(config.chineseVideoUrl);
-                setInputTitle(config.title);
-                setShowPasteModal(true);
-              }}
-              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-              title="点击装载视频链接与字幕"
-            >
-              <ClipboardPaste className="w-3.5 h-3.5" />
-              <span>📥 装载字幕</span>
-            </button>
-
-            {/* 2. 预制课件库 */}
-            <button
-              onClick={() => setShowPresetModal(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-              title="挑选官方及社群共学课件"
-            >
-              <Library className="w-3.5 h-3.5" />
-              <span>📚 课件库</span>
-            </button>
+            {onStartTour && (
+              <button
+                type="button"
+                onClick={onStartTour}
+                className="min-h-[38px] px-2.5 rounded-xl bg-white hover:bg-stone-100 text-[#7a6f5f] border border-stone-200 transition cursor-pointer flex items-center gap-1 text-xs font-semibold whitespace-nowrap shrink-0"
+                title="查看功能导览"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">导览</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -1748,6 +1965,50 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
       {/* 主界面内容 */}
       <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-4 space-y-4 sm:space-y-5 max-w-full box-border">
+        {/* 主页直达选课与音视频源切换条 */}
+        {!isFullscreen && (
+          <UnifiedMediaSelectorBar
+            mode="video"
+            onSwitchMode={(nextMode) => {
+              if (nextMode === 'audio') onSwitchToAudioMode?.();
+            }}
+            lessons={curatedLessons}
+            currentLessonId={currentCuratedLesson?.id || ''}
+            currentDate={currentCuratedLesson?.date}
+            isUnmatchedCustomMedia={activeSubtitles.length === 0}
+            unmatchedMediaLabel={thaiVideoId ? `YouTube: ${thaiVideoId}` : '未匹配泰文视频'}
+            onSelectLesson={(lesson) => handleSelectPresetLesson(lesson)}
+            onSelectAudioTrack={(params) => {
+              if (onOpenAudioWithTrack) {
+                onOpenAudioWithTrack(params);
+              } else {
+                onSwitchToAudioMode?.();
+              }
+            }}
+            onSelectYouTubePair={(item) => handleLoadYouTubePair(item)}
+            onLoadCustomMediaPair={({ thaiUrl, chineseUrl, title, mediaType }) => {
+              if (mediaType === 'audio') {
+                if (onOpenAudioWithTrack && thaiUrl) {
+                  const fn = thaiUrl.split('/').pop()?.split('?')[0] || `thai_${Date.now()}.mp3`;
+                  onOpenAudioWithTrack({ mp3Url: thaiUrl, fileName: fn, trackType: 'thai_audio' });
+                } else {
+                  onSwitchToAudioMode?.();
+                }
+                return;
+              }
+              handleLoadCustomVideoPair({ thaiUrl, chineseUrl, title });
+            }}
+            onOpenOfflineModal={() => setShowOfflineModal(true)}
+            hasOfflineActive={isThaiOfflineActive || isChineseOfflineActive}
+            onOpenSubtitleImporter={() => {
+              setInputThaiUrl(config.thaiVideoUrl);
+              setInputChineseUrl(config.chineseVideoUrl);
+              setInputTitle(config.title);
+              setShowPasteModal(true);
+            }}
+            externalExpandSignal={videoSelectorExpandSignal}
+          />
+        )}
 
         {/* 可一键全屏沉浸容器：保持播放器不卸载不断播 */}
         <div
@@ -1764,15 +2025,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 <Video className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="font-bold text-white truncate max-w-[180px] sm:max-w-md">{config.title}</span>
                 <span className="text-slate-400 font-mono tabular-nums shrink-0">
-                  · 第 {currentLineIndex + 1} / {activeSubtitles.length} 句
+                  {activeSubtitles.length > 0
+                    ? `· 第 ${safeLineIndex + 1} / ${activeSubtitles.length} 句`
+                    : '· 暂无对应字幕'}
                 </span>
               </div>
 
               <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                 <button
                   type="button"
-                  onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1))}
-                  disabled={currentLineIndex === 0}
+                  onClick={() => handleJumpToSentence(Math.max(0, safeLineIndex - 1))}
+                  disabled={activeSubtitles.length === 0 || safeLineIndex === 0}
                   className="min-h-[36px] px-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 text-xs cursor-pointer"
                 >
                   上一句
@@ -1787,8 +2050,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1))}
-                  disabled={currentLineIndex >= activeSubtitles.length - 1}
+                  onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, safeLineIndex + 1))}
+                  disabled={activeSubtitles.length === 0 || safeLineIndex >= activeSubtitles.length - 1}
                   className="min-h-[36px] px-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 text-xs cursor-pointer"
                 >
                   下一句
@@ -1805,13 +2068,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           )}
 
-        {/* 1. 视频视窗区域 (单播自适应全景，双播智能并列) */}
+        {/* 1. 视频视窗区域 (始终保持泰中双框左右并列对照，与音频模式视觉完全对称) */}
         <div
           data-tour-id="tour-video-stage"
           className={
             isFullscreen
-              ? (hasChineseMedia ? 'max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3' : 'max-w-4xl mx-auto w-full')
-              : (hasChineseMedia ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : 'max-w-4xl mx-auto w-full')
+              ? 'max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3'
+              : 'grid grid-cols-1 lg:grid-cols-2 gap-4'
           }
         >
           
@@ -1828,6 +2091,31 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                     纯泰原声精研
                   </span>
+                )}
+                {thaiVideoId && !isThaiOfflineActive && (
+                  thaiCaptionLiveStatus === 'has_thai' ? (
+                    <a
+                      href={`https://www.youtube.com/watch?v=${thaiVideoId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/30 flex items-center gap-1 whitespace-nowrap"
+                      title="本机播放器已检测到泰文字幕轨，点击可在 YouTube 原网页导出或用 Language Reactor 学习"
+                    >
+                      <span>✓ 已有泰文字幕</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  ) : (
+                    <a
+                      href={`https://www.youtube.com/watch?v=${thaiVideoId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-2 py-0.5 rounded text-[10px] font-semibold bg-stone-800 text-stone-300 border border-stone-600/60 hover:text-amber-300 hover:border-amber-500/40 flex items-center gap-1 whitespace-nowrap"
+                      title="播放后自动检测字幕；也可直接前往 YouTube 原网页查看泰文字幕或用 Language Reactor 导出带时间戳文本"
+                    >
+                      <span>{thaiCaptionLiveStatus === 'checking' ? '检测字幕中...' : 'YouTube/LR 查字幕'}</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  )
                 )}
               </div>
               <button
@@ -1914,17 +2202,16 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
 
-          {/* 中文视频视窗 (仅在有中文音视频源或已挂载离线中文音频时展示) */}
-          {hasChineseMedia && (
+          {/* 中文视频视窗 (始终保留右框位置，未绑定时提供一键关联同日中文译版/目录选片/贴链接) */}
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
             <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className={`w-2.5 h-2.5 rounded-full ${isChinesePlaying ? 'bg-amber-400 animate-pulse' : 'bg-stone-500'}`} />
+                <span className={`w-2.5 h-2.5 rounded-full ${isChinesePlaying ? 'bg-amber-400 animate-pulse' : hasChineseMedia ? 'bg-stone-500' : 'bg-stone-600'}`} />
                 <span className="font-bold whitespace-nowrap">🇨🇳 中文译版</span>
                 <span className="text-[10px] text-stone-300 whitespace-nowrap">
-                  ({isChinesePlaying ? '播放中' : '已暂停'})
+                  ({!hasChineseMedia ? '待关联' : isChinesePlaying ? '播放中' : '已暂停'})
                 </span>
-                {offsetSeconds !== 0 && (
+                {hasChineseMedia && offsetSeconds !== 0 && (
                   <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap">
                     {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
                   </span>
@@ -1933,46 +2220,58 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
               {/* 中文伴弱随听音量与画面控制 */}
               <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                <button
-                  type="button"
-                  onClick={handleCycleChineseDim}
-                  className="px-2 py-1 rounded bg-stone-900/90 hover:bg-stone-800 text-amber-200 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
-                  title="点击以30%幅度循环切换伴弱音量 (100% → 70% → 40% → 10%)"
-                >
-                  <Volume1 className="w-3 h-3 text-amber-400" />
-                  <span>伴弱 {chineseVol}%</span>
-                </button>
+                {hasChineseMedia ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handleCycleChineseDim}
+                      className="px-2 py-1 rounded bg-stone-900/90 hover:bg-stone-800 text-amber-200 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
+                      title="点击以30%幅度循环切换伴弱音量 (100% → 70% → 40% → 10%)"
+                    >
+                      <Volume1 className="w-3 h-3 text-amber-400" />
+                      <span>伴弱 {chineseVol}%</span>
+                    </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    const nextVal = !chineseAudioOnlyMode;
-                    setChineseAudioOnlyMode(nextVal);
-                    triggerToast(nextVal ? '已收起中文画面（仅保留声音随听）' : '已展开中文双视频画面');
-                  }}
-                  className={`px-2 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition cursor-pointer border whitespace-nowrap ${
-                    chineseAudioOnlyMode
-                      ? 'bg-amber-500 text-slate-950 border-amber-400 font-black'
-                      : 'bg-stone-800 text-stone-300 hover:text-white border-stone-700'
-                  }`}
-                  title="收起中文视频画面，仅保留声音播放（保持泰语全景画面）"
-                >
-                  <Headphones className="w-3 h-3" />
-                  <span>{chineseAudioOnlyMode ? '仅出声' : '收起出声'}</span>
-                </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextVal = !chineseAudioOnlyMode;
+                        setChineseAudioOnlyMode(nextVal);
+                        triggerToast(nextVal ? '已收起中文画面（仅保留声音随听）' : '已展开中文双视频画面');
+                      }}
+                      className={`px-2 py-1 rounded text-[11px] font-bold flex items-center gap-1 transition cursor-pointer border whitespace-nowrap ${
+                        chineseAudioOnlyMode
+                          ? 'bg-amber-500 text-slate-950 border-amber-400 font-black'
+                          : 'bg-stone-800 text-stone-300 hover:text-white border-stone-700'
+                      }`}
+                      title="收起中文视频画面，仅保留声音播放（保持泰语全景画面）"
+                    >
+                      <Headphones className="w-3 h-3" />
+                      <span>{chineseAudioOnlyMode ? '仅出声' : '收起出声'}</span>
+                    </button>
 
-                <button
-                  onClick={handleToggleChineseAlone}
-                  className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
-                  title="单独播放/暂停中文视频，用于听完一句暂停对齐"
-                >
-                  {isChinesePlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-                  <span>{isChinesePlaying ? '暂停' : '播中文'}</span>
-                </button>
+                    <button
+                      onClick={handleToggleChineseAlone}
+                      className="px-2 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-400/40 text-[11px] font-bold flex items-center gap-1 transition cursor-pointer whitespace-nowrap"
+                      title="单独播放/暂停中文视频，用于听完一句暂停对齐"
+                    >
+                      {isChinesePlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                      <span>{isChinesePlaying ? '暂停' : '播中文'}</span>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setVideoSelectorExpandSignal({ tab: 'catalog', sourceKind: 'video', nonce: Date.now() })}
+                    className="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 text-[11px] font-bold transition cursor-pointer whitespace-nowrap"
+                  >
+                    关联中文译版
+                  </button>
+                )}
               </div>
             </div>
 
-            <div className={`relative ${chineseAudioOnlyMode ? 'min-h-[100px] p-4 bg-stone-900 flex items-center justify-between border-t border-stone-800' : 'aspect-video'} w-full bg-black [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0 transition-all`}>
+            <div className={`relative ${chineseAudioOnlyMode && hasChineseMedia ? 'min-h-[100px] p-4 bg-stone-900 flex items-center justify-between border-t border-stone-800' : 'aspect-video'} w-full bg-black [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:border-0 transition-all`}>
               {isChineseOfflineActive && chineseOfflineAudio ? (
                 <div className="w-full h-full flex flex-col items-center justify-center p-4 sm:p-5 bg-gradient-to-br from-slate-900 via-stone-900 to-slate-950 text-amber-100 gap-3">
                   <div className="w-full max-w-md flex items-center justify-between gap-2 text-xs">
@@ -2182,14 +2481,59 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   )}
                 </div>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-stone-400 p-6 text-center text-xs">
-                  <Video className="w-8 h-8 text-stone-600 mb-2" />
-                  <p>请输入有效的中文 YouTube 视频链接或 MP4/MP3 直链</p>
+                <div className="w-full h-full flex flex-col items-center justify-center text-stone-300 p-5 text-center text-xs gap-3 bg-gradient-to-br from-stone-900 via-stone-900 to-slate-950">
+                  <Video className="w-8 h-8 text-amber-400/70" />
+                  <div className="space-y-1 max-w-sm">
+                    <div className="font-bold text-amber-100">本场暂未挂载中文同传视频</div>
+                    <p className="text-[11px] text-stone-400 leading-relaxed">
+                      泰语原版与逐句字幕可正常学习；您也可随时为右侧挂载解脱园中文同传视频或离线中文音频（不改变左侧泰文视频对应的字幕）。
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    {thaiVideoId === 'xEKmQRulTgg' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextConf: DualVideoConfig = {
+                            ...config,
+                            chineseVideoUrl: 'https://www.youtube.com/watch?v=IzSQSq2blzo',
+                          };
+                          saveConfig(nextConf);
+                          setInputChineseUrl(nextConf.chineseVideoUrl);
+                          setAudioFocus('both');
+                          triggerToast('已挂载 2026-10-10 解脱园中文同传直播录像（泰语 29 句字幕保留不变）');
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold cursor-pointer"
+                      >
+                        一键挂载同日中文同传 (10月10日)
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setVideoSelectorExpandSignal({ tab: 'catalog', sourceKind: 'video', nonce: Date.now() })}
+                      className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-200 border border-stone-600 font-bold cursor-pointer"
+                    >
+                      从目录选视频
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVideoSelectorExpandSignal({ tab: 'link', sourceKind: 'video', nonce: Date.now() })}
+                      className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 cursor-pointer"
+                    >
+                      贴中文链接
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowOfflineModal(true)}
+                      className="px-3 py-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 cursor-pointer"
+                    >
+                      挂载离线音频
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
           </div>
-          )}
         </div>
 
         {/* 🍎 苹果 iOS 设备专属温馨提示 (仅在真机 iOS/iPadOS 且有双播时展示，安卓/PC 绝不出现) */}
@@ -2280,6 +2624,26 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         )}
 
         {/* 2. 当前聚焦精读句大卡 (Hero Active Sentence Stage: 集成卡拉OK交互演练与逐词彩色进度线条) */}
+        {!currentLine && (
+          <UnmatchedSubtitleBanner
+            mediaKind="thai_video"
+            mediaIdentifier={thaiVideoId ? `YouTube ID: ${thaiVideoId}` : undefined}
+            isFullscreen={isFullscreen}
+            onImportSubtitles={() => {
+              if (isFullscreen) exitFullscreen();
+              setInputThaiUrl(config.thaiVideoUrl);
+              setInputChineseUrl(config.chineseVideoUrl);
+              setInputTitle(config.title);
+              setShowPasteModal(true);
+            }}
+            onSwitchBackToMatchedLesson={() => {
+              const target = curatedLessons.find((l) => l.subtitles.length > 0) || curatedLessons[0];
+              if (target) {
+                handleSelectPresetLesson(target);
+              }
+            }}
+          />
+        )}
         {currentLine && (
           <div
             data-tour-id="tour-karaoke-stage"
@@ -2288,7 +2652,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-[#b58940] text-white text-xs font-bold">
-                  第 {currentLineIndex + 1} 句
+                  第 {safeLineIndex + 1} 句
                 </span>
                 <span className="text-xs font-medium text-stone-400">
                   / 共 {activeSubtitles.length} 句
@@ -2663,7 +3027,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             ref={timelineContainerRef}
             className="max-h-[520px] overflow-y-auto space-y-2 pr-1 divide-y divide-stone-100"
           >
-            {filteredSubtitles.map((sub) => {
+            {activeSubtitles.length === 0 ? (
+              <div className="py-10 text-center text-xs text-stone-500 space-y-2">
+                <p>当前泰文视频尚未关联字幕记录（已自动隐藏其他视频的字幕以避免错配）。</p>
+                <p className="text-[11px] text-stone-400">
+                  上方「-0.1 / +0.1 / 校准」仍可正常微调当前泰中双视频的声画时差。
+                </p>
+              </div>
+            ) : filteredSubtitles.map((sub) => {
               const isActive = sub.id === currentLine?.id;
               return (
                 <div
@@ -2783,291 +3154,29 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
       </div>
 
-      {/* 4. 极简悬浮主控播放栏 (自适应响应式架构：手机/平板/电脑模式防溢出设计，精炼绝不突出) */}
-      <div
-        data-tour-id="tour-bottom-dock"
-        className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-20px)] max-w-sm sm:w-auto sm:max-w-md xl:max-w-4xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-1.5 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all box-border overflow-hidden"
-      >
-        
-        {/* 📱 移动端 / 平板端 (宽度 < 1280px，涵盖各类 iPad、Android 平板、折叠屏及手机)：高品质双行结构 (严控宽度，绝不溢出) */}
-        <div className="flex flex-col xl:hidden gap-1.5 sm:gap-2">
-          {/* 顶行：主播放操作 + 三档声道滑块 */}
-          <div className="flex items-center justify-between gap-1.5 sm:gap-2 w-full">
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-              {/* 上一句 */}
-              <button
-                onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1))}
-                disabled={currentLineIndex === 0}
-                className="p-1 sm:p-2 rounded-lg bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
-                title="上一句"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
-              {/* 主播控按键 */}
-              <button
-                onClick={handleMasterPlayToggle}
-                className="px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1 shadow-md shadow-amber-500/25 active:scale-95 transition cursor-pointer shrink-0"
-              >
-                {isCurrentModePlaying ? (
-                  <>
-                    <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                    <span>{!hasChineseMedia ? '暂停' : (audioFocus === 'both' ? '双轨停' : audioFocus === 'thai' ? '外文停' : '中文停')}</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current ml-0.5" />
-                    <span>{!hasChineseMedia ? '播放' : (audioFocus === 'both' ? '双轨播' : audioFocus === 'thai' ? '外文播' : '中文播')}</span>
-                  </>
-                )}
-              </button>
-
-              {/* 下一句 */}
-              <button
-                onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1))}
-                disabled={currentLineIndex >= activeSubtitles.length - 1}
-                className="p-1 sm:p-2 rounded-lg bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
-                title="下一句"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* 三档滑块：外文 | 双轨 | 中文 (仅在双播模式下展示) */}
-            {hasChineseMedia && (
-              <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shrink-0 text-xs gap-0.5 sm:gap-1">
-                <button
-                  onClick={() => handleSelectMode('thai')}
-                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="单播外文原声"
-                >
-                  外文
-                </button>
-                <button
-                  onClick={() => handleSelectMode('both')}
-                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="双轨齐播"
-                >
-                  双轨
-                </button>
-                <button
-                  onClick={() => handleSelectMode('chinese')}
-                  className={`px-1.5 sm:px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="单播中文译声"
-                >
-                  中文
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* 底行：句序对齐 + 循环/倍速 (极简紧凑，绝不溢出) */}
-          <div className="flex items-center justify-between gap-2 w-full pt-1.5 border-t border-stone-800/60">
-            {/* 紧凑句序与时间戳 (点击一键精确对齐) */}
-            <button
-              onClick={handleAlignCurrent}
-              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-stone-800/90 hover:bg-stone-700 text-stone-200 text-[11px] sm:text-xs font-mono tracking-tight shrink min-w-0 truncate cursor-pointer transition"
-              title="点击快速一键对齐视频与当前字幕"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-              <span className="truncate">第 {currentLineIndex + 1} / {activeSubtitles.length} 句</span>
-              <span className="text-stone-500">·</span>
-              <span className="text-stone-300">{formatSecondsToTime(currentTime)}</span>
-            </button>
-
-            {/* 统一操作区：循环 + 倍速选择 (时差与校准已常驻上方对照表) */}
-            <div className="flex items-center bg-stone-950/90 p-0.5 sm:p-1 rounded-lg border border-stone-800 gap-1 sm:gap-1.5 shrink-0 text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  const nextVal = !isLoopSentence;
-                  setIsLoopSentence(nextVal);
-                  triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
-                }}
-                className={`px-1.5 py-1 sm:px-2 rounded text-xs transition cursor-pointer flex items-center gap-1 ${
-                  isLoopSentence
-                    ? 'bg-amber-500 text-slate-950 font-black'
-                    : 'text-stone-400 hover:text-stone-200'
-                }`}
-                title="单句循环"
-              >
-                <Repeat className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">循环</span>
-              </button>
-
-              <span className="w-px h-3 bg-stone-800" />
-
-              {/* 手机窄屏端 (< sm): 单键循环倍速 (点击切换 0.75x -> 1.0x -> 1.25x) */}
-              <button
-                type="button"
-                onClick={() => {
-                  const rates = [0.75, 1.0, 1.25];
-                  const nextIdx = (rates.indexOf(playbackRate) + 1) % rates.length;
-                  handleSetPlaybackRate(rates[nextIdx]);
-                }}
-                className="sm:hidden px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-900 text-amber-300 border border-stone-800 hover:bg-stone-800 transition cursor-pointer"
-                title={`当前倍速 ${playbackRate}x (点击切换 0.75x / 1.0x / 1.25x)`}
-              >
-                {playbackRate}x
-              </button>
-
-              {/* 平板端 (>= sm 且 < xl): 完整三档倍速切换按钮 */}
-              <div className="hidden sm:flex items-center gap-0.5 text-[11px] font-bold">
-                {[0.75, 1.0, 1.25].map(rate => (
-                  <button
-                    key={rate}
-                    type="button"
-                    onClick={() => handleSetPlaybackRate(rate)}
-                    className={`px-1.5 py-0.5 rounded transition cursor-pointer ${
-                      playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                    }`}
-                  >
-                    {rate}x
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 💻 宽屏桌面端 (>= 1280px)：流畅单行自适应排布 */}
-        <div className="hidden xl:flex items-center justify-between gap-3 w-full">
-          {/* 左侧：句序与时间对齐 */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={handleAlignCurrent}
-              className="group flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-800/90 hover:bg-stone-700/90 border border-stone-700/60 hover:border-amber-500/50 text-stone-200 transition cursor-pointer"
-              title="点击快速一键对齐视频与当前字幕"
-            >
-              <span className="w-2 h-2 rounded-full bg-amber-400 group-hover:scale-125 transition-transform shrink-0" />
-              <span className="text-xs font-bold text-amber-200/90 font-mono tracking-tight whitespace-nowrap">
-                第 {currentLineIndex + 1} / {activeSubtitles.length} 句
-              </span>
-              <span className="text-stone-500 text-xs">·</span>
-              <span className="text-xs font-medium text-stone-300 font-mono whitespace-nowrap">
-                {formatSecondsToTime(currentTime)}
-              </span>
-            </button>
-          </div>
-
-          {/* 中间：主控群 + 三档分段滑块 */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1))}
-              disabled={currentLineIndex === 0}
-              className="p-1.5 sm:p-2 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 hover:text-amber-200 disabled:opacity-25 transition cursor-pointer"
-              title="上一句"
-            >
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
-            <button
-              onClick={handleMasterPlayToggle}
-              className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-amber-500/25 transition transform active:scale-95 cursor-pointer shrink-0"
-            >
-              {isCurrentModePlaying ? (
-                <>
-                  <Pause className="w-4 h-4 fill-current" />
-                  <span>{!hasChineseMedia ? '暂停' : (audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '外文暂停' : '中文暂停')}</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-4 h-4 fill-current ml-0.5" />
-                  <span>{!hasChineseMedia ? '播放' : (audioFocus === 'both' ? '双轨播放' : audioFocus === 'thai' ? '外文播放' : '中文播放')}</span>
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1))}
-              disabled={currentLineIndex >= activeSubtitles.length - 1}
-              className="p-1.5 sm:p-2 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 hover:text-amber-200 disabled:opacity-25 transition cursor-pointer"
-              title="下一句"
-            >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
-            {/* 三档滑块：外文 | 双轨 | 中文 (仅在双播模式下展示) */}
-            {hasChineseMedia && (
-              <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shadow-inner gap-1">
-                <button
-                  onClick={() => handleSelectMode('thai')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'thai' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="单播外文原声"
-                >
-                  外文
-                </button>
-                <button
-                  onClick={() => handleSelectMode('both')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'both' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="双轨齐播"
-                >
-                  双轨
-                </button>
-                <button
-                  onClick={() => handleSelectMode('chinese')}
-                  className={`px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
-                    audioFocus === 'chinese' ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="单播中文译声"
-                >
-                  中文
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* 右侧：单句循环 + 倍速选择 */}
-          <div className="flex items-center bg-stone-950/90 p-1 rounded-xl border border-stone-800 shadow-inner gap-1.5 shrink-0">
-            {/* 1. 单句循环 */}
-            <button
-              type="button"
-              onClick={() => {
-                const nextVal = !isLoopSentence;
-                setIsLoopSentence(nextVal);
-                triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
-              }}
-              className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 transition cursor-pointer ${
-                isLoopSentence
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-xs'
-                  : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800/80'
-              }`}
-              title="单句循环反复播放"
-            >
-              <Repeat className="w-3.5 h-3.5" />
-              <span>循环</span>
-            </button>
-
-            <span className="w-px h-3.5 bg-stone-800" />
-
-            {/* 2. 倍速选择 */}
-            <div className="flex items-center gap-0.5 text-[11px] font-bold">
-              {[0.75, 1.0, 1.25].map(rate => (
-                <button
-                  key={rate}
-                  type="button"
-                  onClick={() => handleSetPlaybackRate(rate)}
-                  className={`px-2 py-1 rounded-lg transition cursor-pointer ${
-                    playbackRate === rate ? 'bg-amber-500 text-slate-950 font-black shadow-xs' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                >
-                  {rate}x
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* 4. 统一极简悬浮主控播放栏 */}
+      <UnifiedPlayerDock
+        tourId="tour-bottom-dock"
+        currentLineIndex={safeLineIndex}
+        totalLines={activeSubtitles.length}
+        clockLabel={formatSecondsToTime(currentTime)}
+        isPlaying={isCurrentModePlaying}
+        audioFocus={audioFocus}
+        hasChineseTrack={hasChineseMedia}
+        isLoopSentence={isLoopSentence}
+        playbackRate={playbackRate}
+        onAlignCurrent={handleAlignCurrent}
+        onPrevLine={() => handleJumpToSentence(Math.max(0, safeLineIndex - 1))}
+        onTogglePlay={handleMasterPlayToggle}
+        onNextLine={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, safeLineIndex + 1))}
+        onSelectFocus={(focus) => handleSelectMode(focus)}
+        onToggleLoop={() => {
+          const nextVal = !isLoopSentence;
+          setIsLoopSentence(nextVal);
+          triggerToast(nextVal ? '已开启每一句循环' : '已关闭循环');
+        }}
+        onChangePlaybackRate={(rate) => handleSetPlaybackRate(rate)}
+      />
 
       {/* 5. 装载法谈与双视频弹窗 (统一整合链接装载与法谈字幕于同一弹窗) */}
       {showPasteModal && (
@@ -3081,10 +3190,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </span>
                 <div>
                   <h3 className="text-base font-bold text-stone-900">
-                    装载法坛 (链接与字幕合一)
+                    装载法谈 (链接与字幕合一)
                   </h3>
                   <p className="text-xs text-stone-500">
-                    在此配置视频链接与法坛字幕，确认后一键秒级装载并开播
+                    在此配置视频链接与法谈字幕，确认后一键秒级装载并开播
                   </p>
                 </div>
               </div>
@@ -3207,7 +3316,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 type="file"
                 ref={modalFileInputRef}
                 className="hidden"
-                accept=".srt,.txt,.vtt,.tsv,.csv,.json,.lrc,text/plain"
+                accept=".srt,.txt,.html,.htm,.vtt,.tsv,.csv,.json,.lrc,text/plain,text/html"
                 onChange={handleFileInputChange}
               />
 
@@ -3258,40 +3367,61 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 ) : (
                   <div className="flex items-center justify-center gap-2 text-xs text-stone-600">
                     <Upload className="w-4 h-4 text-amber-700" />
-                    <span className="font-bold text-stone-800">点击上传 或 拖拽字幕文件 (.srt / .txt) 到此处</span>
+                    <span className="font-bold text-stone-800">点击上传 或 拖拽字幕 / Language Reactor 导出文件 (.srt / .html / .txt)</span>
                   </div>
                 )}
               </div>
 
               {/* 粘贴文本框 */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <label className="text-[11px] font-bold text-stone-600 flex items-center gap-1.5">
-                    <span>或直接在此粘贴 SRT 字幕文本 (支持 [GLOSS] 拆词行):</span>
+                    <span>或直接在此粘贴 SRT / LR HTML 字幕文本:</span>
                     {parseResult.totalParsed > 0 && (
                       <span className="text-[11px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
                         ✓ 已就绪 {parseResult.totalParsed} 句
                       </span>
                     )}
                   </label>
-                  {pastedText && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard.writeText(pastedText);
-                        triggerToast('已复制文本框中全部字幕！');
-                      }}
-                      className="text-[11px] text-amber-800 hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <Copy className="w-3 h-3" />
-                      <span>复制全文</span>
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {pastedText && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const { cleanedText, blockCount, removedLinesCount } = extractThaiAndTimestampsOnly(pastedText);
+                          if (!cleanedText.trim()) {
+                            triggerToast('未检测到有效泰文内容');
+                            return;
+                          }
+                          handlePastedTextChange(cleanedText);
+                          triggerToast(`已剥离 HTML 与剔除 ${removedLinesCount} 行机翻，保留 ${blockCount} 段纯泰文+时间戳！`);
+                        }}
+                        className="px-2 py-0.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+                        title="剔除 Language Reactor HTML 标签与机器翻译，仅保留带时间戳的泰文原文"
+                      >
+                        <Eraser className="w-3 h-3 text-amber-700" />
+                        <span>仅留泰文+时间戳（去机翻）</span>
+                      </button>
+                    )}
+                    {pastedText && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(pastedText);
+                          triggerToast('已复制文本框中全部字幕！');
+                        }}
+                        className="text-[11px] text-amber-800 hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <Copy className="w-3 h-3" />
+                        <span>复制全文</span>
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <textarea
                   value={pastedText}
                   onChange={(e) => handlePastedTextChange(e.target.value)}
-                  placeholder="在此直接粘贴包含 [GLOSS] 拆词或普通生肉 SRT 的字幕全文..."
+                  placeholder="在此直接粘贴增强型 SRT、Language Reactor 导出的 HTML/带时间戳内容或生肉 SRT..."
                   rows={8}
                   className="w-full text-xs font-mono p-3 rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 leading-relaxed shadow-inner"
                 />
@@ -3330,122 +3460,8 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
       )}
 
-      {/* 6. 预制精品课件库弹窗 */}
-      {showPresetModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 animate-in fade-in">
-          <div className="bg-slate-900 border border-amber-500/30 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col shadow-2xl text-slate-100">
-            {/* 弹窗头部 */}
-            <div className="px-5 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
-                  📚
-                </div>
-                <div>
-                  <h3 className="text-base font-extrabold text-white">
-                    官方预制精品课件库 (Curated Lessons Library)
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    一键调入尊者原版视频与全篇精准对齐（含 10-10 原声精研、10-31 双播等）
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowPresetModal(false)}
-                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+      {/* 6. 课件库 & YouTube 官方频道按日双视频对照弹窗 */}
 
-            {/* 课件列表：仅预制 10月17日 与 10月18日 */}
-            <div className="p-4 sm:p-6 overflow-y-auto space-y-3.5">
-              {curatedLessons.map((lesson) => {
-                const isSelected = config.thaiVideoUrl === lesson.thaiVideoUrl || config.chineseVideoUrl === lesson.chineseVideoUrl || config.title.includes(lesson.chineseTitle);
-                return (
-                  <div
-                    key={lesson.id}
-                    className={`p-4 rounded-xl border transition cursor-pointer ${
-                      isSelected
-                        ? 'bg-amber-500/10 border-amber-500/60 shadow-md ring-1 ring-amber-500/40'
-                        : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/40'
-                    }`}
-                    onClick={() => handleSelectPresetLesson(lesson)}
-                  >
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
-                        {lesson.date === '2026-10-17' && (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                            🇹🇭 10月17日实况
-                          </span>
-                        )}
-                        {lesson.date === '2026-10-18' && (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-black bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                            🇹🇭 10月18日实况
-                          </span>
-                        )}
-                        <span className="text-xs font-mono text-slate-400">
-                          {lesson.date}
-                        </span>
-                        <span className="text-xs font-mono text-amber-400/90 font-bold">
-                          {lesson.totalSentences} 句全篇对齐
-                        </span>
-                      </div>
-
-                      <span className="text-[11px] font-mono text-slate-400">
-                        基准偏置: {lesson.defaultOffsetSeconds > 0 ? `+${lesson.defaultOffsetSeconds}s` : `${lesson.defaultOffsetSeconds}s`}
-                      </span>
-                    </div>
-
-                    {/* 标题遵循视频抬头：中文在前，泰文在后 */}
-                    <h4 className="text-sm font-bold text-white mb-1">
-                      {lesson.chineseTitle}
-                    </h4>
-                    <p className="text-xs text-amber-300/80 font-serif mb-2 line-clamp-1">
-                      {lesson.title}
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/60">
-                      <div className="flex flex-wrap gap-1">
-                        {lesson.tags.map(t => (
-                          <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectPresetLesson(lesson);
-                        }}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
-                          isSelected
-                            ? 'bg-amber-500 text-slate-950 shadow-sm'
-                            : 'bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-slate-200'
-                        }`}
-                      >
-                        {isSelected ? '✓ 当前已载入' : '调入共学放映机'}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 弹窗底部提示 */}
-            <div className="px-5 py-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span>* 如需微调音画偏移，可点击上方「校准」面板调整个人同步时间差</span>
-              <button
-                onClick={() => setShowPresetModal(false)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium cursor-pointer"
-              >
-                关闭
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
 
       {/* 离线纯音频与录音弹窗 */}
@@ -3453,7 +3469,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         isOpen={showOfflineModal}
         onClose={() => setShowOfflineModal(false)}
         lessons={curatedLessons}
-        currentLesson={currentCuratedLesson}
+        currentLesson={currentCuratedLesson || curatedLessons[0]}
         activeOfflineTracks={{
           thai: thaiOfflineAudio ? { fileName: thaiOfflineAudio.fileName, lessonId: thaiOfflineAudio.lessonId } : undefined,
           chinese: chineseOfflineAudio ? { fileName: chineseOfflineAudio.fileName, lessonId: chineseOfflineAudio.lessonId } : undefined,

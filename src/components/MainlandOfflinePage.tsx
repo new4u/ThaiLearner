@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { CuratedLesson, SubtitleLine, WordToken } from '../types';
-import { getAllCuratedLessons } from '../data/presetLessonsLibrary';
+import { getAllCuratedLessons, getLessonProvenance, subscribeLessonsUpdate } from '../data/presetLessonsLibrary';
 import {
   OFFICIAL_FREE_AUDIO_ARCHIVES,
   OFFICIAL_DIRECTORY_LINKS,
@@ -15,9 +15,20 @@ import {
   formatBytes,
 } from '../services/offlineAudioStorage';
 import { OfflineAudioModal } from './OfflineAudioModal';
+import { CourseStudioModal } from './CourseStudioModal';
+import { UnifiedMediaSelectorBar } from './UnifiedMediaSelectorBar';
+import { UnmatchedSubtitleBanner } from './UnmatchedSubtitleBanner';
+import { UnifiedPlayerDock } from './UnifiedPlayerDock';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { computeSentenceWordSlots, getKaraokeWordProgress } from '../utils/karaokeTiming';
 import { useFullscreenStage } from '../hooks/useFullscreenStage';
+import {
+  inferGregorianDateFromAudio,
+  findCuratedLessonByAudioMeta,
+  getAudioMediaKey,
+  getBoundSubtitlesForMedia,
+  saveBoundSubtitlesForMedia,
+} from '../utils/mediaSubtitleBinding';
 import {
   Headphones,
   Play,
@@ -56,7 +67,16 @@ interface MainlandOfflinePageProps {
   onSelectWord?: (word: WordToken) => void;
   onOpenKeyboard?: (thaiText: string) => void;
   onSpeak?: (text: string, rate?: number) => void;
+  pendingAudioSelection?: {
+    mp3Url: string;
+    fileName: string;
+    fileCode?: string;
+    dateLabel?: string;
+    trackType: 'thai_audio' | 'chinese_audio';
+    nonce: number;
+  } | null;
   onSwitchToYouTubeMode: () => void;
+  onOpenVideoWithPair?: (pair: { thaiVideoUrl: string; chineseVideoUrl?: string; title?: string }) => void;
   onStartTour: () => void;
 }
 
@@ -72,6 +92,8 @@ interface TrackAudioState {
   lessonId: string;
   trackType: OfflineTrackType;
   fileCode?: string;
+  dateLabel?: string;
+  mediaKey?: string;
   autoPlay?: boolean;
   fallbackTried?: boolean;
 }
@@ -93,9 +115,16 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   onSelectWord,
   onOpenKeyboard,
   onSpeak,
+  pendingAudioSelection,
+  onSwitchToYouTubeMode,
+  onOpenVideoWithPair,
   onStartTour,
 }) => {
-  const lessons = useMemo(() => getAllCuratedLessons(), []);
+  const [lessonsVersion, setLessonsVersion] = useState(0);
+  useEffect(() => {
+    return subscribeLessonsUpdate(() => setLessonsVersion((v) => v + 1));
+  }, []);
+  const lessons = useMemo(() => getAllCuratedLessons(), [lessonsVersion]);
 
   // 1. 课件与字幕状态（与视频模式实时同步同一套数据）
   const [localLessonId, setLocalLessonId] = useState<string>(() => {
@@ -116,10 +145,88 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     [lessons, currentLessonId]
   );
 
-  const activeSubtitles: SubtitleLine[] = useMemo(
-    () => (propSubtitles && propSubtitles.length > 0 ? propSubtitles : currentLesson?.subtitles || []),
-    [propSubtitles, currentLesson]
-  );
+  // 2. 双音轨状态（泰语原声框 + 中文同传框）与严格字幕绑定
+  const thaiAudioRef = useRef<HTMLAudioElement | null>(null);
+  const chineseAudioRef = useRef<HTMLAudioElement | null>(null);
+  const thaiBlobUrlRef = useRef<string | null>(null);
+  const chineseBlobUrlRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [thaiTrack, setThaiTrack] = useState<TrackAudioState | null>(null);
+  const [chineseTrack, setChineseTrack] = useState<TrackAudioState | null>(null);
+  const [bindingVersion, setBindingVersion] = useState(0);
+  const [showImportSubtitlesModal, setShowImportSubtitlesModal] = useState(false);
+
+  const thaiAudioRefLatest = useRef<TrackAudioState | null>(null);
+  thaiAudioRefLatest.current = thaiTrack;
+  const chineseAudioRefLatest = useRef<TrackAudioState | null>(null);
+  chineseAudioRefLatest.current = chineseTrack;
+  const prevAutoLessonIdRef = useRef<string | null>(null);
+  const pendingExplicitTrackRef = useRef<{
+    lessonId: string;
+    trackType: 'thai_audio' | 'chinese_audio';
+    trackState: TrackAudioState;
+  } | null>(null);
+
+  // 严格校验当前泰语音频与字幕的对应关系：只有严格对应（同场次或显式绑定）才出字幕
+  const audioSubtitleBinding = useMemo(() => {
+    const lessonSubs = propSubtitles && propSubtitles.length > 0 ? propSubtitles : currentLesson?.subtitles || [];
+    if (!thaiTrack) {
+      return {
+        isMatched: true,
+        source: 'no_thai_track' as const,
+        inferredDate: null as string | null,
+        audioKey: '',
+        subtitles: lessonSubs,
+      };
+    }
+
+    const audioKey =
+      thaiTrack.mediaKey ||
+      getAudioMediaKey({ rawMp3Url: thaiTrack.rawMp3Url, fileName: thaiTrack.fileName });
+    const customBound = getBoundSubtitlesForMedia(audioKey);
+    if (customBound && customBound.subtitles.length > 0) {
+      return {
+        isMatched: true,
+        source: 'custom_bound' as const,
+        inferredDate: customBound.date || null,
+        audioKey,
+        subtitles: customBound.subtitles,
+      };
+    }
+
+    const inferredDate = inferGregorianDateFromAudio({
+      dateLabel: thaiTrack.dateLabel,
+      fileCode: thaiTrack.fileCode,
+      fileName: thaiTrack.fileName,
+      rawMp3Url: thaiTrack.rawMp3Url,
+    });
+
+    const isLessonIdMatch =
+      !thaiTrack.lessonId.startsWith('unmatched::') &&
+      thaiTrack.lessonId === currentLesson.id;
+    const isDateCompatible = !inferredDate || inferredDate === currentLesson.date;
+
+    if (isLessonIdMatch && isDateCompatible) {
+      return {
+        isMatched: true,
+        source: 'lesson_match' as const,
+        inferredDate,
+        audioKey,
+        subtitles: lessonSubs,
+      };
+    }
+
+    return {
+      isMatched: false,
+      source: 'unmatched' as const,
+      inferredDate,
+      audioKey,
+      subtitles: [] as SubtitleLine[],
+    };
+  }, [thaiTrack, propSubtitles, currentLesson, bindingVersion]);
+
+  const activeSubtitles: SubtitleLine[] = audioSubtitleBinding.subtitles;
 
   const [localLineIndex, setLocalLineIndex] = useState(0);
   const currentLineIndex = useMemo(() => {
@@ -135,17 +242,8 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     [onLineIndexChange]
   );
 
-  const currentLine = activeSubtitles[currentLineIndex] || activeSubtitles[0];
+  const currentLine = activeSubtitles.length > 0 ? activeSubtitles[currentLineIndex] : undefined;
 
-  // 2. 双音轨状态（泰语原声框 + 中文同传框）
-  const thaiAudioRef = useRef<HTMLAudioElement | null>(null);
-  const chineseAudioRef = useRef<HTMLAudioElement | null>(null);
-  const thaiBlobUrlRef = useRef<string | null>(null);
-  const chineseBlobUrlRef = useRef<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const [thaiTrack, setThaiTrack] = useState<TrackAudioState | null>(null);
-  const [chineseTrack, setChineseTrack] = useState<TrackAudioState | null>(null);
   const [isThaiPlaying, setIsThaiPlaying] = useState(false);
   const [isChinesePlaying, setIsChinesePlaying] = useState(false);
   const [thaiRawTime, setThaiRawTime] = useState(0);
@@ -177,11 +275,14 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   // 全屏沉浸（保持底层 <audio> 不断播）
   const { stageRef: fullscreenRef, isFullscreen, toggleFullscreen, exitFullscreen } = useFullscreenStage();
 
-  // 弹窗状态（保持主界面如视频工作台般简洁）
-  const [showAudioPickerModal, setShowAudioPickerModal] = useState(false);
-  const [audioPickerTab, setAudioPickerTab] = useState<'catalog' | 'local'>('catalog');
+  // 页面内联合选源条展开信号（保持主界面清爽无多层弹窗）
   const [audioPickerFocusTrack, setAudioPickerFocusTrack] = useState<'thai_audio' | 'chinese_audio'>('thai_audio');
-  const [showPresetModal, setShowPresetModal] = useState(false);
+  const [externalExpandSignal, setExternalExpandSignal] = useState<{
+    tab?: 'catalog' | 'link';
+    sourceKind?: 'audio' | 'video';
+    focusTrack?: 'thai_audio' | 'chinese_audio';
+    nonce: number;
+  } | null>(null);
   const [showOfflineModal, setShowOfflineModal] = useState(false);
 
   // 缓存与提示气泡
@@ -204,8 +305,6 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   const [pairedCatalog, setPairedCatalog] = useState<LuangporPairedCatalogResponse | null>(null);
   const [isCatalogLoading, setIsCatalogLoading] = useState(false);
   const [catalogError, setCatalogError] = useState<string | null>(null);
-  const [catalogQuery, setCatalogQuery] = useState('');
-  const [customMp3Url, setCustomMp3Url] = useState('');
 
   const replaceThaiTrack = useCallback((next: TrackAudioState | null) => {
     if (thaiBlobUrlRef.current && thaiBlobUrlRef.current !== next?.srcUrl) {
@@ -256,14 +355,50 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   }, [pairedCatalog, currentLesson?.date]);
 
   // 半自动智能挂载：优先本机离线缓存 -> 其次精确日期官方 MP3 -> 实时目录同日匹配
+  // 严格保护用户主动选定的外部/未匹配音轨，避免异步目录刷新将其冲掉
   useEffect(() => {
     let cancelled = false;
-    setIsThaiPlaying(false);
-    setIsChinesePlaying(false);
-    setThaiRawTime(0);
-    setThaiDuration(0);
-    setChineseRawTime(0);
-    setChineseDuration(0);
+    const isLessonChanged = prevAutoLessonIdRef.current !== currentLesson.id;
+    prevAutoLessonIdRef.current = currentLesson.id;
+
+    const pendingExplicit =
+      pendingExplicitTrackRef.current && pendingExplicitTrackRef.current.lessonId === currentLesson.id
+        ? pendingExplicitTrackRef.current
+        : null;
+    if (pendingExplicit) {
+      pendingExplicitTrackRef.current = null;
+      if (pendingExplicit.trackType === 'thai_audio') {
+        replaceThaiTrack(pendingExplicit.trackState);
+      } else {
+        replaceChineseTrack(pendingExplicit.trackState);
+      }
+    }
+
+    if (isLessonChanged) {
+      setIsThaiPlaying(false);
+      setIsChinesePlaying(false);
+      setThaiRawTime(0);
+      setThaiDuration(0);
+      setChineseRawTime(0);
+      setChineseDuration(0);
+    }
+
+    const curThai = thaiAudioRefLatest.current;
+    const curCn = chineseAudioRefLatest.current;
+    const skipAutoThai =
+      pendingExplicit?.trackType === 'thai_audio' ||
+      (!isLessonChanged &&
+        Boolean(curThai) &&
+        (curThai!.matchMode === 'manual' ||
+          curThai!.matchMode === 'cached' ||
+          curThai!.lessonId.startsWith('unmatched::')));
+    const skipAutoCn =
+      pendingExplicit?.trackType === 'chinese_audio' ||
+      (!isLessonChanged &&
+        Boolean(curCn) &&
+        (curCn!.matchMode === 'manual' ||
+          curCn!.matchMode === 'cached' ||
+          curCn!.lessonId.startsWith('unmatched::')));
 
     const staticThai = OFFICIAL_FREE_AUDIO_ARCHIVES.find(
       (a) => (a.suggestedLessonId === currentLesson.id || a.date === currentLesson.date) && a.trackType === 'thai_audio'
@@ -280,115 +415,157 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         if (cancelled) return;
 
         // 1. 泰语原声轨（含用户录音优先）
-        const cachedThai = tracks.thai_audio || tracks.user_recording;
-        if (cachedThai) {
-          replaceThaiTrack({
-            srcUrl: URL.createObjectURL(cachedThai.blob),
-            isBlobUrl: true,
-            fileName: cachedThai.fileName,
-            sourceLabel: '已离线缓存',
-            matchMode: 'cached',
-            sizeBytes: cachedThai.sizeBytes,
-            offsetSeconds: cachedThai.offsetSeconds || 0,
-            lessonId: cachedThai.lessonId,
-            trackType: cachedThai.trackType,
-          });
-        } else if (staticThai || catalogThai) {
-          const mp3Url = staticThai?.mp3Url || catalogThai!.mp3Url;
-          const fileName = staticThai?.fileName || catalogThai!.fileName;
-          const fileCode = staticThai?.fileCode || catalogThai!.fileCode;
-          replaceThaiTrack({
-            srcUrl: buildAudioProxyUrl(mp3Url),
-            rawMp3Url: mp3Url,
-            isBlobUrl: false,
-            fileName,
-            fileCode,
-            sourceLabel: `智能匹配 · ${currentLesson.date} (${fileCode})`,
-            matchMode: 'auto',
-            offsetSeconds: 0,
-            lessonId: currentLesson.id,
-            trackType: 'thai_audio',
-            autoPlay: false,
-          });
-        } else {
-          replaceThaiTrack(null);
+        if (!skipAutoThai) {
+          const cachedThai = tracks.thai_audio || tracks.user_recording;
+          const cachedInferredDate = cachedThai
+            ? inferGregorianDateFromAudio({ fileName: cachedThai.fileName })
+            : null;
+          const isCachedThaiDateValid =
+            !cachedInferredDate || cachedInferredDate === currentLesson.date;
+
+          if (cachedThai && isCachedThaiDateValid) {
+            replaceThaiTrack({
+              srcUrl: URL.createObjectURL(cachedThai.blob),
+              isBlobUrl: true,
+              fileName: cachedThai.fileName,
+              dateLabel: currentLesson.date,
+              mediaKey: getAudioMediaKey({ fileName: cachedThai.fileName }),
+              sourceLabel: '已离线缓存',
+              matchMode: 'cached',
+              sizeBytes: cachedThai.sizeBytes,
+              offsetSeconds: cachedThai.offsetSeconds || 0,
+              lessonId: cachedThai.lessonId,
+              trackType: cachedThai.trackType,
+            });
+          } else if (staticThai || catalogThai) {
+            const mp3Url = staticThai?.mp3Url || catalogThai!.mp3Url;
+            const fileName = staticThai?.fileName || catalogThai!.fileName;
+            const fileCode = staticThai?.fileCode || catalogThai!.fileCode;
+            const latestThai = thaiAudioRefLatest.current;
+            if (
+              isLessonChanged ||
+              !latestThai ||
+              latestThai.rawMp3Url !== mp3Url ||
+              latestThai.lessonId !== currentLesson.id
+            ) {
+              replaceThaiTrack({
+                srcUrl: buildAudioProxyUrl(mp3Url),
+                rawMp3Url: mp3Url,
+                isBlobUrl: false,
+                fileName,
+                fileCode,
+                dateLabel: currentLesson.date,
+                mediaKey: getAudioMediaKey({ rawMp3Url: mp3Url, fileName }),
+                sourceLabel: `智能匹配 · ${currentLesson.date} (${fileCode})`,
+                matchMode: 'auto',
+                offsetSeconds: 0,
+                lessonId: currentLesson.id,
+                trackType: 'thai_audio',
+                autoPlay: false,
+              });
+            }
+          } else if (isLessonChanged) {
+            replaceThaiTrack(null);
+          }
         }
 
         // 2. 中文同传轨
-        const cachedCn = tracks.chinese_audio;
-        if (cachedCn) {
-          replaceChineseTrack({
-            srcUrl: URL.createObjectURL(cachedCn.blob),
-            isBlobUrl: true,
-            fileName: cachedCn.fileName,
-            sourceLabel: '已离线缓存',
-            matchMode: 'cached',
-            sizeBytes: cachedCn.sizeBytes,
-            offsetSeconds: cachedCn.offsetSeconds || 0,
-            lessonId: cachedCn.lessonId,
-            trackType: 'chinese_audio',
-          });
-        } else if (staticChinese || catalogChinese) {
-          const mp3Url = staticChinese?.mp3Url || catalogChinese!.mp3Url;
-          const fileName = staticChinese?.fileName || catalogChinese!.fileName;
-          const fileCode = staticChinese?.fileCode || catalogChinese!.fileCode;
-          replaceChineseTrack({
-            srcUrl: buildAudioProxyUrl(mp3Url),
-            rawMp3Url: mp3Url,
-            isBlobUrl: false,
-            fileName,
-            fileCode,
-            sourceLabel: `智能匹配 · ${currentLesson.date} (${fileCode})`,
-            matchMode: 'auto',
-            offsetSeconds: 0,
-            lessonId: currentLesson.id,
-            trackType: 'chinese_audio',
-            autoPlay: false,
-          });
-        } else {
-          replaceChineseTrack(null);
+        if (!skipAutoCn) {
+          const cachedCn = tracks.chinese_audio;
+          if (cachedCn) {
+            replaceChineseTrack({
+              srcUrl: URL.createObjectURL(cachedCn.blob),
+              isBlobUrl: true,
+              fileName: cachedCn.fileName,
+              dateLabel: currentLesson.date,
+              mediaKey: getAudioMediaKey({ fileName: cachedCn.fileName }),
+              sourceLabel: '已离线缓存',
+              matchMode: 'cached',
+              sizeBytes: cachedCn.sizeBytes,
+              offsetSeconds: cachedCn.offsetSeconds || 0,
+              lessonId: cachedCn.lessonId,
+              trackType: 'chinese_audio',
+            });
+          } else if (staticChinese || catalogChinese) {
+            const mp3Url = staticChinese?.mp3Url || catalogChinese!.mp3Url;
+            const fileName = staticChinese?.fileName || catalogChinese!.fileName;
+            const fileCode = staticChinese?.fileCode || catalogChinese!.fileCode;
+            const latestCn = chineseAudioRefLatest.current;
+            if (
+              isLessonChanged ||
+              !latestCn ||
+              latestCn.rawMp3Url !== mp3Url ||
+              latestCn.lessonId !== currentLesson.id
+            ) {
+              replaceChineseTrack({
+                srcUrl: buildAudioProxyUrl(mp3Url),
+                rawMp3Url: mp3Url,
+                isBlobUrl: false,
+                fileName,
+                fileCode,
+                dateLabel: currentLesson.date,
+                mediaKey: getAudioMediaKey({ rawMp3Url: mp3Url, fileName }),
+                sourceLabel: `智能匹配 · ${currentLesson.date} (${fileCode})`,
+                matchMode: 'auto',
+                offsetSeconds: 0,
+                lessonId: currentLesson.id,
+                trackType: 'chinese_audio',
+                autoPlay: false,
+              });
+            }
+          } else if (isLessonChanged) {
+            replaceChineseTrack(null);
+          }
         }
       })
       .catch(() => {
         if (cancelled) return;
-        if (staticThai || catalogThai) {
-          const mp3Url = staticThai?.mp3Url || catalogThai!.mp3Url;
-          const fileName = staticThai?.fileName || catalogThai!.fileName;
-          const fileCode = staticThai?.fileCode || catalogThai!.fileCode;
-          replaceThaiTrack({
-            srcUrl: buildAudioProxyUrl(mp3Url),
-            rawMp3Url: mp3Url,
-            isBlobUrl: false,
-            fileName,
-            fileCode,
-            sourceLabel: `智能匹配 · ${currentLesson.date}`,
-            matchMode: 'auto',
-            offsetSeconds: 0,
-            lessonId: currentLesson.id,
-            trackType: 'thai_audio',
-          });
-        } else {
-          replaceThaiTrack(null);
+        if (!skipAutoThai) {
+          if (staticThai || catalogThai) {
+            const mp3Url = staticThai?.mp3Url || catalogThai!.mp3Url;
+            const fileName = staticThai?.fileName || catalogThai!.fileName;
+            const fileCode = staticThai?.fileCode || catalogThai!.fileCode;
+            replaceThaiTrack({
+              srcUrl: buildAudioProxyUrl(mp3Url),
+              rawMp3Url: mp3Url,
+              isBlobUrl: false,
+              fileName,
+              fileCode,
+              dateLabel: currentLesson.date,
+              mediaKey: getAudioMediaKey({ rawMp3Url: mp3Url, fileName }),
+              sourceLabel: `智能匹配 · ${currentLesson.date}`,
+              matchMode: 'auto',
+              offsetSeconds: 0,
+              lessonId: currentLesson.id,
+              trackType: 'thai_audio',
+            });
+          } else if (isLessonChanged) {
+            replaceThaiTrack(null);
+          }
         }
 
-        if (staticChinese || catalogChinese) {
-          const mp3Url = staticChinese?.mp3Url || catalogChinese!.mp3Url;
-          const fileName = staticChinese?.fileName || catalogChinese!.fileName;
-          const fileCode = staticChinese?.fileCode || catalogChinese!.fileCode;
-          replaceChineseTrack({
-            srcUrl: buildAudioProxyUrl(mp3Url),
-            rawMp3Url: mp3Url,
-            isBlobUrl: false,
-            fileName,
-            fileCode,
-            sourceLabel: `智能匹配 · ${currentLesson.date}`,
-            matchMode: 'auto',
-            offsetSeconds: 0,
-            lessonId: currentLesson.id,
-            trackType: 'chinese_audio',
-          });
-        } else {
-          replaceChineseTrack(null);
+        if (!skipAutoCn) {
+          if (staticChinese || catalogChinese) {
+            const mp3Url = staticChinese?.mp3Url || catalogChinese!.mp3Url;
+            const fileName = staticChinese?.fileName || catalogChinese!.fileName;
+            const fileCode = staticChinese?.fileCode || catalogChinese!.fileCode;
+            replaceChineseTrack({
+              srcUrl: buildAudioProxyUrl(mp3Url),
+              rawMp3Url: mp3Url,
+              isBlobUrl: false,
+              fileName,
+              fileCode,
+              dateLabel: currentLesson.date,
+              mediaKey: getAudioMediaKey({ rawMp3Url: mp3Url, fileName }),
+              sourceLabel: `智能匹配 · ${currentLesson.date}`,
+              matchMode: 'auto',
+              offsetSeconds: 0,
+              lessonId: currentLesson.id,
+              trackType: 'chinese_audio',
+            });
+          } else if (isLessonChanged) {
+            replaceChineseTrack(null);
+          }
         }
       });
 
@@ -600,8 +777,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   const handleToggleThaiSolo = () => {
     if (!thaiAudioRef.current || !thaiTrack) {
       setAudioPickerFocusTrack('thai_audio');
-      setAudioPickerTab('catalog');
-      setShowAudioPickerModal(true);
+      setExternalExpandSignal({ tab: 'catalog', sourceKind: 'audio', focusTrack: 'thai_audio', nonce: Date.now() });
       return;
     }
     if (thaiAudioRef.current.paused) {
@@ -615,8 +791,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   const handleToggleChineseSolo = () => {
     if (!chineseAudioRef.current || !chineseTrack) {
       setAudioPickerFocusTrack('chinese_audio');
-      setAudioPickerTab('catalog');
-      setShowAudioPickerModal(true);
+      setExternalExpandSignal({ tab: 'catalog', sourceKind: 'audio', focusTrack: 'chinese_audio', nonce: Date.now() });
       return;
     }
     if (chineseAudioRef.current.paused) {
@@ -671,7 +846,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     }
   };
 
-  // 从目录/自定义网址载入指定轨道并保留点击手势试听
+  // 从目录/自定义网址载入指定轨道并严格校验泰语音频与字幕的对应关系
   const handleSelectTrackStream = (params: {
     mp3Url: string;
     fileName: string;
@@ -691,7 +866,66 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       setTrack((prev) => (prev ? { ...prev, autoPlay: true } : null));
       currentEl.play().catch(() => {});
       showToast(`开始播放 ${params.fileName}`);
-      setShowAudioPickerModal(false);
+      return;
+    }
+
+    const inferredDate = inferGregorianDateFromAudio({
+      dateLabel: params.dateLabel,
+      fileCode: params.fileCode,
+      fileName: params.fileName,
+      rawMp3Url: params.mp3Url,
+    });
+    const audioKey = getAudioMediaKey({ rawMp3Url: params.mp3Url, fileName: params.fileName });
+
+    if (isThai) {
+      const matchedLesson = findCuratedLessonByAudioMeta(lessons, {
+        dateLabel: params.dateLabel || inferredDate || undefined,
+        fileCode: params.fileCode,
+        fileName: params.fileName,
+        rawMp3Url: params.mp3Url,
+      });
+
+      const targetLessonId = matchedLesson
+        ? matchedLesson.id
+        : `unmatched::${inferredDate || params.fileCode || params.fileName}`;
+
+      const nextState: TrackAudioState = {
+        srcUrl: buildAudioProxyUrl(params.mp3Url),
+        rawMp3Url: params.mp3Url,
+        isBlobUrl: false,
+        fileName: params.fileName,
+        fileCode: params.fileCode,
+        dateLabel: inferredDate || params.dateLabel,
+        mediaKey: audioKey,
+        sourceLabel: params.dateLabel || inferredDate ? `官方存档 · ${inferredDate || params.dateLabel}` : '手动选定 MP3',
+        matchMode: 'manual',
+        offsetSeconds: 0,
+        lessonId: targetLessonId,
+        trackType: 'thai_audio',
+        autoPlay: params.autoPlay ?? true,
+        fallbackTried: false,
+      };
+
+      if (matchedLesson && matchedLesson.id !== currentLesson.id) {
+        pendingExplicitTrackRef.current = {
+          lessonId: matchedLesson.id,
+          trackType: 'thai_audio',
+          trackState: nextState,
+        };
+        setCurrentLessonId(matchedLesson.id);
+        setCurrentLineIndex(0);
+        showToast(`已切换至对应课件「${matchedLesson.date}」并加载泰语音频：${params.fileName}`);
+      } else {
+        replaceThaiTrack(nextState);
+        const bound = getBoundSubtitlesForMedia(audioKey);
+        if (matchedLesson) {
+          showToast(`已挂载同场泰语音频：${params.fileName}`);
+        } else if (bound) {
+          showToast(`已挂载泰语音频「${params.fileName}」并匹配到对应字幕 (${bound.subtitles.length} 句)`);
+        } else {
+          showToast(`已挂载泰语音频「${params.fileName}」；本音频暂无对应字幕，已自动隐藏其他场次字幕`);
+        }
+      }
       return;
     }
 
@@ -701,7 +935,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       isBlobUrl: false,
       fileName: params.fileName,
       fileCode: params.fileCode,
-      sourceLabel: params.dateLabel ? `官方存档 · ${params.dateLabel}` : '手动选定 MP3',
+      dateLabel: inferredDate || params.dateLabel,
+      mediaKey: audioKey,
+      sourceLabel: params.dateLabel || inferredDate ? `官方存档 · ${inferredDate || params.dateLabel}` : '手动选定 MP3',
       matchMode: 'manual',
       offsetSeconds: 0,
       lessonId: currentLesson.id,
@@ -710,12 +946,28 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       fallbackTried: false,
     });
 
-    if (!isThai && audioFocus === 'thai') {
+    if (audioFocus === 'thai') {
       setAudioFocus('both');
     }
-    showToast(`已挂载${isThai ? '泰语' : '中文'}音频：${params.fileName}`);
-    setShowAudioPickerModal(false);
+    showToast(`已挂载中文音频：${params.fileName}`);
   };
+
+  // 响应从「视频学习」跨模式切入的待载入音轨
+  const handleSelectTrackStreamRef = useRef(handleSelectTrackStream);
+  handleSelectTrackStreamRef.current = handleSelectTrackStream;
+  const lastHandledAudioNonceRef = useRef<number>(0);
+  useEffect(() => {
+    if (!pendingAudioSelection || pendingAudioSelection.nonce === lastHandledAudioNonceRef.current) return;
+    lastHandledAudioNonceRef.current = pendingAudioSelection.nonce;
+    handleSelectTrackStreamRef.current({
+      mp3Url: pendingAudioSelection.mp3Url,
+      fileName: pendingAudioSelection.fileName,
+      fileCode: pendingAudioSelection.fileCode,
+      dateLabel: pendingAudioSelection.dateLabel,
+      trackType: pendingAudioSelection.trackType,
+      autoPlay: true,
+    });
+  }, [pendingAudioSelection]);
 
   // 离线缓存指定 MP3 至 IndexedDB（4MB 分段兼容大文件）
   const handleCacheTrack = async (params: {
@@ -736,20 +988,39 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         }
       });
 
+      const inferredDate = inferGregorianDateFromAudio({
+        fileCode: params.fileCode,
+        fileName: params.fileName,
+        rawMp3Url: params.mp3Url,
+      });
+      const matchedLesson = findCuratedLessonByAudioMeta(lessons, {
+        fileCode: params.fileCode,
+        fileName: params.fileName,
+        rawMp3Url: params.mp3Url,
+      });
+      const targetLessonId =
+        params.trackType === 'thai_audio'
+          ? matchedLesson?.id || `unmatched::${inferredDate || params.fileCode || params.fileName}`
+          : matchedLesson?.id || currentLesson.id;
+
       const meta = await offlineAudioStorage.saveAudioTrack({
-        lessonId: currentLesson.id,
+        lessonId: targetLessonId,
         trackType: params.trackType,
-        lessonTitle: currentLesson.chineseTitle || currentLesson.title,
+        lessonTitle: matchedLesson?.chineseTitle || matchedLesson?.title || params.fileName,
         fileName: params.fileName,
         blob,
         sourceKind: 'official_archive',
       });
 
+      const audioKey = getAudioMediaKey({ rawMp3Url: params.mp3Url, fileName: params.fileName });
       const nextState: TrackAudioState = {
         srcUrl: URL.createObjectURL(blob),
+        rawMp3Url: params.mp3Url,
         isBlobUrl: true,
         fileName: meta.fileName,
         fileCode: params.fileCode,
+        dateLabel: inferredDate || undefined,
+        mediaKey: audioKey,
         sourceLabel: '已离线缓存至本机',
         matchMode: 'cached',
         sizeBytes: meta.sizeBytes,
@@ -758,8 +1029,21 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         trackType: meta.trackType,
       };
 
-      if (params.trackType === 'thai_audio') replaceThaiTrack(nextState);
-      else replaceChineseTrack(nextState);
+      if (params.trackType === 'thai_audio') {
+        if (matchedLesson && matchedLesson.id !== currentLesson.id) {
+          pendingExplicitTrackRef.current = {
+            lessonId: matchedLesson.id,
+            trackType: 'thai_audio',
+            trackState: nextState,
+          };
+          setCurrentLessonId(matchedLesson.id);
+          setCurrentLineIndex(0);
+        } else {
+          replaceThaiTrack(nextState);
+        }
+      } else {
+        replaceChineseTrack(nextState);
+      }
 
       showToast(`已缓存「${params.fileName}」(${formatBytes(blob.size)})`);
     } catch (err: any) {
@@ -770,7 +1054,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     }
   };
 
-  // 导入本地音频文件
+  // 导入本地音频文件（严格校验文件名日期/绑定，不把无关音频误挂载成当前课字幕）
   const handleLocalFilePicked = async (file: File, trackType: 'thai_audio' | 'chinese_audio') => {
     if (!file) return;
     const lower = file.name.toLowerCase();
@@ -783,10 +1067,19 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     }
 
     try {
+      const inferredDate = inferGregorianDateFromAudio({ fileName: file.name });
+      const matchedLesson = findCuratedLessonByAudioMeta(lessons, { fileName: file.name });
+      const audioKey = getAudioMediaKey({ fileName: file.name });
+
+      const targetLessonId =
+        trackType === 'thai_audio'
+          ? matchedLesson?.id || `unmatched::${inferredDate || file.name}`
+          : matchedLesson?.id || currentLesson.id;
+
       const meta = await offlineAudioStorage.saveAudioTrack({
-        lessonId: currentLesson.id,
+        lessonId: targetLessonId,
         trackType,
-        lessonTitle: currentLesson.chineseTitle || currentLesson.title,
+        lessonTitle: matchedLesson?.chineseTitle || matchedLesson?.title || file.name,
         fileName: file.name,
         blob: file,
         sourceKind: 'local_file',
@@ -795,6 +1088,8 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         srcUrl: URL.createObjectURL(file),
         isBlobUrl: true,
         fileName: meta.fileName,
+        dateLabel: inferredDate || undefined,
+        mediaKey: audioKey,
         sourceLabel: '本地导入 · 已离线保存',
         matchMode: 'cached',
         sizeBytes: meta.sizeBytes,
@@ -802,10 +1097,28 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         lessonId: meta.lessonId,
         trackType: meta.trackType,
       };
-      if (trackType === 'thai_audio') replaceThaiTrack(nextState);
-      else replaceChineseTrack(nextState);
-      setShowAudioPickerModal(false);
-      showToast(`已导入并保存「${file.name}」`);
+      if (trackType === 'thai_audio') {
+        if (matchedLesson && matchedLesson.id !== currentLesson.id) {
+          pendingExplicitTrackRef.current = {
+            lessonId: matchedLesson.id,
+            trackType: 'thai_audio',
+            trackState: nextState,
+          };
+          setCurrentLessonId(matchedLesson.id);
+          setCurrentLineIndex(0);
+          showToast(`已识别为 ${matchedLesson.date} 课件音频并载入「${file.name}」`);
+        } else {
+          replaceThaiTrack(nextState);
+          if (matchedLesson || getBoundSubtitlesForMedia(audioKey)) {
+            showToast(`已导入并匹配对应字幕：「${file.name}」`);
+          } else {
+            showToast(`已导入本地泰语音频「${file.name}」（暂未绑定字幕，已隐藏其他场次字幕）`);
+          }
+        }
+      } else {
+        replaceChineseTrack(nextState);
+        showToast(`已导入并保存「${file.name}」`);
+      }
     } catch (err: any) {
       showToast(err?.message || '导入音频失败', 'error');
     }
@@ -817,29 +1130,49 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     blob: Blob,
     meta: OfflineAudioMeta
   ) => {
-    if (lessonId !== currentLessonId) {
-      setCurrentLessonId(lessonId);
-      setCurrentLineIndex(0);
-    }
+    const isUnmatchedSlot = lessonId.startsWith('unmatched::');
+    const inferredDate = inferGregorianDateFromAudio({ fileName: meta.fileName });
+    const targetLesson = !isUnmatchedSlot ? lessons.find((l) => l.id === lessonId) : undefined;
+    const isConflictingDate = Boolean(targetLesson && inferredDate && inferredDate !== targetLesson.date);
+    const effectiveLessonId = isConflictingDate ? `unmatched::${inferredDate}` : lessonId;
+
     const nextState: TrackAudioState = {
       srcUrl: URL.createObjectURL(blob),
       isBlobUrl: true,
       fileName: meta.fileName,
+      dateLabel: inferredDate || targetLesson?.date,
+      mediaKey: getAudioMediaKey({ fileName: meta.fileName }),
       sourceLabel: '本机离线音频库',
       matchMode: 'cached',
       sizeBytes: meta.sizeBytes,
       offsetSeconds: meta.offsetSeconds || 0,
-      lessonId,
+      lessonId: effectiveLessonId,
       trackType,
     };
     if (trackType === 'chinese_audio') {
-      replaceChineseTrack(nextState);
+      if (!isUnmatchedSlot && !isConflictingDate && lessonId !== currentLessonId) {
+        pendingExplicitTrackRef.current = { lessonId, trackType: 'chinese_audio', trackState: nextState };
+        setCurrentLessonId(lessonId);
+        setCurrentLineIndex(0);
+      } else {
+        replaceChineseTrack(nextState);
+      }
       if (audioFocus === 'thai') setAudioFocus('both');
     } else {
-      replaceThaiTrack(nextState);
+      if (!isUnmatchedSlot && !isConflictingDate && lessonId !== currentLessonId) {
+        pendingExplicitTrackRef.current = { lessonId, trackType: 'thai_audio', trackState: nextState };
+        setCurrentLessonId(lessonId);
+        setCurrentLineIndex(0);
+      } else {
+        replaceThaiTrack(nextState);
+      }
     }
     setShowOfflineModal(false);
-    showToast(`已载入：${meta.fileName}`);
+    showToast(
+      isConflictingDate
+        ? `已载入「${meta.fileName}」（日期 ${inferredDate} 与当前课件不同，已自动隐藏不匹配字幕）`
+        : `已载入：${meta.fileName}`
+    );
   };
 
   const filteredSubtitles = useMemo(() => {
@@ -852,22 +1185,6 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         s.romanization.toLowerCase().includes(q)
     );
   }, [activeSubtitles, searchQuery]);
-
-  const filteredPairedItems = useMemo<LuangporPairedItem[]>(() => {
-    const list = pairedCatalog?.items || [];
-    if (!catalogQuery.trim()) return list;
-    const q = catalogQuery.toLowerCase().trim();
-    return list.filter(
-      (row) =>
-        row.date.includes(q) ||
-        (row.thai &&
-          (row.thai.fileCode.toLowerCase().includes(q) ||
-            row.thai.title.toLowerCase().includes(q))) ||
-        (row.chinese &&
-          (row.chinese.fileCode.toLowerCase().includes(q) ||
-            row.chinese.title.toLowerCase().includes(q)))
-    );
-  }, [pairedCatalog, catalogQuery]);
 
   // 键盘快捷键（空格播停、上下句、Esc退出全屏）
   useEffect(() => {
@@ -903,84 +1220,55 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             </span>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-sm sm:text-base font-bold text-[#2d2a26]">
-                  泰中双音频同步对齐播放器
+                <h1 className="text-sm sm:text-base font-bold text-[#2d2a26] whitespace-nowrap">
+                  泰中双音频同步对齐
                 </h1>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-amber-100/80 text-amber-900 border border-amber-300/60 font-mono tabular-nums">
-                  第 {currentLineIndex + 1} 句 / 共 {activeSubtitles.length} 句
+                <span className="text-xs font-mono tabular-nums text-[#7a6f5f]">
+                  {activeSubtitles.length > 0
+                    ? `第 ${currentLineIndex + 1} / ${activeSubtitles.length} 句`
+                    : '暂无对应字幕'}
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
-                  <span>✨ 音频优先 · 共用字幕</span>
+                <span className="hidden sm:inline text-stone-300" aria-hidden="true">·</span>
+                <span className="hidden sm:inline text-xs font-medium text-[#5b3f1e]">
+                  {audioSubtitleBinding.isMatched
+                    ? audioSubtitleBinding.source === 'custom_bound'
+                      ? '已绑定本音频字幕'
+                      : (() => {
+                          const prov = getLessonProvenance(currentLesson);
+                          return `${prov.type === 'official' ? '🌟' : '🤝'} ${prov.label}`;
+                        })()
+                    : '字幕严格绑定泰语音频'}
                 </span>
               </div>
               <p className="text-xs text-[#7a6f5f] truncate max-w-md sm:max-w-xl">
-                {currentLesson.date} · {currentLesson.chineseTitle} ｜ {currentLesson.title}
+                {audioSubtitleBinding.isMatched
+                  ? `${currentLesson.date} · ${currentLesson.chineseTitle} ｜ ${currentLesson.title}`
+                  : `当前泰语音频：${thaiTrack?.fileName || '自定义音频'}（暂无对应字幕）`}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
             {/* 一键全屏沉浸 */}
             <button
               type="button"
               data-tour-id="tour-ml-fullscreen"
               onClick={toggleFullscreen}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
+              className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
               title="一键进入全屏沉浸字幕学习"
             >
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               <span>{isFullscreen ? '退出全屏' : '全屏沉浸'}</span>
             </button>
 
-            {/* 选音频 / 隆波按日目录 */}
-            <button
-              type="button"
-              data-tour-id="tour-ml-audio-player"
-              onClick={() => {
-                setAudioPickerFocusTrack('thai_audio');
-                setAudioPickerTab('catalog');
-                setShowAudioPickerModal(true);
-              }}
-              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-200 border border-slate-700 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-              title="半自动匹配按日开示 MP3、导入本地音频或录音"
-            >
-              <Headphones className="w-3.5 h-3.5" />
-              <span>🎧 选音频 / 目录</span>
-            </button>
-
-            {/* 离线录音库 */}
-            <button
-              type="button"
-              onClick={() => setShowOfflineModal(true)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0 border ${
-                thaiTrack?.isBlobUrl || chineseTrack?.isBlobUrl
-                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500'
-                  : 'bg-white hover:bg-amber-50 text-[#5b3f1e] border-[#d9c8a9]'
-              }`}
-              title="管理离线缓存与录制跟读音频"
-            >
-              <Mic className="w-3.5 h-3.5" />
-              <span>{thaiTrack?.isBlobUrl || chineseTrack?.isBlobUrl ? '离线已挂载' : '录音 / 离线库'}</span>
-            </button>
-
-            {/* 预制课件库 */}
-            <button
-              type="button"
-              onClick={() => setShowPresetModal(true)}
-              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-              title="切换日期课件（与视频学习共用同一套字幕）"
-            >
-              <Library className="w-3.5 h-3.5" />
-              <span>📚 课件库</span>
-            </button>
-
             <button
               type="button"
               onClick={onStartTour}
-              className="p-1.5 rounded-xl bg-white hover:bg-stone-100 text-[#7a6f5f] border border-stone-200 transition cursor-pointer"
+              className="min-h-[38px] px-2.5 rounded-xl bg-white hover:bg-stone-100 text-[#7a6f5f] border border-stone-200 transition cursor-pointer flex items-center gap-1 text-xs font-semibold whitespace-nowrap shrink-0"
               title="查看功能导览"
             >
-              <Compass className="w-4 h-4" />
+              <Compass className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">导览</span>
             </button>
           </div>
         </div>
@@ -1017,6 +1305,83 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             if (file) handleLocalFilePicked(file, audioPickerFocusTrack);
             e.target.value = '';
           }}
+        />
+
+        {/* 主页直达选课与音视频源切换条 */}
+        <UnifiedMediaSelectorBar
+          mode="audio"
+          onSwitchMode={(nextMode) => {
+            if (nextMode === 'video') onSwitchToYouTubeMode();
+          }}
+          lessons={lessons}
+          currentLessonId={currentLesson.id}
+          currentDate={currentLesson.date}
+          isUnmatchedCustomMedia={!audioSubtitleBinding.isMatched}
+          unmatchedMediaLabel={thaiTrack?.fileName}
+          onSelectLesson={(lesson) => {
+            setCurrentLessonId(lesson.id);
+            setCurrentLineIndex(0);
+            showToast(`已切换开示：${lesson.date} · ${lesson.chineseTitle}`);
+          }}
+          pairedAudioCatalog={pairedCatalog}
+          isAudioCatalogLoading={isCatalogLoading}
+          audioCatalogError={catalogError}
+          audioCatalogYear={catalogYear}
+          onChangeAudioCatalogYear={(y) => setCatalogYear(y)}
+          onRefreshAudioCatalog={() => loadCatalog(catalogYear, true)}
+          onSelectAudioTrack={(params) =>
+            handleSelectTrackStream({
+              ...params,
+              autoPlay: true,
+            })
+          }
+          onCacheAudioTrack={(params) => handleCacheTrack(params)}
+          cachingKey={cachingKey}
+          cachingProgress={cachingProgress}
+          onSelectYouTubePair={(item) => {
+            const matchedLesson = item.matchedLessonId
+              ? lessons.find((l) => l.id === item.matchedLessonId)
+              : undefined;
+            if (matchedLesson) {
+              setCurrentLessonId(matchedLesson.id);
+              setCurrentLineIndex(0);
+              onSwitchToYouTubeMode();
+            } else if (onOpenVideoWithPair) {
+              onOpenVideoWithPair({
+                thaiVideoUrl: item.thai?.url || '',
+                chineseVideoUrl: item.chinese?.url || '',
+                title: `${item.date} ${item.chinese?.title || item.thai?.title || '隆波开示'}`,
+              });
+            } else {
+              onSwitchToYouTubeMode();
+            }
+          }}
+          onLoadCustomMediaPair={({ thaiUrl, chineseUrl, title, mediaType }) => {
+            if (mediaType === 'video') {
+              if (onOpenVideoWithPair) {
+                onOpenVideoWithPair({ thaiVideoUrl: thaiUrl, chineseVideoUrl: chineseUrl, title });
+              } else {
+                onSwitchToYouTubeMode();
+              }
+              return;
+            }
+            if (thaiUrl) {
+              const fn = thaiUrl.split('/').pop()?.split('?')[0] || `thai_${Date.now()}.mp3`;
+              handleSelectTrackStream({ mp3Url: thaiUrl, fileName: fn, trackType: 'thai_audio', autoPlay: true });
+            }
+            if (chineseUrl) {
+              const fn = chineseUrl.split('/').pop()?.split('?')[0] || `cn_${Date.now()}.mp3`;
+              handleSelectTrackStream({ mp3Url: chineseUrl, fileName: fn, trackType: 'chinese_audio', autoPlay: false });
+            }
+          }}
+          onPickLocalAudioFile={(trackType) => {
+            setAudioPickerFocusTrack(trackType);
+            fileInputRef.current?.click();
+          }}
+          onOpenOfflineModal={() => setShowOfflineModal(true)}
+          hasOfflineActive={Boolean(thaiTrack?.isBlobUrl || chineseTrack?.isBlobUrl)}
+          onOpenSubtitleImporter={() => setShowImportSubtitlesModal(true)}
+          externalExpandSignal={externalExpandSignal}
         />
 
         {/* 2. 紧凑双音频视窗区（对应双视频的两个框，紧致优雅、半自动匹配） */}
@@ -1066,8 +1431,12 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                   type="button"
                   onClick={() => {
                     setAudioPickerFocusTrack('thai_audio');
-                    setAudioPickerTab('catalog');
-                    setShowAudioPickerModal(true);
+                    setExternalExpandSignal({
+                      tab: 'catalog',
+                      sourceKind: 'audio',
+                      focusTrack: 'thai_audio',
+                      nonce: Date.now(),
+                    });
                   }}
                   className="px-2 py-1 rounded bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-600/60 text-[11px] font-semibold cursor-pointer whitespace-nowrap"
                   title="半自动挑选同日场次、其他日期或导入本地泰语音频"
@@ -1211,8 +1580,12 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                       type="button"
                       onClick={() => {
                         setAudioPickerFocusTrack('thai_audio');
-                        setAudioPickerTab('catalog');
-                        setShowAudioPickerModal(true);
+                        setExternalExpandSignal({
+                          tab: 'catalog',
+                          sourceKind: 'audio',
+                          focusTrack: 'thai_audio',
+                          nonce: Date.now(),
+                        });
                       }}
                       className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold cursor-pointer"
                     >
@@ -1274,8 +1647,12 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                   type="button"
                   onClick={() => {
                     setAudioPickerFocusTrack('chinese_audio');
-                    setAudioPickerTab('catalog');
-                    setShowAudioPickerModal(true);
+                    setExternalExpandSignal({
+                      tab: 'catalog',
+                      sourceKind: 'audio',
+                      focusTrack: 'chinese_audio',
+                      nonce: Date.now(),
+                    });
                   }}
                   className="px-2 py-1 rounded bg-stone-800/90 hover:bg-stone-700 text-stone-200 border border-stone-600/60 text-[11px] font-semibold cursor-pointer whitespace-nowrap"
                   title="半自动挑选同日中文开示或导入本地音频"
@@ -1435,8 +1812,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                       type="button"
                       onClick={() => {
                         setAudioPickerFocusTrack('chinese_audio');
-                        setAudioPickerTab('catalog');
-                        setShowAudioPickerModal(true);
+                        setExternalExpandSignal({ tab: 'catalog', sourceKind: 'audio', focusTrack: 'chinese_audio', nonce: Date.now() });
                       }}
                       className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold cursor-pointer"
                     >
@@ -1460,6 +1836,43 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         </div>
 
         {/* 3. 当前聚焦精读句大卡（与「视频学习」保持同一视觉设计与交互） */}
+        {!currentLine && (
+          <UnmatchedSubtitleBanner
+            mediaKind="thai_audio"
+            mediaIdentifier={thaiTrack?.fileName}
+            inferredDate={audioSubtitleBinding.inferredDate}
+            canConfirmSameDateAsLesson={Boolean(
+              thaiTrack && !audioSubtitleBinding.inferredDate && audioSubtitleBinding.audioKey
+            )}
+            currentLessonDate={currentLesson.date}
+            onConfirmSameDateAsLesson={() => {
+              if (!thaiTrack || !audioSubtitleBinding.audioKey) return;
+              saveBoundSubtitlesForMedia({
+                mediaKey: audioSubtitleBinding.audioKey,
+                mediaKind: 'thai_audio',
+                thaiAudioUrl: thaiTrack.rawMp3Url,
+                thaiAudioFileName: thaiTrack.fileName,
+                date: currentLesson.date,
+                title: currentLesson.chineseTitle || currentLesson.title,
+                subtitles: currentLesson.subtitles,
+                updatedAt: Date.now(),
+              });
+              setBindingVersion((v) => v + 1);
+              setCurrentLineIndex(0);
+              showToast(`已将「${thaiTrack.fileName}」确认关联到《${currentLesson.date}》字幕！`);
+            }}
+            onImportSubtitles={() => setShowImportSubtitlesModal(true)}
+            onSwitchBackToMatchedLesson={() => {
+              const target = lessons.find((l) => l.subtitles.length > 0) || lessons[0];
+              if (target) {
+                setCurrentLessonId(target.id);
+                setCurrentLineIndex(0);
+                replaceThaiTrack(null);
+                showToast(`已切回课件：${target.date} · ${target.chineseTitle}`);
+              }
+            }}
+          />
+        )}
         {currentLine && (
           <div
             data-tour-id="tour-ml-subtitle-studio"
@@ -1696,22 +2109,6 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
-              {/* 便捷课件切换 */}
-              <select
-                value={currentLessonId}
-                onChange={(e) => {
-                  setCurrentLessonId(e.target.value);
-                  setCurrentLineIndex(0);
-                }}
-                className="min-h-[36px] bg-stone-50 border border-stone-200 text-[#2d2a26] rounded-xl px-2.5 py-1 text-xs font-semibold focus:outline-none focus:border-amber-500 max-w-[220px] sm:max-w-xs"
-              >
-                {lessons.map((l) => (
-                  <option key={l.id} value={l.id}>
-                    {l.date} · {l.chineseTitle} ({l.totalSentences}句)
-                  </option>
-                ))}
-              </select>
-
               <div className="relative">
                 <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -1726,7 +2123,14 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
           </div>
 
           <div className="max-h-[420px] overflow-y-auto space-y-2 pr-1">
-            {filteredSubtitles.map((sub) => {
+            {activeSubtitles.length === 0 ? (
+              <div className="py-10 text-center text-xs text-[#7a6f5f] space-y-2">
+                <p>当前泰语音频尚未关联字幕记录（已自动隐藏其他场次字幕，避免错配）。</p>
+                <p className="text-[11px] text-stone-400">
+                  可点击上方「切回已有字幕课件」或「为本音频导入对应字幕」继续学习。
+                </p>
+              </div>
+            ) : filteredSubtitles.map((sub) => {
               const idx = sub.id - 1;
               const isActive = sub.id === currentLine?.id;
               return (
@@ -1765,109 +2169,24 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         </div>
       </div>
 
-      {/* 5. 悬浮底部播放主控台（与「视频学习」完全对称一致） */}
-      <div className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-20px)] max-w-sm sm:w-auto sm:max-w-md xl:max-w-4xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-1.5 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all box-border overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {/* 左：句序与对齐 */}
-          <button
-            type="button"
-            onClick={() => handleAlignCurrentTrack(audioFocus === 'chinese' ? 'chinese_audio' : 'thai_audio')}
-            className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-stone-200 text-xs font-mono cursor-pointer transition"
-            title="点击对齐当前音频时刻"
-          >
-            <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-            <span>第 {currentLineIndex + 1} / {activeSubtitles.length} 句</span>
-          </button>
-
-          {/* 中：上一句 / 主播控 / 下一句 + 音轨三档切换 */}
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 sm:flex-initial justify-center">
-            <button
-              type="button"
-              onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1), isCurrentModePlaying)}
-              disabled={currentLineIndex <= 0}
-              className="p-1.5 sm:p-2 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
-              title="上一句"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
-              onClick={handleMasterPlayToggle}
-              className="px-3 sm:px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-amber-500/25 active:scale-95 transition cursor-pointer shrink-0 whitespace-nowrap"
-            >
-              {isCurrentModePlaying ? (
-                <>
-                  <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                  <span>{audioFocus === 'both' ? '双轨暂停' : audioFocus === 'thai' ? '泰语暂停' : '中文暂停'}</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
-                  <span>{audioFocus === 'both' ? '双轨播放' : audioFocus === 'thai' ? '泰语播放' : '中文播放'}</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1), isCurrentModePlaying)}
-              disabled={currentLineIndex >= activeSubtitles.length - 1}
-              className="p-1.5 sm:p-2 rounded-xl bg-stone-800/80 hover:bg-stone-700 text-stone-300 disabled:opacity-25 transition cursor-pointer"
-              title="下一句"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 gap-0.5 text-xs">
-              {(
-                [
-                  { id: 'thai', label: '泰语' },
-                  { id: 'both', label: '双轨' },
-                  { id: 'chinese', label: '中文' },
-                ] as const
-              ).map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setAudioFocus(tab.id)}
-                  className={`px-2 py-1 rounded-lg font-bold transition cursor-pointer whitespace-nowrap ${
-                    audioFocus === tab.id ? 'bg-amber-500 text-slate-950 font-black' : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 右：单句循环 + 倍速 */}
-          <div className="flex items-center bg-stone-950/90 p-0.5 sm:p-1 rounded-xl border border-stone-800 gap-1 shrink-0 text-xs">
-            <button
-              type="button"
-              onClick={() => setIsLoopSentence((v) => !v)}
-              className={`px-2 py-1 rounded-lg transition cursor-pointer flex items-center gap-1 ${
-                isLoopSentence ? 'bg-amber-500 text-slate-950 font-black' : 'text-stone-400 hover:text-stone-200'
-              }`}
-              title="单句循环"
-            >
-              <Repeat className="w-3.5 h-3.5" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                const rates = [0.75, 1.0, 1.25];
-                setPlaybackRate(rates[(rates.indexOf(playbackRate) + 1) % rates.length]);
-              }}
-              className="px-2 py-1 rounded-lg bg-stone-900 hover:bg-stone-800 text-amber-300 font-mono font-bold cursor-pointer"
-              title="切换语速"
-            >
-              {playbackRate}x
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* 5. 统一悬浮底部播放主控台 */}
+      <UnifiedPlayerDock
+        currentLineIndex={currentLineIndex}
+        totalLines={activeSubtitles.length}
+        clockLabel={formatClock(thaiRawTime)}
+        isPlaying={isCurrentModePlaying}
+        audioFocus={audioFocus}
+        hasChineseTrack={true}
+        isLoopSentence={isLoopSentence}
+        playbackRate={playbackRate}
+        onAlignCurrent={() => handleAlignCurrentTrack(audioFocus === 'chinese' ? 'chinese_audio' : 'thai_audio')}
+        onPrevLine={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1), isCurrentModePlaying)}
+        onTogglePlay={handleMasterPlayToggle}
+        onNextLine={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1), isCurrentModePlaying)}
+        onSelectFocus={(focus) => setAudioFocus(focus)}
+        onToggleLoop={() => setIsLoopSentence((v) => !v)}
+        onChangePlaybackRate={(rate) => setPlaybackRate(rate)}
+      />
 
       {/* 6. 一键全屏沉浸舞台（保留底层 <audio> 不断播） */}
       {isFullscreen && (
@@ -1879,10 +2198,14 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             <div className="min-w-0 flex items-center gap-2 text-xs">
               <Headphones className="w-4 h-4 text-amber-400 shrink-0" />
               <span className="font-bold text-white truncate max-w-[180px] sm:max-w-md">
-                {currentLesson.date} · {currentLesson.chineseTitle || currentLesson.title}
+                {audioSubtitleBinding.isMatched
+                  ? `${currentLesson.date} · ${currentLesson.chineseTitle || currentLesson.title}`
+                  : thaiTrack?.fileName || '自定义音频'}
               </span>
               <span className="text-slate-400 font-mono tabular-nums shrink-0">
-                · 第 {currentLineIndex + 1} / {activeSubtitles.length} 句
+                {activeSubtitles.length > 0
+                  ? `· 第 ${currentLineIndex + 1} / ${activeSubtitles.length} 句`
+                  : '· 暂无对应字幕'}
               </span>
             </div>
 
@@ -1921,6 +2244,30 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
               </button>
             </div>
           </div>
+
+          {!currentLine && (
+            <div className="w-full my-auto py-8">
+              <UnmatchedSubtitleBanner
+                mediaKind="thai_audio"
+                mediaIdentifier={thaiTrack?.fileName}
+                inferredDate={audioSubtitleBinding.inferredDate}
+                isFullscreen={true}
+                onImportSubtitles={() => {
+                  exitFullscreen();
+                  setShowImportSubtitlesModal(true);
+                }}
+                onSwitchBackToMatchedLesson={() => {
+                  const target = lessons.find((l) => l.subtitles.length > 0) || lessons[0];
+                  if (target) {
+                    setCurrentLessonId(target.id);
+                    setCurrentLineIndex(0);
+                    replaceThaiTrack(null);
+                    showToast(`已切回课件：${target.date} · ${target.chineseTitle}`);
+                  }
+                }}
+              />
+            </div>
+          )}
 
           {currentLine && (
             <div className="w-full max-w-4xl mx-auto my-auto py-6 flex flex-col items-center gap-6">
@@ -1991,7 +2338,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             <button
               type="button"
               onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1), isCurrentModePlaying)}
-              disabled={currentLineIndex <= 0}
+              disabled={activeSubtitles.length === 0 || currentLineIndex <= 0}
               className="min-h-[46px] min-w-[46px] rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 flex items-center justify-center cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -2018,7 +2365,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
             <button
               type="button"
               onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1), isCurrentModePlaying)}
-              disabled={currentLineIndex >= activeSubtitles.length - 1}
+              disabled={activeSubtitles.length === 0 || currentLineIndex >= activeSubtitles.length - 1}
               className="min-h-[46px] min-w-[46px] rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 flex items-center justify-center cursor-pointer"
             >
               <ChevronRight className="w-5 h-5" />
@@ -2027,389 +2374,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         </div>
       )}
 
-      {/* 7. 音频源与隆波开示按日目录弹窗（半自动选音频，主界面保持清爽） */}
-      {showAudioPickerModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="w-full max-w-3xl bg-slate-900 border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh] text-slate-100">
-            <div className="px-5 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-                  <Headphones className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-sm sm:text-base font-extrabold text-white truncate">
-                    选择与匹配音频（{audioPickerFocusTrack === 'thai_audio' ? '🇹🇭 泰语原声' : '🇨🇳 中文同传'}）
-                  </h3>
-                  <p className="text-xs text-slate-400 truncate">
-                    当前课：{currentLesson.date} · {currentLesson.chineseTitle}
-                  </p>
-                </div>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => setShowAudioPickerModal(false)}
-                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* 切换正在配置的轨道 & 标签页 */}
-            <div className="px-5 py-2.5 bg-slate-950/50 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setAudioPickerTab('catalog')}
-                  className={`px-3 py-1 rounded-lg font-bold cursor-pointer ${
-                    audioPickerTab === 'catalog' ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  隆波开示按日目录
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudioPickerTab('local')}
-                  className={`px-3 py-1 rounded-lg font-bold cursor-pointer ${
-                    audioPickerTab === 'local' ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'
-                  }`}
-                >
-                  本地文件 / 自定义链接
-                </button>
-              </div>
-
-              <div className="flex items-center gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setAudioPickerFocusTrack('thai_audio')}
-                  className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer ${
-                    audioPickerFocusTrack === 'thai_audio' ? 'bg-cyan-500 text-slate-950' : 'text-slate-300'
-                  }`}
-                >
-                  🇹🇭 泰语轨
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAudioPickerFocusTrack('chinese_audio')}
-                  className={`px-2.5 py-1 rounded-lg font-bold cursor-pointer ${
-                    audioPickerFocusTrack === 'chinese_audio' ? 'bg-emerald-500 text-slate-950' : 'text-slate-300'
-                  }`}
-                >
-                  🇨🇳 中文轨
-                </button>
-              </div>
-            </div>
-
-            <div className="p-4 sm:p-5 overflow-y-auto space-y-4">
-              {audioPickerTab === 'catalog' ? (
-                <>
-                  {/* 搜索与年份切换 */}
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
-                      {(['2026', '2025'] as const).map((y) => (
-                        <button
-                          key={y}
-                          type="button"
-                          onClick={() => setCatalogYear(y)}
-                          className={`px-2.5 py-1 rounded text-xs font-bold cursor-pointer ${
-                            catalogYear === y ? 'bg-amber-500 text-slate-950' : 'text-slate-300 hover:text-white'
-                          }`}
-                        >
-                          {y}年 (佛历{y === '2026' ? '2569' : '2568'})
-                        </button>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center gap-1.5 flex-1 sm:flex-initial">
-                      <input
-                        type="text"
-                        value={catalogQuery}
-                        onChange={(e) => setCatalogQuery(e.target.value)}
-                        placeholder="按日期/编号搜索 (如 2026-10 或 D26)"
-                        className="min-h-[36px] w-full sm:w-56 px-3 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-amber-400"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => loadCatalog(catalogYear, true)}
-                        disabled={isCatalogLoading}
-                        className="min-h-[36px] min-w-[36px] rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center cursor-pointer"
-                        title="刷新官方目录"
-                      >
-                        <RefreshCw className={`w-3.5 h-3.5 ${isCatalogLoading ? 'animate-spin' : ''}`} />
-                      </button>
-                    </div>
-                  </div>
-
-                  {catalogError ? (
-                    <div className="text-xs text-rose-300 py-4 text-center">{catalogError}</div>
-                  ) : isCatalogLoading && !pairedCatalog ? (
-                    <div className="text-xs text-slate-400 py-6 text-center">
-                      正在同步 dhamma.com 与 dhamma.cn 对照目录...
-                    </div>
-                  ) : (
-                    <div className="space-y-2 max-h-[48vh] overflow-y-auto pr-1">
-                      {filteredPairedItems.slice(0, 80).map((row) => {
-                        const isCurrentDate = row.date === currentLesson.date;
-                        return (
-                          <div
-                            key={row.id}
-                            className={`p-3 rounded-xl border space-y-2 text-xs ${
-                              isCurrentDate
-                                ? 'bg-amber-500/10 border-amber-500/50'
-                                : 'bg-slate-950/70 border-slate-800'
-                            }`}
-                          >
-                            <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
-                              <div className="flex items-center gap-2">
-                                <span className="text-amber-300 font-bold">{row.date}</span>
-                                {row.sessionSuffix && <span className="text-slate-400">({row.sessionSuffix}场)</span>}
-                                {isCurrentDate && <span className="text-emerald-300 font-bold">· 同日匹配</span>}
-                              </div>
-                              <div className="text-slate-400">
-                                {row.thai ? `泰:${row.thai.fileCode}` : '泰语待传'} · {row.chinese ? `中:${row.chinese.fileCode}` : '中文待传'}
-                              </div>
-                            </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {row.thai ? (
-                                <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
-                                  <span className="text-[11px] font-bold text-cyan-300 truncate">
-                                    🇹🇭 {row.thai.fileCode} · {row.thai.title}
-                                  </span>
-                                  <div className="flex items-center gap-1 shrink-0">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleSelectTrackStream({
-                                          mp3Url: row.thai!.mp3Url,
-                                          fileName: row.thai!.fileName,
-                                          fileCode: row.thai!.fileCode,
-                                          dateLabel: row.date,
-                                          trackType: 'thai_audio',
-                                        })
-                                      }
-                                      className="px-2 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-500/30 text-[11px] font-bold cursor-pointer"
-                                    >
-                                      选用
-                                    </button>
-                                    <button
-                                      type="button"
-                                      disabled={Boolean(cachingKey)}
-                                      onClick={() =>
-                                        handleCacheTrack({
-                                          key: row.thai!.id,
-                                          mp3Url: row.thai!.mp3Url,
-                                          fileName: row.thai!.fileName,
-                                          fileCode: row.thai!.fileCode,
-                                          trackType: 'thai_audio',
-                                        })
-                                      }
-                                      className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-[11px] font-bold cursor-pointer"
-                                    >
-                                      {cachingKey === row.thai.id ? cachingProgress : '缓存'}
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="p-2 rounded-lg bg-slate-900/40 border border-slate-800/50 text-[11px] text-slate-500">
-                                  🇹🇭 泰语原声待上架
-                                </div>
-                              )}
-
-                              {row.chinese ? (
-                                <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
-                                  <span className="text-[11px] font-bold text-emerald-300 truncate">
-                                    🇨🇳 {row.chinese.fileCode} · {row.chinese.title}
-                                  </span>
-                                  <div className="flex items-center gap-1 shrink-0">
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleSelectTrackStream({
-                                          mp3Url: row.chinese!.mp3Url,
-                                          fileName: row.chinese!.fileName,
-                                          fileCode: row.chinese!.fileCode,
-                                          dateLabel: row.date,
-                                          trackType: 'chinese_audio',
-                                        })
-                                      }
-                                      className="px-2 py-1 rounded bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-500/30 text-[11px] font-bold cursor-pointer"
-                                    >
-                                      选用
-                                    </button>
-                                    <button
-                                      type="button"
-                                      disabled={Boolean(cachingKey)}
-                                      onClick={() =>
-                                        handleCacheTrack({
-                                          key: row.chinese!.id,
-                                          mp3Url: row.chinese!.mp3Url,
-                                          fileName: row.chinese!.fileName,
-                                          fileCode: row.chinese!.fileCode,
-                                          trackType: 'chinese_audio',
-                                        })
-                                      }
-                                      className="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-[11px] font-bold cursor-pointer"
-                                    >
-                                      {cachingKey === row.chinese.id ? cachingProgress : '缓存'}
-                                    </button>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="p-2 rounded-lg bg-slate-900/40 border border-slate-800/50 text-[11px] text-slate-500">
-                                  🇨🇳 中文开示待收录
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800 text-[11px] text-slate-400">
-                    <span>官方目录自查：</span>
-                    <div className="flex flex-wrap gap-2">
-                      {OFFICIAL_DIRECTORY_LINKS.map((link) => (
-                        <a
-                          key={link.id}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-amber-300"
-                        >
-                          <span>{link.label}</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-4">
-                  {/* 本地上传 */}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-full min-h-[120px] border-2 border-dashed border-slate-700 hover:border-amber-400/70 bg-slate-950/70 rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-center cursor-pointer"
-                  >
-                    <Upload className="w-6 h-6 text-amber-400" />
-                    <span className="text-sm font-bold text-white">
-                      选取本地 MP3 / M4A / WAV 挂载到「{audioPickerFocusTrack === 'thai_audio' ? '泰语原声' : '中文同传'}」
-                    </span>
-                    <span className="text-xs text-slate-400">导入后将持久保存在本机离线库</span>
-                  </button>
-
-                  {/* 粘贴官网 MP3 网址 */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold text-slate-300 block">
-                      或粘贴官方 MP3 网址（如 dhamma.com / dhamma.cn 音频链接）
-                    </label>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <div className="relative flex-1">
-                        <Link2 className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                        <input
-                          type="url"
-                          value={customMp3Url}
-                          onChange={(e) => setCustomMp3Url(e.target.value)}
-                          placeholder="https://media.dhamma.com/.../*.mp3"
-                          className="w-full min-h-[40px] pl-8 pr-3 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-amber-400"
-                        />
-                      </div>
-                      <button
-                        type="button"
-                        disabled={!customMp3Url.trim()}
-                        onClick={() => {
-                          const u = customMp3Url.trim();
-                          const fn = u.split('/').pop()?.split('?')[0] || `dhamma_${Date.now()}.mp3`;
-                          handleSelectTrackStream({
-                            mp3Url: u,
-                            fileName: fn,
-                            trackType: audioPickerFocusTrack,
-                          });
-                        }}
-                        className="min-h-[40px] px-4 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-40 text-slate-950 text-xs font-bold cursor-pointer"
-                      >
-                        立即加载
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* 打开录音/离线库 */}
-                  <div className="flex justify-end pt-2 border-t border-slate-800">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowAudioPickerModal(false);
-                        setShowOfflineModal(true);
-                      }}
-                      className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <FolderOpen className="w-4 h-4" />
-                      <span>打开录音与已存离线音频库</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 8. 官方预制课件库弹窗（与「视频学习」保持统一体验） */}
-      {showPresetModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="w-full max-w-2xl bg-slate-900 border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div className="px-5 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-sm">
-                  📚
-                </div>
-                <div>
-                  <h3 className="text-base font-extrabold text-white">选择日期课件（与视频共用字幕）</h3>
-                  <p className="text-xs text-slate-400">切换课件后将半自动匹配对应日期的泰中音频</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowPresetModal(false)}
-                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="p-4 sm:p-5 overflow-y-auto space-y-3">
-              {lessons.map((lesson) => {
-                const isSelected = lesson.id === currentLesson.id;
-                return (
-                  <div
-                    key={lesson.id}
-                    onClick={() => {
-                      setCurrentLessonId(lesson.id);
-                      setCurrentLineIndex(0);
-                      setShowPresetModal(false);
-                      showToast(`已切换课件：${lesson.chineseTitle}`);
-                    }}
-                    className={`p-4 rounded-xl border transition cursor-pointer ${
-                      isSelected
-                        ? 'bg-amber-500/10 border-amber-500/60 ring-1 ring-amber-500/40'
-                        : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1.5 text-xs font-mono">
-                      <span className="text-slate-400">{lesson.date}</span>
-                      <span className="text-amber-400 font-bold">{lesson.totalSentences} 句字幕</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-white">{lesson.chineseTitle}</h4>
-                    <p className="text-xs text-amber-300/80 mt-0.5 line-clamp-1">{lesson.title}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 9. 离线音频库与录音弹窗 */}
       <OfflineAudioModal
@@ -2425,6 +2390,27 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         onClearActiveTrack={(trackType) => {
           if (trackType === 'thai_audio') replaceThaiTrack(null);
           else if (trackType === 'chinese_audio') replaceChineseTrack(null);
+        }}
+      />
+
+      {/* 10. 为当前未匹配泰语音频导入专属绑定字幕 */}
+      <CourseStudioModal
+        isOpen={showImportSubtitlesModal}
+        onClose={() => setShowImportSubtitlesModal(false)}
+        prefillConfig={{
+          title: thaiTrack?.fileName || currentLesson.chineseTitle || '音频配套字幕',
+          date: audioSubtitleBinding.inferredDate || thaiTrack?.dateLabel || currentLesson.date,
+          audioMediaKey: audioSubtitleBinding.audioKey || undefined,
+          audioFileName: thaiTrack?.fileName,
+          audioUrl: thaiTrack?.rawMp3Url,
+        }}
+        onLessonCreatedAndLoaded={(lesson) => {
+          setBindingVersion((v) => v + 1);
+          setCurrentLineIndex(0);
+          setShowImportSubtitlesModal(false);
+          showToast(
+            `已为当前泰语音频「${thaiTrack?.fileName || lesson.date}」绑定 ${lesson.subtitles.length} 句专属字幕`
+          );
         }}
       />
     </div>

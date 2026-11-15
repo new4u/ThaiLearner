@@ -6,7 +6,8 @@ import { adminAuthService } from '../services/adminAuthService';
 import { secureStorageService } from '../services/secureStorageService';
 import { 
   getAllCuratedLessons, updateCuratedLessonCalibration, getFlagshipLesson,
-  getAllCommunityLessons, approveCommunityLesson, rejectCommunityLesson, deleteCommunityLesson
+  getAllCommunityLessons, approveCommunityLesson, rejectCommunityLesson, deleteCommunityLesson,
+  getLessonProvenance
 } from '../data/presetLessonsLibrary';
 import { 
   ShieldCheck, Download, Trash2, Search,
@@ -1062,6 +1063,20 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                                   <span className="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono">
                                     {lesson.totalSentences} 句
                                   </span>
+                                  {(() => {
+                                    const prov = getLessonProvenance(lesson);
+                                    return (
+                                      <span
+                                        className={`text-[10px] px-2 py-0.5 rounded border font-bold ${
+                                          prov.type === 'official'
+                                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                                            : 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+                                        }`}
+                                      >
+                                        {prov.type === 'official' ? '🌟' : '🤝'} {prov.label}
+                                      </span>
+                                    );
+                                  })()}
                                 </div>
                                 <p className="text-xs text-slate-400 mt-1">
                                   主讲: {lesson.speaker} · 日期: {lesson.date} · 提交人: {lesson.submittedBy?.name || '学员'} ({lesson.submittedBy?.emailOrPhone || '匿名'})
@@ -1499,6 +1514,43 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                           <span>时间差基准校准已持久化保存！前台放映机已实时同步。</span>
                         </div>
                       )}
+                    </div>
+
+                    {/* 主理人周度底层代码级更新导出区 */}
+                    <div className="mt-4 p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="space-y-0.5">
+                        <div className="text-xs font-bold text-amber-200 flex items-center gap-1.5">
+                          <Copy className="w-3.5 h-3.5 text-amber-400" />
+                          <span>AI Studio 周度底层代码更新导出</span>
+                        </div>
+                        <p className="text-[11px] text-slate-400">
+                          一键复制当前全库官方对齐配置（日期、泰中 YouTube ID、基准时差与标注类型），直接发给 AI Studio 固化到底层代码。
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const snapshot = curatedLessons.map((l) => ({
+                            id: l.id,
+                            date: l.date,
+                            chineseTitle: l.chineseTitle,
+                            thaiTitle: l.title,
+                            thaiVideoId: l.thaiVideoId,
+                            chineseVideoId: l.chineseVideoId,
+                            defaultOffsetSeconds: l.defaultOffsetSeconds,
+                            totalSentences: l.totalSentences,
+                            curationType: l.curationType || 'official',
+                            alignedBy: l.alignedBy || '官方周度精校',
+                          }));
+                          navigator.clipboard.writeText(JSON.stringify(snapshot, null, 2));
+                          setExportNotice('已复制全部官方对齐配置 JSON！可直接粘贴到 AI Studio 对话中进行底层更新。');
+                          setTimeout(() => setExportNotice(null), 4000);
+                        }}
+                        className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/40 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shrink-0"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>复制本周官方对齐配置</span>
+                      </button>
                     </div>
                   </div>
                 </div>

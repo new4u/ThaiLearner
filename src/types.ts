@@ -208,6 +208,8 @@ export interface CuratedLesson {
   subtitles: SubtitleLine[];
   // 课件多态媒体与协同审核流程字段
   chineseMediaType?: 'youtube' | 'mp4' | 'mp3';
+  curationType?: 'official' | 'community';
+  alignedBy?: string;
   status?: 'draft' | 'pending' | 'approved' | 'rejected';
   submittedBy?: {
     id: string;
@@ -218,6 +220,44 @@ export interface CuratedLesson {
   approvedBy?: string;
   approvedAt?: string;
   reviewNote?: string;
+}
+
+export interface YouTubePairedVideoItem {
+  videoId: string;
+  title: string;
+  url: string;
+  publishedText?: string;
+  durationText?: string;
+  gregorianDate?: string;
+  isRerun?: boolean;
+  isLiveNow?: boolean;
+  sourceTab?: 'videos' | 'streams';
+  streamState?: 'live_now' | 'upcoming' | 'formal_vod' | 'stream_archive' | 'rerun';
+  thumbnailUrl?: string;
+}
+
+export interface YouTubePairedTalkItem {
+  id: string;
+  date: string;
+  isRerun: boolean;
+  matchedLessonId?: string;
+  thaiCaptionStatus: 'manual' | 'asr' | 'none' | 'client_check_needed';
+  thai: YouTubePairedVideoItem | null;
+  chinese: YouTubePairedVideoItem | null;
+  thaiCandidates?: YouTubePairedVideoItem[];
+  chineseCandidates?: YouTubePairedVideoItem[];
+}
+
+export interface YouTubePairedCatalogResponse {
+  fetchedAt: number;
+  total: number;
+  pairedCount: number;
+  thaiCount: number;
+  chineseCount: number;
+  captionApiEnabled: boolean;
+  thaiChannelUrl: string;
+  chineseChannelUrl: string;
+  items: YouTubePairedTalkItem[];
 }
 
 // 独立安全管理后台审计日志

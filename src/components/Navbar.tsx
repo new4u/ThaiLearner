@@ -14,6 +14,7 @@ import {
 interface NavbarProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
+  lastMediaTab?: 'mainland_offline' | 'dual_sync_player';
   currentStudent?: RegisteredStudent | null;
   onOpenAdmin?: () => void;
   onOpenIdentityModal?: (mode?: 'set_statement' | 'claim_statement') => void;
@@ -24,19 +25,22 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onTabChange,
+  lastMediaTab = 'mainland_offline',
   currentStudent,
   onOpenAdmin,
   onOpenIdentityModal,
   onStartTour,
   isAdminAuthenticated = false
 }) => {
+  const isMediaStudyActive = activeTab === 'mainland_offline' || activeTab === 'dual_sync_player';
+
   return (
     <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-2.5 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none max-w-full">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-4 min-w-0">
         
-        {/* Brand (音频优先默认主页) */}
+        {/* Brand (直达法谈学习主工作台) */}
         <div
-          onClick={() => onTabChange('mainland_offline')}
+          onClick={() => onTabChange(lastMediaTab)}
           className="flex items-center gap-2 sm:gap-2.5 shrink-0 cursor-pointer group"
         >
           <img
@@ -49,42 +53,31 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
 
-        {/* 极简四项导航：两大学习岔路（音频学习优先 | 视频学习） + 实用工具（泰语打字 | 每日打卡） */}
+        {/* 极简三项主导航：法谈学习（页内自由切换音频/视频） + 泰语打字 + 每日打卡 */}
         <nav
           data-tour-id="tour-navbar-modes"
           className="flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-slate-900/90 rounded-xl border border-slate-800/80 min-w-0 overflow-x-auto"
         >
-          {/* 1. 音频学习（全球通用 · 首选推荐） */}
+          {/* 1. 法谈学习（统一主工作台，页内滑块切换音频学习 / 视频学习） */}
           <button
-            onClick={() => onTabChange('mainland_offline')}
+            onClick={() => onTabChange(lastMediaTab)}
             className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
-              activeTab === 'mainland_offline'
-                ? 'bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-md shadow-cyan-500/20 font-black'
-                : 'text-cyan-300/90 hover:text-white hover:bg-slate-800/80'
-            }`}
-            title="音频学习（全球可用 · 隆波开示 MP3 与共用字幕）"
-          >
-            <Headphones className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">音频学习</span>
-            <span className="sm:hidden">音频</span>
-          </button>
-
-          {/* 2. 视频学习（YouTube 双视频） */}
-          <button
-            onClick={() => onTabChange('dual_sync_player')}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
-              activeTab === 'dual_sync_player'
+              isMediaStudyActive
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                 : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
             }`}
-            title="视频学习（泰中双视频同步对齐，共用同一套字幕）"
+            title="法谈共学主工作台（页内可直接切换音频学习与视频学习，共用同一套课件与字幕）"
           >
-            <Video className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">视频学习</span>
-            <span className="sm:hidden">视频</span>
+            {lastMediaTab === 'dual_sync_player' ? (
+              <Video className="w-3.5 h-3.5 shrink-0" />
+            ) : (
+              <Headphones className="w-3.5 h-3.5 shrink-0" />
+            )}
+            <span className="hidden sm:inline">法谈学习</span>
+            <span className="sm:hidden">学习</span>
           </button>
 
-          {/* 3. 泰语打字 */}
+          {/* 2. 泰语打字 */}
           <button
             onClick={() => onTabChange('keyboard_lab')}
             className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
@@ -99,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="sm:hidden">打字</span>
           </button>
 
-          {/* 4. 每日打卡 */}
+          {/* 3. 每日打卡 */}
           <button
             onClick={() => onTabChange('registration_checkin')}
             className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${

@@ -28,10 +28,10 @@ export const YOUTUBE_TOUR_STEPS: TourStep[] = [
   {
     id: 'yt_nav',
     targetSelector: '[data-tour-id="tour-navbar-modes"]',
-    title: '极简四项顶部菜单：音频与视频两条主路径',
+    title: '极简三项顶部菜单：主工作台、打字与打卡',
     description:
-      '顶部仅保留「音频学习（优先推荐）」「视频学习」「泰语打字」与「每日打卡」。音频和视频两条路径共用同一套课件与字幕，切换即接续当前进度。',
-    mobileTip: '手机端轻点顶部标签即可切换不同学习模式。',
+      '顶部精简为「法谈学习」「泰语打字」与「每日打卡」。进入工作台后，可直接使用播放器上方的「音频学习 | 视频学习」滑块一键切换载体，完全共用同一套课件与字幕进度。',
+    mobileTip: '手机端轻点顶部标签即可切换，学习区内用滑块切音频或视频。',
   },
   {
     id: 'yt_fullscreen',
@@ -45,7 +45,7 @@ export const YOUTUBE_TOUR_STEPS: TourStep[] = [
     targetSelector: '[data-tour-id="tour-video-stage"]',
     title: '泰中双视频同屏对照与伴弱听法',
     description:
-      '泰语原版与中文同传同步对齐播放，支持「伴弱音量」降低中文干扰，也可随时收起中文画面仅出声音。',
+      '泰语原版与中文译版双框并列同步播放，支持「伴弱音量」降低中文干扰，也可随时收起中文画面仅出声音。',
   },
   {
     id: 'yt_karaoke',
@@ -67,9 +67,9 @@ export const MAINLAND_TOUR_STEPS: TourStep[] = [
   {
     id: 'ml_hero',
     targetSelector: '[data-tour-id="tour-ml-hero"]',
-    title: '泰中双音频同步播放器（首选推荐）',
+    title: '泰中双音频同步对齐（首选推荐）',
     description:
-      '海内外皆可用，界面与「视频学习」完全一致并共用同一套字幕进度。顶部可一键全屏、选音频、录制或切换日期课件。',
+      '海内外皆可用，与「视频学习」共用同一套课件与字幕进度。下方控制条直接切换当前开示、音频/视频模式，以及一键全屏。',
     mobileTip: '音频模式简洁轻快，点开即听。',
   },
   {
@@ -89,16 +89,16 @@ export const MAINLAND_TOUR_STEPS: TourStep[] = [
   {
     id: 'ml_audio_player',
     targetSelector: '[data-tour-id="tour-ml-audio-player"]',
-    title: '「选音频 / 目录」半自动挑选与本地导入',
+    title: '「选音/视频 · 贴链接」原地展开目录',
     description:
-      '若需更换其他日期开示、粘贴链接或导入本地 MP3，点此即可打开 2026/2025 泰中按日目录弹窗，主界面始终保持清爽。',
+      '点击即可在主界面原地展开 2026/2025 官方音频目录、YouTube 双频道对照目录，或粘贴 MP3/YouTube 链接与导入本地音频文件。',
   },
   {
     id: 'ml_subtitles',
     targetSelector: '[data-tour-id="tour-ml-subtitle-studio"]',
     title: '共用同一套全篇字幕 · 逐词精读台',
     description:
-      '点击任意句子或单词即可发音查词根与打卡，支持「🎯 对齐进度」将当前音频时刻精准绑定到字幕句。',
+      '点击任意句子或单词即可发音查词根与打卡，支持「对齐此刻」将当前音频时刻精准绑定到字幕句，且仅当前泰语媒体严格对应时才展示对应字幕。',
   },
 ];
 
