@@ -4,8 +4,11 @@ import {
   OfflineAudioMeta,
   OfflineTrackType,
   OFFICIAL_FREE_AUDIO_ARCHIVES,
+  OFFICIAL_DIRECTORY_LINKS,
+  DhammaCatalogItem,
   offlineAudioStorage,
   fetchOfficialAudioBlob,
+  fetchDhammaCatalog,
   buildAudioProxyUrl,
   formatBytes,
   triggerBlobDownload,
@@ -30,6 +33,8 @@ import {
   Globe,
   Square,
   Save,
+  ExternalLink,
+  RefreshCw,
 } from 'lucide-react';
 
 interface OfflineAudioModalProps {
@@ -97,6 +102,11 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
   const [customAudioUrl, setCustomAudioUrl] = useState('');
   const [fetchingArchiveId, setFetchingArchiveId] = useState<string | null>(null);
   const [fetchProgressText, setFetchProgressText] = useState('');
+  const [showLiveCatalog, setShowLiveCatalog] = useState(false);
+  const [modalCatalogSource, setModalCatalogSource] = useState<'2569' | 'cn2026' | '2568' | 'cn2025'>('2569');
+  const [modalCatalogItems, setModalCatalogItems] = useState<DhammaCatalogItem[]>([]);
+  const [modalCatalogLoading, setModalCatalogLoading] = useState(false);
+  const [modalCatalogQuery, setModalCatalogQuery] = useState('');
 
   // Recording state
   const recorderRef = useRef<AudioRecorderSession | null>(null);
@@ -145,6 +155,25 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
       }
     }
   }, [isOpen, currentLesson.id]);
+
+  useEffect(() => {
+    if (!isOpen || !showLiveCatalog) return;
+    let cancelled = false;
+    setModalCatalogLoading(true);
+    fetchDhammaCatalog(modalCatalogSource)
+      .then((res) => {
+        if (!cancelled) setModalCatalogItems(res.items || []);
+      })
+      .catch((err) => {
+        if (!cancelled) showError(err?.message || '读取官网录音列表失败');
+      })
+      .finally(() => {
+        if (!cancelled) setModalCatalogLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, showLiveCatalog, modalCatalogSource]);
 
   useEffect(() => {
     return () => {
@@ -210,7 +239,7 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
     trackType: 'thai_audio' | 'chinese_audio'
   ) => {
     if (!mp3Url.trim()) {
-      showError('请输入官方公开音频 MP3 直链');
+      showError('请输入官方公开音频 MP3 网址');
       return;
     }
     setFetchingArchiveId(itemId);
@@ -386,7 +415,7 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-base font-bold text-white truncate">
-                内地离线纯音频中心 · 录音与本地缓存
+                纯音频中心 · 录音与本地缓存
               </h3>
               <p className="text-xs text-slate-400 truncate">
                 纯音频学习方案（不下载视频） · 浏览器 IndexedDB 离线缓存 · 配合全篇泰中字幕同步跟读
@@ -541,7 +570,7 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
                     点击选取音频文件，或将 MP3 / M4A / WAV / WebM 录音文件拖入此处
                   </p>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    存入 IndexedDB 后无需翻墙、刷新页面仍可自动加载并同步对齐字幕
+                    存入 IndexedDB 后离线可用、刷新页面仍可自动加载并同步对齐字幕
                   </p>
                 </div>
               </section>
@@ -551,27 +580,57 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h4 className="text-sm font-bold text-white flex items-center gap-2">
                     <Globe className="w-4 h-4 text-cyan-400" />
-                    <span>2. 寺院公开纯音频 MP3 存档（免跨域直连缓存 / 导出分享）</span>
+                    <span>2. 寺院官网公开 MP3 存档（按佛历日期精确对应 · 缓存后断网可听）</span>
                   </h4>
-                  <span className="text-[11px] text-cyan-300/90 font-mono">
-                    Audio-Only Policy · 仅限公开佛教 MP3 存档
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowLiveCatalog((v) => !v)}
+                    className="px-2.5 py-1 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/40 text-cyan-300 text-[11px] font-bold cursor-pointer flex items-center gap-1"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    <span>{showLiveCatalog ? '收起官网全量录音表' : '展开官网实时录音目录'}</span>
+                  </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Official directory reference links */}
+                <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                  <span>规律：<code className="text-cyan-300 font-mono">69MMDD.mp3</code> = 2026年，可自行去官网查找后粘贴：</span>
+                  {OFFICIAL_DIRECTORY_LINKS.map((link) => (
+                    <a
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-900 hover:bg-slate-800 border border-slate-700 text-cyan-300 transition"
+                    >
+                      <span>{link.label.replace('dhamma.com ', '')}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {OFFICIAL_FREE_AUDIO_ARCHIVES.map((item) => {
                     const isBusy = fetchingArchiveId === item.id;
+                    const isExactMatch = item.suggestedLessonId === selectedLesson.id;
                     return (
                       <div
                         key={item.id}
-                        className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between gap-3"
+                        className={`p-3.5 rounded-xl border flex flex-col justify-between gap-3 ${
+                          isExactMatch
+                            ? 'bg-emerald-500/10 border-emerald-500/40'
+                            : 'bg-slate-900 border-slate-800'
+                        }`}
                       >
                         <div className="space-y-1">
+                          <div className="flex items-center justify-between gap-1 text-[11px] font-mono">
+                            <span className="text-cyan-300">{item.date} · {item.fileCode}</span>
+                            {isExactMatch && (
+                              <span className="text-emerald-300 font-bold">当前课匹配</span>
+                            )}
+                          </div>
                           <div className="text-xs font-bold text-amber-300">{item.title}</div>
                           <div className="text-[11px] text-slate-400 leading-relaxed">{item.subtitle}</div>
-                          <div className="text-[11px] text-slate-500 font-mono">
-                            来源：{item.sourceDomain} · {getTrackLabel(item.trackType)}
-                          </div>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-2">
@@ -583,23 +642,25 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
                                 item.id,
                                 item.mp3Url,
                                 item.fileName,
-                                targetLessonId,
+                                item.suggestedLessonId,
                                 item.trackType
                               )
                             }
                             className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0"
                           >
                             <Save className="w-3.5 h-3.5" />
-                            <span>{isBusy ? fetchProgressText || '缓存中...' : '缓存并绑定本课'}</span>
+                            <span>{isBusy ? fetchProgressText || '缓存中...' : '缓存并绑定对应课'}</span>
                           </button>
 
                           <a
-                            href={buildAudioProxyUrl(item.mp3Url, item.fileName)}
+                            href={item.mp3Url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             download={item.fileName}
-                            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition flex items-center gap-1.5 whitespace-nowrap shrink-0"
+                            className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition flex items-center gap-1 whitespace-nowrap shrink-0"
                           >
                             <Download className="w-3.5 h-3.5 text-cyan-400" />
-                            <span>保存 MP3</span>
+                            <span>保存</span>
                           </a>
                         </div>
                       </div>
@@ -607,13 +668,98 @@ export const OfflineAudioModal: React.FC<OfflineAudioModalProps> = ({
                   })}
                 </div>
 
+                {/* Live crawled catalog picker inside modal */}
+                {showLiveCatalog && (
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center gap-1 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                        {(
+                          [
+                            { id: '2569', label: '2026 泰语(2569)' },
+                            { id: 'cn2026', label: '2026 中文(dhamma.cn)' },
+                            { id: '2568', label: '2025 泰语(2568)' },
+                            { id: 'cn2025', label: '2025 中文(dhamma.cn)' },
+                          ] as const
+                        ).map((src) => (
+                          <button
+                            key={src.id}
+                            type="button"
+                            onClick={() => setModalCatalogSource(src.id)}
+                            className={`px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer ${
+                              modalCatalogSource === src.id
+                                ? 'bg-cyan-500 text-slate-950'
+                                : 'text-slate-300 hover:text-white'
+                            }`}
+                          >
+                            {src.label}
+                          </button>
+                        ))}
+                      </div>
+                      <input
+                        type="text"
+                        value={modalCatalogQuery}
+                        onChange={(e) => setModalCatalogQuery(e.target.value)}
+                        placeholder="筛选日期/编号 (如 691017)"
+                        className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-cyan-400"
+                      />
+                    </div>
+
+                    {modalCatalogLoading ? (
+                      <div className="text-xs text-slate-400 py-4 text-center">正在同步官网列表...</div>
+                    ) : (
+                      <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1">
+                        {modalCatalogItems
+                          .filter((it) => {
+                            const q = modalCatalogQuery.toLowerCase().trim();
+                            if (!q) return true;
+                            return (
+                              it.title.toLowerCase().includes(q) ||
+                              it.fileCode.toLowerCase().includes(q) ||
+                              (it.gregorianDate || '').includes(q)
+                            );
+                          })
+                          .slice(0, 50)
+                          .map((it) => (
+                            <div
+                              key={it.id}
+                              className="p-2 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between gap-2 text-xs"
+                            >
+                              <div className="min-w-0">
+                                <span className="font-mono text-cyan-300 mr-2">
+                                  {it.gregorianDate || it.fileCode}
+                                </span>
+                                <span className="text-slate-200 truncate">{it.title}</span>
+                              </div>
+                              <button
+                                type="button"
+                                disabled={Boolean(fetchingArchiveId)}
+                                onClick={() =>
+                                  handleCacheOfficialMp3(
+                                    it.id,
+                                    it.mp3Url,
+                                    it.fileName,
+                                    it.matchedLessonId || targetLessonId,
+                                    it.trackType
+                                  )
+                                }
+                                className="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-[11px] font-bold cursor-pointer shrink-0"
+                              >
+                                {fetchingArchiveId === it.id ? fetchProgressText || '缓存中' : '缓存到当前课'}
+                              </button>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Custom official dhamma.com / zhdhamma MP3 URL */}
                 <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row gap-2">
                   <input
                     type="url"
                     value={customAudioUrl}
                     onChange={(e) => setCustomAudioUrl(e.target.value)}
-                    placeholder="粘贴寺院官方 MP3 直链 (如 media.dhamma.com / s3-ap-southeast-1.amazonaws.com/zhdhamma/*.mp3)"
+                    placeholder="粘贴官网 MP3 网址 (如 https://media.dhamma.cn/.../*.mp3)"
                     className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 font-mono focus:outline-none focus:border-cyan-400"
                   />
                   <button

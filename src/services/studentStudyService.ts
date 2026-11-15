@@ -402,7 +402,7 @@ class StudentStudyService {
     const clean = query.trim().toLowerCase();
     if (!clean || !password) return null;
 
-    // 超级管理员账号：与学员登录共用同一入口，密码 suan2026 (哈希 + 固定盐)
+    // 超级管理员账号：与学员登录共用同一入口，密码验证后解锁后台
     if (['admin', 'super_admin', '管理员', '超级管理员'].includes(clean)) {
       const adminHash = await hashPasswordWithSalt(password, SUPER_ADMIN_ACCOUNT.id);
       if (adminHash === SUPER_ADMIN_ACCOUNT.passwordHash) {

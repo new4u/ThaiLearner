@@ -1,23 +1,105 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Navbar } from './src/components/Navbar';
 import { DualVideoSyncAlignPlayer } from './src/components/DualVideoSyncAlignPlayer';
-import { MinimalImmersionPlayer } from './src/components/MinimalImmersionPlayer';
+import { MainlandOfflinePage } from './src/components/MainlandOfflinePage';
 import { ThaiKeyboardPractice } from './src/components/ThaiKeyboardPractice';
 import { WordDetailModal } from './src/components/WordDetailModal';
 import { RegistrationCheckinView } from './src/components/RegistrationCheckinView';
 import { AdminSanctuaryModal } from './src/components/AdminSanctuaryModal';
 import { StatementIdentityModal } from './src/components/StatementIdentityModal';
+import { FirstVisitOnboardingModal } from './src/components/FirstVisitOnboardingModal';
+import {
+  SpotlightTourOverlay,
+  YOUTUBE_TOUR_STEPS,
+  MAINLAND_TOUR_STEPS,
+} from './src/components/SpotlightTourOverlay';
 import { AppFooter } from './src/components/AppFooter';
-import { INITIAL_SUBTITLES } from './src/data/luangporCourseData';
+import { getAllCuratedLessons } from './src/data/presetLessonsLibrary';
 import { SubtitleLine, WordToken, WordStatus, ActiveTab, RegisteredStudent } from './src/types';
 import { thaiAudio } from './src/utils/thaiAudioSynthesizer';
+import { getOrCreateDeviceFingerprint } from './src/utils/browserFingerprint';
 import { studentStudyService } from './src/services/studentStudyService';
+import { adminAuthService } from './src/services/adminAuthService';
+
+const ONBOARDING_STORAGE_KEY = 'taixue_onboarding_v1';
+const ACTIVE_LESSON_STORAGE_KEY = 'taixue_active_lesson_id_v1';
+
+interface OnboardingPrefs {
+  completed: boolean;
+  canUseYouTube: boolean;
+  tourCompleted: boolean;
+  updatedAt: number;
+}
+
+function readOnboardingPrefs(): OnboardingPrefs | null {
+  try {
+    const raw = localStorage.getItem(ONBOARDING_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.completed === 'boolean') {
+      return parsed as OnboardingPrefs;
+    }
+  } catch {}
+  return null;
+}
+
+function saveOnboardingPrefs(prefs: OnboardingPrefs): void {
+  try {
+    localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(prefs));
+  } catch {}
+}
 
 const App: React.FC = () => {
-  // 默认直接进入泰中双视频共学放映机
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dual_sync_player');
+  const deviceFingerprint = useMemo(() => getOrCreateDeviceFingerprint(), []);
+
+  // 音频优先默认入口：仅在明确指定 #/video 或用户首次选择「视频学习」时进入双视频，否则一律默认音频学习
+  const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.hash === '#/video') {
+        return 'dual_sync_player';
+      }
+      if (window.location.hash === '#/mainland' || window.location.hash === '#/audio') {
+        return 'mainland_offline';
+      }
+    }
+    const prefs = readOnboardingPrefs();
+    if (prefs?.completed && prefs.canUseYouTube === true) {
+      return 'dual_sync_player';
+    }
+    return 'mainland_offline';
+  });
   const [showAdminModal, setShowAdminModal] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => adminAuthService.getSession().isAuthenticated);
+  const [showHiddenAdminGate, setShowHiddenAdminGate] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#/admin') {
+      return !adminAuthService.getSession().isAuthenticated;
+    }
+    return false;
+  });
+  const [hiddenAdminPass, setHiddenAdminPass] = useState('');
+  const [hiddenAdminErr, setHiddenAdminErr] = useState<string | null>(null);
+  const [hiddenAdminBusy, setHiddenAdminBusy] = useState(false);
+
+  useEffect(() => {
+    return adminAuthService.subscribe((session) => {
+      setIsAdminAuthenticated(Boolean(session.isAuthenticated));
+    });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash === '#/admin' && adminAuthService.getSession().isAuthenticated) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      setShowAdminModal(true);
+    }
+  }, []);
+
+  // 首次访问引导与“明暗”聚光灯 Tour 状态
+  const [showOnboardingModal, setShowOnboardingModal] = useState<boolean>(() => {
+    const prefs = readOnboardingPrefs();
+    return !prefs?.completed;
+  });
+  const [activeTourMode, setActiveTourMode] = useState<'youtube' | 'mainland' | null>(null);
 
   // 播放器中文轨偏移量与锁定状态（从持久化存储恢复，与校准中枢毫秒同步）
   const [playerOffsetSeconds, setPlayerOffsetSeconds] = useState<number>(() => {
@@ -79,20 +161,119 @@ const App: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const [subtitles, setSubtitles] = useState<SubtitleLine[]>(() => {
-    try {
-      const saved = localStorage.getItem('luangpor_course_subtitles');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 700 && parsed[0]?.words?.length > 0) {
-          return parsed;
+  // 同步 URL Hash 路由 (#/video 与 #/audio，兼容旧版 #/mainland) 与浏览器前进后退
+  const navigateToTab = useCallback((tab: ActiveTab) => {
+    setActiveTab(tab);
+    if (typeof window !== 'undefined') {
+      if (tab === 'dual_sync_player') {
+        if (window.location.hash !== '#/video') {
+          window.location.hash = '#/video';
+        }
+      } else if (tab === 'mainland_offline') {
+        if (window.location.hash === '#/video' || window.location.hash === '#/mainland') {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
         }
       }
-      return INITIAL_SUBTITLES;
-    } catch {
-      return INITIAL_SUBTITLES;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }, []);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      if (window.location.hash === '#/admin') {
+        if (adminAuthService.getSession().isAuthenticated) {
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          setShowAdminModal(true);
+        } else {
+          setHiddenAdminErr(null);
+          setHiddenAdminPass('');
+          setShowHiddenAdminGate(true);
+        }
+        return;
+      }
+      if (window.location.hash === '#/video') {
+        setActiveTab('dual_sync_player');
+      } else if (window.location.hash === '#/mainland' || window.location.hash === '#/audio' || window.location.hash === '') {
+        setActiveTab((prev) => (prev === 'dual_sync_player' ? 'mainland_offline' : prev));
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  // 手动重播或首次启动“明暗”高亮 Tour
+  const triggerTour = useCallback(
+    (mode: 'youtube' | 'mainland') => {
+      const targetTab: ActiveTab = mode === 'youtube' ? 'dual_sync_player' : 'mainland_offline';
+      if (activeTab !== targetTab) {
+        navigateToTab(targetTab);
+      }
+      window.setTimeout(() => {
+        setActiveTourMode(mode);
+      }, 220);
+    },
+    [activeTab, navigateToTab]
+  );
+
+  const handleTourComplete = useCallback(() => {
+    setActiveTourMode(null);
+    const existing = readOnboardingPrefs();
+    saveOnboardingPrefs({
+      completed: existing?.completed ?? true,
+      canUseYouTube: existing?.canUseYouTube ?? (activeTab === 'dual_sync_player'),
+      tourCompleted: true,
+      updatedAt: Date.now(),
+    });
+  }, [activeTab]);
+
+  // 音频与视频两大学习岔路共用同一套课件与字幕状态
+  const allLessons = useMemo(() => getAllCuratedLessons(), []);
+  const [currentLessonId, setCurrentLessonId] = useState<string>(() => {
+    try {
+      const savedId = localStorage.getItem(ACTIVE_LESSON_STORAGE_KEY);
+      if (savedId && allLessons.some((l) => l.id === savedId)) {
+        return savedId;
+      }
+    } catch {}
+    return allLessons.find((l) => l.id === 'lesson_20261017')?.id || allLessons[0]?.id || 'lesson_20261017';
   });
+
+  const [subtitles, setSubtitles] = useState<SubtitleLine[]>(() => {
+    try {
+      const savedId = localStorage.getItem(ACTIVE_LESSON_STORAGE_KEY);
+      const target = allLessons.find((l) => l.id === (savedId || 'lesson_20261017')) || allLessons[0];
+      if (target?.subtitles?.length) return target.subtitles;
+    } catch {}
+    return allLessons[0]?.subtitles || [];
+  });
+
+  const [sharedLineIndex, setSharedLineIndex] = useState<number>(0);
+
+  const handleSelectLessonId = useCallback(
+    (lessonId: string) => {
+      const lesson = allLessons.find((l) => l.id === lessonId);
+      if (!lesson) return;
+      setCurrentLessonId(lesson.id);
+      setSubtitles(lesson.subtitles);
+      setSharedLineIndex(0);
+      setPlayerOffsetSeconds(lesson.defaultOffsetSeconds);
+      setPlayerIsOffsetLocked(true);
+      try {
+        localStorage.setItem(ACTIVE_LESSON_STORAGE_KEY, lesson.id);
+        localStorage.setItem('luangpor_course_subtitles', JSON.stringify(lesson.subtitles));
+        localStorage.setItem('luangpor_active_subtitles_v3', JSON.stringify(lesson.subtitles));
+        localStorage.setItem('luangpor_offset_locked_v3', 'true');
+        const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
+        const parsed = saved ? JSON.parse(saved) : {};
+        parsed.thaiVideoUrl = lesson.thaiVideoUrl;
+        parsed.chineseVideoUrl = lesson.chineseVideoUrl;
+        parsed.title = `${lesson.chineseTitle} ｜ ${lesson.title}`;
+        parsed.offsetSeconds = lesson.defaultOffsetSeconds;
+        localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
+      } catch {}
+    },
+    [allLessons]
+  );
 
   const [selectedWord, setSelectedWord] = useState<WordToken | null>(null);
   const [keyboardTargetWord, setKeyboardTargetWord] = useState<string>('สัมมาสมาธิ');
@@ -160,41 +341,70 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 w-full max-w-full overflow-x-hidden">
       
-      {/* 顶部极简导航：共学、打字、注册打卡、管理后台 */}
+      {/* 顶部极简导航 */}
       <Navbar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={navigateToTab}
         currentStudent={currentStudent}
+        isAdminAuthenticated={isAdminAuthenticated}
         onOpenAdmin={() => setShowAdminModal(true)}
         onOpenIdentityModal={(m) => {
           setIdentityModalMode(m || 'set_statement');
           setShowIdentityModal(true);
         }}
+        onStartTour={() =>
+          triggerTour(activeTab === 'mainland_offline' ? 'mainland' : 'youtube')
+        }
       />
 
       {/* 主界面视窗 */}
       <main className="flex-1 w-full max-w-7xl mx-auto p-2 sm:p-4 lg:p-6 overflow-x-hidden">
-        
-        {/* 0. 极简沉浸版：单泰文视频·嵌入式音标与连续进度条 */}
-        {activeTab === 'minimal_player' && (
-          <MinimalImmersionPlayer
-            subtitles={subtitles}
-            onSwitchToDualPlayer={() => setActiveTab('dual_sync_player')}
-          />
-        )}
 
-        {/* 1. 核心共学：泰中双视频同步对齐放映机 (学员端研读工作台) */}
-        {activeTab === 'dual_sync_player' && (
-          <DualVideoSyncAlignPlayer
+        {/* 1. 音频学习（优先推荐 · 海内外通用，与视频模式共用同一套课件与字幕） */}
+        {activeTab === 'mainland_offline' && (
+          <MainlandOfflinePage
+            currentLessonId={currentLessonId}
+            onSelectLessonId={handleSelectLessonId}
             subtitles={subtitles}
+            currentLineIndex={sharedLineIndex}
+            onLineIndexChange={setSharedLineIndex}
             onSelectWord={setSelectedWord}
             onOpenKeyboard={handlePracticeInKeyboard}
             onSpeak={handleSpeak}
-            onUpdateSubtitles={(newSubs) => setSubtitles(newSubs)}
+            onSwitchToYouTubeMode={() => {
+              const existing = readOnboardingPrefs();
+              saveOnboardingPrefs({
+                completed: true,
+                canUseYouTube: true,
+                tourCompleted: existing?.tourCompleted ?? true,
+                updatedAt: Date.now(),
+              });
+              navigateToTab('dual_sync_player');
+            }}
+            onStartTour={() => triggerTour('mainland')}
+          />
+        )}
+
+        {/* 2. 视频学习（YouTube 双视频同步学习，与音频模式共用同一套字幕与进度） */}
+        {activeTab === 'dual_sync_player' && (
+          <DualVideoSyncAlignPlayer
+            subtitles={subtitles}
+            currentLessonId={currentLessonId}
+            onSelectLessonId={handleSelectLessonId}
+            currentLineIndex={sharedLineIndex}
+            onLineIndexChange={setSharedLineIndex}
+            onSelectWord={setSelectedWord}
+            onOpenKeyboard={handlePracticeInKeyboard}
+            onSpeak={handleSpeak}
+            onUpdateSubtitles={(newSubs) => {
+              setSubtitles(newSubs);
+              try {
+                localStorage.setItem('luangpor_course_subtitles', JSON.stringify(newSubs));
+              } catch {}
+            }}
             offsetSeconds={playerOffsetSeconds}
             isOffsetLocked={playerIsOffsetLocked}
             onOpenAdmin={() => setShowAdminModal(true)}
-            onSwitchToMinimal={() => setActiveTab('minimal_player')}
             onOffsetChange={(offset, locked) => {
               setPlayerOffsetSeconds(offset);
               setPlayerIsOffsetLocked(locked);
@@ -209,7 +419,7 @@ const App: React.FC = () => {
           />
         )}
 
-        {/* 2. 泰语打字练习：Kedmanee 键盘打卡实战 */}
+        {/* 3. 泰语打字练习：Kedmanee 键盘打卡实战 */}
         {activeTab === 'keyboard_lab' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800 flex-wrap gap-2">
@@ -220,16 +430,16 @@ const App: React.FC = () => {
               </span>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setActiveTab('registration_checkin')}
+                  onClick={() => navigateToTab('registration_checkin')}
                   className="text-xs text-emerald-300 hover:text-white px-2.5 py-1 rounded-lg bg-emerald-950/60 border border-emerald-500/30 hover:bg-emerald-900/40 transition cursor-pointer"
                 >
                   查看打卡记录
                 </button>
                 <button
-                  onClick={() => setActiveTab('dual_sync_player')}
+                  onClick={() => navigateToTab('mainland_offline')}
                   className="text-xs text-stone-300 hover:text-white px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 transition cursor-pointer"
                 >
-                  ← 返回双视频共学
+                  ← 返回音频学习
                 </button>
               </div>
             </div>
@@ -237,19 +447,19 @@ const App: React.FC = () => {
             <ThaiKeyboardPractice
               initialTargetWord={keyboardTargetWord}
               onSpeak={handleSpeak}
-              onBackToStudy={() => setActiveTab('dual_sync_player')}
+              onBackToStudy={() => navigateToTab('mainland_offline')}
               onPracticeCompleted={handlePracticeCompleted}
             />
           </div>
         )}
 
-        {/* 3. 学员免费注册、个人学修打卡与禅修共学动态 */}
+        {/* 4. 学员免费注册、个人学修打卡与禅修共学动态 */}
         {activeTab === 'registration_checkin' && (
           <RegistrationCheckinView
             currentStudent={currentStudent}
             onStudentChange={setCurrentStudent}
             onNavigateToKeyboard={handlePracticeInKeyboard}
-            onNavigateToPlayer={() => setActiveTab('dual_sync_player')}
+            onNavigateToPlayer={() => navigateToTab('mainland_offline')}
             onOpenAdmin={() => setShowAdminModal(true)}
           />
         )}
@@ -270,12 +480,13 @@ const App: React.FC = () => {
         />
       )}
 
-      {/* 共学管理 · 法工校对工作流 (AdminSanctuaryModal) */}
+      {/* 共学互助中心（仅 admin 登录后才显示专属管理界面） */}
       <AdminSanctuaryModal
         isOpen={showAdminModal}
         onClose={() => setShowAdminModal(false)}
+        currentStudent={currentStudent}
         onLessonCalibrated={(lessonId, offset) => {
-          // 共学管理校准后：更新播放器偏移量并自动锁定，立即同步生效
+          // 管理员校准后：更新播放器偏移量并自动锁定，立即同步生效
           setPlayerOffsetSeconds(offset);
           setPlayerIsOffsetLocked(true);
           try {
@@ -287,11 +498,15 @@ const App: React.FC = () => {
           } catch {}
         }}
         onLoadLessonToPlayer={(lesson) => {
-          // 从后台课件库或检索结果载入双播播放器
+          setCurrentLessonId(lesson.id);
           setSubtitles(lesson.subtitles);
+          setSharedLineIndex(0);
           setPlayerOffsetSeconds(lesson.defaultOffsetSeconds);
           setPlayerIsOffsetLocked(true);
           try {
+            localStorage.setItem(ACTIVE_LESSON_STORAGE_KEY, lesson.id);
+            localStorage.setItem('luangpor_course_subtitles', JSON.stringify(lesson.subtitles));
+            localStorage.setItem('luangpor_active_subtitles_v3', JSON.stringify(lesson.subtitles));
             const saved = localStorage.getItem('luangpor_custom_dual_video_v3');
             const parsed = saved ? JSON.parse(saved) : {};
             parsed.thaiVideoUrl = lesson.thaiVideoUrl;
@@ -300,10 +515,74 @@ const App: React.FC = () => {
             parsed.offsetSeconds = lesson.defaultOffsetSeconds;
             localStorage.setItem('luangpor_custom_dual_video_v3', JSON.stringify(parsed));
           } catch {}
-          setActiveTab('dual_sync_player');
           setShowAdminModal(false);
         }}
       />
+
+      {/* 隐藏式 #/admin 专属登录弹窗（平时不在前台任何位置体现） */}
+      {showHiddenAdminGate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-sm">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setHiddenAdminErr(null);
+              setHiddenAdminBusy(true);
+              try {
+                const res = await adminAuthService.unlock(hiddenAdminPass);
+                if (res.success) {
+                  setShowHiddenAdminGate(false);
+                  setHiddenAdminPass('');
+                  if (typeof window !== 'undefined' && window.location.hash === '#/admin') {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                  }
+                  setShowAdminModal(true);
+                } else {
+                  setHiddenAdminErr(res.message);
+                }
+              } finally {
+                setHiddenAdminBusy(false);
+              }
+            }}
+            className="w-full max-w-sm bg-slate-900 border border-amber-500/30 rounded-2xl p-5 shadow-2xl space-y-3"
+          >
+            <h3 className="text-sm font-bold text-white">admin 登录验证</h3>
+            <input
+              type="password"
+              value={hiddenAdminPass}
+              onChange={(e) => setHiddenAdminPass(e.target.value)}
+              placeholder="请输入 admin 口令"
+              autoFocus
+              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 focus:border-amber-500 text-xs text-white outline-none"
+            />
+            {hiddenAdminErr && (
+              <p className="text-xs text-rose-400">{hiddenAdminErr}</p>
+            )}
+            <div className="flex justify-end gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowHiddenAdminGate(false);
+                  setHiddenAdminPass('');
+                  setHiddenAdminErr(null);
+                  if (typeof window !== 'undefined' && window.location.hash === '#/admin') {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                  }
+                }}
+                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs cursor-pointer"
+              >
+                取消
+              </button>
+              <button
+                type="submit"
+                disabled={hiddenAdminBusy || !hiddenAdminPass.trim()}
+                className="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs cursor-pointer disabled:opacity-50"
+              >
+                {hiddenAdminBusy ? '验证中...' : '登录'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* 法缘发心语句身份标识与认领弹窗 */}
       <StatementIdentityModal
@@ -314,6 +593,38 @@ const App: React.FC = () => {
         onStudentUpdated={(updated) => {
           setCurrentStudent(updated);
         }}
+      />
+
+      {/* 首次访问引导弹窗：指纹识别 + 名字发心 + 音频/视频岔路选择 */}
+      <FirstVisitOnboardingModal
+        isOpen={showOnboardingModal}
+        currentStudent={currentStudent}
+        fingerprint={deviceFingerprint}
+        onComplete={({ updatedStudent, canUseYouTube }) => {
+          setCurrentStudent(updatedStudent);
+          saveOnboardingPrefs({
+            completed: true,
+            canUseYouTube,
+            tourCompleted: false,
+            updatedAt: Date.now(),
+          });
+          setShowOnboardingModal(false);
+          triggerTour(canUseYouTube ? 'youtube' : 'mainland');
+        }}
+        onSwitchToClaimAccount={() => {
+          setShowOnboardingModal(false);
+          setIdentityModalMode('claim_statement');
+          setShowIdentityModal(true);
+        }}
+      />
+
+      {/* 现代“明暗”聚光灯高亮功能导览 (Spotlight Tour) */}
+      <SpotlightTourOverlay
+        isOpen={activeTourMode !== null}
+        modeLabel={activeTourMode === 'youtube' ? '视频学习导览' : '音频学习导览'}
+        steps={activeTourMode === 'youtube' ? YOUTUBE_TOUR_STEPS : MAINLAND_TOUR_STEPS}
+        onClose={handleTourComplete}
+        onFinish={handleTourComplete}
       />
     </div>
   );

@@ -11,6 +11,7 @@ import { saveCommunityLesson } from '../data/presetLessonsLibrary';
 interface CourseStudioModalProps {
   isOpen: boolean;
   onClose: () => void;
+  isAdmin?: boolean;
   currentUserEmail?: string;
   currentUserName?: string;
   prefillConfig?: {
@@ -41,13 +42,15 @@ const DEFAULT_SAMPLE_SRT = `1
 export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
   isOpen,
   onClose,
-  currentUserEmail = 'dhamma_worker',
-  currentUserName = '法工团队',
+  isAdmin = false,
+  currentUserEmail = 'community_user',
+  currentUserName = '共学学友',
   prefillConfig,
   onLessonCreatedAndLoaded,
 }) => {
-  const isAdmin = true;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [lessonTitle, setLessonTitle] = useState<string>(prefillConfig?.title || '共学互助校对课件');
+  const [lessonDate, setLessonDate] = useState<string>(new Date().toISOString().slice(0, 10));
 
   const getInitialText = () => {
     if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
@@ -89,6 +92,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
   // 当外部传入 prefillConfig 变动或弹窗打开时，自动同步全篇内容
   useEffect(() => {
     if (!isOpen) return;
+    setLessonTitle(prefillConfig?.title || '共学互助校对课件');
     if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
       const fullText = exportToEnhancedSRT(prefillConfig.subtitles);
       setRawText(fullText);
@@ -157,22 +161,22 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     setTimeout(() => setCopiedPrompt(false), 2500);
   };
 
-  // 装载或发布
-  const handleApply = (saveToCurated: boolean = false) => {
+  // 装载或上传至共学互助库
+  const handleApply = (saveToCommunityPool: boolean = false) => {
     const subs = parseResult.lines.length > 0 ? parseResult.lines : parseLanguageReactorText(rawText).subtitles;
     if (subs.length === 0) {
-      alert('请先上传文件或在下方文本区粘贴有效字幕！');
+      showToast('请先上传文件或在下方文本区粘贴有效字幕');
       return;
     }
 
-    const lessonTitle = prefillConfig?.title || '新制作法谈字幕课件';
+    const finalTitle = lessonTitle.trim() || prefillConfig?.title || '共学互助校对课件';
     const newLesson: CuratedLesson = {
       id: `lesson_${Date.now()}`,
-      date: new Date().toISOString().slice(0, 10),
-      title: lessonTitle,
-      chineseTitle: lessonTitle,
+      date: lessonDate || new Date().toISOString().slice(0, 10),
+      title: finalTitle,
+      chineseTitle: finalTitle,
       speaker: '隆波帕默尊者',
-      source: '法谈字幕工坊',
+      source: '共学互助校对',
       thaiVideoUrl: prefillConfig?.thaiVideoUrl || 'https://www.youtube.com/watch?v=F4-tJNYDpss',
       chineseVideoUrl: prefillConfig?.chineseVideoUrl || 'https://www.youtube.com/watch?v=HR-O2XYifbI',
       thaiVideoId: prefillConfig?.thaiVideoUrl || 'F4-tJNYDpss',
@@ -180,20 +184,25 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
       chineseMediaType: 'youtube',
       defaultOffsetSeconds: 0,
       totalSentences: subs.length,
-      tags: ['最新开示', '制作法谈'],
+      tags: ['共学互助', '字幕校对'],
       keyTerms: [],
       subtitles: subs,
-      status: 'approved',
+      status: isAdmin ? 'approved' : 'pending',
       submittedBy: {
-        id: currentUserEmail || 'admin',
-        name: currentUserName || '主理人',
+        id: currentUserEmail || 'community_user',
+        name: currentUserName || '共学学友',
+        emailOrPhone: currentUserEmail || '共学互助提交',
       },
       submittedAt: new Date().toISOString(),
     };
 
-    if (saveToCurated) {
+    if (saveToCommunityPool) {
       saveCommunityLesson(newLesson);
-      showToast('🎉 已成功保存并发布到课件库！');
+      showToast(
+        isAdmin
+          ? '✅ 已直接保存并发布至公共课件库！'
+          : '📤 已上传提交至共学互助库，本机已为您立即载入学习！'
+      );
     }
 
     if (onLessonCreatedAndLoaded) {
@@ -215,10 +224,10 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
             </span>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-stone-900">
-                制作法谈字幕 (Subtitle Production)
+                共学互助字幕校对与上传
               </h2>
               <p className="text-xs text-stone-500">
-                保留极简三要素：AI 提示词、上传文件与字幕粘贴区
+                每位学友皆可导入 SRT 校对、试听并上传分享给共学伙伴
               </p>
             </div>
           </div>
@@ -240,6 +249,32 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
 
         {/* 主体内容 */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          {/* 课件名称与开示日期 */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2">
+              <label className="text-xs font-bold text-stone-800 block mb-1">
+                🏷️ 课件名称 / 开示标题
+              </label>
+              <input
+                type="text"
+                value={lessonTitle}
+                onChange={(e) => setLessonTitle(e.target.value)}
+                placeholder="例如：2026-10-18 日常生活中的四念处（互助校对）"
+                className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-stone-800 block mb-1">
+                📅 开示日期
+              </label>
+              <input
+                type="date"
+                value={lessonDate}
+                onChange={(e) => setLessonDate(e.target.value)}
+                className="w-full text-xs px-3 py-2 rounded-xl border border-[#d9c8a9] bg-white text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
           
           {/* 1. AI 提示词部分 */}
           <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 space-y-2.5">
@@ -443,33 +478,36 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition cursor-pointer"
+              className="px-3.5 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition cursor-pointer"
             >
               取消
             </button>
-            {isAdmin && (
-              <button
-                type="button"
-                onClick={() => handleApply(true)}
-                disabled={parseResult.total === 0}
-                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 text-xs font-bold transition cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>保存至课件库</span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => handleApply(true)}
+              disabled={parseResult.total === 0}
+              className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 text-xs font-bold transition cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
+              title={
+                isAdmin
+                  ? '以 admin 身份直接保存并公开发布到课件库'
+                  : '上传提交至共学互助库，并立即载入学习'
+              }
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>{isAdmin ? '保存并直接发布上线' : '上传提交至共学互助库'}</span>
+            </button>
             <button
               type="button"
               onClick={() => handleApply(false)}
               disabled={parseResult.total === 0}
-              className="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold transition cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-white text-xs font-bold transition cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-1.5"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>⚡ 装载到双播播放器 ({parseResult.total} 句)</span>
+              <span>仅载入播放器 ({parseResult.total} 句)</span>
             </button>
           </div>
         </div>

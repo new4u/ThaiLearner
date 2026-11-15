@@ -1,5 +1,5 @@
 import { AdminAuditLog, AdminSessionState } from '../types';
-import { sha256 } from '../utils/hash';
+import { sha256, hashPasswordWithSalt } from '../utils/hash';
 import { supabase, isSupabaseConfigured } from './supabaseClient';
 
 const ADMIN_STORAGE_KEYS = {
@@ -8,40 +8,53 @@ const ADMIN_STORAGE_KEYS = {
   FAIL_COUNT: 'taixue_admin_fail_count_v1'
 };
 
-const SESSION_STORAGE_KEY = 'taixue_admin_session_v5';
-const DEFAULT_PRIMARY_ADMIN_EMAIL = 'dhamma_worker';
-const DEFAULT_PRIMARY_ADMIN_NAME = '法工团队';
-const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+const SESSION_STORAGE_KEY = 'taixue_admin_session_v6';
+const DEFAULT_PRIMARY_ADMIN_EMAIL = 'admin';
+const DEFAULT_PRIMARY_ADMIN_NAME = 'admin';
+const SUPER_ADMIN_ID = 'super_admin';
+const SUPER_ADMIN_FALLBACK_HASH = '9e58a324b56a7220a6bd30b49c3b0795a2e5da6a651c5852811c5d5da6d9b8f0';
+const TWELVE_HOURS_MS = 12 * 60 * 60 * 1000;
+
+const UNAUTHENTICATED_SESSION: AdminSessionState = {
+  isAuthenticated: false,
+  unlockedAt: null,
+  expiresAt: null,
+  adminName: ''
+};
 
 class AdminAuthService {
-  private session: AdminSessionState = {
-    isAuthenticated: true,
-    unlockedAt: Date.now(),
-    expiresAt: Date.now() + ONE_YEAR_MS,
-    adminName: DEFAULT_PRIMARY_ADMIN_NAME,
-    email: DEFAULT_PRIMARY_ADMIN_EMAIL
-  };
+  private session: AdminSessionState = { ...UNAUTHENTICATED_SESSION };
 
-  private sessionTimeoutMs = ONE_YEAR_MS;
+  private sessionTimeoutMs = TWELVE_HOURS_MS;
   private listeners: Array<(session: AdminSessionState) => void> = [];
 
   constructor() {
     this.restoreSession();
   }
 
-  // 恢复会话，默认持续就绪
+  // 仅当存在未过期的已验证 admin 会话时恢复；默认未登录
   private restoreSession() {
     try {
-      this.session = {
-        isAuthenticated: true,
-        unlockedAt: Date.now(),
-        expiresAt: Date.now() + ONE_YEAR_MS,
-        adminName: DEFAULT_PRIMARY_ADMIN_NAME,
-        email: DEFAULT_PRIMARY_ADMIN_EMAIL
-      };
-      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(this.session));
+      // 清理旧版本自动登录残留键
+      localStorage.removeItem('taixue_admin_session_v5');
+      const raw = localStorage.getItem(SESSION_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as AdminSessionState;
+        if (parsed?.isAuthenticated && parsed.expiresAt && parsed.expiresAt > Date.now()) {
+          this.session = {
+            isAuthenticated: true,
+            unlockedAt: parsed.unlockedAt || Date.now(),
+            expiresAt: parsed.expiresAt,
+            adminName: parsed.adminName || DEFAULT_PRIMARY_ADMIN_NAME,
+            email: parsed.email || DEFAULT_PRIMARY_ADMIN_EMAIL
+          };
+          return;
+        }
+      }
+      this.session = { ...UNAUTHENTICATED_SESSION };
+      localStorage.removeItem(SESSION_STORAGE_KEY);
     } catch {
-      // ignore
+      this.session = { ...UNAUTHENTICATED_SESSION };
     }
   }
 
@@ -51,6 +64,7 @@ class AdminAuthService {
         localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(this.session));
       } else {
         localStorage.removeItem(SESSION_STORAGE_KEY);
+        localStorage.removeItem('taixue_admin_session_v5');
         sessionStorage.removeItem('taixue_admin_session');
       }
     } catch {
@@ -72,7 +86,7 @@ class AdminAuthService {
   }
 
   public getSession(): AdminSessionState {
-    if (this.session.expiresAt && this.session.expiresAt <= Date.now()) {
+    if (this.session.isAuthenticated && this.session.expiresAt && this.session.expiresAt <= Date.now()) {
       this.lock();
     }
     return { ...this.session };
@@ -98,12 +112,12 @@ class AdminAuthService {
   }
 
   /**
-   * 验证管理员密码 —— 凭据存在 Supabase 数据库，前端不存放任何密码。
-   * 流程: sha256(密码) -> RPC verify_admin -> 返回布尔。
+   * 验证管理员密码 —— 优先调用 Supabase RPC verify_admin，离线或未部署 RPC 时以 salted sha256 校验兜底。
    */
   public async unlock(passphrase: string): Promise<{ success: boolean; message: string }> {
-    if (!supabase || !isSupabaseConfigured()) {
-      return { success: false, message: '数据库尚未配置，管理后台暂不可用' };
+    const cleanPass = passphrase.trim();
+    if (!cleanPass) {
+      return { success: false, message: '请输入管理员密码' };
     }
 
     const lockout = this.isLockedOut();
@@ -114,25 +128,34 @@ class AdminAuthService {
       };
     }
 
-    const hashedInput = await sha256(passphrase);
     let verified = false;
-    try {
-      const { data, error } = await supabase.rpc('verify_admin', { p_hash: hashedInput });
-      if (error) {
-        if (error.code === '42883') {
-          // 函数不存在 → 数据库未执行安全升级脚本
-          return { success: false, message: '数据库尚未启用安全校验，请先在 SQL Editor 执行安全升级脚本' };
+    let rpcChecked = false;
+
+    if (supabase && isSupabaseConfigured()) {
+      try {
+        const hashedInput = await sha256(cleanPass);
+        const { data, error } = await supabase.rpc('verify_admin', { p_hash: hashedInput });
+        if (!error) {
+          rpcChecked = true;
+          verified = data === true;
         }
-        return { success: false, message: `验证服务异常: ${error.message}` };
+      } catch {
+        // 网络或 RPC 不可用时走本地哈希兜底校验
       }
-      verified = data === true;
-    } catch (e: any) {
-      return { success: false, message: `连接验证服务失败: ${e?.message || '网络异常'}` };
     }
 
-    // 如果数据库未配置或 RPC 异常，允许本地安全口令 suan2026 兜底验证
-    if (!verified && (passphrase.trim() === 'suan2026' || passphrase.trim() === 'dhamma_worker')) {
-      verified = true;
+    // 若未配置数据库、RPC 尚未部署，或本地管理员密码哈希一致时通过验证
+    if (!verified && (!rpcChecked || !supabase || !isSupabaseConfigured())) {
+      const fallbackHash = await hashPasswordWithSalt(cleanPass, SUPER_ADMIN_ID);
+      if (fallbackHash === SUPER_ADMIN_FALLBACK_HASH) {
+        verified = true;
+      }
+    } else if (!verified) {
+      // 兼容与打卡页共用的超级管理员密码哈希
+      const fallbackHash = await hashPasswordWithSalt(cleanPass, SUPER_ADMIN_ID);
+      if (fallbackHash === SUPER_ADMIN_FALLBACK_HASH) {
+        verified = true;
+      }
     }
 
     if (verified) {
@@ -145,12 +168,12 @@ class AdminAuthService {
       };
       this.saveSession();
       localStorage.setItem(ADMIN_STORAGE_KEYS.FAIL_COUNT, '0');
-      this.recordAuditLog('unlock_success', `法工团队进入共学管理`);
-      return { success: true, message: `欢迎，法工团队！已就绪进入共学管理` };
+      this.recordAuditLog('unlock_success', `admin 登录后台`);
+      return { success: true, message: `admin 登录成功，专属管理界面已开启` };
     } else {
       const currentFail = parseInt(localStorage.getItem(ADMIN_STORAGE_KEYS.FAIL_COUNT) || '0', 10) + 1;
       localStorage.setItem(ADMIN_STORAGE_KEYS.FAIL_COUNT, currentFail.toString());
-      this.recordAuditLog('unlock_failed', `尝试密码错误 (第 ${currentFail} 次)`);
+      this.recordAuditLog('unlock_failed', `管理员密码尝试错误 (第 ${currentFail} 次)`);
 
       if (currentFail >= 5) {
         const lockoutUntil = Date.now() + 60 * 1000;
@@ -162,34 +185,14 @@ class AdminAuthService {
       }
       return {
         success: false,
-        message: `密码不正确，还剩 ${5 - currentFail} 次机会`
+        message: `管理员密码不正确，还剩 ${5 - currentFail} 次机会`
       };
     }
   }
 
-  // 法工团队极速进入
-  public quickUnlockPrimaryAdmin(email: string = DEFAULT_PRIMARY_ADMIN_EMAIL) {
-    this.session = {
-      isAuthenticated: true,
-      unlockedAt: Date.now(),
-      expiresAt: Date.now() + this.sessionTimeoutMs,
-      adminName: DEFAULT_PRIMARY_ADMIN_NAME,
-      email: email
-    };
-    this.saveSession();
-    this.recordAuditLog('unlock_success', `法工团队已进入共学管理`);
-    return { success: true, message: `已进入共学管理` };
-  }
-
-  // 手动锁定
+  // 退出 admin 登录并锁定专属管理界面
   public lock() {
-    this.session = {
-      isAuthenticated: true,
-      unlockedAt: Date.now(),
-      expiresAt: Date.now() + this.sessionTimeoutMs,
-      adminName: DEFAULT_PRIMARY_ADMIN_NAME,
-      email: DEFAULT_PRIMARY_ADMIN_EMAIL
-    };
+    this.session = { ...UNAUTHENTICATED_SESSION };
     this.saveSession();
   }
 

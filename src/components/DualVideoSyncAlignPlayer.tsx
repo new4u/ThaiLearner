@@ -10,8 +10,9 @@ import {
   Repeat, Headphones, Video, BookOpen, Check, Search, ClipboardPaste,
   SlidersHorizontal, Clock, Bot, Copy, ChevronLeft, ChevronRight,
   FolderOpen, Upload, FileText, FileCheck2, Trash2, Library, X, ExternalLink,
-  Lock, LockOpen, Mic, Globe
+  Lock, LockOpen, Mic, Globe, Maximize2, Minimize2
 } from 'lucide-react';
+import { useFullscreenStage } from '../hooks/useFullscreenStage';
 import {
   offlineAudioStorage,
   OfflineAudioMeta,
@@ -33,6 +34,10 @@ import {
 
 interface DualVideoSyncAlignPlayerProps {
   subtitles?: SubtitleLine[];
+  currentLessonId?: string;
+  onSelectLessonId?: (lessonId: string) => void;
+  currentLineIndex?: number;
+  onLineIndexChange?: (idx: number) => void;
   onSelectWord?: (word: WordToken) => void;
   onOpenKeyboard?: (thaiText: string) => void;
   onSpeak?: (text: string, rate?: number) => void;
@@ -46,8 +51,6 @@ interface DualVideoSyncAlignPlayerProps {
   onOffsetChange?: (offset: number, locked: boolean) => void;
   /** 打开管理后台 */
   onOpenAdmin?: () => void;
-  /** 切换到极简沉浸版 */
-  onSwitchToMinimal?: () => void;
 }
 
 declare global {
@@ -145,6 +148,10 @@ const SUBTITLES_STORAGE_KEY = 'luangpor_active_subtitles_v3';
 
 export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> = ({
   subtitles: propsSubtitles,
+  currentLessonId: propLessonId,
+  onSelectLessonId,
+  currentLineIndex: propLineIndex,
+  onLineIndexChange,
   onSelectWord,
   onOpenKeyboard,
   onSpeak,
@@ -154,8 +161,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   isOffsetLocked: propIsOffsetLocked,
   onOffsetChange,
   onOpenAdmin,
-  onSwitchToMinimal,
 }) => {
+  const { stageRef: fullscreenStageRef, isFullscreen, toggleFullscreen, exitFullscreen } = useFullscreenStage();
+
   // 苹果 iOS 设备标记 (WebKit 单音频专属策略，安卓与电脑绝不受限)
   const [isAppleDevice] = useState(() => isIOSDevice());
   const isIOS = isAppleDevice;
@@ -187,14 +195,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const [inputChineseUrl, setInputChineseUrl] = useState(config.chineseVideoUrl);
   const [inputTitle, setInputTitle] = useState(config.title);
 
-  // 2. 字幕轨数据
+  // 2. 字幕轨数据（与「音频学习」共用同一套字幕）
   const [activeSubtitles, setActiveSubtitles] = useState<SubtitleLine[]>(() => {
-    if (propsSubtitles && propsSubtitles.length >= 700 && propsSubtitles[0]?.words?.length > 0) return propsSubtitles;
+    if (propsSubtitles && propsSubtitles.length > 0) return propsSubtitles;
     try {
       const savedSubs = localStorage.getItem(SUBTITLES_STORAGE_KEY);
       if (savedSubs) {
         const parsed = JSON.parse(savedSubs);
-        if (Array.isArray(parsed) && parsed.length >= 700 && parsed[0]?.words?.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.words?.length > 0) return parsed;
       }
     } catch {
       // fallback
@@ -202,7 +210,32 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return OCT_18_LIVE_SUBTITLES;
   });
 
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [currentLineIndex, setCurrentLineIndexState] = useState<number>(propLineIndex ?? 0);
+  const currentLineIndexRef = useRef<number>(currentLineIndex);
+  currentLineIndexRef.current = currentLineIndex;
+
+  const setCurrentLineIndex = useCallback(
+    (updater: number | ((prev: number) => number)) => {
+      const nextVal = typeof updater === 'function' ? updater(currentLineIndexRef.current) : updater;
+      currentLineIndexRef.current = nextVal;
+      setCurrentLineIndexState(nextVal);
+      onLineIndexChange?.(nextVal);
+    },
+    [onLineIndexChange]
+  );
+
+  useEffect(() => {
+    if (typeof propLineIndex === 'number') {
+      currentLineIndexRef.current = propLineIndex;
+      setCurrentLineIndexState(propLineIndex);
+    }
+  }, [propLineIndex]);
+
+  useEffect(() => {
+    if (propsSubtitles && propsSubtitles.length > 0) {
+      setActiveSubtitles(propsSubtitles);
+    }
+  }, [propsSubtitles]);
 
   // 3. 独立与协同播放状态
   const [isBothPlaying, setIsBothPlaying] = useState(false);
@@ -251,7 +284,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   // 默认不勾选自动滚动，避免列表频繁自动翻动打扰学习
   const [autoScroll, setAutoScroll] = useState(false);
 
-  // 选择预制课件（严格按视频原标题：中文在前，泰文在后）
+  // 选择预制课件（同步通知父级，保证与音频模式共用同一套课件与字幕）
   const handleSelectPresetLesson = (lesson: CuratedLesson) => {
     const combinedTitle = `${lesson.chineseTitle} ｜ ${lesson.title}`;
     const newConf: DualVideoConfig = {
@@ -269,6 +302,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputChineseUrl(lesson.chineseVideoUrl);
     setInputTitle(combinedTitle);
     saveSubtitles(lesson.subtitles);
+    onSelectLessonId?.(lesson.id);
     setCurrentLineIndex(0);
     setShowPresetModal(false);
     triggerToast(`已成功调入官方预制课件: ${lesson.chineseTitle}`);
@@ -377,13 +411,45 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   const currentLine = activeSubtitles[currentLineIndex] || activeSubtitles[0];
 
   const currentCuratedLesson = useMemo(() => {
+    if (propLessonId) {
+      const byId = curatedLessons.find(l => l.id === propLessonId);
+      if (byId) return byId;
+    }
     return curatedLessons.find(l => 
       config.title.includes(l.chineseTitle) ||
       l.chineseTitle === config.title || 
       (thaiVideoId && l.thaiVideoId === thaiVideoId) || 
       (chineseVideoId && l.chineseVideoId === chineseVideoId)
     ) || curatedLessons[0];
-  }, [curatedLessons, config.title, thaiVideoId, chineseVideoId]);
+  }, [propLessonId, curatedLessons, config.title, thaiVideoId, chineseVideoId]);
+
+  // 外部切换课件时自动同步双视频链接与标题，保证音/视频两条岔路同一套课件对齐
+  useEffect(() => {
+    if (!propLessonId) return;
+    const target = curatedLessons.find(l => l.id === propLessonId);
+    if (!target) return;
+    const combinedTitle = `${target.chineseTitle} ｜ ${target.title}`;
+    setConfig(prev => {
+      if (prev.thaiVideoUrl === target.thaiVideoUrl && prev.chineseVideoUrl === target.chineseVideoUrl) {
+        return prev;
+      }
+      const next: DualVideoConfig = {
+        ...prev,
+        title: combinedTitle,
+        thaiVideoUrl: target.thaiVideoUrl,
+        chineseVideoUrl: target.chineseVideoUrl,
+        offsetSeconds: target.defaultOffsetSeconds,
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+    setInputThaiUrl(target.thaiVideoUrl);
+    setInputChineseUrl(target.chineseVideoUrl);
+    setInputTitle(combinedTitle);
+    setOffsetSeconds(target.defaultOffsetSeconds);
+  }, [propLessonId, curatedLessons]);
 
   // 切换课程时自动检索 IndexedDB 中的离线纯音频
   useEffect(() => {
@@ -1253,6 +1319,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           setInputChineseUrl(target.chineseVideoUrl);
           setInputTitle(combinedTitle);
           saveSubtitles(target.subtitles);
+          onSelectLessonId?.(target.id);
           setCurrentLineIndex(0);
         }
       }
@@ -1615,22 +1682,22 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            {/* 0. 极简沉浸版快捷切换 */}
-            {onSwitchToMinimal && (
-              <button
-                type="button"
-                onClick={onSwitchToMinimal}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-                title="切换到单泰文视频·嵌入式音标与连续进度条极简沉浸版"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>极简沉浸版</span>
-              </button>
-            )}
+            {/* 0. 一键全屏沉浸学习 */}
+            <button
+              type="button"
+              data-tour-id="tour-yt-fullscreen"
+              onClick={toggleFullscreen}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
+              title="一键进入全屏沉浸模式（视频与字幕同屏聚焦）"
+            >
+              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              <span>{isFullscreen ? '退出全屏' : '全屏沉浸'}</span>
+            </button>
 
             {/* 离线纯音频与录音按钮 */}
             <button
               type="button"
+              data-tour-id="tour-offline-btn"
               onClick={() => setShowOfflineModal(true)}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0 border ${
                 isThaiOfflineActive || isChineseOfflineActive
@@ -1682,14 +1749,77 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       {/* 主界面内容 */}
       <div className="max-w-7xl mx-auto px-1.5 sm:px-4 pt-3 sm:pt-4 space-y-4 sm:space-y-5 max-w-full box-border">
 
+        {/* 可一键全屏沉浸容器：保持播放器不卸载不断播 */}
+        <div
+          ref={fullscreenStageRef}
+          className={
+            isFullscreen
+              ? 'fixed inset-0 z-[70] bg-slate-950 text-slate-100 overflow-y-auto p-3 sm:p-5 flex flex-col gap-3 sm:gap-4'
+              : 'space-y-4 sm:space-y-5'
+          }
+        >
+          {isFullscreen && (
+            <div className="max-w-6xl w-full mx-auto flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800/80">
+              <div className="min-w-0 flex items-center gap-2 text-xs">
+                <Video className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="font-bold text-white truncate max-w-[180px] sm:max-w-md">{config.title}</span>
+                <span className="text-slate-400 font-mono tabular-nums shrink-0">
+                  · 第 {currentLineIndex + 1} / {activeSubtitles.length} 句
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1))}
+                  disabled={currentLineIndex === 0}
+                  className="min-h-[36px] px-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 text-xs cursor-pointer"
+                >
+                  上一句
+                </button>
+                <button
+                  type="button"
+                  onClick={handleMasterPlayToggle}
+                  className="min-h-[36px] px-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                >
+                  {isCurrentModePlaying ? <Pause className="w-3.5 h-3.5 fill-current" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                  <span>{isCurrentModePlaying ? '暂停' : '播放'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1))}
+                  disabled={currentLineIndex >= activeSubtitles.length - 1}
+                  className="min-h-[36px] px-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 text-slate-200 border border-slate-700 text-xs cursor-pointer"
+                >
+                  下一句
+                </button>
+                <button
+                  type="button"
+                  onClick={exitFullscreen}
+                  className="min-h-[36px] px-3 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Minimize2 className="w-3.5 h-3.5" />
+                  <span>退出全屏</span>
+                </button>
+              </div>
+            </div>
+          )}
+
         {/* 1. 视频视窗区域 (单播自适应全景，双播智能并列) */}
-        <div className={hasChineseMedia ? "grid grid-cols-1 lg:grid-cols-2 gap-4" : "max-w-4xl mx-auto w-full"}>
+        <div
+          data-tour-id="tour-video-stage"
+          className={
+            isFullscreen
+              ? (hasChineseMedia ? 'max-w-6xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-3' : 'max-w-4xl mx-auto w-full')
+              : (hasChineseMedia ? 'grid grid-cols-1 lg:grid-cols-2 gap-4' : 'max-w-4xl mx-auto w-full')
+          }
+        >
           
           {/* 泰文视频视窗 */}
           <div className="bg-[#2d2a26] rounded-2xl overflow-hidden shadow-lg border border-[#d9c8a9]/30 flex flex-col">
             <div className="bg-[#3d3730] px-3 sm:px-3.5 py-2 flex flex-wrap items-center justify-between text-xs text-amber-100 gap-1.5">
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className={`w-2.5 h-2.5 rounded-full ${isThaiPlaying ? 'bg-emerald-400 animate-pulse' : 'bg-stone-500'}`} />
+                <span className={`w-2 h-2 rounded-full ${isThaiPlaying ? 'bg-emerald-400' : 'bg-stone-500'}`} />
                 <span className="font-bold whitespace-nowrap">🇹🇭 泰文原版</span>
                 <span className="text-[10px] text-stone-300 whitespace-nowrap">
                   ({isThaiPlaying ? '播放中' : '已暂停'})
@@ -1729,7 +1859,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   </div>
 
                   <div className="w-full max-w-md text-[11px] text-slate-400 font-mono">
-                    免翻离线泰语纯音频 · {formatBytes(thaiOfflineAudio.sizeBytes)} · 正在驱动下方全篇字幕同步
+                    离线泰语纯音频 · {formatBytes(thaiOfflineAudio.sizeBytes)} · 正在驱动下方全篇字幕同步
                   </div>
 
                   <audio
@@ -1863,7 +1993,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                   </div>
 
                   <div className="w-full max-w-md text-[11px] text-slate-400 font-mono">
-                    免翻离线中文同传纯音频 · {formatBytes(chineseOfflineAudio.sizeBytes)}
+                    离线中文同传纯音频 · {formatBytes(chineseOfflineAudio.sizeBytes)}
                   </div>
 
                   <audio
@@ -2151,7 +2281,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
         {/* 2. 当前聚焦精读句大卡 (Hero Active Sentence Stage: 集成卡拉OK交互演练与逐词彩色进度线条) */}
         {currentLine && (
-          <div className="bg-gradient-to-r from-amber-50/80 via-white to-amber-50/50 rounded-2xl p-5 sm:p-6 shadow-sm border border-amber-200/90 relative">
+          <div
+            data-tour-id="tour-karaoke-stage"
+            className="bg-gradient-to-r from-amber-50/80 via-white to-amber-50/50 rounded-2xl p-5 sm:p-6 shadow-sm border border-amber-200/90 relative"
+          >
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full bg-[#b58940] text-white text-xs font-bold">
@@ -2165,7 +2298,17 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-amber-300 text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                  title="一键全屏沉浸学习"
+                >
+                  {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+                  <span>{isFullscreen ? '退出全屏' : '全屏'}</span>
+                </button>
+
                 {/* 🎯 视频下方固定显示的进度对齐按钮 (一键校准视频与字幕同步) */}
                 <button
                   type="button"
@@ -2413,6 +2556,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             </div>
           </div>
         )}
+        </div>
 
         {/* 3. 完整法谈句子列表 (Timeline Transcript Deck) */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-[#e6d3ac]/80 space-y-4">
@@ -2640,7 +2784,10 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       </div>
 
       {/* 4. 极简悬浮主控播放栏 (自适应响应式架构：手机/平板/电脑模式防溢出设计，精炼绝不突出) */}
-      <div className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-20px)] max-w-sm sm:w-auto sm:max-w-md xl:max-w-4xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-1.5 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all box-border overflow-hidden">
+      <div
+        data-tour-id="tour-bottom-dock"
+        className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100vw-20px)] max-w-sm sm:w-auto sm:max-w-md xl:max-w-4xl mx-auto bg-stone-900/95 backdrop-blur-xl border border-stone-800/80 hover:border-amber-500/30 rounded-2xl p-1.5 sm:px-4 sm:py-2.5 shadow-2xl shadow-black/90 text-white transition-all box-border overflow-hidden"
+      >
         
         {/* 📱 移动端 / 平板端 (宽度 < 1280px，涵盖各类 iPad、Android 平板、折叠屏及手机)：高品质双行结构 (严控宽度，绝不溢出) */}
         <div className="flex flex-col xl:hidden gap-1.5 sm:gap-2">
@@ -3288,7 +3435,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
             {/* 弹窗底部提示 */}
             <div className="px-5 py-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-              <span>* 如需微调双视频毫秒级时间差，请在顶部导航点击「共学管理」进入校准工作流</span>
+              <span>* 如需微调音画偏移，可点击上方「校准」面板调整个人同步时间差</span>
               <button
                 onClick={() => setShowPresetModal(false)}
                 className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-medium cursor-pointer"

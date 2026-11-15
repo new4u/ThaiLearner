@@ -40,8 +40,8 @@ export type MaskMode = 'all' | 'blur_cn' | 'hide_th' | 'blind_audio';
 
 // 核心功能标签页定义
 export type ActiveTab = 
-  | 'minimal_player'     // 极简沉浸版（单泰文视频·嵌入式逐词音标与连续进度条）
-  | 'dual_sync_player'   // 泰中双视频同步对齐放映机（双播研读工作台）
+  | 'mainland_offline'   // 音频学习（优先推荐 · 海内外通用）
+  | 'dual_sync_player'   // 视频学习（泰中双视频同步对齐放映机）
   | 'phonetic_lego'      // 积木式声韵拼音实验室（选字母即刻变调、出声、SVG五调曲线、同音五调对比盘）
   | 'zoom_slides'        // Zoom 讲义（左侧大字 + 右侧 SVG 禅意 10 页幻灯片，极简放映与独立 HTML 导出）
   | 'sati_counter'       // Sati 听法觉知实时看板（随听随点、S/R/L/M 快捷键、觉知频率走势、打卡结缘报告）

@@ -25,38 +25,213 @@ export interface OfficialAudioArchiveItem {
   title: string;
   subtitle: string;
   speaker: string;
+  date: string;
+  fileCode: string;
   trackType: 'thai_audio' | 'chinese_audio';
   suggestedLessonId: string;
+  isExcerptMatch?: boolean;
   mp3Url: string;
   fileName: string;
   sourceDomain: string;
 }
 
-// 官方公开免费 MP3 音频档案馆（纯音频直链，可经 /api/audio-proxy 无跨域缓存到本地或下载保存）
-export const OFFICIAL_FREE_AUDIO_ARCHIVES: OfficialAudioArchiveItem[] = [
+export interface DhammaCatalogItem {
+  id: string;
+  fileCode: string;
+  fileName: string;
+  title: string;
+  gregorianDate?: string;
+  buddhistYear?: string;
+  mp3Url: string;
+  wikiUrl?: string;
+  sizeBytes?: number;
+  trackType: 'thai_audio' | 'chinese_audio';
+  sourceDomain: string;
+  matchedLessonId?: string;
+}
+
+export interface DhammaCatalogResponse {
+  source: '2569' | '2568' | 'cn2026' | 'cn2025';
+  officialPageUrl: string;
+  fetchedAt: number;
+  total: number;
+  items: DhammaCatalogItem[];
+}
+
+export interface LuangporPairedItem {
+  id: string;
+  date: string;
+  sessionSuffix: 'A' | 'B' | '';
+  matchedLessonId?: string;
+  thai: DhammaCatalogItem | null;
+  chinese: DhammaCatalogItem | null;
+}
+
+export interface LuangporPairedCatalogResponse {
+  year: '2026' | '2025';
+  buddhistYear: '2569' | '2568';
+  fetchedAt: number;
+  total: number;
+  thaiCount: number;
+  chineseCount: number;
+  thaiCatalogUrl: string;
+  chineseCatalogUrl: string;
+  items: LuangporPairedItem[];
+}
+
+export const OFFICIAL_DIRECTORY_LINKS = [
   {
-    id: 'archive_wat_suan_611007A',
-    title: 'Wat Suan Santidham 官方泰语开示 MP3 (CD078 · 611007A)',
-    subtitle: '隆波帕默尊者官方公开 MP3 音频归档，适合无翻墙环境下离线跟读、倍速精听',
-    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
-    trackType: 'thai_audio',
-    suggestedLessonId: 'lesson_20261010',
-    mp3Url: 'https://media.dhamma.com/pramote/cd/078/611007A.mp3',
-    fileName: 'WatSuanSantidham_611007A_Thai.mp3',
-    sourceDomain: 'media.dhamma.com',
+    id: 'dir_2569',
+    label: 'dhamma.com 泰语原声 2569 (2026年)',
+    url: 'https://www.dhamma.com/download/2569/',
+    note: '泰语编号：69 + 月日（如 691017.mp3）',
   },
   {
-    id: 'archive_zhdhamma_zh260705',
-    title: '解脱园 / Wat Suan 官方中文同传 MP3 (zh260705)',
-    subtitle: '官方公开中文同步传译 MP3 存档，可缓存后配合泰语原声轨道学习',
-    speaker: '解脱园中文同传音频库',
-    trackType: 'chinese_audio',
-    suggestedLessonId: 'lesson_20261017',
-    mp3Url: 'https://s3-ap-southeast-1.amazonaws.com/zhdhamma/zh260705.mp3',
-    fileName: 'Luangpor_Chinese_zh260705.mp3',
-    sourceDomain: 's3-ap-southeast-1.amazonaws.com/zhdhamma',
+    id: 'dir_cn_2026',
+    label: 'dhamma.cn 中文开示 2026目录',
+    url: 'https://www.dhamma.cn/luangpor/2026%E5%B9%B4%E5%BA%A6%E6%97%A5%E5%B8%B8%E5%BC%80%E7%A4%BA',
+    note: '中文站收录隆波帕默尊者 D26.xx 系列中文 MP3',
+  },
+  {
+    id: 'dir_2568',
+    label: 'dhamma.com 泰语 2568 (2025年)',
+    url: 'https://www.dhamma.com/download/2568/',
+    note: '泰语编号：68 + 月日',
   },
 ];
+
+// 官方公开免费 MP3 音频档案馆（与当前课程公历/佛历日期严格 1:1 核验对应，涵盖泰语 dhamma.com 与中文 dhamma.cn）
+export const OFFICIAL_FREE_AUDIO_ARCHIVES: OfficialAudioArchiveItem[] = [
+  {
+    id: 'archive_2569_691017',
+    title: '2026-10-17 泰语原声 MP3 (691017)',
+    subtitle: 'ปฏิบัติในที่ทุกสถานในกาลทุกเมื่อ · dhamma.com 泰语完整录音，对应本课 1,198 句字幕',
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    date: '2026-10-17',
+    fileCode: '691017',
+    trackType: 'thai_audio',
+    suggestedLessonId: 'lesson_20261017',
+    mp3Url: 'https://media.dhamma.com/pramote/cd/2569/691017.mp3',
+    fileName: '691017.mp3',
+    sourceDomain: 'media.dhamma.com/pramote/cd/2569',
+  },
+  {
+    id: 'archive_cn_20261017',
+    title: '2026-10-17 中文同传 MP3 (D26.83)',
+    subtitle: 'dhamma.cn 收录《隆波帕默尊者开示》2026年10月17日中文口译音频',
+    speaker: 'dhamma.cn 隆波帕默尊者中文存档',
+    date: '2026-10-17',
+    fileCode: 'D26.83',
+    trackType: 'chinese_audio',
+    suggestedLessonId: 'lesson_20261017',
+    mp3Url: 'https://media.dhamma.cn/6/6f/D26.83%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B410%E6%9C%8817%E6%97%A5.mp3',
+    fileName: 'D26.83_2026-10-17_CN.mp3',
+    sourceDomain: 'media.dhamma.cn',
+  },
+  {
+    id: 'archive_2569_691018',
+    title: '2026-10-18 泰语原声 MP3 (691018)',
+    subtitle: 'แก้มิจฉาทิฎฐิด้วยสติปัฏฐาน · dhamma.com 泰语完整录音，对应本课 746 句字幕',
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    date: '2026-10-18',
+    fileCode: '691018',
+    trackType: 'thai_audio',
+    suggestedLessonId: 'lesson_20261018',
+    mp3Url: 'https://media.dhamma.com/pramote/cd/2569/691018.mp3',
+    fileName: '691018.mp3',
+    sourceDomain: 'media.dhamma.com/pramote/cd/2569',
+  },
+  {
+    id: 'archive_cn_20261018',
+    title: '2026-10-18 中文同传 MP3 (D26.84)',
+    subtitle: 'dhamma.cn 收录《隆波帕默尊者开示》2026年10月18日中文口译音频',
+    speaker: 'dhamma.cn 隆波帕默尊者中文存档',
+    date: '2026-10-18',
+    fileCode: 'D26.84',
+    trackType: 'chinese_audio',
+    suggestedLessonId: 'lesson_20261018',
+    mp3Url: 'https://media.dhamma.cn/4/41/D26.84%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B410%E6%9C%8818%E6%97%A5.mp3',
+    fileName: 'D26.84_2026-10-18_CN.mp3',
+    sourceDomain: 'media.dhamma.cn',
+  },
+  {
+    id: 'archive_cn_20261031',
+    title: '2026-10-31 中文同传 MP3 (D26.87)',
+    subtitle: 'dhamma.cn 收录《隆波帕默尊者开示》2026年10月31日中文音频（dhamma.com 泰语版待上架）',
+    speaker: 'dhamma.cn 隆波帕默尊者中文存档',
+    date: '2026-10-31',
+    fileCode: 'D26.87',
+    trackType: 'chinese_audio',
+    suggestedLessonId: 'lesson_20261031',
+    mp3Url: 'https://media.dhamma.cn/0/09/D26.87%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B410%E6%9C%8831%E6%97%A5.mp3',
+    fileName: 'D26.87_2026-10-31_CN.mp3',
+    sourceDomain: 'media.dhamma.cn',
+  },
+  {
+    id: 'archive_2569_691010',
+    title: '2026-10-10 泰语原声全程 MP3 (691010 · 字幕为节选)',
+    subtitle: 'น้อมเข้ามาเรียนรู้ตัวเอง · 全场完整录音，本课字幕为 29 句节选，可点“对齐起点”匹配时间',
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    date: '2026-10-10',
+    fileCode: '691010',
+    trackType: 'thai_audio',
+    suggestedLessonId: 'lesson_20261010',
+    isExcerptMatch: true,
+    mp3Url: 'https://media.dhamma.com/pramote/cd/2569/691010.mp3',
+    fileName: '691010.mp3',
+    sourceDomain: 'media.dhamma.com/pramote/cd/2569',
+  },
+  {
+    id: 'archive_cn_20261010',
+    title: '2026-10-10 中文同传 MP3 (D26.81 · 字幕为节选)',
+    subtitle: 'dhamma.cn 收录《隆波帕默尊者开示》2026年10月10日中文音频',
+    speaker: 'dhamma.cn 隆波帕默尊者中文存档',
+    date: '2026-10-10',
+    fileCode: 'D26.81',
+    trackType: 'chinese_audio',
+    suggestedLessonId: 'lesson_20261010',
+    isExcerptMatch: true,
+    mp3Url: 'https://media.dhamma.cn/7/76/D26.81%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B410%E6%9C%8810%E6%97%A5.mp3',
+    fileName: 'D26.81_2026-10-10_CN.mp3',
+    sourceDomain: 'media.dhamma.cn',
+  },
+];
+
+export async function fetchLuangporPairedCatalog(
+  year: '2026' | '2025',
+  forceRefresh = false
+): Promise<LuangporPairedCatalogResponse> {
+  const qs = new URLSearchParams({ year });
+  if (forceRefresh) qs.set('refresh', '1');
+  const res = await fetch(`/api/luangpor-catalog?${qs.toString()}`);
+  if (!res.ok) {
+    let errMsg = `同步隆波帕默尊者开示目录失败 (${res.status})`;
+    try {
+      const json = await res.json();
+      if (json?.error) errMsg = json.error;
+    } catch {}
+    throw new Error(errMsg);
+  }
+  return res.json();
+}
+
+export async function fetchDhammaCatalog(
+  source: '2569' | '2568' | 'cn2026' | 'cn2025',
+  forceRefresh = false
+): Promise<DhammaCatalogResponse> {
+  const qs = new URLSearchParams({ source });
+  if (forceRefresh) qs.set('refresh', '1');
+  const res = await fetch(`/api/dhamma-catalog?${qs.toString()}`);
+  if (!res.ok) {
+    let errMsg = `读取官网录音目录失败 (${res.status})`;
+    try {
+      const json = await res.json();
+      if (json?.error) errMsg = json.error;
+    } catch {}
+    throw new Error(errMsg);
+  }
+  return res.json();
+}
 
 const DB_NAME = 'taixue_offline_audio_v1';
 const DB_VERSION = 1;
@@ -125,53 +300,90 @@ export async function fetchOfficialAudioBlob(
   rawUrl: string,
   onProgress?: (loadedBytes: number, totalBytes: number | null) => void
 ): Promise<{ blob: Blob; mimeType: string }> {
+  const CHUNK_SIZE = 4 * 1024 * 1024; // 4 MB chunks (safe for Cloud Run 32MB limit)
   const proxyUrl = buildAudioProxyUrl(rawUrl);
-  const res = await fetch(proxyUrl);
-  if (!res.ok) {
-    let errMsg = `拉取官方音频失败 (${res.status})`;
-    try {
-      const json = await res.json();
-      if (json?.error) errMsg = json.error;
-    } catch {
-      // ignore non-json
+
+  const readSingleResponse = async (
+    res: Response,
+    offsetBytes: number,
+    knownTotal: number | null
+  ): Promise<{ part: Uint8Array; contentType: string }> => {
+    const contentType = (res.headers.get('content-type') || 'audio/mpeg').toLowerCase();
+    if (contentType.includes('text/html') || contentType.startsWith('video/')) {
+      throw new Error(`源站返回非纯音频类型 (${contentType})，已拦截`);
     }
+    if (!res.body) {
+      const ab = await res.arrayBuffer();
+      const u8 = new Uint8Array(ab);
+      onProgress?.(offsetBytes + u8.byteLength, knownTotal);
+      return { part: u8, contentType };
+    }
+    const reader = res.body.getReader();
+    const subChunks: Uint8Array[] = [];
+    let subLoaded = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) {
+        subChunks.push(value);
+        subLoaded += value.byteLength;
+        onProgress?.(offsetBytes + subLoaded, knownTotal);
+      }
+    }
+    const merged = new Uint8Array(subLoaded);
+    let pos = 0;
+    for (const c of subChunks) {
+      merged.set(c, pos);
+      pos += c.byteLength;
+    }
+    return { part: merged, contentType };
+  };
+
+  const firstRes = await fetch(proxyUrl, {
+    headers: { Range: `bytes=0-${CHUNK_SIZE - 1}` },
+  });
+  if (!firstRes.ok && firstRes.status !== 206) {
+    let errMsg = `拉取官方音频失败 (${firstRes.status})`;
+    try {
+      const json = await firstRes.json();
+      if (json?.error) errMsg = json.error;
+    } catch {}
     throw new Error(errMsg);
   }
 
-  const contentType = (res.headers.get('content-type') || 'audio/mpeg').toLowerCase();
-  if (contentType.includes('text/html') || contentType.startsWith('video/')) {
-    throw new Error(`源站返回非纯音频类型 (${contentType})，已遵循纯音频原则拦截`);
-  }
+  const contentRangeHeader = firstRes.headers.get('content-range') || '';
+  const crMatch = contentRangeHeader.match(/bytes\s+(\d+)-(\d+)\/(\d+|\*)/i);
+  const totalBytes = crMatch && crMatch[3] !== '*'
+    ? parseInt(crMatch[3], 10)
+    : firstRes.status === 200
+    ? Number(firstRes.headers.get('content-length') || 0) || null
+    : null;
 
-  const totalHeader = res.headers.get('content-length');
-  const totalBytes = totalHeader ? parseInt(totalHeader, 10) : null;
+  const parts: BlobPart[] = [];
+  const firstData = await readSingleResponse(firstRes, 0, totalBytes);
+  parts.push(firstData.part.buffer as ArrayBuffer);
+  let loaded = firstData.part.byteLength;
+  const mimeType = firstData.contentType.includes('audio') ? firstData.contentType : 'audio/mpeg';
 
-  if (!res.body || !onProgress) {
-    const blob = await res.blob();
-    return { blob, mimeType: blob.type || contentType || 'audio/mpeg' };
-  }
-
-  const reader = res.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let loaded = 0;
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (value) {
-      chunks.push(value);
-      loaded += value.byteLength;
-      onProgress(loaded, Number.isFinite(totalBytes) ? totalBytes : null);
+  // If 206 and more bytes remain, continue 4MB chunks sequentially
+  if (firstRes.status === 206 && totalBytes && loaded < totalBytes) {
+    while (loaded < totalBytes) {
+      const end = Math.min(loaded + CHUNK_SIZE - 1, totalBytes - 1);
+      const nextRes = await fetch(proxyUrl, {
+        headers: { Range: `bytes=${loaded}-${end}` },
+      });
+      if (!nextRes.ok && nextRes.status !== 206) {
+        throw new Error(`分片拉取音频失败 (${nextRes.status})`);
+      }
+      const nextData = await readSingleResponse(nextRes, loaded, totalBytes);
+      if (nextData.part.byteLength === 0) break;
+      parts.push(nextData.part.buffer as ArrayBuffer);
+      loaded += nextData.part.byteLength;
     }
   }
 
-  const mergedParts: BlobPart[] = chunks.map(chunk => {
-    const copy = new Uint8Array(chunk.byteLength);
-    copy.set(chunk);
-    return copy.buffer;
-  });
-  const blob = new Blob(mergedParts, { type: contentType.includes('audio') ? contentType : 'audio/mpeg' });
-  return { blob, mimeType: blob.type };
+  const blob = new Blob(parts, { type: mimeType });
+  return { blob, mimeType: blob.type || mimeType };
 }
 
 export async function probeAudioDuration(blob: Blob): Promise<number> {

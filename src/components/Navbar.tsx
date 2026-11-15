@@ -1,6 +1,15 @@
 import React from 'react';
 import { ActiveTab, RegisteredStudent } from '../types';
-import { Video, Keyboard, CheckCircle2, UserCheck, Flame, UserPlus, Settings, Sparkles } from 'lucide-react';
+import {
+  Video,
+  Keyboard,
+  CheckCircle2,
+  Flame,
+  UserPlus,
+  Settings,
+  Headphones,
+  Compass,
+} from 'lucide-react';
 
 interface NavbarProps {
   activeTab: ActiveTab;
@@ -8,6 +17,7 @@ interface NavbarProps {
   currentStudent?: RegisteredStudent | null;
   onOpenAdmin?: () => void;
   onOpenIdentityModal?: (mode?: 'set_statement' | 'claim_statement') => void;
+  onStartTour?: () => void;
   isAdminAuthenticated?: boolean;
 }
 
@@ -17,15 +27,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentStudent,
   onOpenAdmin,
   onOpenIdentityModal,
+  onStartTour,
   isAdminAuthenticated = false
 }) => {
   return (
     <header className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-xl border-b border-slate-800/80 px-2.5 sm:px-6 h-14 sm:h-16 flex items-center shadow-lg shadow-black/50 select-none max-w-full">
       <div className="w-full max-w-7xl mx-auto flex items-center justify-between gap-1.5 sm:gap-4 min-w-0">
         
-        {/* Brand */}
-        <div 
-          onClick={() => onTabChange('dual_sync_player')}
+        {/* Brand (音频优先默认主页) */}
+        <div
+          onClick={() => onTabChange('mainland_offline')}
           className="flex items-center gap-2 sm:gap-2.5 shrink-0 cursor-pointer group"
         >
           <img
@@ -38,45 +49,48 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
 
-        {/* 核心三入口导航：双视频共学、泰语打字练习、免费注册与打卡 */}
-        <nav className="flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-slate-900/90 rounded-xl border border-slate-800/80 shrink-0">
-          {/* 1. 双视频共学 */}
+        {/* 极简四项导航：两大学习岔路（音频学习优先 | 视频学习） + 实用工具（泰语打字 | 每日打卡） */}
+        <nav
+          data-tour-id="tour-navbar-modes"
+          className="flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-slate-900/90 rounded-xl border border-slate-800/80 min-w-0 overflow-x-auto"
+        >
+          {/* 1. 音频学习（全球通用 · 首选推荐） */}
+          <button
+            onClick={() => onTabChange('mainland_offline')}
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+              activeTab === 'mainland_offline'
+                ? 'bg-gradient-to-r from-cyan-400 to-emerald-400 text-slate-950 shadow-md shadow-cyan-500/20 font-black'
+                : 'text-cyan-300/90 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title="音频学习（全球可用 · 隆波开示 MP3 与共用字幕）"
+          >
+            <Headphones className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">音频学习</span>
+            <span className="sm:hidden">音频</span>
+          </button>
+
+          {/* 2. 视频学习（YouTube 双视频） */}
           <button
             onClick={() => onTabChange('dual_sync_player')}
-            className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
               activeTab === 'dual_sync_player'
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                 : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
             }`}
-            title="泰中双视频同步共学放映机"
+            title="视频学习（泰中双视频同步对齐，共用同一套字幕）"
           >
             <Video className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">双视频研读</span>
-            <span className="sm:hidden">研读</span>
+            <span className="hidden sm:inline">视频学习</span>
+            <span className="sm:hidden">视频</span>
           </button>
 
-          {/* 1.5 极简沉浸版 */}
-          <button
-            onClick={() => onTabChange('minimal_player')}
-            className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
-              activeTab === 'minimal_player'
-                ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
-            }`}
-            title="单泰文视频·嵌入式音标与连续进度条极简沉浸版"
-          >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden sm:inline">极简沉浸</span>
-            <span className="sm:hidden">沉浸</span>
-          </button>
-
-          {/* 2. 泰语打字练习 */}
+          {/* 3. 泰语打字 */}
           <button
             onClick={() => onTabChange('keyboard_lab')}
-            className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+            className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
               activeTab === 'keyboard_lab'
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
-                : 'text-amber-200/90 hover:text-white hover:bg-slate-800/80'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
             }`}
             title="Kedmanee 泰语键盘实战打卡与练习"
           >
@@ -85,10 +99,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="sm:hidden">打字</span>
           </button>
 
-          {/* 3. 每日打卡 */}
+          {/* 4. 每日打卡 */}
           <button
             onClick={() => onTabChange('registration_checkin')}
-            className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+            className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
               activeTab === 'registration_checkin'
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
                 : 'text-emerald-300 hover:text-white hover:bg-slate-800/80'
@@ -145,15 +159,41 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* 共学管理入口 (法工校对工作流、课件制作、开示与学员记录) */}
+          {/* 重播互动高亮导览 */}
+          {onStartTour && (
+            <button
+              type="button"
+              onClick={onStartTour}
+              className="px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1 bg-slate-900/90 hover:bg-slate-800 text-amber-300 hover:text-amber-200 border border-amber-500/30 whitespace-nowrap shrink-0"
+              title="重新开启明暗高亮功能导览 (Tour)"
+            >
+              <Compass className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">导览</span>
+            </button>
+          )}
+
+          {/* 共学互助中心入口（仅 admin 登录后才体现 admin 状态） */}
           {onOpenAdmin && (
             <button
               onClick={onOpenAdmin}
-              className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 text-stone-300 hover:text-white border border-slate-700/80 shadow-xs"
-              title="共学管理 (法工校对工作流、课件、开示与学员管理)"
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 border shadow-xs whitespace-nowrap shrink-0 ${
+                isAdminAuthenticated
+                  ? 'bg-emerald-950/70 hover:bg-emerald-900/70 text-emerald-200 border-emerald-500/40'
+                  : 'bg-slate-900/90 hover:bg-slate-800 text-stone-300 hover:text-white border-slate-700/80'
+              }`}
+              title={
+                isAdminAuthenticated
+                  ? '共学互助中心（admin 已登录）'
+                  : '共学互助中心（互助校对、课件上传、开示检索与资源）'
+              }
             >
-              <Settings className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden md:inline">共学管理</span>
+              <Settings className={`w-3.5 h-3.5 ${isAdminAuthenticated ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <span className="hidden md:inline">共学互助</span>
+              {isAdminAuthenticated && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-bold lowercase">
+                  admin
+                </span>
+              )}
             </button>
           )}
         </div>

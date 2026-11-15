@@ -305,7 +305,7 @@ export async function searchDhammaDiscourses(
     return result;
   }
 
-  // 4. 实时网络检索：三级网络链路 (satipatthana.life 缓存接口 ➔ dhamma.cn 直连 ➔ 代理路由)
+  // 4. 实时网络检索：三级网络链路 (satipatthana.life 缓存接口 ➔ dhamma.cn 检索 ➔ 代理路由)
   const videoRegex = /mp4|视频|視頻|File:|\[\[文件:|\[\[檔案:|\.mp4|media\.dhamma|影片|影像/i;
   const audioRegex = /mp3|音頻|音频|語音|语音|ogg|flac|m4a|\.mp3|\.ogg|\.m4a|有聲書|有声书|錄音|录音/i;
 
@@ -397,7 +397,7 @@ export async function searchDhammaDiscourses(
           cachedAt: now,
           expiresAt: now + STORAGE_TTL_MS,
           ttlRemaining: formatTtlCountdown(now),
-          sourceNotice: `dhamma.cn MediaWiki 直连抓取 (${items.length}条)`,
+          sourceNotice: `dhamma.cn MediaWiki 抓取 (${items.length}条)`,
         };
         saveToStorage(cacheKey, result);
         return result;

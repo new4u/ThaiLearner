@@ -9,8 +9,8 @@ import {
   getAllCommunityLessons, approveCommunityLesson, rejectCommunityLesson, deleteCommunityLesson
 } from '../data/presetLessonsLibrary';
 import { 
-  ShieldCheck, Lock, Unlock, KeyRound, Download, Trash2, Search,
-  RefreshCw, CheckCircle2, AlertTriangle, Eye, EyeOff, X, Sliders,
+  ShieldCheck, Download, Trash2, Search,
+  RefreshCw, CheckCircle2, X, Sliders,
   FileSpreadsheet, Users, History, Clock, BookOpen, ExternalLink,
   ChevronRight, Save, LogOut, Check, Layers, Play, Sparkles, Copy,
   FileText, Wand2, Volume2, Bot, Video, Globe, FolderOpen, Headphones
@@ -29,6 +29,7 @@ import { DhammaExplorerDrawer } from './DhammaExplorerDrawer';
 interface AdminSanctuaryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentStudent?: RegisteredStudent | null;
   onLessonCalibrated?: (lessonId: string, offset: number) => void;
   onLoadLessonToPlayer?: (lesson: CuratedLesson) => void;
 }
@@ -43,16 +44,20 @@ export type AdminSanctuaryTab =
   | 'students' 
   | 'security';
 
+const ADMIN_ONLY_TABS: AdminSanctuaryTab[] = ['review', 'calibration', 'students', 'security'];
+
 export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
   isOpen,
   onClose,
+  currentStudent,
   onLessonCalibrated,
   onLoadLessonToPlayer
 }) => {
-  // 会话状态
+  // 管理员会话状态（仅 admin 登录后为 true）
   const [session, setSession] = useState<AdminSessionState>(() => adminAuthService.getSession());
+  const isAdmin = Boolean(session.isAuthenticated);
 
-  // 子标签页 (法工校对工作流、开示检索、AI提示词、6大平台、审核发布、时间调校、学员档案、数据日志)
+  // 子标签页 (公开：共学互助校对、开示检索、AI优化词、学习参考资源；admin 登录后才出现：课件审核、时间轴调校、学员记录、数据与日志)
   const [activeTab, setActiveTab] = useState<AdminSanctuaryTab>('studio');
 
   // 课件工坊生产状态
@@ -105,19 +110,26 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
   // 审计日志
   const [auditLogs, setAuditLogs] = useState<AdminAuditLog[]>([]);
 
-  // 刷新共学管理数据
+  // 刷新共学互助与管理数据（机密与高权限数据仅在 ADM 登录后加载）
   const refreshAdminData = () => {
     try {
-      const allStudents = secureStorageService.getConfidentialStudents();
-      setStudents(allStudents);
+      const currentSession = adminAuthService.getSession();
       const allLessons = getAllCuratedLessons();
       setCuratedLessons(allLessons);
-      setCommunityLessons(getAllCommunityLessons());
-      setAuditLogs(adminAuthService.getAuditLogs());
 
       const curr = allLessons.find(l => l.id === selectedLessonId) || allLessons[0];
       if (curr) {
         setCalibratedOffset(curr.defaultOffsetSeconds);
+      }
+
+      if (currentSession.isAuthenticated) {
+        const allStudents = secureStorageService.getConfidentialStudents();
+        setStudents(allStudents);
+        setCommunityLessons(getAllCommunityLessons());
+        setAuditLogs(adminAuthService.getAuditLogs());
+      } else {
+        setStudents([]);
+        setAuditLogs([]);
       }
     } catch (e) {
       console.error(e);
@@ -125,12 +137,34 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
   };
 
   useEffect(() => {
+    const unsubscribe = adminAuthService.subscribe((nextSession) => {
+      setSession(nextSession);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin && ADMIN_ONLY_TABS.includes(activeTab)) {
+      setActiveTab('studio');
+    }
+  }, [isAdmin, activeTab]);
+
+  useEffect(() => {
     if (isOpen) {
       refreshAdminData();
     }
-  }, [isOpen]);
+  }, [isOpen, isAdmin]);
 
   if (!isOpen) return null;
+
+  const handleAdminLogout = () => {
+    adminAuthService.lock();
+    setActiveTab('studio');
+    setStudents([]);
+    setAuditLogs([]);
+    setExportNotice('已退出 admin 管理界面');
+    setTimeout(() => setExportNotice(null), 2500);
+  };
 
   // 切换待校准课件
   const handleSelectLessonForCalibration = (lessonId: string) => {
@@ -143,6 +177,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
 
   // 导出学员数据 CSV
   const handleExportCsv = () => {
+    if (!isAdmin) return;
     try {
       const res = secureStorageService.exportConfidentialCsv();
       setExportNotice(`学员数据报表导出成功！包含 ${res.count} 名学员完整数据 (${res.filename})`);
@@ -154,6 +189,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
 
   // 删除单个学员
   const handleDeleteStudent = (studentId: string, studentName: string) => {
+    if (!isAdmin) return;
     if (window.confirm(`确认：是否确定删除学员【${studentName}】的档案与打卡记录？此操作不可逆！`)) {
       secureStorageService.deleteStudentConfidential(studentId);
       refreshAdminData();
@@ -162,11 +198,12 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
 
   // 保存课件校准
   const handleSaveCalibration = () => {
+    if (!isAdmin) return;
     const updated = updateCuratedLessonCalibration(selectedLessonId, {
       defaultOffsetSeconds: calibratedOffset
     });
     setCuratedLessons(updated);
-    adminAuthService.recordAuditLog('offset_calibrated', `法工校准了课件 [ID: ${selectedLessonId}] 的基准偏移量为 ${calibratedOffset}s`);
+    adminAuthService.recordAuditLog('offset_calibrated', `管理员校准了课件 [ID: ${selectedLessonId}] 的基准偏移量为 ${calibratedOffset}s`);
     if (onLessonCalibrated) {
       onLessonCalibrated(selectedLessonId, calibratedOffset);
     }
@@ -199,21 +236,41 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
               <Sparkles className="w-4 h-4 text-amber-400" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h3 className="text-sm sm:text-base font-extrabold text-white tracking-tight">
-                  共学管理 · 法工校对工作流
+                  共学互助中心
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-medium">
-                  在线协同
-                </span>
+                {isAdmin ? (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold flex items-center gap-1 lowercase">
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>admin</span>
+                  </span>
+                ) : (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-medium">
+                    互助共学 · 人人可上传
+                  </span>
+                )}
               </div>
               <p className="text-[11px] text-slate-400">
-                法谈课件制作 · 词汇音标 · 开示检索 · 课件审核 · 时间轴对齐 · 学员打卡记录
+                {isAdmin
+                  ? '共学互助校对与上传 · 开示检索 · 课件审核 · 官方时间轴调校 · 学员档案与审计'
+                  : '共学互助校对 · 字幕上传分享 · 开示检索 · 朱拉音标提示词 · 学习资源'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={handleAdminLogout}
+                className="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-rose-950/70 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                title="退出 admin 专属界面"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">退出 admin</span>
+              </button>
+            )}
             <button
               onClick={onClose}
               className="p-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer"
@@ -224,7 +281,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
           </div>
         </div>
 
-        {/* 视窗内容 (直接进入全功能专区，无需任何密码或拦截) */}
+        {/* 视窗内容 */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0 space-y-5">
           
           {/* 子导航栏 */}
@@ -236,10 +293,10 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                   ? 'bg-amber-500 text-slate-950 font-black shadow-md'
                   : 'text-slate-300 hover:bg-slate-800'
               }`}
-              title="法工校对工作流：导入生肉、朱拉分词与课件制作"
+              title="共学互助校对：人人可导入 SRT、朱拉分词与上传课件"
             >
               <Wand2 className="w-3.5 h-3.5" />
-              <span>✍️ 法工校对工作流</span>
+              <span>✍️ 共学互助校对</span>
             </button>
 
             <button
@@ -290,63 +347,68 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
               <span>🌿 学习参考资源</span>
             </button>
 
-            <button
-              onClick={() => setActiveTab('review')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                activeTab === 'review'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>
-                课件审核 (
-                {communityLessons.filter((l) => l.status === 'pending').length > 0 ? (
-                  <span className="text-amber-300 font-black animate-pulse">
-                    {communityLessons.filter((l) => l.status === 'pending').length} 待审
+            {isAdmin && (
+              <>
+                <span className="h-4 w-px bg-slate-700 mx-1 shrink-0" />
+                <button
+                  onClick={() => setActiveTab('review')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    activeTab === 'review'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <Layers className="w-3.5 h-3.5" />
+                  <span>
+                    课件审核 (
+                    {communityLessons.filter((l) => l.status === 'pending').length > 0 ? (
+                      <span className="text-amber-300 font-black animate-pulse">
+                        {communityLessons.filter((l) => l.status === 'pending').length} 待审
+                      </span>
+                    ) : (
+                      communityLessons.length
+                    )}
+                    )
                   </span>
-                ) : (
-                  communityLessons.length
-                )}
-                )
-              </span>
-            </button>
+                </button>
 
-            <button
-              onClick={() => setActiveTab('calibration')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                activeTab === 'calibration'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>时间轴调校</span>
-            </button>
+                <button
+                  onClick={() => setActiveTab('calibration')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    activeTab === 'calibration'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <Sliders className="w-3.5 h-3.5" />
+                  <span>时间轴调校</span>
+                </button>
 
-            <button
-              onClick={() => setActiveTab('students')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                activeTab === 'students'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>学员记录 ({students.length})</span>
-            </button>
+                <button
+                  onClick={() => setActiveTab('students')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    activeTab === 'students'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5" />
+                  <span>学员记录 ({students.length})</span>
+                </button>
 
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                activeTab === 'security'
-                  ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                  : 'text-slate-300 hover:bg-slate-800'
-              }`}
-            >
-              <History className="w-3.5 h-3.5" />
-              <span>数据与日志</span>
-            </button>
+                <button
+                  onClick={() => setActiveTab('security')}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    activeTab === 'security'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                      : 'text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <History className="w-3.5 h-3.5" />
+                  <span>数据与日志</span>
+                </button>
+              </>
+            )}
               </div>
 
               {/* 导出成功通知 */}
@@ -357,23 +419,23 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 1: 法工校对工作流 (Course Studio) */}
+              {/* TAB 1: 共学互助校对与上传 (Course Studio) */}
               {activeTab === 'studio' && (
                 <div className="space-y-4">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                         <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
                           <Wand2 className="w-4 h-4 text-amber-400" />
-                          <span>法工校对工作流 (Course Studio)</span>
+                          <span>共学互助校对与上传 (Mutual-Aid Studio)</span>
                         </h4>
                         <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">
-                          法工协作
+                          人人皆可上传
                         </span>
                       </div>
                       <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                        在此将生肉双语/单语 SRT 导入，系统将自动基于内置 1120+ 佛学大词典与朱拉隆功实用音标进行逐词拆解断词，可直接测试逐词显示并发布为全员共学课件。
+                        大家一起共学互助校对：任何学友皆可导入生肉或增强型 SRT 字幕，系统自动配齐朱拉隆功实用音标与词典释义，可立即载入播放器学习或上传分享给共学伙伴。
                       </p>
                     </div>
 
@@ -387,7 +449,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                         className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer"
                       >
                         <Sparkles className="w-4 h-4" />
-                        <span>🚀 启动课件制作</span>
+                        <span>✍️ 校对与上传字幕</span>
                       </button>
                     </div>
                   </div>
@@ -800,7 +862,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                       </h4>
                     </div>
                     <p className="text-xs text-slate-400">
-                      后台集中归拢 6 大权威平台与母带直播源，已从学员端移至管理后台，供管理员与制作团队一键直达获取最新原版母带与官方同传。
+                      集中汇集解脱园及尊者法音公开平台资源，方便全体学友进行共学查证与字幕互助校对。
                     </p>
                   </div>
 
@@ -889,8 +951,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 5: 课件审核发布专区 */}
-              {activeTab === 'review' && (
+              {/* TAB 5: 课件审核发布专区 (仅 ADM) */}
+              {isAdmin && activeTab === 'review' && (
                 <div className="space-y-4">
                   {/* KPI 概览卡片 */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -1094,7 +1156,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                         <Layers className="w-8 h-8 text-slate-600 mx-auto" />
                         <p>暂无符合此条件的课件记录。</p>
                         <p className="text-[11px] text-slate-600">
-                          学员在播放器中点击「🛠️ 制作课件」完成测试并上传后，待审核记录将即时汇总在此。
+                          学友在「共学互助校对」上传提交课件后，待审核记录将即时汇总在此。
                         </p>
                       </div>
                     )}
@@ -1102,8 +1164,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 7: 学员学修档案与打卡记录 */}
-              {activeTab === 'students' && (
+              {/* TAB 7: 学员学修档案与打卡记录 (仅 ADM) */}
+              {isAdmin && activeTab === 'students' && (
                 <div className="space-y-4">
                   {/* KPI 统计卡片 */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -1252,8 +1314,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 2: 预置课件与时间轴调校 */}
-              {activeTab === 'calibration' && (
+              {/* TAB 2: 预置课件与时间轴调校 (仅 ADM) */}
+              {isAdmin && activeTab === 'calibration' && (
                 <div className="space-y-5">
                   {/* 官方直播源与中文同传合集直达 */}
                   <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
@@ -1442,8 +1504,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                 </div>
               )}
 
-              {/* TAB 8: 数据管理与操作日志 */}
-              {activeTab === 'security' && (
+              {/* TAB 8: 数据管理与操作日志 (仅 ADM) */}
+              {isAdmin && activeTab === 'security' && (
                 <div className="space-y-5">
                   {/* 数据备份与导出卡片 */}
                   <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
@@ -1506,7 +1568,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                   <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
                     <h5 className="text-xs font-bold text-white mb-2 flex items-center gap-1.5">
                       <History className="w-4 h-4 text-cyan-400" />
-                      <span>法工校对操作日志 (Audit Trail)</span>
+                      <span>管理员操作审计日志 (Audit Trail)</span>
                     </h5>
                     <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                       {auditLogs.map((log) => (
@@ -1528,7 +1590,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
         </div>
       </div>
 
-      {/* 课件制作工坊弹窗 (Course Studio) */}
+      {/* 共学互助字幕校对与上传弹窗 (Course Studio) */}
       {showStudioModal && (
         <CourseStudioModal
           isOpen={showStudioModal}
@@ -1536,8 +1598,9 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
             setShowStudioModal(false);
             setStudioPrefill(null);
           }}
-          currentUserEmail="dhamma_worker"
-          currentUserName="法工团队"
+          isAdmin={isAdmin}
+          currentUserEmail={isAdmin ? (session.email || 'admin') : (currentStudent?.id || 'community_user')}
+          currentUserName={isAdmin ? (session.adminName || 'admin') : (currentStudent?.name || '共学学友')}
           prefillConfig={studioPrefill || undefined}
           onLessonCreatedAndLoaded={(lesson) => {
             refreshAdminData();
