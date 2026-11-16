@@ -231,6 +231,7 @@ export interface YouTubePairedVideoItem {
   gregorianDate?: string;
   isRerun?: boolean;
   isLiveNow?: boolean;
+  isUpcoming?: boolean;
   sourceTab?: 'videos' | 'streams';
   streamState?: 'live_now' | 'upcoming' | 'formal_vod' | 'stream_archive' | 'rerun';
   thumbnailUrl?: string;
@@ -258,6 +259,8 @@ export interface YouTubePairedCatalogResponse {
   thaiChannelUrl: string;
   chineseChannelUrl: string;
   items: YouTubePairedTalkItem[];
+  isSolidified?: boolean;
+  solidifiedAt?: string;
 }
 
 // 独立安全管理后台审计日志

@@ -72,7 +72,7 @@
 | 模块领域 | 核心文件 | 职责说明 |
 | :--- | :--- | :--- |
 | 应用入口与共享状态 | `/index.tsx`, `/server.ts` | 管理统一课件/字幕/句子索引状态、音画偏好、`#/admin` 隐藏入口，及代理/流媒体 API (`/api/audio-proxy`, `/api/thai-tts`, `/api/luangpor-catalog`) |
-| 顶部导航与导览 | `/src/components/Navbar.tsx`, `/src/components/FirstVisitOnboardingModal.tsx`, `/src/components/SpotlightTourOverlay.tsx`, `/src/hooks/useFullscreenStage.ts` | 极简 4 项导航、Tour 高亮导览（随 UI 改动同步维护）、一键全屏沉浸 Hook |
+| 顶部导航与导览 | `/src/components/Navbar.tsx`, `/src/components/FirstVisitOnboardingModal.tsx`, `/src/components/SpotlightTourOverlay.tsx`, `/src/hooks/useFullscreenStage.ts` | 极简 3 项导航、Tour 高亮导览（随 UI 改动同步维护）、一键全屏沉浸 Hook |
 | 两大学习主视图与复用底座 | `/src/components/MainlandOfflinePage.tsx`, `/src/components/DualVideoSyncAlignPlayer.tsx`, `/src/components/UnifiedMediaSelectorBar.tsx`, `/src/components/UnmatchedSubtitleBanner.tsx`, `/src/components/UnifiedPlayerDock.tsx` | 音频学习（默认）与视频学习共用主界面选课/音视频切换条、严格绑定空字幕横幅与底部悬浮主控台 |
 | 共学互助与 `admin` 后台 | `/src/components/AdminSanctuaryModal.tsx`, `/src/components/CourseStudioModal.tsx` | 普通用户仅见互助校对与上传、开示检索、AI 优化词、学习资源；仅 `admin` 登录后解锁审核/校准/学员档案/日志 |
 | 权限、隐私与学员体系 | `/src/services/adminAuthService.ts`, `/src/services/secureStorageService.ts`, `/src/services/studentStudyService.ts`, `/src/components/RegistrationCheckinView.tsx` | `admin` 会话认证、防爆破锁定、学员隐私金库、打卡与发心认领 |
@@ -101,6 +101,13 @@
    - 字幕只属于对应的 **原泰语视频 / 原泰语音频**（由 `src/utils/mediaSubtitleBinding.ts` 按 YouTube Video ID、官方音频网址或文件名/佛历日期严格校验，并持久化于带媒体主键的绑定表 `taixue_bound_subtitles_by_media_v1`）。
    - 切换或加载一个新的泰语 YouTube 视频或新的泰语 MP3/本地音频时，若该泰语媒体既不对应任何已有精校/共学课件，也没有为该媒体键显式导入过字幕，**严禁沿用上一场课件的字幕**，必须清空并展示空字幕引导卡片（可正常播放收听，或一键为当前音/视频导入专属字幕、或切回已有字幕课件）。
    - 仅切换中文同传视频或中文同传音频时，不清除当前已正确绑定的泰语字幕。
+
+5. **目录静态固化与零依赖离线发布原则（Solidified Catalogs）**
+   - **根本原因**：在 Netlify/Vercel 等静态托管部署时，不存在 Node.js 后端服务器，所有 `/api/*` 请求会被路由重定向到 `index.html`（HTML 文本），导致 `res.json()` 抛出 `SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON`（即用户所指的 "JSON document invalid" 报错）。同时外部站点（如 dhamma.cn）的防爬 WAF 会对非白名单环境直接返回 403 HTML 拦截页。
+   - **机制与实现**：
+     - 在代码库内置 `src/data/solidifiedYouTubeCatalog.ts`、`src/data/solidifiedAudioCatalog2026.ts`、`src/data/solidifiedAudioCatalog2025.ts` 与 `public/data/` 静态 JSON 文件。
+     - 前端组件（`UnifiedMediaSelectorBar.tsx` 与 `offlineAudioStorage.ts`）默认直接从固化文件初始化；在尝试拉取 `/api/...` 时，严格检查 `res.headers.get('content-type')?.includes('application/json')`，绝不对非 JSON/HTML 调用 `.json()`，直接安全回退至固化目录。
+     - 主理人仅在 AI Studio 开发环境下进行实时抓取与同步，点击选课栏的 **「⚡ 固化到代码库」** 按钮或执行 `npm run sync:solidify`，即可把最新目录冻结写入代码库，部署后即可离线且永不报错。
 
 ---
 

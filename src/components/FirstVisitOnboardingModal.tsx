@@ -174,7 +174,7 @@ export const FirstVisitOnboardingModal: React.FC<FirstVisitOnboardingModalProps>
           {/* Step 2: Two Learning Branches (Audio-First) */}
           <div className="space-y-2">
             <div className="text-xs font-semibold text-slate-200">
-              3. 请选择学习方式（两条岔路共用同一套字幕，随时切换）
+              3. 请选择初始学习方式（共用同一套字幕，随时可在页内滑块切换）
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

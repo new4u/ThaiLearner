@@ -946,6 +946,25 @@ async function createAppServer() {
     }
   });
 
+  // 一键固化接口：主理人在 AI Studio 开发环境下一键将最新官方目录冻结到代码库中
+  app.all('/api/solidify-catalogs', async (_req: Request, res: Response) => {
+    try {
+      const { solidifyCatalogs } = await import('./scripts/solidify_catalogs');
+      const ytCached = catalogCache.get('luangpor_youtube_paired_v2')?.payload;
+      const a26Cached = catalogCache.get('luangpor_paired_2026')?.payload;
+      const a25Cached = catalogCache.get('luangpor_paired_2025')?.payload;
+      const result = await solidifyCatalogs({
+        ytCatalog: ytCached,
+        audio2026: a26Cached,
+        audio2025: a25Cached,
+      });
+      res.json(result);
+    } catch (err: any) {
+      console.error('Failed to solidify catalogs:', err);
+      res.status(500).json({ success: false, error: err?.message || '固化目录失败' });
+    }
+  });
+
   app.get('/api/dhamma-catalog', async (req: Request, res: Response) => {
     const source = typeof req.query.source === 'string' ? req.query.source.trim() : '2569';
     if (!['2569', '2568', 'cn2026', 'cn2025'].includes(source)) {

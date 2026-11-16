@@ -28,38 +28,45 @@ export const YOUTUBE_TOUR_STEPS: TourStep[] = [
   {
     id: 'yt_nav',
     targetSelector: '[data-tour-id="tour-navbar-modes"]',
-    title: '极简三项顶部菜单：主工作台、打字与打卡',
+    title: '顶部精简三项导航：法谈学习、打字与打卡',
     description:
-      '顶部精简为「法谈学习」「泰语打字」与「每日打卡」。进入工作台后，可直接使用播放器上方的「音频学习 | 视频学习」滑块一键切换载体，完全共用同一套课件与字幕进度。',
-    mobileTip: '手机端轻点顶部标签即可切换，学习区内用滑块切音频或视频。',
+      '顶部精简为「法谈学习」「泰语打字」与「每日打卡」三项。点选后在学习区上方即可自由切换音频或视频，无需来回跳转页面。',
+    mobileTip: '手机端轻点顶部标签即可快速切换。',
   },
   {
     id: 'yt_fullscreen',
     targetSelector: '[data-tour-id="tour-yt-fullscreen"]',
-    title: '点一下即可进入「全屏沉浸」',
+    title: '一键开启「全屏沉浸」',
     description:
-      '不用跳转独立页面，点此按钮立刻将视频与逐词字幕聚焦铺满屏幕；再点右上角「退出全屏」或按 Esc 即可回到完整工作台。',
+      '点击此按钮即可将双视频与逐词字幕聚焦铺满屏幕；再点右上角「退出全屏」或按 Esc 键即可回到完整工作台。',
+  },
+  {
+    id: 'yt_media_selector',
+    targetSelector: '[data-tour-id="tour-yt-media-selector"]',
+    title: '统一选课栏 · 音/视频滑块与官方双频道目录',
+    description:
+      '可直接切换当前开示课件，并用「音频学习 | 视频学习」滑块无缝切换载体（共用同一套字幕进度）。点击「选音/视频 · 贴链接」可按日浏览官方双频道目录（自动区分正式版、直播中、直播回放与重播），粘贴动态直播链接也会自动锁定当场唯一视频 ID。',
   },
   {
     id: 'yt_video',
     targetSelector: '[data-tour-id="tour-video-stage"]',
-    title: '泰中双视频同屏对照与伴弱听法',
+    title: '泰中双视频并列对照 · 中文框常驻不丢失',
     description:
-      '泰语原版与中文译版双框并列同步播放，支持「伴弱音量」降低中文干扰，也可随时收起中文画面仅出声音。',
+      '左泰文原版支持查看泰文字幕状态与快速跳往 YouTube；右中文译版始终并排保留，支持「伴弱音量」与「收起画面」，若当前场次暂无中文视频也可直接在右侧从目录或链接一键补挂。',
   },
   {
     id: 'yt_karaoke',
     targetSelector: '[data-tour-id="tour-karaoke-stage"]',
-    title: '逐词卡拉OK音标精读台（共用字幕）',
+    title: '严格绑定泰文媒体的逐词精读台',
     description:
-      '当前句拆解为泰文词块 + 音标 + 中文释义，轻触单词即可发音查词根或跳去盲打，且与「音频学习」保持完全同一套字幕。',
+      '字幕仅在对应当前泰语视频时展示，避免错位；每句拆解为泰文、朱拉音标与中文释义，轻触单词即可发音、查词根或跳转盲打练习。',
   },
   {
     id: 'yt_dock',
     targetSelector: '[data-tour-id="tour-bottom-dock"]',
-    title: '底部随身悬浮主控台',
+    title: '底部随身主控台',
     description:
-      '拇指区即可单手控制双轨播停、单句循环复读、0.75x 慢速精听与毫秒级时差纠偏。',
+      '单手即可控制泰语/双轨/中文播停、单句循环、0.75x–1.25x 语速调节，以及点击当前句号/时刻以播放进度精准对齐字幕。',
   },
 ];
 
@@ -67,10 +74,10 @@ export const MAINLAND_TOUR_STEPS: TourStep[] = [
   {
     id: 'ml_hero',
     targetSelector: '[data-tour-id="tour-ml-hero"]',
-    title: '泰中双音频同步对齐（首选推荐）',
+    title: '泰中双音频同步对齐（默认推荐）',
     description:
-      '海内外皆可用，与「视频学习」共用同一套课件与字幕进度。下方控制条直接切换当前开示、音频/视频模式，以及一键全屏。',
-    mobileTip: '音频模式简洁轻快，点开即听。',
+      '海内外各类网络环境下皆可顺畅收听，与「视频学习」共用同一套课件、字幕与学习句进度。',
+    mobileTip: '音频模式简洁轻快，打开即听。',
   },
   {
     id: 'ml_fullscreen',
@@ -80,25 +87,25 @@ export const MAINLAND_TOUR_STEPS: TourStep[] = [
       '点一下即可进入全屏大字字幕剧场，专注跟读而不中断音频播放；按右上角「退出全屏」或 Esc 随时返回。',
   },
   {
-    id: 'ml_direct_mp3',
-    targetSelector: '[data-tour-id="tour-ml-direct-mp3"]',
-    title: '紧凑双音频框 · 半自动匹配同日开示',
-    description:
-      '左泰语、右中文两个紧凑音频框会按当前课件日期自动匹配官方 MP3 或本机缓存；如当日有多场次可直接点编号切换，支持「缓存」与「伴弱音量」。',
-  },
-  {
     id: 'ml_audio_player',
     targetSelector: '[data-tour-id="tour-ml-audio-player"]',
-    title: '「选音/视频 · 贴链接」原地展开目录',
+    title: '统一选课栏 · 切换载体与展开官方目录',
     description:
-      '点击即可在主界面原地展开 2026/2025 官方音频目录、YouTube 双频道对照目录，或粘贴 MP3/YouTube 链接与导入本地音频文件。',
+      '可在此选择当前开示、通过中间滑块一键切换「音频学习 / 视频学习」，或点击「选音/视频 · 贴链接」原地展开 2026/2025 官方音频与 YouTube 双频道目录，并支持粘贴链接与导入本地音频、字幕。',
+  },
+  {
+    id: 'ml_direct_mp3',
+    targetSelector: '[data-tour-id="tour-ml-direct-mp3"]',
+    title: '紧凑双音频框 · 按日匹配与离线缓存',
+    description:
+      '左泰语、右中文两个音频框按当前开示日期自动匹配官方 MP3 或本机缓存；支持多场次切换、「伴弱音量」降低中文干扰，以及单轨「缓存」离线收听。',
   },
   {
     id: 'ml_subtitles',
     targetSelector: '[data-tour-id="tour-ml-subtitle-studio"]',
-    title: '共用同一套全篇字幕 · 逐词精读台',
+    title: '共用全篇字幕 · 严格匹配与逐词精读',
     description:
-      '点击任意句子或单词即可发音查词根与打卡，支持「对齐此刻」将当前音频时刻精准绑定到字幕句，且仅当前泰语媒体严格对应时才展示对应字幕。',
+      '仅当当前泰语音频与课件或已导入字幕对应时才展示字幕，防止错配。点击任意词句即可发音查词根，配合「对齐此刻」可将当前时刻精准绑定到字幕句。',
   },
 ];
 

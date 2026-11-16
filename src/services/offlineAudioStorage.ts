@@ -77,6 +77,8 @@ export interface LuangporPairedCatalogResponse {
   thaiCatalogUrl: string;
   chineseCatalogUrl: string;
   items: LuangporPairedItem[];
+  isSolidified?: boolean;
+  solidifiedAt?: string;
 }
 
 export const OFFICIAL_DIRECTORY_LINKS = [
@@ -197,22 +199,30 @@ export const OFFICIAL_FREE_AUDIO_ARCHIVES: OfficialAudioArchiveItem[] = [
   },
 ];
 
+import { SOLIDIFIED_AUDIO_CATALOG_2026 } from '../data/solidifiedAudioCatalog2026';
+import { SOLIDIFIED_AUDIO_CATALOG_2025 } from '../data/solidifiedAudioCatalog2025';
+
 export async function fetchLuangporPairedCatalog(
   year: '2026' | '2025',
   forceRefresh = false
 ): Promise<LuangporPairedCatalogResponse> {
-  const qs = new URLSearchParams({ year });
-  if (forceRefresh) qs.set('refresh', '1');
-  const res = await fetch(`/api/luangpor-catalog?${qs.toString()}`);
-  if (!res.ok) {
-    let errMsg = `同步隆波帕默尊者开示目录失败 (${res.status})`;
-    try {
-      const json = await res.json();
-      if (json?.error) errMsg = json.error;
-    } catch {}
-    throw new Error(errMsg);
+  const fallback = year === '2026' ? SOLIDIFIED_AUDIO_CATALOG_2026 : SOLIDIFIED_AUDIO_CATALOG_2025;
+  try {
+    const qs = new URLSearchParams({ year });
+    if (forceRefresh) qs.set('refresh', '1');
+    const res = await fetch(`/api/luangpor-catalog?${qs.toString()}`);
+    const contentType = (res.headers.get('content-type') || '').toLowerCase();
+    if (!res.ok || !contentType.includes('application/json')) {
+      return fallback;
+    }
+    const data = await res.json();
+    if (data && Array.isArray(data.items) && data.items.length > 0) {
+      return data;
+    }
+    return fallback;
+  } catch {
+    return fallback;
   }
-  return res.json();
 }
 
 export async function fetchDhammaCatalog(
@@ -222,12 +232,15 @@ export async function fetchDhammaCatalog(
   const qs = new URLSearchParams({ source });
   if (forceRefresh) qs.set('refresh', '1');
   const res = await fetch(`/api/dhamma-catalog?${qs.toString()}`);
-  if (!res.ok) {
-    let errMsg = `读取官网录音目录失败 (${res.status})`;
-    try {
-      const json = await res.json();
-      if (json?.error) errMsg = json.error;
-    } catch {}
+  const contentType = (res.headers.get('content-type') || '').toLowerCase();
+  if (!res.ok || !contentType.includes('application/json')) {
+    let errMsg = `当前静态环境不支持在线拉取该源目录 (${res.status})`;
+    if (contentType.includes('application/json')) {
+      try {
+        const json = await res.json();
+        if (json?.error) errMsg = json.error;
+      } catch {}
+    }
     throw new Error(errMsg);
   }
   return res.json();

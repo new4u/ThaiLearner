@@ -11,6 +11,9 @@ import {
   fetchLuangporPairedCatalog,
 } from '../services/offlineAudioStorage';
 import { OFFICIAL_THAI_STREAMS_URL } from '../data/officialChannels';
+import { SOLIDIFIED_YOUTUBE_CATALOG } from '../data/solidifiedYouTubeCatalog';
+import { SOLIDIFIED_AUDIO_CATALOG_2026 } from '../data/solidifiedAudioCatalog2026';
+import { SOLIDIFIED_AUDIO_CATALOG_2025 } from '../data/solidifiedAudioCatalog2025';
 import {
   Headphones,
   Video,
@@ -115,15 +118,19 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
   const [panelTab, setPanelTab] = useState<'catalog' | 'link'>('catalog');
   const [catalogSourceKind, setCatalogSourceKind] = useState<'audio' | 'video'>(mode);
 
-  // 本组件内音频目录兜底状态（当在视频页直接查看音频目录时自动拉取）
+  // 本组件内音频目录兜底状态（默认预载已固化 2026 目录，零延迟无网络依赖）
   const [localAudioYear, setLocalAudioYear] = useState<'2026' | '2025'>('2026');
-  const [localAudioCatalog, setLocalAudioCatalog] = useState<LuangporPairedCatalogResponse | null>(null);
+  const [localAudioCatalog, setLocalAudioCatalog] = useState<LuangporPairedCatalogResponse | null>(
+    () => SOLIDIFIED_AUDIO_CATALOG_2026
+  );
   const [localAudioLoading, setLocalAudioLoading] = useState(false);
   const [localAudioError, setLocalAudioError] = useState<string | null>(null);
   const [audioQuery, setAudioQuery] = useState('');
 
-  // 本组件内 YouTube 双频道目录状态
-  const [ytCatalog, setYtCatalog] = useState<YouTubePairedCatalogResponse | null>(null);
+  // 本组件内 YouTube 双频道目录状态（默认预载已固化 75 场双频道目录，零延迟无网络依赖）
+  const [ytCatalog, setYtCatalog] = useState<YouTubePairedCatalogResponse | null>(
+    () => SOLIDIFIED_YOUTUBE_CATALOG
+  );
   const [ytLoading, setYtLoading] = useState(false);
   const [ytError, setYtError] = useState<string | null>(null);
   const [ytQuery, setYtQuery] = useState('');
@@ -149,8 +156,8 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
     try {
       const data = await fetchLuangporPairedCatalog(year, refresh);
       setLocalAudioCatalog(data);
-    } catch (err: any) {
-      setLocalAudioError(err?.message || '同步官方音频目录失败');
+    } catch {
+      setLocalAudioCatalog(year === '2026' ? SOLIDIFIED_AUDIO_CATALOG_2026 : SOLIDIFIED_AUDIO_CATALOG_2025);
     } finally {
       setLocalAudioLoading(false);
     }
@@ -161,14 +168,26 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
     setYtError(null);
     try {
       const res = await fetch(`/api/luangpor-youtube-catalog${refresh ? '?refresh=1' : ''}`);
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody?.error || `请求失败 (${res.status})`);
+      const contentType = (res.headers.get('content-type') || '').toLowerCase();
+      // 在生产纯静态部署中（如 Netlify/* 兜底），接口会返回 index.html (200 OK text/html)
+      // 若非 JSON，绝不调用 res.json()，直接平滑使用代码库固化目录，彻底绝迹 "JSON document is invalid" 报错
+      if (!res.ok || !contentType.includes('application/json')) {
+        console.info('[Catalog] 运行于纯静态部署环境，无缝启用代码库固化目录');
+        setYtCatalog(SOLIDIFIED_YOUTUBE_CATALOG);
+        setYtError(null);
+        return;
       }
       const data: YouTubePairedCatalogResponse = await res.json();
-      setYtCatalog(data);
-    } catch (err: any) {
-      setYtError(err?.message || '无法拉取 YouTube 官方双频道目录，请稍后重试');
+      if (data && Array.isArray(data.items) && data.items.length > 0) {
+        setYtCatalog(data);
+        setYtError(null);
+      } else {
+        setYtCatalog(SOLIDIFIED_YOUTUBE_CATALOG);
+      }
+    } catch {
+      console.warn('[Catalog] 在线同步受限，直接回退至代码库固化目录');
+      setYtCatalog(SOLIDIFIED_YOUTUBE_CATALOG);
+      setYtError(null);
     } finally {
       setYtLoading(false);
     }
@@ -259,14 +278,37 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
     if (/youtube\.com\/.+/i.test(trimmed)) {
       try {
         const res = await fetch(`/api/youtube-resolve?url=${encodeURIComponent(trimmed)}`);
-        const json = await res.json();
-        if (res.ok && json?.canonicalUrl) {
-          return {
-            url: json.canonicalUrl,
-            note: json.wasLiveAlias ? `已将动态直播入口固定为唯一 ID (${json.videoId})` : undefined,
-          };
+        const contentType = (res.headers.get('content-type') || '').toLowerCase();
+        if (res.ok && contentType.includes('application/json')) {
+          const json = await res.json();
+          if (json?.canonicalUrl) {
+            return {
+              url: json.canonicalUrl,
+              note: json.wasLiveAlias ? `已将动态直播入口固定为唯一 ID (${json.videoId})` : undefined,
+            };
+          }
         }
       } catch {}
+
+      // 静态环境下回退查找本地目录中该频道的最新场次
+      const items = ytCatalog?.items || SOLIDIFIED_YOUTUBE_CATALOG.items;
+      if (/jietuoyuan/i.test(trimmed)) {
+        const latestCn = items.find((i) => i.chinese?.videoId);
+        if (latestCn?.chinese?.url) {
+          return {
+            url: latestCn.chinese.url,
+            note: `已自动匹配解脱园最新场次 (${latestCn.date} · ${latestCn.chinese.videoId})`,
+          };
+        }
+      } else if (/luangpupramote/i.test(trimmed)) {
+        const latestThai = items.find((i) => i.thai?.videoId);
+        if (latestThai?.thai?.url) {
+          return {
+            url: latestThai.thai.url,
+            note: `已自动匹配泰文官方最新场次 (${latestThai.date} · ${latestThai.thai.videoId})`,
+          };
+        }
+      }
     }
     return { url: trimmed };
   };
@@ -325,6 +367,7 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
 
   return (
     <section
+      data-tour-id={mode === 'audio' ? 'tour-ml-audio-player' : 'tour-yt-media-selector'}
       aria-label="选课与音视频源切换"
       className="bg-white rounded-2xl border border-[#e6d3ac]/90 shadow-xs overflow-hidden"
     >
@@ -387,7 +430,6 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
         <div className="flex flex-wrap items-center gap-1.5 shrink-0">
           <button
             type="button"
-            data-tour-id={mode === 'audio' ? 'tour-ml-audio-player' : 'tour-yt-media-selector'}
             onClick={() => {
               setCatalogSourceKind(mode);
               setLinkMediaType(mode);
