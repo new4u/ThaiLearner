@@ -116,7 +116,7 @@ export function tokenizeThaiWithChula(thaiText: string, sentenceZh?: string): Wo
         id: `tok_${wordIndex++}`,
         thai: piece,
         romanization: transliterateThaiSyllableToChulaIPA(piece),
-        chinese: '助词'
+        chinese: '（待校释义）'
       });
       remaining = remaining.slice(piece.length);
     }

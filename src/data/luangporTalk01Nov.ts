@@ -1,5 +1,5 @@
 // 2026年11月01日 隆波帕默尊者开示《听法生起禅定与智慧 (ฟังธรรมให้เกิดสมาธิและปัญญา)》
-// 供养功德衣法会专场法谈 · 官方 543 句全篇高清转译数据集：含朱拉隆功大学标准 Adapted IPA 五声调音标、逐词泰汉对照及精确时间戳
+// 供养功德衣法会专场法谈 · 官方 543 句全篇精校版高清转译数据集：含朱拉隆功大学标准 Adapted IPA 五声调音标、语境化逐词泰汉对照及精确时间戳
 import { SubtitleLine } from '../types';
 
 export const LUANGPOR_NOV_01_TALK_TITLE = "ฟังธรรมให้เกิดสมาธิและปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 1 พ.ย. 2569";
@@ -36,14 +36,14 @@ export const LUANGPOR_NOV_01_KEY_TERMS = [
   },
   {
     "thai": "อริยสัจ 4",
-    "romanization": "ʔà-rí-já-sàt sìi",
+    "romanization": "ʔà-rí-jáʔ-sàt sìi",
     "chinese": "四圣谛 / 因果实相",
     "explanation": "佛教的核心因果法则：造作恶因（无明、渴爱、执取）感招苦果，培育善因（八支圣道）感招灭苦究竟解脱",
     "shortcutKey": "A"
   },
   {
     "thai": "วิมุตติ",
-    "romanization": "wí-mút-tì",
+    "romanization": "wí-mút-tìʔ",
     "chinese": "解脱 / 彻断结缚",
     "explanation": "超越一般世间智慧的心识彻底解脱，于听法、打坐或弘法当下心智凝定刹那断惑，涤除无明残毒证悟道果",
     "shortcutKey": "V"
@@ -72,14 +72,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -104,7 +104,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -118,7 +118,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -130,7 +130,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 19,
     "secondsEnd": 25,
     "thai": "วันนี้โครงสร้างของคนที่มาวัด จะไม่เหมือนปกติ",
-    "romanization": "wan níi kʰrooŋ-sâaŋ kʰɔ̌ɔŋ kʰon tʰîi maa wat càʔ mâj mɯ̌an pà-kà-tì",
+    "romanization": "wan níi kʰrooŋ-sâaŋ kʰɔ̌ɔŋ kʰon tʰîi maa wát càʔ mâj mɯ̌an pà-kà-tì",
     "chinese": "今天来寺庙的人员构成和往常不太一样",
     "words": [
       {
@@ -144,7 +144,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -164,7 +164,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -177,8 +177,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       },
       {
@@ -192,7 +192,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -218,14 +218,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 25,
     "secondsEnd": 27,
     "thai": "คนที่มาวัดวันอื่นๆ",
-    "romanization": "kʰon tʰîi maa wat wan ʔɯ̀ɯn ʔɯ̀ɯn",
+    "romanization": "kʰon tʰîi maa wát wan ʔɯ̀ɯn-ʔɯ̀ɯn",
     "chinese": "其他日子来寺庙的人",
     "words": [
       {
         "id": "tok_0",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -238,8 +238,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       },
       {
@@ -252,8 +252,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "อื่นๆ",
-        "romanization": "ʔɯ̀ɯn ʔɯ̀ɯn",
-        "chinese": "余外诸般(重复)",
+        "romanization": "ʔɯ̀ɯn-ʔɯ̀ɯn",
+        "chinese": "其他的",
         "isCore": false
       }
     ]
@@ -272,7 +272,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
@@ -293,14 +293,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -340,14 +340,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -368,28 +368,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -422,7 +422,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -436,7 +436,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -457,7 +457,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了(语气词)",
         "isCore": false
       }
     ]
@@ -469,14 +469,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 44,
     "secondsEnd": 50,
     "thai": "ที่จริงมาวัดมาฟังธรรมให้ตั้งอกตั้งใจฟัง",
-    "romanization": "tʰîi ciŋ maa wat maa faŋ tʰam hâj tâŋ-ʔòk tâŋ-caj faŋ",
+    "romanization": "tʰîi ciŋ maa wát maa faŋ tʰam hâj tâŋ-ʔòk tâŋ-caj faŋ",
     "chinese": "但实际上来寺庙听法，应该专心致志地听",
     "words": [
       {
         "id": "tok_0",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -490,28 +490,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -525,7 +525,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -539,7 +539,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -558,7 +558,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -598,7 +598,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -619,7 +619,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -659,14 +659,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -721,7 +721,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -761,7 +761,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -776,7 +776,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -802,14 +802,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -830,21 +830,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -870,7 +870,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -903,7 +903,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -917,7 +917,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -943,14 +943,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -1003,7 +1003,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -1017,14 +1017,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -1057,7 +1057,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
@@ -1071,7 +1071,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -1085,21 +1085,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -1118,7 +1118,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "เสีย",
         "romanization": "sǐa",
-        "chinese": "花费/失掉",
+        "chinese": "掉/……吧(语气词)",
         "isCore": false
       }
     ]
@@ -1175,7 +1175,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 95,
     "secondsEnd": 102,
     "thai": "เดี๋ยวก็มีสัญญาณเรียกมีข่าวมีอะไรเข้ามา",
-    "romanization": "dǐaw kɔ̂ɔ mii sǎn-jaan-rîak mii kʰàao mii ʔà-raj kʰâw maa",
+    "romanization": "dǐaw kɔ̂ɔ mii sǎn-jaan-rîak mii kʰàaw mii ʔà-raj kʰâw maa",
     "chinese": "一会儿来电话铃声、一会儿有消息新闻弹出来",
     "words": [
       {
@@ -1189,7 +1189,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -1215,7 +1215,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "ข่าว",
-        "romanization": "kʰàao",
+        "romanization": "kʰàaw",
         "chinese": "新闻/消息/推送"
       },
       {
@@ -1236,14 +1236,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -1269,21 +1269,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -1297,28 +1297,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -1352,21 +1352,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -1417,21 +1417,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "พา",
         "romanization": "pʰaa",
-        "chinese": "助词",
+        "chinese": "带着/连带",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -1445,7 +1445,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -1458,14 +1458,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       }
     ]
@@ -1531,14 +1531,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -1550,7 +1550,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 121,
     "secondsEnd": 125,
     "thai": "อย่างเราอยู่ในวัด ท่านไม่ให้เสียงดัง",
-    "romanization": "jàaŋ raw jùu naj wat tʰâan mâj hâj sǐaŋ daŋ",
+    "romanization": "jàaŋ raw jùu naj wát tʰâan mâj hâj sǐaŋ daŋ",
     "chinese": "比如在寺庙里，师父们绝不允许大声吵闹",
     "words": [
       {
@@ -1571,7 +1571,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
@@ -1584,29 +1584,29 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -1638,49 +1638,49 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_3",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "方当其冲",
+        "chinese": "正在",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
@@ -1695,7 +1695,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       }
     ]
@@ -1722,7 +1722,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -1736,7 +1736,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       }
     ]
@@ -1762,7 +1762,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -1796,7 +1796,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
@@ -1835,14 +1835,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -1869,7 +1869,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       }
     ]
@@ -1896,7 +1896,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -1910,7 +1910,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
@@ -1952,7 +1952,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       }
     ]
@@ -1985,14 +1985,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -2033,21 +2033,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_11",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -2073,21 +2073,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -2109,7 +2109,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -2124,7 +2124,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -2143,7 +2143,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 155,
     "secondsEnd": 160,
     "thai": "ฉะนั้นเวลามาฟังธรรมที่วัด",
-    "romanization": "cʰàʔ-nán weː-laa maa faŋ tʰam tʰîi wat",
+    "romanization": "cʰàʔ-nán weː-laa maa faŋ tʰam tʰîi wát",
     "chinese": "因此，来到寺庙听法的时候",
     "words": [
       {
@@ -2164,14 +2164,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -2185,14 +2185,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       }
     ]
@@ -2211,7 +2211,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -2232,7 +2232,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
@@ -2264,7 +2264,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -2278,7 +2278,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -2319,13 +2319,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 168,
     "secondsEnd": 171,
     "thai": "สำรวมกาย",
-    "romanization": "sǎm-ruam-kaai",
+    "romanization": "sǎm-ruam-kaaj",
     "chinese": "收摄身根（身仪防守）",
     "words": [
       {
         "id": "tok_0",
         "thai": "สำรวมกาย",
-        "romanization": "sǎm-ruam-kaai",
+        "romanization": "sǎm-ruam-kaaj",
         "chinese": "收摄身门/身律仪",
         "isCore": true
       }
@@ -2397,28 +2397,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走路/行走",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走路/行走",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -2470,7 +2470,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -2484,7 +2484,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
@@ -2498,14 +2498,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -2519,7 +2519,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -2533,7 +2533,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       }
     ]
@@ -2558,7 +2558,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
@@ -2603,7 +2603,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -2638,7 +2638,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -2652,7 +2652,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -2678,14 +2678,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -2699,7 +2699,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -2713,14 +2713,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -2732,7 +2732,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 195,
     "secondsEnd": 199,
     "thai": "อย่างลุกขึ้นถ่ายรูปอย่างนี้ก็เสีย",
-    "romanization": "jàaŋ luk kʰɯ̂n tʰàai rûup jàaŋ níi kɔ̂ɔ sǐa",
+    "romanization": "jàaŋ lúk kʰɯ̂n tʰàaj-rûup jàaŋ níi kɔ̂ɔ sǐa",
     "chinese": "比如中途站起来到处拍照，这样就很不妥",
     "words": [
       {
@@ -2745,57 +2745,50 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "ลุก",
-        "romanization": "luk",
-        "chinese": "助词",
+        "romanization": "lúk",
+        "chinese": "起身/站起",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ถ่าย",
-        "romanization": "tʰàai",
-        "chinese": "排泄/换移/拍摄"
+        "thai": "ถ่ายรูป",
+        "romanization": "tʰàaj-rûup",
+        "chinese": "拍照",
+        "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "รูป",
-        "romanization": "rûup",
-        "chinese": "色蕴/色相",
-        "isCore": true,
-        "rootBreakdown": "巴利语 Rūpa"
-      },
-      {
-        "id": "tok_5",
         "thai": "อย่าง",
         "romanization": "jàaŋ",
         "chinese": "这般/样式",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
+        "isCore": false
+      },
+      {
+        "id": "tok_6",
+        "thai": "ก็",
+        "romanization": "kɔ̂ɔ",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "ก็",
-        "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
-        "isCore": false
-      },
-      {
-        "id": "tok_8",
         "thai": "เสีย",
         "romanization": "sǐa",
-        "chinese": "花费/失掉",
+        "chinese": "坏事/不妥",
         "isCore": false
       }
     ]
@@ -2821,7 +2814,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -2846,14 +2839,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -2888,7 +2881,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -2921,7 +2914,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -2955,7 +2948,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -2969,7 +2962,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -2983,7 +2976,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -3003,91 +2996,84 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 220,
     "secondsEnd": 227,
     "thai": "ได้ยิน ได้ฟัง สิ่งที่ไม่เคยรู้ไม่เคยเห็น",
-    "romanization": "dâaj jin dâaj faŋ sìŋ tʰîi mâj kʰəəj rúu mâj kʰəəj hěn",
+    "romanization": "dâaj-jin dâaj faŋ sìŋ tʰîi mâj kʰəəj rúu mâj kʰəəj hěn",
     "chinese": "能听闻到未曾听闻见识过的真理法义",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ได้",
-        "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "thai": "ได้ยิน",
+        "romanization": "dâaj-jin",
+        "chinese": "听见/听到",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ยิน",
-        "romanization": "jin",
-        "chinese": "助词",
+        "thai": "ได้",
+        "romanization": "dâaj",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ได้",
-        "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "thai": "ฟัง",
+        "romanization": "faŋ",
+        "chinese": "听",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ฟัง",
-        "romanization": "faŋ",
-        "chinese": "听/闻",
-        "isCore": false
-      },
-      {
-        "id": "tok_4",
         "thai": "สิ่ง",
         "romanization": "sìŋ",
         "chinese": "事物/所对",
         "isCore": true
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
+        "isCore": false
+      },
+      {
+        "id": "tok_5",
+        "thai": "ไม่",
+        "romanization": "mâj",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_6",
-        "thai": "ไม่",
-        "romanization": "mâj",
-        "chinese": "非/不",
+        "thai": "เคย",
+        "romanization": "kʰəəj",
+        "chinese": "曾经/向来",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "เคย",
-        "romanization": "kʰəəj",
-        "chinese": "曾经/向来",
+        "thai": "รู้",
+        "romanization": "rúu",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_8",
-        "thai": "รู้",
-        "romanization": "rúu",
-        "chinese": "觉了明知",
+        "thai": "ไม่",
+        "romanization": "mâj",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_9",
-        "thai": "ไม่",
-        "romanization": "mâj",
-        "chinese": "非/不",
-        "isCore": false
-      },
-      {
-        "id": "tok_10",
         "thai": "เคย",
         "romanization": "kʰəəj",
         "chinese": "曾经/向来",
         "isCore": false
       },
       {
-        "id": "tok_11",
+        "id": "tok_10",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       }
     ]
@@ -3106,14 +3092,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -3180,7 +3166,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -3221,7 +3207,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 237,
     "secondsEnd": 242,
     "thai": "ถ้าเคยฝึกภาวนามานานๆ",
-    "romanization": "tʰâa kʰəəj fɯ̀k pʰaa-wáʔ-naa maa naan ๆ",
+    "romanization": "tʰâa kʰəəj fɯ̀k pʰaa-wáʔ-naa maa naan-naan",
     "chinese": "如果长期修行训练积累下来",
     "words": [
       {
@@ -3256,21 +3242,15 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
-        "thai": "นาน",
-        "romanization": "naan",
-        "chinese": "久/长久",
+        "thai": "นานๆ",
+        "romanization": "naan-naan",
+        "chinese": "长久/长期",
         "isCore": false
-      },
-      {
-        "id": "tok_6",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
       }
     ]
   },
@@ -3318,14 +3298,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "正确/如理",
         "isCore": true
       },
       {
@@ -3373,7 +3353,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "开展/运作",
         "isCore": false
       },
       {
@@ -3421,7 +3401,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -3442,7 +3422,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -3456,7 +3436,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -3469,14 +3449,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
         "id": "tok_11",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -3516,7 +3496,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -3556,7 +3536,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -3584,7 +3564,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -3616,7 +3596,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       }
     ]
@@ -3635,7 +3615,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -3665,7 +3645,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -3679,14 +3659,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -3699,14 +3679,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -3725,7 +3705,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -3739,7 +3719,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -3753,14 +3733,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -3773,14 +3753,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -3799,7 +3779,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -3813,7 +3793,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -3827,7 +3807,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -3841,7 +3821,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -3881,7 +3861,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -3895,7 +3875,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -3908,14 +3888,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ส่วน",
         "romanization": "sùan",
-        "chinese": "条块支节",
+        "chinese": "部分/方面",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -3941,7 +3921,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -3955,7 +3935,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -4002,7 +3982,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -4023,7 +4003,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了(语气词)",
         "isCore": false
       }
     ]
@@ -4057,7 +4037,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       }
     ]
@@ -4097,7 +4077,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -4117,7 +4097,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       }
     ]
@@ -4159,21 +4139,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -4213,7 +4193,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -4239,28 +4219,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "方当其冲",
+        "chinese": "正在",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       }
     ]
@@ -4286,7 +4266,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -4300,28 +4280,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "被……",
         "isCore": true
       },
       {
         "id": "tok_4",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "被……",
         "isCore": true
       },
       {
         "id": "tok_6",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -4347,7 +4327,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -4361,7 +4341,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -4375,7 +4355,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -4429,14 +4409,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ลง",
         "romanization": "loŋ",
-        "chinese": "沉降收敛",
+        "chinese": "下来/降落",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -4483,14 +4463,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -4505,7 +4485,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -4546,35 +4526,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -4589,7 +4569,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -4629,7 +4609,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -4643,7 +4623,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -4672,14 +4652,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -4712,7 +4692,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "开展/运作",
         "isCore": false
       },
       {
@@ -4727,7 +4707,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -4768,21 +4748,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
@@ -4815,14 +4795,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -4848,14 +4828,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -4888,7 +4868,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -4918,14 +4898,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -4958,7 +4938,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -4972,14 +4952,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -5012,7 +4992,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -5026,7 +5006,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -5040,21 +5020,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -5087,7 +5067,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -5101,8 +5081,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "方当其冲",
-        "isCore": false
+        "chinese": "力量/定慧力",
+        "isCore": true
       },
       {
         "id": "tok_3",
@@ -5122,14 +5102,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
@@ -5150,7 +5130,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -5198,21 +5178,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ลง",
         "romanization": "loŋ",
-        "chinese": "沉降收敛",
+        "chinese": "下来/降落",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -5253,7 +5233,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -5274,14 +5254,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -5328,14 +5308,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -5367,7 +5347,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -5381,7 +5361,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -5395,7 +5375,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -5428,7 +5408,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -5449,7 +5429,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -5469,7 +5449,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "แต่ง",
         "romanization": "tɛ̀ŋ",
-        "chinese": "造作/修饰",
+        "chinese": "打扮/修饰",
         "isCore": false
       },
       {
@@ -5530,7 +5510,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -5597,7 +5577,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
@@ -5664,7 +5644,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -5677,7 +5657,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -5709,7 +5689,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 400,
     "secondsEnd": 407,
     "thai": "เดี๋ยวก็ศพปลา ศพกุ้ง ศพเป็ดไก่ ศพหมู",
-    "romanization": "dǐaw kɔ̂ɔ sòp plaa sòp kûŋ sòp pèt kài sòp mǔu",
+    "romanization": "dǐaw kɔ̂ɔ sòp plaa sòp kûŋ sòp pèt kàj sòp mǔu",
     "chinese": "一会儿是鱼的尸体、虾的尸体、鸭鸡的尸体、猪肉的尸体",
     "words": [
       {
@@ -5723,7 +5703,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -5765,7 +5745,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_8",
         "thai": "ไก่",
-        "romanization": "kài",
+        "romanization": "kàj",
         "chinese": "鸡"
       },
       {
@@ -5789,14 +5769,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 407,
     "secondsEnd": 410,
     "thai": "เอาศพนี้ใส่เข้าไปเยอะแยะเลย",
-    "romanization": "ʔaw sòp níi sàj kʰâo-pai jə́ʔ jɛ́ʔ ləəj",
+    "romanization": "ʔaw sòp níi sàj kʰâw-paj jə́ʔ jɛ́ʔ ləəj",
     "chinese": "把大量的各种尸体通通塞了进去",
     "words": [
       {
         "id": "tok_0",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -5809,7 +5789,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -5822,7 +5802,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       },
       {
@@ -5842,7 +5822,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -5861,14 +5841,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
@@ -5889,7 +5869,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -5920,7 +5900,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -5969,7 +5949,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -6023,14 +6003,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -6044,14 +6024,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -6118,7 +6098,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -6151,7 +6131,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -6165,21 +6145,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -6198,7 +6178,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 430,
     "secondsEnd": 431,
     "thai": "แต่ก่อนเราเป็นหนุ่มสาว",
-    "romanization": "tɛ̀ɛ kɔ̀ɔn raw pen nùm-sǎao",
+    "romanization": "tɛ̀ɛ kɔ̀ɔn raw pen nùm-sǎaw",
     "chinese": "以前我们曾是少男少女、青春年少",
     "words": [
       {
@@ -6226,13 +6206,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "หนุ่มสาว",
-        "romanization": "nùm-sǎao",
+        "romanization": "nùm-sǎaw",
         "chinese": "青年男女/青春韶华"
       }
     ]
@@ -6244,8 +6224,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 431,
     "secondsEnd": 435,
     "thai": "ตอนนี้ไม่หนุ่มไม่สาว",
-    "romanization": "tɔɔn níi mâj nùm mâj sǎao",
-    "chinese": "现在已不再年轻少艾",
+    "romanization": "tɔɔn níi mâj nùm mâj sǎaw",
+    "chinese": "现在已不再年轻了",
     "words": [
       {
         "id": "tok_0",
@@ -6258,14 +6238,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -6278,13 +6258,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "สาว",
-        "romanization": "sǎao",
+        "romanization": "sǎaw",
         "chinese": "少女/女青"
       }
     ]
@@ -6296,13 +6276,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 435,
     "secondsEnd": 440,
     "thai": "ชีวิตเราเปลี่ยนแปลงไปเรื่อยๆ เป็นลำดับ",
-    "romanization": "chii-wít raw plìan-plɛɛŋ paj rɯ̂ai ๆ pen lam-dàp",
+    "romanization": "cʰii-wít raw plìan-plɛɛŋ paj rɯ̂aj-rɯ̂aj pen lam-dàp",
     "chinese": "我们的生命在一环扣一环地持续变迁",
     "words": [
       {
         "id": "tok_0",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
+        "romanization": "cʰii-wít",
         "chinese": "生机/生命",
         "isCore": false
       },
@@ -6324,30 +6304,24 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       },
       {
         "id": "tok_5",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_6",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "ลำดับ",
         "romanization": "lam-dàp",
         "chinese": "次第/阶次/循序"
@@ -6396,7 +6370,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -6430,7 +6404,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -6478,7 +6452,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -6512,7 +6486,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -6526,7 +6500,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -6540,7 +6514,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -6554,28 +6528,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -6594,14 +6568,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 453,
     "secondsEnd": 457,
     "thai": "เมื่อก่อนแข็งแรงตอนนี้ไม่แข็งแรงแล้ว",
-    "romanization": "mɯ̂a kɔ̀ɔn kʰɛ̌ŋ rɛɛŋ tɔɔn níi mâj kʰɛ̌ŋ rɛɛŋ lɛ́ɛw",
+    "romanization": "mɯ̂a kɔ̀ɔn kʰɛ̌ŋ-rɛɛŋ tɔɔn níi mâj kʰɛ̌ŋ-rɛɛŋ lɛ́ɛw",
     "chinese": "以前身强力壮，现在已经不再健壮有力了",
     "words": [
       {
         "id": "tok_0",
         "thai": "เมื่อ",
         "romanization": "mɯ̂a",
-        "chinese": "及至……时",
+        "chinese": "当……时/以前",
         "isCore": false
       },
       {
@@ -6613,58 +6587,44 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_2",
-        "thai": "แข็ง",
-        "romanization": "kʰɛ̌ŋ",
-        "chinese": "僵硬",
-        "isCore": true
-      },
-      {
-        "id": "tok_3",
-        "thai": "แรง",
-        "romanization": "rɛɛŋ",
-        "chinese": "力量/强烈",
+        "thai": "แข็งแรง",
+        "romanization": "kʰɛ̌ŋ-rɛɛŋ",
+        "chinese": "强壮/健壮",
         "isCore": false
       },
       {
-        "id": "tok_4",
+        "id": "tok_3",
         "thai": "ตอน",
         "romanization": "tɔɔn",
         "chinese": "时际/当此",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
+        "isCore": false
+      },
+      {
+        "id": "tok_5",
+        "thai": "ไม่",
+        "romanization": "mâj",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_6",
-        "thai": "ไม่",
-        "romanization": "mâj",
-        "chinese": "非/不",
+        "thai": "แข็งแรง",
+        "romanization": "kʰɛ̌ŋ-rɛɛŋ",
+        "chinese": "强壮/健壮",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "แข็ง",
-        "romanization": "kʰɛ̌ŋ",
-        "chinese": "僵硬",
-        "isCore": true
-      },
-      {
-        "id": "tok_8",
-        "thai": "แรง",
-        "romanization": "rɛɛŋ",
-        "chinese": "力量/强烈",
-        "isCore": false
-      },
-      {
-        "id": "tok_9",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -6676,14 +6636,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 457,
     "secondsEnd": 459,
     "thai": "เมื่อก่อนผมดำ",
-    "romanization": "mɯ̂a kɔ̀ɔn pʰǒm da",
+    "romanization": "mɯ̂a kɔ̀ɔn pʰǒm dam",
     "chinese": "以前满头青丝黑发",
     "words": [
       {
         "id": "tok_0",
         "thai": "เมื่อ",
         "romanization": "mɯ̂a",
-        "chinese": "及至……时",
+        "chinese": "当……时/以前",
         "isCore": false
       },
       {
@@ -6697,14 +6657,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ผม",
         "romanization": "pʰǒm",
-        "chinese": "贫僧/弟子",
+        "chinese": "头发",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ดำ",
-        "romanization": "da",
-        "chinese": "助词",
+        "romanization": "dam",
+        "chinese": "黑/乌黑",
         "isCore": false
       }
     ]
@@ -6716,8 +6676,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 459,
     "secondsEnd": 462,
     "thai": "เดี๋ยวนี้ผมชักจะขาวแล้ว",
-    "romanization": "dǐaw níi pʰǒm cʰak càʔ kʰǎao lɛ́ɛw",
-    "chinese": "如今头发渐渐变得斑白苍苍",
+    "romanization": "dǐaw níi pʰǒm cʰák càʔ kʰǎaw lɛ́ɛw",
+    "chinese": "如今头发也渐渐变白了",
     "words": [
       {
         "id": "tok_0",
@@ -6730,21 +6690,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ผม",
         "romanization": "pʰǒm",
-        "chinese": "贫僧/弟子",
+        "chinese": "头发",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ชัก",
-        "romanization": "cʰak",
-        "chinese": "助词",
+        "romanization": "cʰák",
+        "chinese": "渐渐/开始趋向",
         "isCore": false
       },
       {
@@ -6757,14 +6717,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "ขาว",
-        "romanization": "kʰǎao",
+        "romanization": "kʰǎaw",
         "chinese": "白/花白"
       },
       {
         "id": "tok_6",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -6790,14 +6750,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
@@ -6811,7 +6771,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -6825,7 +6785,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -6851,7 +6811,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -6887,7 +6847,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -6913,14 +6873,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -6934,7 +6894,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -6948,7 +6908,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -6988,14 +6948,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       }
     ]
@@ -7007,28 +6967,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 475,
     "secondsEnd": 478,
     "thai": "นั่งได้ไม่นานก็ต้องลุกขึ้น",
-    "romanization": "nâŋ dâaj mâj naan kɔ̂ɔ tɔ̂ŋ luk kʰɯ̂n",
+    "romanization": "nâŋ dâaj mâj naan kɔ̂ɔ tɔ̂ŋ lúk kʰɯ̂n",
     "chinese": "坐不了多久就不得不站起身来",
     "words": [
       {
         "id": "tok_0",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -7042,7 +7002,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -7055,15 +7015,15 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "ลุก",
-        "romanization": "luk",
-        "chinese": "助词",
+        "romanization": "lúk",
+        "chinese": "起身/站起",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -7075,21 +7035,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 478,
     "secondsEnd": 482,
     "thai": "ลุกขึ้นยืนนานก็ไม่ได้มันเมื่อย",
-    "romanization": "luk kʰɯ̂n jɯɯn-naan kɔ̂ɔ mâj dâaj man mɯ̂ai",
+    "romanization": "lúk kʰɯ̂n jɯɯn-naan kɔ̂ɔ mâj dâaj man mɯ̂aj",
     "chinese": "站久了也不行，身心会酸痛疲倦",
     "words": [
       {
         "id": "tok_0",
         "thai": "ลุก",
-        "romanization": "luk",
-        "chinese": "助词",
+        "romanization": "lúk",
+        "chinese": "起身/站起",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
@@ -7103,21 +7063,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -7130,7 +7090,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_7",
         "thai": "เมื่อย",
-        "romanization": "mɯ̂ai",
+        "romanization": "mɯ̂aj",
         "chinese": "酸痛困乏"
       }
     ]
@@ -7142,21 +7102,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 482,
     "secondsEnd": 485,
     "thai": "ไปเดินหรือเมื่อยมากก็ลงไปนอน",
-    "romanization": "paj dəən rɯ̌ɯ mɯ̂ai mâak kɔ̂ɔ loŋ paj nɔɔn",
+    "romanization": "paj dəən rɯ̌ɯ mɯ̂aj mâak kɔ̂ɔ loŋ paj nɔɔn",
     "chinese": "便去走动，或者疲累不堪时就躺下休息",
     "words": [
       {
         "id": "tok_0",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走路/行走",
         "isCore": false
       },
       {
@@ -7169,42 +7129,42 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เมื่อย",
-        "romanization": "mɯ̂ai",
+        "romanization": "mɯ̂aj",
         "chinese": "酸痛困乏"
       },
       {
         "id": "tok_4",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ลง",
         "romanization": "loŋ",
-        "chinese": "沉降收敛",
+        "chinese": "下来/降落",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       }
     ]
@@ -7223,14 +7183,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
@@ -7244,7 +7204,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -7271,14 +7231,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 488,
     "secondsEnd": 491,
     "thai": "ก็ต้องลุกขึ้นมา",
-    "romanization": "kɔ̂ɔ tɔ̂ŋ luk kʰɯ̂n maa",
+    "romanization": "kɔ̂ɔ tɔ̂ŋ lúk kʰɯ̂n maa",
     "chinese": "又必须再次坐起身来",
     "words": [
       {
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -7291,22 +7251,22 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "ลุก",
-        "romanization": "luk",
-        "chinese": "助词",
+        "romanization": "lúk",
+        "chinese": "起身/站起",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -7318,27 +7278,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 491,
     "secondsEnd": 494,
     "thai": "คนป่วยมากๆ ลุกเองไม่ได้",
-    "romanization": "kʰon-pùai mâak mâak luk ʔeeŋ mâj dâaj",
+    "romanization": "kʰon-pùaj mâak-mâak lúk ʔeeŋ mâj dâaj",
     "chinese": "那些病情严重、自己无法起身的病患",
     "words": [
       {
         "id": "tok_0",
         "thai": "คนป่วย",
-        "romanization": "kʰon-pùai",
+        "romanization": "kʰon-pùaj",
         "chinese": "病人/卧病者"
       },
       {
         "id": "tok_1",
         "thai": "มากๆ",
-        "romanization": "mâak mâak",
-        "chinese": "非常多/极甚",
+        "romanization": "mâak-mâak",
+        "chinese": "非常/很多",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ลุก",
-        "romanization": "luk",
-        "chinese": "助词",
+        "romanization": "lúk",
+        "chinese": "起身/站起",
         "isCore": false
       },
       {
@@ -7352,14 +7312,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -7384,7 +7344,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       }
     ]
@@ -7416,14 +7376,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -7437,7 +7397,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -7465,7 +7425,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -7479,7 +7439,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -7536,8 +7496,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 506,
     "secondsEnd": 510,
     "thai": "พลิกนี้คนป่วยปู่ย่าตายาย",
-    "romanization": "pʰlík níi kʰon-pùai pùu-jâa-taa-jaai",
-    "chinese": "翻动年迈患病的祖父母外祖父母",
+    "romanization": "pʰlík níi kʰon-pùaj pùu-jâa-taa-jaaj",
+    "chinese": "翻动患病的爷爷奶奶、外公外婆时",
     "words": [
       {
         "id": "tok_0",
@@ -7550,19 +7510,19 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "คนป่วย",
-        "romanization": "kʰon-pùai",
+        "romanization": "kʰon-pùaj",
         "chinese": "病人/卧病者"
       },
       {
         "id": "tok_3",
         "thai": "ปู่ย่าตายาย",
-        "romanization": "pùu-jâa-taa-jaai",
+        "romanization": "pùu-jâa-taa-jaaj",
         "chinese": "祖父母外祖父母/先辈长者"
       }
     ]
@@ -7574,14 +7534,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 510,
     "secondsEnd": 516,
     "thai": "ถูกจับพลิกไม่ถูกจังหวะกระดูกหักเสียอีก",
-    "romanization": "tʰùuk càp pʰlík mâj tʰùuk caŋ-wàʔ krà-dùuk hàk sǐa ʔìik",
+    "romanization": "tʰùuk càp pʰlík mâj tʰùuk caŋ-wàʔ krà-dùuk hàk sǐa-ʔìik",
     "chinese": "翻动的节奏手势不对，甚至还会造成骨折",
     "words": [
       {
         "id": "tok_0",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "被……",
         "isCore": true
       },
       {
@@ -7602,14 +7562,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "合乎/对",
         "isCore": true
       },
       {
@@ -7632,16 +7592,9 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_8",
-        "thai": "เสีย",
-        "romanization": "sǐa",
-        "chinese": "花费/失掉",
-        "isCore": false
-      },
-      {
-        "id": "tok_9",
-        "thai": "อีก",
-        "romanization": "ʔìik",
-        "chinese": "再度/且",
+        "thai": "เสียอีก",
+        "romanization": "sǐa-ʔìik",
+        "chinese": "反而/甚至还",
         "isCore": false
       }
     ]
@@ -7681,7 +7634,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -7703,7 +7656,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -7715,7 +7668,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 519,
     "secondsEnd": 523,
     "thai": "ตอนยังหนุ่มยังสาวเรานึกว่าไม่ทุกข์",
-    "romanization": "tɔɔn jaŋ nùm jaŋ sǎao raw nɯ́k wâa mâj tʰúk",
+    "romanization": "tɔɔn jaŋ nùm jaŋ sǎaw raw nɯ́k wâa mâj tʰúk",
     "chinese": "年少轻狂时我们以为身体不是苦",
     "words": [
       {
@@ -7748,7 +7701,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "สาว",
-        "romanization": "sǎao",
+        "romanization": "sǎaw",
         "chinese": "少女/女青"
       },
       {
@@ -7769,14 +7722,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -7872,7 +7825,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -7908,14 +7861,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ล่ะ",
         "romanization": "lâʔ",
-        "chinese": "了/呢(语气词)",
+        "chinese": "呢/呀(语气词)",
         "isCore": false
       }
     ]
@@ -7934,7 +7887,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
@@ -7956,14 +7909,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ละ",
         "romanization": "láʔ",
-        "chinese": "断舍涤除",
+        "chinese": "呢(语气词)",
         "isCore": false
       },
       {
@@ -7977,7 +7930,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -7996,7 +7949,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
@@ -8017,7 +7970,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8058,7 +8011,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8085,7 +8038,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走路/行走",
         "isCore": false
       },
       {
@@ -8106,7 +8059,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8133,7 +8086,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       },
       {
@@ -8154,7 +8107,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8188,14 +8141,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -8216,7 +8169,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -8249,7 +8202,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -8282,7 +8235,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "สัก",
         "romanization": "sàk",
-        "chinese": "สักหนึ่ง：随便某一个",
+        "chinese": "哪怕(一点)/任何",
         "isCore": false
       },
       {
@@ -8302,7 +8255,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8317,7 +8270,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -8398,7 +8351,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8425,7 +8378,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8473,7 +8426,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -8523,7 +8476,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -8535,31 +8488,25 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 557,
     "secondsEnd": 560,
     "thai": "อยู่ทุกๆ อิริยาบถ",
-    "romanization": "jùu tʰúk ๆ ʔì-rí-jaa-bòt",
+    "romanization": "jùu tʰúk-tʰúk ʔì-rí-jaa-bòt",
     "chinese": "存在于每一个行住坐卧的姿势动作中",
     "words": [
       {
         "id": "tok_0",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ทุก",
-        "romanization": "tʰúk",
-        "chinese": "每/一切",
+        "thai": "ทุกๆ",
+        "romanization": "tʰúk-tʰúk",
+        "chinese": "每一个",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_3",
         "thai": "อิริยาบถ",
         "romanization": "ʔì-rí-jaa-bòt",
         "chinese": "威仪/身姿",
@@ -8574,33 +8521,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 560,
     "secondsEnd": 564,
     "thai": "อยู่ทุกๆ ลมหายใจเข้าออก",
-    "romanization": "jùu tʰúk ๆ lom-hǎai-cai-kʰâo-ʔɔ̀ɔk",
+    "romanization": "jùu tʰúk-tʰúk lom-hǎaj-caj-kʰâw-ʔɔ̀ɔk",
     "chinese": "存在于每一次的一呼一吸之中",
     "words": [
       {
         "id": "tok_0",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ทุก",
-        "romanization": "tʰúk",
-        "chinese": "每/一切",
+        "thai": "ทุกๆ",
+        "romanization": "tʰúk-tʰúk",
+        "chinese": "每一个",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_3",
         "thai": "ลมหายใจเข้าออก",
-        "romanization": "lom-hǎai-cai-kʰâo-ʔɔ̀ɔk",
+        "romanization": "lom-hǎaj-caj-kʰâw-ʔɔ̀ɔk",
         "chinese": "入出息/呼吸气息",
         "isCore": true,
         "rootBreakdown": "巴利语 Ānāpāna"
@@ -8658,7 +8599,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -8679,14 +8620,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -8720,7 +8661,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -8734,7 +8675,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -8748,7 +8689,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -8809,7 +8750,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -8823,7 +8764,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -8856,21 +8797,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ถูก",
         "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "chinese": "被……",
         "isCore": true
       },
       {
         "id": "tok_3",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -8899,7 +8840,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
@@ -8939,14 +8880,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -8967,7 +8908,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -8988,7 +8929,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -9021,14 +8962,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -9076,14 +9017,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -9123,14 +9064,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -9150,7 +9091,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -9171,7 +9112,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -9197,14 +9138,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -9238,7 +9179,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -9276,7 +9217,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -9295,7 +9236,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       },
       {
@@ -9381,7 +9322,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -9408,7 +9349,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "สั่ง",
         "romanization": "sàŋ",
-        "chinese": "命令/嘱咐",
+        "chinese": "命令/主宰",
         "isCore": false
       },
       {
@@ -9422,14 +9363,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -9441,14 +9382,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 608,
     "secondsEnd": 611,
     "thai": "แล้วเรามีสติดีๆ เราจะเห็นเลย",
-    "romanization": "lɛ́ɛw raw mii sà-tì dii ๆ raw càʔ hěn ləəj",
+    "romanization": "lɛ́ɛw raw mii sà-tì dii-dii raw càʔ hěn ləəj",
     "chinese": "当我们具足良好的正念，就能亲眼照见：",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -9475,43 +9416,37 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_4",
-        "thai": "ดี",
-        "romanization": "dii",
-        "chinese": "良善美好",
+        "thai": "ดีๆ",
+        "romanization": "dii-dii",
+        "chinese": "好好地/好的",
         "isCore": false
       },
       {
         "id": "tok_5",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_6",
         "thai": "เรา",
         "romanization": "raw",
         "chinese": "我们",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "จะ",
         "romanization": "càʔ",
         "chinese": "将要/会",
         "isCore": false
       },
       {
-        "id": "tok_8",
+        "id": "tok_7",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -9537,7 +9472,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -9564,7 +9499,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -9583,7 +9518,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 617,
     "secondsEnd": 621,
     "thai": "หรือเหมือนถุงใบหนึ่ง",
-    "romanization": "rɯ̌ɯ mɯ̌an tʰǔŋ bai nɯ̀ŋ",
+    "romanization": "rɯ̌ɯ mɯ̌an tʰǔŋ baj nɯ̀ŋ",
     "chinese": "或者犹如一只盛物的袋子",
     "words": [
       {
@@ -9609,7 +9544,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "ใบ",
-        "romanization": "bai",
+        "romanization": "baj",
         "chinese": "只/个/张(容器量词)"
       },
       {
@@ -9628,7 +9563,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 621,
     "secondsEnd": 626,
     "thai": "เราใส่อาหารเข้าไป ใส่น้ำเข้าไป ใส่อากาศเข้าไป",
-    "romanization": "raw sàj ʔaa-hǎan kʰâo-pai sàj nám kʰâo-pai sàj ʔaa-kàat kʰâo-pai",
+    "romanization": "raw sàj ʔaa-hǎan kʰâw-paj sàj nám kʰâw-paj sàj ʔaa-kàat kʰâw-paj",
     "chinese": "我们往里装入食物、装入水、装入空气",
     "words": [
       {
@@ -9656,7 +9591,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       },
       {
@@ -9676,7 +9611,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       },
       {
@@ -9696,7 +9631,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_9",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       }
     ]
@@ -9708,14 +9643,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 626,
     "secondsEnd": 629,
     "thai": "แล้วเดี๋ยวมันก็ต้องขับถ่ายออก",
-    "romanization": "lɛ́ɛw dǐaw man kɔ̂ɔ tɔ̂ŋ kʰàp tʰàai ʔɔ̀ɔk",
-    "chinese": "紧接着又必须排泄排泄出来",
+    "romanization": "lɛ́ɛw dǐaw man kɔ̂ɔ tɔ̂ŋ kʰàp-tʰàaj ʔɔ̀ɔk",
+    "chinese": "紧接着又必须排泄出来",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -9736,7 +9671,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -9748,21 +9683,16 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_5",
-        "thai": "ขับ",
-        "romanization": "kʰàp",
-        "chinese": "排泄/驱出/驶"
+        "thai": "ขับถ่าย",
+        "romanization": "kʰàp-tʰàaj",
+        "chinese": "排泄",
+        "isCore": false
       },
       {
         "id": "tok_6",
-        "thai": "ถ่าย",
-        "romanization": "tʰàai",
-        "chinese": "排泄/换移/拍摄"
-      },
-      {
-        "id": "tok_7",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       }
     ]
@@ -9774,7 +9704,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 629,
     "secondsEnd": 632,
     "thai": "หมุนเวียนไปเรื่อยๆ",
-    "romanization": "mǔn-wian paj rɯ̂ai ๆ",
+    "romanization": "mǔn-wian paj rɯ̂aj-rɯ̂aj",
     "chinese": "周而复始地持续循环运转",
     "words": [
       {
@@ -9788,20 +9718,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
-      },
-      {
-        "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       }
     ]
   },
@@ -9826,14 +9750,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -9888,7 +9812,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       },
       {
@@ -9917,7 +9841,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
@@ -9972,7 +9896,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       }
     ]
@@ -9984,7 +9908,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 641,
     "secondsEnd": 645,
     "thai": "เราก็พยายามจะหาของดีๆ มาใส่เข้าไป",
-    "romanization": "raw kɔ̂ɔ pʰá-jaa-jaam càʔ hǎa kʰɔ̌ɔŋ dii ๆ maa sàj kʰâo-pai",
+    "romanization": "raw kɔ̂ɔ pʰá-jaa-jaam càʔ hǎa kʰɔ̌ɔŋ dii-dii maa sàj kʰâw-paj",
     "chinese": "我们千方百计寻找上好的精美之物塞进去",
     "words": [
       {
@@ -9998,7 +9922,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -10031,35 +9955,29 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_6",
-        "thai": "ดี",
-        "romanization": "dii",
-        "chinese": "良善美好",
+        "thai": "ดีๆ",
+        "romanization": "dii-dii",
+        "chinese": "好好地/好的",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_8",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "ใส่",
         "romanization": "sàj",
         "chinese": "安置装盛",
         "isCore": false
       },
       {
-        "id": "tok_10",
+        "id": "tok_9",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       }
     ]
@@ -10072,7 +9990,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 649,
     "thai": "ตอนที่ออกมาดูไม่ได้สักอย่าง",
     "romanization": "tɔɔn tʰîi ʔɔ̀ɔk maa duu mâj dâaj sàk jàaŋ",
-    "chinese": "等到排泄出来的时候，却没有一样是入目能看的",
+    "chinese": "等到排泄出来的时候，却没有一样能看得入眼",
     "words": [
       {
         "id": "tok_0",
@@ -10085,49 +10003,49 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "สัก",
         "romanization": "sàk",
-        "chinese": "สักหนึ่ง：随便某一个",
+        "chinese": "哪怕(一点)/任何",
         "isCore": false
       },
       {
@@ -10146,7 +10064,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 649,
     "secondsEnd": 654,
     "thai": "ตั้งแต่หัวถึงเท้าเราเต็มไปด้วยคำว่าขี้",
-    "romanization": "tâŋ-tɛ̀ɛ hǔa tʰɯ̌ŋ tʰáo raw tem paj dûaj kʰam wâa kʰîi",
+    "romanization": "tâŋ-tɛ̀ɛ hǔa tʰɯ̌ŋ tʰáaw raw tem paj dûaj kʰam wâa kʰîi",
     "chinese": "从头到脚都充斥着各式各样的污垢排泄物",
     "words": [
       {
@@ -10167,13 +10085,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ถึง",
         "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "chinese": "到/至",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เท้า",
-        "romanization": "tʰáo",
+        "romanization": "tʰáaw",
         "chinese": "足部/脚掌"
       },
       {
@@ -10194,35 +10112,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "คำ",
         "romanization": "kʰam",
-        "chinese": "句读名言",
+        "chinese": "词/话语",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "ขี้",
         "romanization": "kʰîi",
-        "chinese": "爱……的(性格倾向)",
+        "chinese": "污垢/排泄物",
         "isCore": false
       }
     ]
@@ -10234,7 +10152,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 654,
     "secondsEnd": 657,
     "thai": "ตั้งแต่ขี้หัวถึงขี้ตีน",
-    "romanization": "tâŋ-tɛ̀ɛ kʰîi hǔa tʰɯ̌ŋ kʰîi tiin",
+    "romanization": "tâŋ-tɛ̀ɛ kʰîi-hǔa tʰɯ̌ŋ kʰîi-tiin",
     "chinese": "从头皮屑一直到脚底泥垢",
     "words": [
       {
@@ -10246,37 +10164,24 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_1",
-        "thai": "ขี้",
-        "romanization": "kʰîi",
-        "chinese": "爱……的(性格倾向)",
+        "thai": "ขี้หัว",
+        "romanization": "kʰîi-hǔa",
+        "chinese": "头皮屑",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "หัว",
-        "romanization": "hǔa",
-        "chinese": "头",
+        "thai": "ถึง",
+        "romanization": "tʰɯ̌ŋ",
+        "chinese": "到/至",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ถึง",
-        "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "thai": "ขี้ตีน",
+        "romanization": "kʰîi-tiin",
+        "chinese": "脚底泥垢",
         "isCore": false
-      },
-      {
-        "id": "tok_4",
-        "thai": "ขี้",
-        "romanization": "kʰîi",
-        "chinese": "爱……的(性格倾向)",
-        "isCore": false
-      },
-      {
-        "id": "tok_5",
-        "thai": "ตีน",
-        "romanization": "tiin",
-        "chinese": "脚/足部"
       }
     ]
   },
@@ -10287,7 +10192,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 657,
     "secondsEnd": 659,
     "thai": "ลองไล่ดู",
-    "romanization": "lɔɔŋ lâi duu",
+    "romanization": "lɔɔŋ lâj duu",
     "chinese": "不妨逐一去体察检点",
     "words": [
       {
@@ -10300,14 +10205,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "ไล่",
-        "romanization": "lâi",
+        "romanization": "lâj",
         "chinese": "溯源细数/逐一核对"
       },
       {
         "id": "tok_2",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -10340,7 +10245,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ปฏิกูล",
         "romanization": "pà-tì-kuun",
-        "chinese": "厌恶/不净",
+        "chinese": "不净之物",
         "isCore": false,
         "rootBreakdown": "巴利语 Paṭikūla"
       },
@@ -10355,14 +10260,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -10374,35 +10279,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 663,
     "secondsEnd": 667,
     "thai": "แล้วก็จริงๆ แล้วมันก็เป็นแค่วัตถุ",
-    "romanization": "lɛ́ɛw kɔ̂ɔ ciŋ ciŋ lɛ́ɛw man kɔ̂ɔ pen kʰɛ̂ɛ wát-tʰùʔ",
+    "romanization": "lɛ́ɛw kɔ̂ɔ ciŋ-ciŋ lɛ́ɛw man kɔ̂ɔ pen kʰɛ̂ɛ wát-tʰùʔ",
     "chinese": "而且追根究底，它仅仅只是物质元素而已",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "จริงๆ",
-        "romanization": "ciŋ ciŋ",
-        "chinese": "真切确乎",
+        "romanization": "ciŋ-ciŋ",
+        "chinese": "真正/实际上",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -10416,14 +10321,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -10450,7 +10355,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 667,
     "secondsEnd": 672,
     "thai": "เบื้องต้นเรายืมธาตุของพ่อของแม่มา",
-    "romanization": "bɯ̂aŋ-tɔ̂n raw jɯɯm tʰâat kʰɔ̌ɔŋ pʰà kʰɔ̌ɔŋ mɛ̂ɛ maa",
+    "romanization": "bɯ̂aŋ-tɔ̂n raw jɯɯm tʰâat kʰɔ̌ɔŋ pʰɔ̂ɔ kʰɔ̌ɔŋ mɛ̂ɛ maa",
     "chinese": "最初我们借用了来自父母的四大元素",
     "words": [
       {
@@ -10491,8 +10396,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "พ่อ",
-        "romanization": "pʰà",
-        "chinese": "助词",
+        "romanization": "pʰɔ̂ɔ",
+        "chinese": "父亲",
         "isCore": false
       },
       {
@@ -10512,7 +10417,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -10524,7 +10429,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 672,
     "secondsEnd": 674,
     "thai": "คนละครึ่งเซลล์",
-    "romanization": "kʰon-láʔ kʰrɯ̂ŋ see-l",
+    "romanization": "kʰon-láʔ kʰrɯ̂ŋ seew",
     "chinese": "各自提供了半个细胞",
     "words": [
       {
@@ -10542,8 +10447,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เซลล์",
-        "romanization": "see-l",
-        "chinese": "细胞/卵原细胞"
+        "romanization": "seew",
+        "chinese": "细胞"
       }
     ]
   },
@@ -10554,21 +10459,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 674,
     "secondsEnd": 682,
     "thai": "จากนั้นเราก็อาศัยอาหารอาศัยน้ำผ่านจากสายรก",
-    "romanization": "càak nán raw kɔ̂ɔ ʔaa-sǎi ʔaa-hǎan ʔaa-sǎi nám pʰàan càak sǎaj rak",
+    "romanization": "càak nán raw kɔ̂ɔ ʔaa-sǎj ʔaa-hǎan ʔaa-sǎj nám pʰàan càak sǎaj-rók",
     "chinese": "接着通过脐带汲取饮食营养与水分",
     "words": [
       {
         "id": "tok_0",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
@@ -10582,13 +10487,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "อาศัย",
-        "romanization": "ʔaa-sǎi",
+        "romanization": "ʔaa-sǎj",
         "chinese": "依凭/依止/赖以",
         "isCore": true,
         "rootBreakdown": "巴利语 Nissaya"
@@ -10604,7 +10509,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "อาศัย",
-        "romanization": "ʔaa-sǎi",
+        "romanization": "ʔaa-sǎj",
         "chinese": "依凭/依止/赖以",
         "isCore": true,
         "rootBreakdown": "巴利语 Nissaya"
@@ -10627,21 +10532,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
         "id": "tok_10",
-        "thai": "สาย",
-        "romanization": "sǎaj",
-        "chinese": "传承法脉",
-        "isCore": false
-      },
-      {
-        "id": "tok_11",
-        "thai": "รก",
-        "romanization": "rak",
-        "chinese": "助词",
+        "thai": "สายรก",
+        "romanization": "sǎaj-rók",
+        "chinese": "脐带",
         "isCore": false
       }
     ]
@@ -10673,14 +10571,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -10692,14 +10590,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 684,
     "secondsEnd": 689,
     "thai": "ก็ต้องอาศัยอาหาร อาศัยน้ำ อาศัยอากาศ",
-    "romanization": "kɔ̂ɔ tɔ̂ŋ ʔaa-sǎi ʔaa-hǎan ʔaa-sǎi nám ʔaa-sǎi ʔaa-kàat",
+    "romanization": "kɔ̂ɔ tɔ̂ŋ ʔaa-sǎj ʔaa-hǎan ʔaa-sǎj nám ʔaa-sǎj ʔaa-kàat",
     "chinese": "就不得不持续依靠食物、水和空气",
     "words": [
       {
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -10712,7 +10610,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "อาศัย",
-        "romanization": "ʔaa-sǎi",
+        "romanization": "ʔaa-sǎj",
         "chinese": "依凭/依止/赖以",
         "isCore": true,
         "rootBreakdown": "巴利语 Nissaya"
@@ -10728,7 +10626,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "อาศัย",
-        "romanization": "ʔaa-sǎi",
+        "romanization": "ʔaa-sǎj",
         "chinese": "依凭/依止/赖以",
         "isCore": true,
         "rootBreakdown": "巴利语 Nissaya"
@@ -10743,7 +10641,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "อาศัย",
-        "romanization": "ʔaa-sǎi",
+        "romanization": "ʔaa-sǎj",
         "chinese": "依凭/依止/赖以",
         "isCore": true,
         "rootBreakdown": "巴利语 Nissaya"
@@ -10764,31 +10662,25 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 689,
     "secondsEnd": 692,
     "thai": "ค่อยๆ เลี้ยงสะสม",
-    "romanization": "kʰɔ̂j ๆ líaŋ sà-sǒm",
+    "romanization": "kʰɔ̂j-kʰɔ̂j líaŋ sà-sǒm",
     "chinese": "一点一滴地长年滋养积聚",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "เลี้ยง",
         "romanization": "líaŋ",
         "chinese": "滋养饲守",
         "isCore": false
       },
       {
-        "id": "tok_3",
+        "id": "tok_2",
         "thai": "สะสม",
         "romanization": "sà-sǒm",
         "chinese": "熏染积习",
@@ -10803,7 +10695,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 692,
     "secondsEnd": 696,
     "thai": "ร่างกายนี้ก็ค่อยๆ โตขึ้น",
-    "romanization": "râaŋ-kaaj níi kɔ̂ɔ kʰɔ̂j ๆ too kʰɯ̂n",
+    "romanization": "râaŋ-kaaj níi kɔ̂ɔ kʰɔ̂j-kʰɔ̂j too kʰɯ̂n",
     "chinese": "这个身体才逐渐长大长成",
     "words": [
       {
@@ -10817,41 +10709,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_5",
         "thai": "โต",
         "romanization": "too",
         "chinese": "大",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -10863,14 +10749,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 696,
     "secondsEnd": 702,
     "thai": "ถึงวันหนึ่งมันอยู่ไม่ได้มันก็แตกสลาย",
-    "romanization": "tʰɯ̌ŋ wan nɯ̀ŋ man jùu mâj dâaj man kɔ̂ɔ tɛ̀ɛk sà-lǎai",
+    "romanization": "tʰɯ̌ŋ wan nɯ̀ŋ man jùu mâj dâaj man kɔ̂ɔ tɛ̀ɛk sà-lǎaj",
     "chinese": "直到有一天它难以为继，便走向崩解坏灭",
     "words": [
       {
         "id": "tok_0",
         "thai": "ถึง",
         "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "chinese": "直到/到了",
         "isCore": false
       },
       {
@@ -10898,21 +10784,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -10926,7 +10812,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -10939,7 +10825,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_10",
         "thai": "สลาย",
-        "romanization": "sà-lǎai",
+        "romanization": "sà-lǎaj",
         "chinese": "消散/瓦解/崩解"
       }
     ]
@@ -10973,7 +10859,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -11034,7 +10920,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -11046,13 +10932,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 709,
     "secondsEnd": 711,
     "thai": "ธาตุไฟก็ดับ",
-    "romanization": "tʰâat-fai kɔ̂ɔ dàp",
+    "romanization": "tʰâat-faj kɔ̂ɔ dàp",
     "chinese": "火大（体温）也随即熄灭",
     "words": [
       {
         "id": "tok_0",
         "thai": "ธาตุไฟ",
-        "romanization": "tʰâat-fai",
+        "romanization": "tʰâat-faj",
         "chinese": "火大/火界",
         "isCore": true,
         "rootBreakdown": "巴利语 Tejodhātu"
@@ -11061,7 +10947,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -11080,58 +10966,52 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 711,
     "secondsEnd": 715,
     "thai": "คล้ายๆ ไม่มีอากาศ ไฟมันก็ดับ",
-    "romanization": "kʰláaj ๆ mâj mii ʔaa-kàat faj man kɔ̂ɔ dàp",
+    "romanization": "kʰláaj-kʰláaj mâj mii ʔaa-kàat faj man kɔ̂ɔ dàp",
     "chinese": "就像缺乏了空气，火势就会熄灭一样",
     "words": [
       {
         "id": "tok_0",
-        "thai": "คล้าย",
-        "romanization": "kʰláaj",
+        "thai": "คล้ายๆ",
+        "romanization": "kʰláaj-kʰláaj",
         "chinese": "宛如/类似于"
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "ไม่มี",
         "romanization": "mâj mii",
         "chinese": "没有",
         "isCore": false
       },
       {
-        "id": "tok_3",
+        "id": "tok_2",
         "thai": "อากาศ",
         "romanization": "ʔaa-kàat",
         "chinese": "空气/气候/空中",
         "isCore": false
       },
       {
-        "id": "tok_4",
+        "id": "tok_3",
         "thai": "ไฟ",
         "romanization": "faj",
         "chinese": "火/火焰",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "มัน",
         "romanization": "man",
         "chinese": "它",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "ดับ",
         "romanization": "dàp",
         "chinese": "灭/灭去",
@@ -11146,14 +11026,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 715,
     "secondsEnd": 719,
     "thai": "ตัวมันก็เย็นลงๆ",
-    "romanization": "tua man kɔ̂ɔ jen loŋ loŋ",
+    "romanization": "tua man kɔ̂ɔ jen loŋ-loŋ",
     "chinese": "身体随之越来越冰凉、彻底冷却",
     "words": [
       {
         "id": "tok_0",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -11167,21 +11047,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เย็น",
         "romanization": "jen",
-        "chinese": "傍晚/凉爽",
+        "chinese": "冰凉/变冷",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ลงๆ",
-        "romanization": "loŋ loŋ",
-        "chinese": "渐渐下降/减少",
+        "romanization": "loŋ-loŋ",
+        "chinese": "越来越(降)",
         "isCore": false
       }
     ]
@@ -11193,35 +11073,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 719,
     "secondsEnd": 722,
     "thai": "ถัดจากนั้นก็เริ่มเน่า",
-    "romanization": "tʰat càak nán kɔ̂ɔ rə̂əm nâo",
+    "romanization": "tʰàt càak nán kɔ̂ɔ rə̂əm nâw",
     "chinese": "紧接着身体便开始腐烂败坏",
     "words": [
       {
         "id": "tok_0",
         "thai": "ถัด",
-        "romanization": "tʰat",
-        "chinese": "助词",
+        "romanization": "tʰàt",
+        "chinese": "紧接着/随后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -11234,7 +11114,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "เน่า",
-        "romanization": "nâo",
+        "romanization": "nâw",
         "chinese": "腐败/溃烂"
       }
     ]
@@ -11267,14 +11147,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -11293,21 +11173,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -11417,7 +11297,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -11443,7 +11323,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -11470,7 +11350,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 741,
     "thai": "มีธาตุไหลออก มีธาตุไหลเข้า มีธาตุไหลออก",
     "romanization": "mii tʰâat lǎj ʔɔ̀ɔk mii tʰâat lǎj kʰâw mii tʰâat lǎj ʔɔ̀ɔk",
-    "chinese": "有元素流出、有元素流入、有元素排泄",
+    "chinese": "有元素流出、有元素流入、有元素流出",
     "words": [
       {
         "id": "tok_0",
@@ -11498,7 +11378,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
@@ -11527,7 +11407,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       },
       {
@@ -11556,7 +11436,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       }
     ]
@@ -11568,7 +11448,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 741,
     "secondsEnd": 744,
     "thai": "สุดท้ายธาตุทั้งหลายก็แตกสลาย",
-    "romanization": "sùt-tʰáaj tʰâat tʰáŋ lǎaj kɔ̂ɔ tɛ̀ɛk sà-lǎai",
+    "romanization": "sùt-tʰáaj tʰâat tʰáŋ lǎaj kɔ̂ɔ tɛ̀ɛk sà-lǎaj",
     "chinese": "到头来所有元素都会四散崩解",
     "words": [
       {
@@ -11604,7 +11484,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -11617,7 +11497,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "สลาย",
-        "romanization": "sà-lǎai",
+        "romanization": "sà-lǎaj",
         "chinese": "消散/瓦解/崩解"
       }
     ]
@@ -11629,7 +11509,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 744,
     "secondsEnd": 747,
     "thai": "คืนไปสู่เจ้าของเดิม",
-    "romanization": "kʰɯɯn paj sùu câo-kʰɔ̌ɔŋ dəəm",
+    "romanization": "kʰɯɯn paj sùu câw-kʰɔ̌ɔŋ dəəm",
     "chinese": "归还给它原本的归属",
     "words": [
       {
@@ -11643,7 +11523,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -11656,7 +11536,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เจ้าของ",
-        "romanization": "câo-kʰɔ̌ɔŋ",
+        "romanization": "câw-kʰɔ̌ɔŋ",
         "chinese": "原主/拥有者"
       },
       {
@@ -11689,7 +11569,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -11715,14 +11595,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -11874,7 +11754,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -11895,7 +11775,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -11937,7 +11817,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -11971,7 +11851,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -11985,7 +11865,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -12000,7 +11880,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12014,7 +11894,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12048,14 +11928,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12069,7 +11949,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -12104,14 +11984,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -12137,7 +12017,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12151,14 +12031,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12180,7 +12060,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12201,7 +12081,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12215,7 +12095,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       }
     ]
@@ -12256,7 +12136,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入/进来",
         "isCore": false
       },
       {
@@ -12270,7 +12150,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
@@ -12296,34 +12176,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 782,
     "secondsEnd": 783,
     "thai": "ดูไปเรื่อยๆ",
-    "romanization": "duu paj rɯ̂ai ๆ",
+    "romanization": "duu paj rɯ̂aj-rɯ̂aj",
     "chinese": "持续不断地观照下去",
     "words": [
       {
         "id": "tok_0",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
-      },
-      {
-        "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       }
     ]
   },
@@ -12348,7 +12222,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -12376,14 +12250,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12397,7 +12271,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -12453,14 +12327,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -12474,7 +12348,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12488,7 +12362,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -12502,7 +12376,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -12528,7 +12402,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -12556,14 +12430,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_6",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
@@ -12617,7 +12491,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12649,7 +12523,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       },
       {
@@ -12663,7 +12537,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -12682,85 +12556,77 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 801,
     "secondsEnd": 806,
     "thai": "อ่อ รูปร่างนี้มันแก่ไป ไม่ใช่เราแก่",
-    "romanization": "ʔà rûup râaŋ níi man kɛ̀ɛ paj mâj cʰâj raw kɛ̀ɛ",
+    "romanization": "ʔɔ̀ɔ rûup-râaŋ níi man kɛ̀ɛ paj mâj cʰâj raw kɛ̀ɛ",
     "chinese": "‘噢，是这个色身形态在衰老，而不是我在变老’",
     "words": [
       {
         "id": "tok_0",
         "thai": "อ่อ",
-        "romanization": "ʔà",
-        "chinese": "助词",
+        "romanization": "ʔɔ̀ɔ",
+        "chinese": "哦(恍然悟解)",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "รูป",
-        "romanization": "rûup",
-        "chinese": "色蕴/色相",
-        "isCore": true,
-        "rootBreakdown": "巴利语 Rūpa"
-      },
-      {
-        "id": "tok_2",
-        "thai": "ร่าง",
-        "romanization": "râaŋ",
-        "chinese": "身躯/肉体",
-        "isCore": true
-      },
-      {
-        "id": "tok_3",
-        "thai": "นี้",
-        "romanization": "níi",
-        "chinese": "当此/这",
+        "thai": "รูปร่าง",
+        "romanization": "rûup-râaŋ",
+        "chinese": "形体/身形",
         "isCore": false
       },
       {
-        "id": "tok_4",
+        "id": "tok_2",
+        "thai": "นี้",
+        "romanization": "níi",
+        "chinese": "这",
+        "isCore": false
+      },
+      {
+        "id": "tok_3",
         "thai": "มัน",
         "romanization": "man",
         "chinese": "它",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
+        "isCore": false
+      },
+      {
+        "id": "tok_5",
+        "thai": "ไป",
+        "romanization": "paj",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_6",
-        "thai": "ไป",
-        "romanization": "paj",
-        "chinese": "前去/转动",
+        "thai": "ไม่",
+        "romanization": "mâj",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "ไม่",
-        "romanization": "mâj",
-        "chinese": "非/不",
-        "isCore": false
-      },
-      {
-        "id": "tok_8",
         "thai": "ใช่",
         "romanization": "cʰâj",
         "chinese": "是/对",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "เรา",
         "romanization": "raw",
         "chinese": "我们",
         "isCore": false
       },
       {
-        "id": "tok_10",
+        "id": "tok_9",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       }
     ]
@@ -12793,14 +12659,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -12814,7 +12680,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12828,7 +12694,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -12861,14 +12727,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -12889,14 +12755,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -12917,7 +12783,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       }
     ]
@@ -12950,7 +12816,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -12978,7 +12844,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -13025,14 +12891,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ตาย",
         "romanization": "taaj",
-        "chinese": "身亡/死",
+        "chinese": "死亡",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -13060,14 +12926,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ตาย",
         "romanization": "taaj",
-        "chinese": "身亡/死",
+        "chinese": "死亡",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -13088,7 +12954,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "ตาย",
         "romanization": "taaj",
-        "chinese": "身亡/死",
+        "chinese": "死亡",
         "isCore": false
       }
     ]
@@ -13121,7 +12987,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -13135,7 +13001,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -13168,34 +13034,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 827,
     "secondsEnd": 830,
     "thai": "ค่อยๆ ฝึกไป",
-    "romanization": "kʰɔ̂j ๆ fɯ̀k paj",
+    "romanization": "kʰɔ̂j-kʰɔ̂j fɯ̀k paj",
     "chinese": "就这样一步一个脚印地去修习训练",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "ฝึก",
         "romanization": "fɯ̀k",
         "chinese": "习练修磨",
         "isCore": false
       },
       {
-        "id": "tok_3",
+        "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -13228,7 +13088,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -13242,7 +13102,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -13268,7 +13128,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -13282,7 +13142,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -13322,21 +13182,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -13369,14 +13229,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -13397,14 +13257,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -13430,7 +13290,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -13463,21 +13323,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -13498,14 +13358,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -13524,7 +13384,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -13538,7 +13398,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -13571,7 +13431,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -13592,7 +13452,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -13618,14 +13478,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -13639,7 +13499,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -13653,7 +13513,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -13672,7 +13532,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -13686,7 +13546,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -13712,14 +13572,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -13733,7 +13593,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -13747,14 +13607,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -13815,7 +13675,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -13855,7 +13715,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -13877,7 +13737,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -13897,7 +13757,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 871,
     "secondsEnd": 875,
     "thai": "ประเดี๋ยวก็ดี ประเดี๋ยวก็ร้าย",
-    "romanization": "prà-dǐaw kɔ̂ɔ dii prà-dǐaw kɔ̂ɔ ráai",
+    "romanization": "prà-dǐaw kɔ̂ɔ dii prà-dǐaw kɔ̂ɔ ráaj",
     "chinese": "一会儿善良清净，一会儿起恶念烦恼",
     "words": [
       {
@@ -13911,14 +13771,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -13932,13 +13792,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ร้าย",
-        "romanization": "ráai",
+        "romanization": "ráaj",
         "chinese": "恶劣/凶恶/不善"
       }
     ]
@@ -13950,7 +13810,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 875,
     "secondsEnd": 878,
     "thai": "หัดดูไปเรื่อยๆ",
-    "romanization": "hàt duu paj rɯ̂ai ๆ",
+    "romanization": "hàt duu paj rɯ̂aj-rɯ̂aj",
     "chinese": "就这样不断训练去体察观照",
     "words": [
       {
@@ -13964,27 +13824,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
-      },
-      {
-        "id": "tok_4",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       }
     ]
   },
@@ -14030,7 +13884,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -14044,21 +13898,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ตื่น",
         "romanization": "tɯ̀ɯn",
-        "chinese": "觉醒",
+        "chinese": "睡醒/醒来",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -14077,28 +13931,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ตื่น",
         "romanization": "tɯ̀ɯn",
-        "chinese": "觉醒",
+        "chinese": "睡醒/醒来",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -14112,14 +13966,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -14133,7 +13987,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -14179,7 +14033,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -14239,14 +14093,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -14258,7 +14112,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 894,
     "secondsEnd": 895,
     "thai": "วันพุธก็ค่อยยังชั่ว",
-    "romanization": "wan-pʰút kɔ̂ɔ kʰɔ̂j jaŋ cʰûa",
+    "romanization": "wan-pʰút kɔ̂ɔ kʰɔ̂j-jaŋ-cʰûa",
     "chinese": "到了星期三情况才稍有舒缓",
     "words": [
       {
@@ -14271,28 +14125,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
-        "isCore": false
-      },
-      {
-        "id": "tok_3",
-        "thai": "ยัง",
-        "romanization": "jaŋ",
-        "chinese": "依然/还",
-        "isCore": false
-      },
-      {
-        "id": "tok_4",
-        "thai": "ชั่ว",
-        "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "thai": "ค่อยยังชั่ว",
+        "romanization": "kʰɔ̂j-jaŋ-cʰûa",
+        "chinese": "稍有舒缓/好一些",
         "isCore": false
       }
     ]
@@ -14304,7 +14144,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 895,
     "secondsEnd": 898,
     "thai": "วันพฤหัสเริ่มสดใส",
-    "romanization": "wan-pʰrɯ́-hàt rə̂əm sòt-sǎi",
+    "romanization": "wan-pʰrɯ́-hàt rə̂əm sòt-sǎj",
     "chinese": "星期四心情开始变得晴朗清爽",
     "words": [
       {
@@ -14323,7 +14163,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "สดใส",
-        "romanization": "sòt-sǎi",
+        "romanization": "sòt-sǎj",
         "chinese": "爽朗/清朗明澈"
       }
     ]
@@ -14335,8 +14175,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 898,
     "secondsEnd": 902,
     "thai": "วันศุกร์ใกล้วันหยุดแล้วเริ่มเบิกบาน",
-    "romanization": "wan-sùk klâj wan-jùt lɛ́ɛw rə̂əm bə̀ək baan",
-    "chinese": "星期五临近周末放假，心就开始欢欣跃然",
+    "romanization": "wan-sùk klâj wan-jùt lɛ́ɛw rə̂əm bə̀ək-baan",
+    "chinese": "星期五临近周末放假，心情就开始雀跃欢畅",
     "words": [
       {
         "id": "tok_0",
@@ -14361,7 +14201,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -14373,16 +14213,9 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_5",
-        "thai": "เบิก",
-        "romanization": "bə̀ək",
-        "chinese": "绽放/开启",
-        "isCore": false
-      },
-      {
-        "id": "tok_6",
-        "thai": "บาน",
-        "romanization": "baan",
-        "chinese": "绽放/舒展",
+        "thai": "เบิกบาน",
+        "romanization": "bə̀ək-baan",
+        "chinese": "欢欣愉悦",
         "isCore": false
       }
     ]
@@ -14394,19 +14227,19 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 902,
     "secondsEnd": 907,
     "thai": "วันเสาร์ อู้ย สนุกสนานทำโน่นทำนี่",
-    "romanization": "wan-sǎo ʔûui sà-nùk-sà-nǎan tʰam nôon tʰam nîi",
+    "romanization": "wan-sǎw ʔûuj sà-nùk-sà-nǎan tʰam nôon tʰam nîi",
     "chinese": "星期六，哇！欢天喜地忙东忙西玩乐",
     "words": [
       {
         "id": "tok_0",
         "thai": "วันเสาร์",
-        "romanization": "wan-sǎo",
+        "romanization": "wan-sǎw",
         "chinese": "星期六"
       },
       {
         "id": "tok_1",
         "thai": "อู้ย",
-        "romanization": "ʔûui",
+        "romanization": "ʔûuj",
         "chinese": "哎呀/唷"
       },
       {
@@ -14419,27 +14252,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "โน่น",
         "romanization": "nôon",
-        "chinese": "彼方/那里"
+        "chinese": "那儿/那边"
       },
       {
         "id": "tok_5",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       }
     ]
@@ -14451,7 +14284,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 907,
     "secondsEnd": 910,
     "thai": "วันอาทิตย์ตอนบ่ายๆ เริ่มซึมอีกแล้ว",
-    "romanization": "wan-ʔaa-tʰít tɔɔn bàai ๆ rə̂əm sɯm ʔìik lɛ́ɛw",
+    "romanization": "wan-ʔaa-tʰít tɔɔn bàaj-bàaj rə̂əm sɯm ʔìik lɛ́ɛw",
     "chinese": "到了星期日下午，心情又开始发蔫低落了",
     "words": [
       {
@@ -14469,42 +14302,36 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_2",
-        "thai": "บ่าย",
-        "romanization": "bàai",
-        "chinese": "午后/下午"
+        "thai": "บ่ายๆ",
+        "romanization": "bàaj-bàaj",
+        "chinese": "下午时分"
       },
       {
         "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_4",
         "thai": "เริ่ม",
         "romanization": "rə̂əm",
         "chinese": "开始",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "ซึม",
         "romanization": "sɯm",
         "chinese": "昏沉/发木",
         "isCore": true
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "อีก",
         "romanization": "ʔìik",
         "chinese": "再度/且",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -14551,7 +14378,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ถึง",
         "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "chinese": "到/至",
         "isCore": false
       },
       {
@@ -14579,7 +14406,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -14704,7 +14531,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
@@ -14718,20 +14545,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "จันทร์",
         "romanization": "can",
-        "chinese": "月/星期一"
+        "chinese": "星期一"
       },
       {
         "id": "tok_4",
         "thai": "ถึง",
         "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "chinese": "到/至",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ศุกร์",
         "romanization": "sùk",
-        "chinese": "星期五/金星"
+        "chinese": "星期五"
       }
     ]
   },
@@ -14756,21 +14583,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ตื่น",
         "romanization": "tɯ̀ɯn",
-        "chinese": "觉醒",
+        "chinese": "睡醒/醒来",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -14784,7 +14611,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -14803,7 +14630,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -14838,14 +14665,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ตื่น",
         "romanization": "tɯ̀ɯn",
-        "chinese": "觉醒",
+        "chinese": "睡醒/醒来",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "นอน",
         "romanization": "nɔɔn",
-        "chinese": "躺卧/睡眠",
+        "chinese": "躺/睡",
         "isCore": false
       }
     ]
@@ -14878,14 +14705,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -14906,14 +14733,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -14925,35 +14752,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 932,
     "secondsEnd": 935,
     "thai": "ดูเป็นวันๆ ไม่เหมือนกัน",
-    "romanization": "duu pen wan wan mâj mɯ̌an kan",
+    "romanization": "duu pen wan-wan mâj mɯ̌an kan",
     "chinese": "逐日观察，每一天都各不相同",
     "words": [
       {
         "id": "tok_0",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "วันๆ",
-        "romanization": "wan wan",
-        "chinese": "一天到晚",
+        "romanization": "wan-wan",
+        "chinese": "一天天/逐日",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -14967,7 +14794,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -14993,14 +14820,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -15014,7 +14841,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
@@ -15035,7 +14862,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       }
     ]
@@ -15108,7 +14935,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -15122,14 +14949,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -15143,7 +14970,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -15236,7 +15063,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "สาย",
         "romanization": "sǎaj",
-        "chinese": "传承法脉",
+        "chinese": "上午(9–11时)",
         "isCore": false
       },
       {
@@ -15250,7 +15077,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -15268,13 +15095,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 952,
     "secondsEnd": 954,
     "thai": "อู้ย รถติดเยอะแยะเลย",
-    "romanization": "ʔûui rót-tìt jə́ʔ jɛ́ʔ ləəj",
+    "romanization": "ʔûuj rót-tìt jə́ʔ jɛ́ʔ ləəj",
     "chinese": "哎呀！路上堵车堵得水泄不通",
     "words": [
       {
         "id": "tok_0",
         "thai": "อู้ย",
-        "romanization": "ʔûui",
+        "romanization": "ʔûuj",
         "chinese": "哎呀/唷"
       },
       {
@@ -15300,7 +15127,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -15340,7 +15167,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -15385,7 +15212,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -15406,7 +15233,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -15446,21 +15273,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ตื่น",
         "romanization": "tɯ̀ɯn",
-        "chinese": "觉醒",
+        "chinese": "睡醒/醒来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "สบายๆ",
         "romanization": "sà-baaj sà-baaj",
-        "chinese": "轻轻松松",
+        "chinese": "轻松自在",
         "isCore": false
       }
     ]
@@ -15486,7 +15313,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -15500,14 +15327,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
@@ -15559,7 +15386,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -15573,14 +15400,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -15594,7 +15421,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -15627,7 +15454,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -15653,7 +15480,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -15706,7 +15533,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -15765,7 +15592,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
@@ -15798,7 +15625,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -15818,7 +15645,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 991,
     "thai": "วันนี้เจอลูกค้าโยเยพูดไม่รู้เรื่อง",
     "romanization": "wan níi cəə lûuk-kʰáa joo-jee pʰûut mâj rúu rɯ̂aŋ",
-    "chinese": "碰上蛮横刁难、胡搅蛮缠的客户",
+    "chinese": "今天碰上蛮横刁难、讲不通道理的客户",
     "words": [
       {
         "id": "tok_0",
@@ -15831,7 +15658,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -15864,14 +15691,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -15890,7 +15717,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 991,
     "secondsEnd": 993,
     "thai": "จะเอาแต่ได้",
-    "romanization": "càʔ ʔao-tɛ̀ɛ-dâai",
+    "romanization": "càʔ ʔaw-tɛ̀ɛ-dâaj",
     "chinese": "一心只想占尽所有便宜",
     "words": [
       {
@@ -15903,7 +15730,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เอาแต่ได้",
-        "romanization": "ʔao-tɛ̀ɛ-dâai",
+        "romanization": "ʔaw-tɛ̀ɛ-dâaj",
         "chinese": "惟求自利/损人肥己"
       }
     ]
@@ -15916,7 +15743,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 997,
     "thai": "เรารำคาญ ใจเราก็รำคาญ",
     "romanization": "raw ram-kʰaan caj raw kɔ̂ɔ ram-kʰaan",
-    "chinese": "我们感到心烦，心就生起了厌烦不耐烦",
+    "chinese": "我们感到心烦，心就生起了厌烦情绪",
     "words": [
       {
         "id": "tok_0",
@@ -15950,7 +15777,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -15976,7 +15803,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -16009,7 +15836,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1000,
     "secondsEnd": 1003,
     "thai": "พอตกเวลาเลิกงานแล้ว",
-    "romanization": "pʰɔɔ tòk weː-laa lɤ̂ək ŋaan lɛ́ɛw",
+    "romanization": "pʰɔɔ tòk weː-laa lə̂ək ŋaan lɛ́ɛw",
     "chinese": "到了下班的时刻",
     "words": [
       {
@@ -16023,7 +15850,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ตก",
         "romanization": "tòk",
-        "chinese": "落入/没下落",
+        "chinese": "到了……(时间)",
         "isCore": false
       },
       {
@@ -16036,8 +15863,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เลิก",
-        "romanization": "lɤ̂ək",
-        "chinese": "放弃/停止",
+        "romanization": "lə̂ək",
+        "chinese": "下班/结束",
         "isCore": false
       },
       {
@@ -16051,7 +15878,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -16110,7 +15937,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -16124,7 +15951,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -16143,7 +15970,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
@@ -16185,7 +16012,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       }
     ]
@@ -16197,7 +16024,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1011,
     "secondsEnd": 1013,
     "thai": "จะกลับบ้าน อยากรีบกลับบ้านเร็วๆ",
-    "romanization": "càʔ klàp bâan jàak rîip klàp bâan reo-reo",
+    "romanization": "càʔ klàp bâan jàak rîip klàp bâan rew-rew",
     "chinese": "急着想赶快回到温馨的家中",
     "words": [
       {
@@ -16252,8 +16079,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_7",
         "thai": "เร็วๆ",
-        "romanization": "reo-reo",
-        "chinese": "快快/迅速"
+        "romanization": "rew-rew",
+        "chinese": "快快/赶紧"
       }
     ]
   },
@@ -16284,7 +16111,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -16297,14 +16124,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ตก",
         "romanization": "tòk",
-        "chinese": "落入/没下落",
+        "chinese": "下雨/落下",
         "isCore": false
       }
     ]
@@ -16349,7 +16176,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1018,
     "secondsEnd": 1022,
     "thai": "ทำไมทำฝนตกตอนจะเลิกงานทุกทีเลย",
-    "romanization": "tʰam-maj tʰam fǒn tòk tɔɔn càʔ lɤ̂ək ŋaan tʰúk-tʰii ləəj",
+    "romanization": "tʰam-maj tʰam fǒn tòk tɔɔn càʔ lə̂ək ŋaan tʰúk-tʰii ləəj",
     "chinese": "‘为什么每次偏偏赶在快下班时下大雨？！’",
     "words": [
       {
@@ -16363,7 +16190,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -16376,7 +16203,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ตก",
         "romanization": "tòk",
-        "chinese": "落入/没下落",
+        "chinese": "下雨/落下",
         "isCore": false
       },
       {
@@ -16396,8 +16223,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "เลิก",
-        "romanization": "lɤ̂ək",
-        "chinese": "放弃/停止",
+        "romanization": "lə̂ək",
+        "chinese": "下班/结束",
         "isCore": false
       },
       {
@@ -16417,7 +16244,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -16429,7 +16256,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1022,
     "secondsEnd": 1025,
     "thai": "ทำไมไม่ไปตกตอนดึกๆ",
-    "romanization": "tʰam-maj mâj paj tòk tɔɔn dɯ̀k ๆ",
+    "romanization": "tʰam-maj mâj paj tòk tɔɔn dɯ̀k-dɯ̀k",
     "chinese": "‘为什么不等到深夜再去下？’",
     "words": [
       {
@@ -16443,21 +16270,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ตก",
         "romanization": "tòk",
-        "chinese": "落入/没下落",
+        "chinese": "下雨/落下",
         "isCore": false
       },
       {
@@ -16469,15 +16296,9 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_5",
-        "thai": "ดึก",
-        "romanization": "dɯ̀k",
-        "chinese": "深夜/更深"
-      },
-      {
-        "id": "tok_6",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "ดึกๆ",
+        "romanization": "dɯ̀k-dɯ̀k",
+        "chinese": "深夜时分"
       }
     ]
   },
@@ -16509,14 +16330,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -16529,7 +16350,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -16548,7 +16369,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -16595,14 +16416,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       }
     ]
@@ -16614,7 +16435,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1034,
     "secondsEnd": 1038,
     "thai": "เปลี่ยนแปลงเช้าสายบ่ายเย็นค่ำดึก",
-    "romanization": "plìan-plɛɛŋ cʰáaw sǎaj bàai jen kʰâm dɯ̀k",
+    "romanization": "plìan-plɛɛŋ cʰáaw sǎaj bàaj jen kʰâm dɯ̀k",
     "chinese": "早晨、上午、午后、黄昏、入夜、深夜，持续变迁",
     "words": [
       {
@@ -16635,13 +16456,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "สาย",
         "romanization": "sǎaj",
-        "chinese": "传承法脉",
+        "chinese": "上午(9–11时)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "บ่าย",
-        "romanization": "bàai",
+        "romanization": "bàaj",
         "chinese": "午后/下午"
       },
       {
@@ -16693,7 +16514,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -16714,14 +16535,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
@@ -16754,7 +16575,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1041,
     "secondsEnd": 1043,
     "thai": "หัดสังเกตเรื่อยๆ ไป",
-    "romanization": "hàt sǎŋ-kèet rɯ̂ai ๆ paj",
+    "romanization": "hàt sǎŋ-kèet rɯ̂aj-rɯ̂aj paj",
     "chinese": "坚持不断地去练习体察观照",
     "words": [
       {
@@ -16773,21 +16594,15 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_2",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       },
       {
         "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -16806,7 +16621,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -16827,7 +16642,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       }
     ]
@@ -16862,14 +16677,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -16911,14 +16726,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -16952,21 +16767,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -17006,14 +16821,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -17060,7 +16875,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -17119,7 +16934,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1058,
     "secondsEnd": 1062,
     "thai": "ฝึกไปเรื่อยๆ ต่อไปเราเห็น",
-    "romanization": "fɯ̀k paj rɯ̂ai ๆ tɔ̀ɔ paj raw hěn",
+    "romanization": "fɯ̀k paj rɯ̂aj-rɯ̂aj tɔ̀ɔ paj raw hěn",
     "chinese": "持续修习下去，接下来我们就会照见：",
     "words": [
       {
@@ -17133,47 +16948,41 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       },
       {
         "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_4",
         "thai": "ต่อ",
         "romanization": "tɔ̀ɔ",
         "chinese": "针对接续",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "เรา",
         "romanization": "raw",
         "chinese": "我们",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       }
     ]
@@ -17192,7 +17001,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -17214,14 +17023,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -17240,14 +17049,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1063,
     "secondsEnd": 1066,
     "thai": "ตัวจิตตรงๆ เลย",
-    "romanization": "tua cìt troŋ ๆ ləəj",
+    "romanization": "tua cìt troŋ-troŋ ləəj",
     "chinese": "就是心本身、最直接的这颗心",
     "words": [
       {
         "id": "tok_0",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -17260,22 +17069,16 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_2",
-        "thai": "ตรง",
-        "romanization": "troŋ",
-        "chinese": "端直纯一",
+        "thai": "ตรงๆ",
+        "romanization": "troŋ-troŋ",
+        "chinese": "直接/直截了当",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_4",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -17301,7 +17104,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17315,7 +17118,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
@@ -17329,7 +17132,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17343,14 +17146,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "คิด",
         "romanization": "kʰít",
-        "chinese": "思量作意",
+        "chinese": "想/思考",
         "isCore": false
       }
     ]
@@ -17390,7 +17193,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17404,14 +17207,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -17451,21 +17254,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -17498,7 +17301,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -17512,14 +17315,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走路/行走",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -17540,7 +17343,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -17573,7 +17376,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -17586,21 +17389,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -17626,7 +17429,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
@@ -17661,7 +17464,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17682,7 +17485,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -17736,7 +17539,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17757,7 +17560,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -17776,7 +17579,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1092,
     "secondsEnd": 1095,
     "thai": "เรามัวแต่สนใจคนอื่น",
-    "romanization": "raw maw tɛ̀ɛ sǒn-caj kʰon ʔɯ̀ɯn",
+    "romanization": "raw mua tɛ̀ɛ sǒn-caj kʰon ʔɯ̀ɯn",
     "chinese": "我们只顾着去关注外在的别人",
     "words": [
       {
@@ -17789,8 +17592,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "มัว",
-        "romanization": "maw",
-        "chinese": "助词",
+        "romanization": "mua",
+        "chinese": "只顾着/沉溺于",
         "isCore": false
       },
       {
@@ -17811,7 +17614,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -17830,7 +17633,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1095,
     "secondsEnd": 1098,
     "thai": "หรือได้ยินเสียงแปลกๆ",
-    "romanization": "rɯ̌ɯ dâaj jin sǐaŋ plɛ̀ɛk-plɛ̀ɛk",
+    "romanization": "rɯ̌ɯ dâaj-jin sǐaŋ plɛ̀ɛk-plɛ̀ɛk",
     "chinese": "或者听到了奇怪异样的声响",
     "words": [
       {
@@ -17842,30 +17645,23 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_1",
-        "thai": "ได้",
-        "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "thai": "ได้ยิน",
+        "romanization": "dâaj-jin",
+        "chinese": "听见/听到",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ยิน",
-        "romanization": "jin",
-        "chinese": "助词",
-        "isCore": false
-      },
-      {
-        "id": "tok_3",
         "thai": "เสียง",
         "romanization": "sǐaŋ",
         "chinese": "声音",
         "isCore": false
       },
       {
-        "id": "tok_4",
+        "id": "tok_3",
         "thai": "แปลกๆ",
         "romanization": "plɛ̀ɛk-plɛ̀ɛk",
-        "chinese": "离奇古怪/罕异"
+        "chinese": "奇怪/异样"
       }
     ]
   },
@@ -17890,7 +17686,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -17926,7 +17722,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -17952,7 +17748,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -17973,21 +17769,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
@@ -18020,7 +17816,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -18107,7 +17903,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1109,
     "secondsEnd": 1112,
     "thai": "จิตใจเราก็เปลี่ยนแปลงไปเรื่อยๆ",
-    "romanization": "cìt-caj raw kɔ̂ɔ plìan-plɛɛŋ paj rɯ̂ai ๆ",
+    "romanization": "cìt-caj raw kɔ̂ɔ plìan-plɛɛŋ paj rɯ̂aj-rɯ̂aj",
     "chinese": "我们的心意便随之一刻不停地变幻流转",
     "words": [
       {
@@ -18128,7 +17924,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -18142,20 +17938,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
-      },
-      {
-        "id": "tok_6",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       }
     ]
   },
@@ -18166,54 +17956,42 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1112,
     "secondsEnd": 1115,
     "thai": "ค่อยๆ สังเกต ค่อยๆ รู้ไป",
-    "romanization": "kʰɔ̂j ๆ sǎŋ-kèet kʰɔ̂j ๆ rúu paj",
+    "romanization": "kʰɔ̂j-kʰɔ̂j sǎŋ-kèet kʰɔ̂j-kʰɔ̂j rúu paj",
     "chinese": "就这样慢慢体察、慢慢如实觉知",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "สังเกต",
         "romanization": "sǎŋ-kèet",
         "chinese": "省察体究",
         "isCore": false
       },
       {
+        "id": "tok_2",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
+        "isCore": false
+      },
+      {
         "id": "tok_3",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "รู้",
+        "romanization": "rúu",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_5",
-        "thai": "รู้",
-        "romanization": "rúu",
-        "chinese": "觉了明知",
-        "isCore": false
-      },
-      {
-        "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -18232,7 +18010,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -18246,7 +18024,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -18267,7 +18045,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       }
     ]
@@ -18308,7 +18086,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -18356,7 +18134,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -18371,21 +18149,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "สั่ง",
         "romanization": "sàŋ",
-        "chinese": "命令/嘱咐",
+        "chinese": "命令/主宰",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -18411,14 +18189,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "สั่ง",
         "romanization": "sàŋ",
-        "chinese": "命令/嘱咐",
+        "chinese": "命令/主宰",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -18432,7 +18210,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -18446,7 +18224,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -18472,14 +18250,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "สั่ง",
         "romanization": "sàŋ",
-        "chinese": "命令/嘱咐",
+        "chinese": "命令/主宰",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -18515,7 +18293,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -18544,7 +18322,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -18592,14 +18370,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -18613,7 +18391,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       }
     ]
@@ -18625,7 +18403,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1136,
     "secondsEnd": 1140,
     "thai": "ยิ่งเราเป็นนักปฏิบัติเราจะรู้อย่างหนึ่ง",
-    "romanization": "jîŋ raw pen nak pà-tì-bàt raw càʔ rúu jàaŋ nɯ̀ŋ",
+    "romanization": "jîŋ raw pen nák-pà-tì-bàt raw càʔ rúu jàaŋ nɯ̀ŋ",
     "chinese": "我们越是身为修行人，就越会深深认清一件事：",
     "words": [
       {
@@ -18646,53 +18424,46 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "นัก",
-        "romanization": "nak",
-        "chinese": "助词",
-        "isCore": false
+        "thai": "นักปฏิบัติ",
+        "romanization": "nák-pà-tì-bàt",
+        "chinese": "修行人/禅修者",
+        "isCore": true
       },
       {
         "id": "tok_4",
-        "thai": "ปฏิบัติ",
-        "romanization": "pà-tì-bàt",
-        "chinese": "修行实践",
-        "isCore": false
-      },
-      {
-        "id": "tok_5",
         "thai": "เรา",
         "romanization": "raw",
         "chinese": "我们",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "จะ",
         "romanization": "càʔ",
         "chinese": "将要/会",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
-        "id": "tok_8",
+        "id": "tok_7",
         "thai": "อย่าง",
         "romanization": "jàaŋ",
         "chinese": "这般/样式",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "หนึ่ง",
         "romanization": "nɯ̀ŋ",
         "chinese": "其一",
@@ -18707,28 +18478,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1140,
     "secondsEnd": 1146,
     "thai": "ว่าจริงๆ แล้ว เราชั่วกว่าที่เราคิดไว้เยอะเลย",
-    "romanization": "wâa ciŋ ciŋ lɛ́ɛw raw cʰûa kwàa tʰîi raw kʰít wáj jə́ʔ ləəj",
+    "romanization": "wâa ciŋ-ciŋ lɛ́ɛw raw cʰûa kwàa tʰîi raw kʰít wáj jə́ʔ ləəj",
     "chinese": "那就是实际上我们内在的恶习陋习，远比自己想象的要恶劣得多！",
     "words": [
       {
         "id": "tok_0",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "จริงๆ",
-        "romanization": "ciŋ ciŋ",
-        "chinese": "真切确乎",
+        "romanization": "ciŋ-ciŋ",
+        "chinese": "真正/实际上",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -18742,7 +18513,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -18756,7 +18527,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -18770,7 +18541,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "คิด",
         "romanization": "kʰít",
-        "chinese": "思量作意",
+        "chinese": "想/思考",
         "isCore": false
       },
       {
@@ -18791,7 +18562,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_11",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -18817,21 +18588,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -18852,7 +18623,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -18873,7 +18644,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -18891,7 +18662,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1149,
     "secondsEnd": 1151,
     "thai": "เราเข้าข้างตัวเอง",
-    "romanization": "raw kʰâo-kʰâaŋ-tua-ʔeeŋ",
+    "romanization": "raw kʰâw-kʰâaŋ-tua-ʔeeŋ",
     "chinese": "我们总是盲目偏袒护短自己",
     "words": [
       {
@@ -18904,7 +18675,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เข้าข้างตัวเอง",
-        "romanization": "kʰâo-kʰâaŋ-tua-ʔeeŋ",
+        "romanization": "kʰâw-kʰâaŋ-tua-ʔeeŋ",
         "chinese": "偏袒自己/自我开脱"
       }
     ]
@@ -18951,14 +18722,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -18972,7 +18743,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ออก",
         "romanization": "ʔɔ̀ɔk",
-        "chinese": "散出/离",
+        "chinese": "出来/出去",
         "isCore": false
       }
     ]
@@ -19012,7 +18783,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -19026,14 +18797,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "คิด",
         "romanization": "kʰít",
-        "chinese": "思量作意",
+        "chinese": "想/思考",
         "isCore": false
       }
     ]
@@ -19059,7 +18830,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       }
     ]
@@ -19092,14 +18863,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -19113,14 +18884,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -19134,7 +18905,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -19160,7 +18931,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
@@ -19174,14 +18945,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -19195,7 +18966,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -19228,28 +18999,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       }
     ]
@@ -19275,7 +19046,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -19289,14 +19060,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -19317,7 +19088,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       }
     ]
@@ -19343,14 +19114,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -19385,14 +19156,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ล่ะ",
         "romanization": "lâʔ",
-        "chinese": "了/呢(语气词)",
+        "chinese": "呢/呀(语气词)",
         "isCore": false
       }
     ]
@@ -19425,28 +19196,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -19461,14 +19232,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -19487,13 +19258,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1175,
     "secondsEnd": 1177,
     "thai": "เห็นอกเห็นใจ",
-    "romanization": "hěn-ʔòk-hěn-cai",
+    "romanization": "hěn-ʔòk-hěn-caj",
     "chinese": "生起深切的同理心与体谅宽容",
     "words": [
       {
         "id": "tok_0",
         "thai": "เห็นอกเห็นใจ",
-        "romanization": "hěn-ʔòk-hěn-cai",
+        "romanization": "hěn-ʔòk-hěn-caj",
         "chinese": "体恤同情"
       }
     ]
@@ -19505,8 +19276,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1177,
     "secondsEnd": 1181,
     "thai": "โอ้ ทุกคนเป็นเพื่อนร่วมทุกข์ ด้วยกันแท้ๆ เลย",
-    "romanization": "ʔôo tʰúk kʰon pen pʰɯ̂an-rûam-tʰúk dûaj kan tʰɛ́ɛ tʰɛ́ɛ ləəj",
-    "chinese": "‘噢，大家实实在在都是同舟共济、同甘共苦的苦难同伴啊！’",
+    "romanization": "ʔôo tʰúk kʰon pen pʰɯ̂an-rûam-tʰúk dûaj kan tʰɛ́ɛ-tʰɛ́ɛ ləəj",
+    "chinese": "‘噢，大家实实在在都是共同受苦的苦难同伴啊！’",
     "words": [
       {
         "id": "tok_0",
@@ -19526,14 +19297,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -19547,28 +19318,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "แท้ๆ",
-        "romanization": "tʰɛ́ɛ tʰɛ́ɛ",
-        "chinese": "本真真实(重复)",
+        "romanization": "tʰɛ́ɛ-tʰɛ́ɛ",
+        "chinese": "真真正正",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -19587,14 +19358,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_1",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -19608,14 +19379,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -19629,7 +19400,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -19643,7 +19414,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -19676,7 +19447,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -19690,7 +19461,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -19704,7 +19475,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -19724,21 +19495,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1189,
     "secondsEnd": 1192,
     "thai": "เกิดความรู้สึกเห็นอกเห็นใจกัน",
-    "romanization": "kə̀ət kʰwaam rúu-sɯ̀k hěn-ʔòk-hěn-cai kan",
+    "romanization": "kə̀ət kʰwaam rúu-sɯ̀k hěn-ʔòk-hěn-caj kan",
     "chinese": "心底油然而生互相同情怜悯体恤之情",
     "words": [
       {
         "id": "tok_0",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_1",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -19751,14 +19522,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เห็นอกเห็นใจ",
-        "romanization": "hěn-ʔòk-hěn-cai",
+        "romanization": "hěn-ʔòk-hěn-caj",
         "chinese": "体恤同情"
       },
       {
         "id": "tok_4",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -19777,14 +19548,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -19797,14 +19568,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -19817,7 +19588,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -19836,14 +19607,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "เบียดเบียน",
         "romanization": "bìat-bian",
-        "chinese": "迫害侵恼",
+        "chinese": "伤害/侵害逼迫",
         "isCore": true,
         "rootBreakdown": "巴利语 Vihiṃsā"
       },
@@ -19851,7 +19622,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -19958,7 +19729,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1204,
     "secondsEnd": 1208,
     "thai": "มันจะคลายความยึดมั่นถือมั่นทั้งหลายลง",
-    "romanization": "man càʔ kʰlaaj kʰwaam jɯt mân tʰɯɯ mân tʰáŋ lǎaj loŋ",
+    "romanization": "man càʔ kʰlaaj kʰwaam jɯ́t-mân-tʰɯ̌ɯ-mân tʰáŋ lǎaj loŋ",
     "chinese": "所有的执着抓取便会逐渐松绑脱落",
     "words": [
       {
@@ -19986,56 +19757,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ยึด",
-        "romanization": "jɯt",
-        "chinese": "助词",
-        "isCore": false
+        "thai": "ยึดมั่นถือมั่น",
+        "romanization": "jɯ́t-mân-tʰɯ̌ɯ-mân",
+        "chinese": "执着执取",
+        "isCore": true
       },
       {
         "id": "tok_5",
-        "thai": "มั่น",
-        "romanization": "mân",
-        "chinese": "稳固",
-        "isCore": false
-      },
-      {
-        "id": "tok_6",
-        "thai": "ถือ",
-        "romanization": "tʰɯɯ",
-        "chinese": "助词",
-        "isCore": false
-      },
-      {
-        "id": "tok_7",
-        "thai": "มั่น",
-        "romanization": "mân",
-        "chinese": "稳固",
-        "isCore": false
-      },
-      {
-        "id": "tok_8",
         "thai": "ทั้ง",
         "romanization": "tʰáŋ",
         "chinese": "全/整",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_6",
         "thai": "หลาย",
         "romanization": "lǎaj",
         "chinese": "许多",
         "isCore": false
       },
       {
-        "id": "tok_10",
+        "id": "tok_7",
         "thai": "ลง",
         "romanization": "loŋ",
-        "chinese": "沉降收敛",
+        "chinese": "下来/降落",
         "isCore": false
       }
     ]
@@ -20075,7 +19825,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -20090,14 +19840,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -20123,7 +19873,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -20157,7 +19907,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -20183,14 +19933,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -20218,14 +19968,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
@@ -20239,7 +19989,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -20253,7 +20003,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -20359,28 +20109,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -20392,14 +20142,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1230,
     "secondsEnd": 1234,
     "thai": "ฟังธรรมะแท้ๆ อย่างที่หลวงพ่อเทศน์",
-    "romanization": "faŋ tʰam-máʔ tʰɛ́ɛ tʰɛ́ɛ jàaŋ tʰîi lǔaŋ-pʰɔ̂ɔ tʰêet",
+    "romanization": "faŋ tʰam-máʔ tʰɛ́ɛ-tʰɛ́ɛ jàaŋ tʰîi lǔaŋ-pʰɔ̂ɔ tʰêet",
     "chinese": "聆听隆波所开示的纯正究竟的正法",
     "words": [
       {
         "id": "tok_0",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -20413,8 +20163,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "แท้ๆ",
-        "romanization": "tʰɛ́ɛ tʰɛ́ɛ",
-        "chinese": "本真真实(重复)",
+        "romanization": "tʰɛ́ɛ-tʰɛ́ɛ",
+        "chinese": "真真正正",
         "isCore": false
       },
       {
@@ -20428,7 +20178,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -20482,7 +20232,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -20509,14 +20259,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -20537,7 +20287,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -20578,14 +20328,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -20614,7 +20364,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -20654,21 +20404,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -20722,21 +20472,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -20769,14 +20519,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -20790,7 +20540,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -20809,7 +20559,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
@@ -20824,7 +20574,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -20838,7 +20588,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -20858,8 +20608,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1258,
     "secondsEnd": 1266,
     "thai": "สมัยพุทธกาลคนฟังธรรมทีละพันคนแล้วได้มรรคผล",
-    "romanization": "sà-mǎj pʰút-tʰá-kaan kʰon faŋ tʰam tʰii láʔ pʰan kʰon lɛ́ɛw dâaj mák-pʰǒn",
-    "chinese": "在佛陀住世时代，千人同时听法而当下证悟道果",
+    "romanization": "sà-mǎj pʰút-tʰá-kaan kʰon faŋ tʰam tʰii-láʔ pʰan kʰon lɛ́ɛw dâaj mák-pʰǒn",
+    "chinese": "在佛陀住世时代，人们动辄上千人一起听法便证悟道果",
     "words": [
       {
         "id": "tok_0",
@@ -20880,14 +20630,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -20899,48 +20649,41 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_5",
-        "thai": "ที",
-        "romanization": "tʰii",
-        "chinese": "次/一下",
+        "thai": "ทีละ",
+        "romanization": "tʰii-láʔ",
+        "chinese": "每次/逐次",
         "isCore": false
       },
       {
         "id": "tok_6",
-        "thai": "ละ",
-        "romanization": "láʔ",
-        "chinese": "断舍涤除",
+        "thai": "พัน",
+        "romanization": "pʰan",
+        "chinese": "一千/千",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "พัน",
-        "romanization": "pʰan",
-        "chinese": "纠缠/缠绕",
+        "thai": "คน",
+        "romanization": "kʰon",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_8",
-        "thai": "คน",
-        "romanization": "kʰon",
-        "chinese": "世人",
+        "thai": "แล้ว",
+        "romanization": "lɛ́ɛw",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_9",
-        "thai": "แล้ว",
-        "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "thai": "ได้",
+        "romanization": "dâaj",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_10",
-        "thai": "ได้",
-        "romanization": "dâaj",
-        "chinese": "能够/得证",
-        "isCore": false
-      },
-      {
-        "id": "tok_11",
         "thai": "มรรคผล",
         "romanization": "mák-pʰǒn",
         "chinese": "道果",
@@ -20969,7 +20712,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -20997,21 +20740,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       }
     ]
@@ -21030,7 +20773,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -21051,7 +20794,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       }
     ]
@@ -21098,7 +20841,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -21131,14 +20874,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -21160,7 +20903,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -21193,7 +20936,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
@@ -21226,7 +20969,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -21254,7 +20997,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -21288,7 +21031,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -21302,7 +21045,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -21335,7 +21078,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -21382,7 +21125,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -21416,7 +21159,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1306,
     "thai": "มีครูบาอาจารย์องค์หนึ่งหลวงพ่อพุธ",
     "romanization": "mii kʰruu-baa-ʔaa-caan ʔoŋ nɯ̀ŋ lǔaŋ-pʰɔ̂ɔ pʰút",
-    "chinese": "有一位著名的高僧隆波布（蒲）长老",
+    "chinese": "有一位大德高僧——隆波普（蒲）长老",
     "words": [
       {
         "id": "tok_0",
@@ -21450,7 +21193,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "หลวงพ่อพุธ",
         "romanization": "lǔaŋ-pʰɔ̂ɔ pʰút",
-        "chinese": "隆波蒲尊者",
+        "chinese": "隆波普长老",
         "isCore": false
       }
     ]
@@ -21462,34 +21205,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1306,
     "secondsEnd": 1309,
     "thai": "ท่านเทศน์ๆ อยู่",
-    "romanization": "tʰâan tʰêet ๆ jùu",
+    "romanization": "tʰâan tʰêet-tʰêet jùu",
     "chinese": "长老正在台上滔滔不绝讲法开示时",
     "words": [
       {
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "เทศน์",
-        "romanization": "tʰêet",
-        "chinese": "说法/开示",
+        "thai": "เทศน์ๆ",
+        "romanization": "tʰêet-tʰêet",
+        "chinese": "讲法中(重复强调)",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_3",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       }
     ]
@@ -21516,7 +21253,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
@@ -21530,7 +21267,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -21559,7 +21296,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -21571,7 +21308,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1313,
     "secondsEnd": 1317,
     "thai": "จิตรวมนี่ชั่วขณะเดียวแว่บเดียว",
-    "romanization": "cìt ruam nîi cʰûa kʰà-nàʔ diaw wɛ̂p diaw",
+    "romanization": "cìt ruam nîi cʰûa-kʰà-nàʔ diaw wɛ̂ɛp diaw",
     "chinese": "心凝定归一仅仅只是一刹那间、极其迅疾的一闪",
     "words": [
       {
@@ -21593,38 +21330,31 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ชั่ว",
-        "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "thai": "ชั่วขณะ",
+        "romanization": "cʰûa-kʰà-nàʔ",
+        "chinese": "一刹那/片刻",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ขณะ",
-        "romanization": "kʰà-nàʔ",
-        "chinese": "刹那当下",
-        "isCore": false
-      },
-      {
-        "id": "tok_5",
         "thai": "เดียว",
         "romanization": "diaw",
         "chinese": "唯一/单一",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "แว่บ",
-        "romanization": "wɛ̂p",
+        "romanization": "wɛ̂ɛp",
         "chinese": "一瞬间/闪现"
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "เดียว",
         "romanization": "diaw",
         "chinese": "唯一/单一",
@@ -21646,7 +21376,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -21675,14 +21405,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -21701,35 +21431,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -21743,7 +21473,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -21762,7 +21492,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
@@ -21784,14 +21514,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -21803,28 +21533,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1324,
     "secondsEnd": 1328,
     "thai": "แล้วท่านก็ต้องรีบนึกว่าเมื่อกี้พูดถึงอะไร",
-    "romanization": "lɛ́ɛw tʰâan kɔ̂ɔ tɔ̂ŋ rîip nɯ́k wâa mɯ̂a kîi pʰûut tʰɯ̌ŋ ʔà-raj",
+    "romanization": "lɛ́ɛw tʰâan kɔ̂ɔ tɔ̂ŋ rîip nɯ́k wâa mɯ̂a-kîi pʰûut tʰɯ̌ŋ ʔà-raj",
     "chinese": "接着长老不得不赶紧回想：刚才自己究竟讲到哪里了？",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -21852,39 +21582,32 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "เมื่อ",
-        "romanization": "mɯ̂a",
-        "chinese": "及至……时",
+        "thai": "เมื่อกี้",
+        "romanization": "mɯ̂a-kîi",
+        "chinese": "刚才/方才",
         "isCore": false
       },
       {
         "id": "tok_8",
-        "thai": "กี้",
-        "romanization": "kîi",
-        "chinese": "助词",
-        "isCore": false
-      },
-      {
-        "id": "tok_9",
         "thai": "พูด",
         "romanization": "pʰûut",
         "chinese": "说/讲",
         "isCore": false
       },
       {
-        "id": "tok_10",
+        "id": "tok_9",
         "thai": "ถึง",
         "romanization": "tʰɯ̌ŋ",
-        "chinese": "契达亲证",
+        "chinese": "到/至",
         "isCore": false
       },
       {
-        "id": "tok_11",
+        "id": "tok_10",
         "thai": "อะไร",
         "romanization": "ʔà-raj",
         "chinese": "何物/什么",
@@ -21920,14 +21643,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -21974,28 +21697,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -22014,7 +21737,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -22028,21 +21751,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
@@ -22056,7 +21779,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -22110,7 +21833,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "มาก",
         "romanization": "mâak",
-        "chinese": "极多深厚",
+        "chinese": "很/非常/多",
         "isCore": false
       }
     ]
@@ -22122,60 +21845,53 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1340,
     "secondsEnd": 1344,
     "thai": "ท่านบอกชั่วขณะไม่กี่ขณะจิต",
-    "romanization": "tʰâan bɔ̀ɔk cʰûa kʰà-nàʔ mâj kìi kʰà-nàʔ cìt",
+    "romanization": "tʰâan bɔ̀ɔk cʰûa-kʰà-nàʔ mâj kìi kʰà-nàʔ cìt",
     "chinese": "长老开示说：那不过是区区几个心识刹那而已",
     "words": [
       {
         "id": "tok_0",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ชั่ว",
-        "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "thai": "ชั่วขณะ",
+        "romanization": "cʰûa-kʰà-nàʔ",
+        "chinese": "一刹那/片刻",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "ขณะ",
-        "romanization": "kʰà-nàʔ",
-        "chinese": "刹那当下",
+        "thai": "ไม่",
+        "romanization": "mâj",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ไม่",
-        "romanization": "mâj",
-        "chinese": "非/不",
-        "isCore": false
-      },
-      {
-        "id": "tok_5",
         "thai": "กี่",
         "romanization": "kìi",
         "chinese": "几/多少",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ขณะ",
         "romanization": "kʰà-nàʔ",
         "chinese": "刹那当下",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "จิต",
         "romanization": "cìt",
         "chinese": "心/意识",
@@ -22231,14 +21947,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -22274,7 +21990,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
@@ -22293,21 +22009,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1351,
     "secondsEnd": 1356,
     "thai": "รับความสุขเสวยผล 2 – 3 ขณะ",
-    "romanization": "ráp kʰwaam sùk sà-wǒei-pʰǒn sɔ̌ɔŋ – sǎam kʰà-nàʔ",
+    "romanization": "ráp kʰwaam sùk sà-wə̌əj-pʰǒn sɔ̌ɔŋ-sǎam kʰà-nàʔ",
     "chinese": "领纳受用果定的殊胜安乐两到三个心识刹那",
     "words": [
       {
         "id": "tok_0",
         "thai": "รับ",
         "romanization": "ráp",
-        "chinese": "领受/感知",
+        "chinese": "领受/纳受",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -22321,32 +22037,19 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เสวยผล",
-        "romanization": "sà-wǒei-pʰǒn",
-        "chinese": "纳受道果",
+        "romanization": "sà-wə̌əj-pʰǒn",
+        "chinese": "纳受果定安乐",
         "isCore": true
       },
       {
         "id": "tok_4",
-        "thai": "2",
-        "romanization": "sɔ̌ɔŋ",
-        "chinese": "二",
+        "thai": "2–3",
+        "romanization": "sɔ̌ɔŋ-sǎam",
+        "chinese": "两三个",
         "isCore": false
       },
       {
         "id": "tok_5",
-        "thai": "–",
-        "romanization": "–",
-        "chinese": "至"
-      },
-      {
-        "id": "tok_6",
-        "thai": "3",
-        "romanization": "sǎam",
-        "chinese": "三",
-        "isCore": false
-      },
-      {
-        "id": "tok_7",
         "thai": "ขณะ",
         "romanization": "kʰà-nàʔ",
         "chinese": "刹那当下",
@@ -22361,14 +22064,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1356,
     "secondsEnd": 1358,
     "thai": "แล้วจิตก็ทวนกลับเข้าไป",
-    "romanization": "lɛ́ɛw cìt kɔ̂ɔ tʰuan klàp kʰâo-pai",
+    "romanization": "lɛ́ɛw cìt kɔ̂ɔ tʰuan klàp kʰâw-paj",
     "chinese": "接着心便内向回返省察（作十九种省察智）",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -22383,7 +22086,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -22402,7 +22105,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       }
     ]
@@ -22428,14 +22131,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -22449,7 +22152,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       }
     ]
@@ -22482,7 +22185,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -22537,7 +22240,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       }
     ]
@@ -22549,7 +22252,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1365,
     "secondsEnd": 1367,
     "thai": "จิตมันทวนเข้าไป",
-    "romanization": "cìt man tʰuan kʰâo-pai",
+    "romanization": "cìt man tʰuan kʰâw-paj",
     "chinese": "心就这样往内回照省察",
     "words": [
       {
@@ -22576,7 +22279,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เข้าไป",
-        "romanization": "kʰâo-pai",
+        "romanization": "kʰâw-paj",
         "chinese": "深入潜入"
       }
     ]
@@ -22602,7 +22305,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -22684,21 +22387,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       }
     ]
@@ -22752,7 +22455,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -22766,7 +22469,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -22778,7 +22481,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1378,
     "secondsEnd": 1382,
     "thai": "เปลี่ยนไปหมดแล้ว ทุกอย่างในชีวิต",
-    "romanization": "plìan paj mòt lɛ́ɛw tʰúk jàaŋ naj chii-wít",
+    "romanization": "plìan paj mòt lɛ́ɛw tʰúk jàaŋ naj cʰii-wít",
     "chinese": "然而生命中的整个世界与一切，早已发生天翻地覆的彻底蜕变！",
     "words": [
       {
@@ -22792,7 +22495,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -22806,7 +22509,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -22833,7 +22536,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_7",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
+        "romanization": "cʰii-wít",
         "chinese": "生机/生命",
         "isCore": false
       }
@@ -22867,14 +22570,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -22943,7 +22646,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "แก่",
         "romanization": "kɛ̀ɛ",
-        "chinese": "老/衰老",
+        "chinese": "衰老/老",
         "isCore": false
       },
       {
@@ -22962,7 +22665,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1398,
     "thai": "เราอาจจะล้างกิเลสในขณะฟังธรรม",
     "romanization": "raw ʔàat càʔ láaŋ-kì-lèet naj kʰà-nàʔ faŋ tʰam",
-    "chinese": "我们完全有可能在听闻佛法的当下洗涤涤除烦恼！",
+    "chinese": "我们完全有可能在听闻佛法的当下涤除烦恼！",
     "words": [
       {
         "id": "tok_0",
@@ -23009,7 +22712,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -23042,7 +22745,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -23068,7 +22771,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1404,
     "secondsEnd": 1408,
     "thai": "เพราะฉะนั้นการที่เรามาวัด",
-    "romanization": "pʰrɔ́ʔ cʰàʔ-nán kaan tʰîi raw maa wat",
+    "romanization": "pʰrɔ́ʔ cʰàʔ-nán kaan tʰîi raw maa wát",
     "chinese": "所以我们大家来到寺庙",
     "words": [
       {
@@ -23089,14 +22792,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -23110,14 +22813,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       }
     ]
@@ -23136,7 +22839,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -23150,7 +22853,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -23164,7 +22867,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -23183,14 +22886,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
@@ -23210,7 +22913,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -23224,7 +22927,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走/行走",
         "isCore": false
       },
       {
@@ -23286,7 +22989,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -23321,7 +23024,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       }
     ]
@@ -23347,7 +23050,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -23374,7 +23077,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1428,
     "secondsEnd": 1432,
     "thai": "ขณะนี้พวกเราสำรวมกายรู้สึกไหม",
-    "romanization": "kʰà-nàʔ níi pʰûak raw sǎm-ruam-kaai rúu-sɯ̀k mǎj",
+    "romanization": "kʰà-nàʔ níi pʰûak raw sǎm-ruam-kaaj rúu-sɯ̀k mǎj",
     "chinese": "此时此刻大家都在收摄身业，大家感觉到了吗？",
     "words": [
       {
@@ -23388,7 +23091,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -23408,7 +23111,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "สำรวมกาย",
-        "romanization": "sǎm-ruam-kaai",
+        "romanization": "sǎm-ruam-kaaj",
         "chinese": "收摄身门/身律仪",
         "isCore": true
       },
@@ -23423,7 +23126,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       }
     ]
@@ -23475,20 +23178,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1435,
     "secondsEnd": 1439,
     "thai": "สำรวมใจ สำรวมใจไม่ใช่ไปนั่งเพ่งให้ใจนิ่งๆ",
-    "romanization": "sǎm-ruam-cai sǎm-ruam-cai mâj cʰâj paj nâŋ pʰêŋ hâj caj nîŋ nîŋ",
+    "romanization": "sǎm-ruam-caj sǎm-ruam-caj mâj cʰâj paj nâŋ pʰêŋ hâj caj nîŋ-nîŋ",
     "chinese": "收摄意业——收摄心并非去死死紧盯紧绷着让心一动不动",
     "words": [
       {
         "id": "tok_0",
         "thai": "สำรวมใจ",
-        "romanization": "sǎm-ruam-cai",
+        "romanization": "sǎm-ruam-caj",
         "chinese": "收摄意门/意律仪",
         "isCore": true
       },
       {
         "id": "tok_1",
         "thai": "สำรวมใจ",
-        "romanization": "sǎm-ruam-cai",
+        "romanization": "sǎm-ruam-caj",
         "chinese": "收摄意门/意律仪",
         "isCore": true
       },
@@ -23496,7 +23199,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -23510,14 +23213,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "นั่ง",
         "romanization": "nâŋ",
-        "chinese": "端坐",
+        "chinese": "坐",
         "isCore": false
       },
       {
@@ -23531,7 +23234,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -23544,8 +23247,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_9",
         "thai": "นิ่งๆ",
-        "romanization": "nîŋ nîŋ",
-        "chinese": "静静地/一动不动",
+        "romanization": "nîŋ-nîŋ",
+        "chinese": "一动不动/静静地",
         "isCore": false
       }
     ]
@@ -23571,7 +23274,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -23600,14 +23303,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       }
     ]
@@ -23633,7 +23336,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -23668,7 +23371,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -23687,7 +23390,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1447,
     "secondsEnd": 1450,
     "thai": "โดยเฉพาะมือถือนี่ตัวร้ายเลย",
-    "romanization": "dooj cʰà-pʰɔ́ʔ mɯɯ-tʰɯ̌ɯ nîi tua ráai ləəj",
+    "romanization": "dooj cʰà-pʰɔ́ʔ mɯɯ-tʰɯ̌ɯ nîi tua ráaj ləəj",
     "chinese": "特别是手机，简直就是最凶猛的破坏元凶",
     "words": [
       {
@@ -23714,27 +23417,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ร้าย",
-        "romanization": "ráai",
+        "romanization": "ráaj",
         "chinese": "恶劣/凶恶/不善"
       },
       {
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -23753,7 +23456,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -23767,7 +23470,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -23787,7 +23490,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "บอก",
         "romanization": "bɔ̀ɔk",
-        "chinese": "讲述告谕",
+        "chinese": "告诉/说",
         "isCore": false
       },
       {
@@ -23819,7 +23522,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เล่น",
         "romanization": "lên",
-        "chinese": "玩/作(喻易行或炒股)",
+        "chinese": "玩/刷(手机)",
         "isCore": false
       },
       {
@@ -23846,7 +23549,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -23860,7 +23563,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "สิ",
         "romanization": "sìʔ",
-        "chinese": "呀/吧(语气词)",
+        "chinese": "嘛/呀(语气词)",
         "isCore": false
       }
     ]
@@ -23872,23 +23575,17 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1457,
     "secondsEnd": 1461,
     "thai": "ว่อกแว่กๆ ตลอด",
-    "romanization": "wɔ̂ɔk-wɛ̂ɛk ๆ tàʔ-lɔ̀ɔt",
+    "romanization": "wɔ̂ɔk-wɛ̂ɛk wɔ̂ɔk-wɛ̂ɛk tàʔ-lɔ̀ɔt",
     "chinese": "自始至终都在分心散乱、心浮气躁",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ว่อกแว่ก",
-        "romanization": "wɔ̂ɔk-wɛ̂ɛk",
-        "chinese": "心神涣散/动摇不定"
+        "thai": "ว่อกแว่กๆ",
+        "romanization": "wɔ̂ɔk-wɛ̂ɛk wɔ̂ɔk-wɛ̂ɛk",
+        "chinese": "分心散乱"
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "ตลอด",
         "romanization": "tàʔ-lɔ̀ɔt",
         "chinese": "终始不息",
@@ -23917,7 +23614,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -23943,20 +23640,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1464,
     "secondsEnd": 1467,
     "thai": "ไหนๆ มาเจอด้วยกันแล้ว",
-    "romanization": "nǎi-nǎi maa cəə dûaj kan lɛ́ɛw",
+    "romanization": "nǎj-nǎj maa cəə dûaj kan lɛ́ɛw",
     "chinese": "既然大家有幸在此齐聚一堂",
     "words": [
       {
         "id": "tok_0",
         "thai": "ไหนๆ",
-        "romanization": "nǎi-nǎi",
-        "chinese": "既然/既已至此"
+        "romanization": "nǎj-nǎj",
+        "chinese": "既然"
       },
       {
         "id": "tok_1",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -23970,21 +23667,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -24010,7 +23707,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -24024,7 +23721,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -24045,7 +23742,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24059,14 +23756,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -24107,14 +23804,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -24136,7 +23833,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -24219,7 +23916,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -24233,7 +23930,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -24254,7 +23951,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24295,7 +23992,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -24324,7 +24021,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เสีย",
         "romanization": "sǐa",
-        "chinese": "花费/失掉",
+        "chinese": "……之多(强调)",
         "isCore": false
       },
       {
@@ -24338,14 +24035,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "สัก",
         "romanization": "sàk",
-        "chinese": "สักหนึ่ง：随便某一个",
+        "chinese": "大约/足有",
         "isCore": false
       },
       {
@@ -24371,7 +24068,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1495,
     "secondsEnd": 1497,
     "thai": "ฉะนั้นการที่เราถือศีล 5",
-    "romanization": "cʰàʔ-nán kaan tʰîi raw tʰɯɯ sǐin hâa",
+    "romanization": "cʰàʔ-nán kaan tʰîi raw tʰɯ̌ɯ sǐin hâa",
     "chinese": "因此只要我们谨守五戒",
     "words": [
       {
@@ -24385,14 +24082,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -24405,8 +24102,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "ถือ",
-        "romanization": "tʰɯɯ",
-        "chinese": "助词",
+        "romanization": "tʰɯ̌ɯ",
+        "chinese": "持守",
         "isCore": false
       },
       {
@@ -24432,7 +24129,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -24453,7 +24150,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24481,7 +24178,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -24521,14 +24218,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24555,7 +24252,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1510,
     "thai": "ข้อที่ 1 ขณะนี้เราไม่ได้ฆ่าสัตว์ เบียดเบียนสัตว์",
     "romanization": "kʰɔ̂ɔ tʰîi nɯ̀ŋ kʰà-nàʔ níi raw mâj dâaj kʰâa sàt bìat-bian sàt",
-    "chinese": "第一条：此时此刻我们没有杀害生命、侵害逼迫众生",
+    "chinese": "第一条：此时此刻我们没有杀害生命、伤害众生",
     "words": [
       {
         "id": "tok_0",
@@ -24568,7 +24265,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -24589,7 +24286,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -24603,14 +24300,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24631,7 +24328,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "เบียดเบียน",
         "romanization": "bìat-bian",
-        "chinese": "迫害侵恼",
+        "chinese": "伤害/侵害逼迫",
         "isCore": true,
         "rootBreakdown": "巴利语 Vihiṃsā"
       },
@@ -24652,7 +24349,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1510,
     "secondsEnd": 1512,
     "thai": "ข้อ 2 เราไม่ได้ลักทรัพย์",
-    "romanization": "kʰɔ̂ɔ sɔ̌ɔŋ raw mâj dâaj lak sáp",
+    "romanization": "kʰɔ̂ɔ sɔ̌ɔŋ raw mâj dâaj lák sáp",
     "chinese": "第二条：我们没有偷盗侵占财物",
     "words": [
       {
@@ -24680,21 +24377,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ลัก",
-        "romanization": "lak",
-        "chinese": "助词",
+        "romanization": "lák",
+        "chinese": "偷盗/盗窃",
         "isCore": false
       },
       {
@@ -24740,7 +24437,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -24754,14 +24451,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24829,14 +24526,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24883,14 +24580,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -24918,28 +24615,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "ตี",
         "romanization": "tii",
-        "chinese": "助词",
+        "chinese": "打架/打斗",
         "isCore": false
       },
       {
         "id": "tok_11",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -24979,14 +24676,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -25000,7 +24697,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "คำ",
         "romanization": "kʰam",
-        "chinese": "句读名言",
+        "chinese": "词/话语",
         "isCore": false
       },
       {
@@ -25047,14 +24744,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -25094,7 +24791,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -25162,7 +24859,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "คำ",
         "romanization": "kʰam",
-        "chinese": "句读名言",
+        "chinese": "词/话语",
         "isCore": false
       },
       {
@@ -25195,14 +24892,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -25223,7 +24920,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ฟัง",
         "romanization": "faŋ",
-        "chinese": "听/闻",
+        "chinese": "听",
         "isCore": false
       },
       {
@@ -25256,14 +24953,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -25278,7 +24975,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       }
     ]
@@ -25297,7 +24994,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -25312,14 +25009,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_3",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
@@ -25354,7 +25051,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -25394,7 +25091,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -25408,7 +25105,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -25422,7 +25119,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -25436,7 +25133,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_9",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -25455,21 +25152,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1556,
     "secondsEnd": 1558,
     "thai": "ตัวนี้ต้องค่อยๆ ฝึก",
-    "romanization": "tua níi tɔ̂ŋ kʰɔ̂j ๆ fɯ̀k",
+    "romanization": "tua níi tɔ̂ŋ kʰɔ̂j-kʰɔ̂j fɯ̀k",
     "chinese": "这三项需要循序渐进地修习训练",
     "words": [
       {
         "id": "tok_0",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -25481,19 +25178,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_3",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_5",
         "thai": "ฝึก",
         "romanization": "fɯ̀k",
         "chinese": "习练修磨",
@@ -25508,34 +25199,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1558,
     "secondsEnd": 1561,
     "thai": "ค่อยๆ พัฒนาไป",
-    "romanization": "kʰɔ̂j ๆ pʰát-tʰá-naa paj",
+    "romanization": "kʰɔ̂j-kʰɔ̂j pʰát-tʰá-naa paj",
     "chinese": "一步步稳扎稳打地培育提升",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "พัฒนา",
         "romanization": "pʰát-tʰá-naa",
         "chinese": "发展/提升",
         "isCore": false
       },
       {
-        "id": "tok_3",
+        "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -25635,7 +25320,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -25709,7 +25394,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -25723,21 +25408,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ขึ้น",
         "romanization": "kʰɯ̂n",
-        "chinese": "升发上起",
+        "chinese": "起来/上升",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -25758,21 +25443,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
         "id": "tok_10",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -25820,7 +25505,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1577,
     "secondsEnd": 1581,
     "thai": "ตรงนี้เราค่อยๆ พัฒนาปัญญา",
-    "romanization": "troŋ níi raw kʰɔ̂j ๆ pʰát-tʰá-naa pan-jaa",
+    "romanization": "troŋ níi raw kʰɔ̂j-kʰɔ̂j pʰát-tʰá-naa pan-jaa",
     "chinese": "在这个层面上我们需要逐步培育开发智慧",
     "words": [
       {
@@ -25834,7 +25519,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -25846,26 +25531,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_3",
-        "thai": "ค่อย",
-        "romanization": "kʰɔ̂j",
-        "chinese": "才/渐渐",
+        "thai": "ค่อยๆ",
+        "romanization": "kʰɔ̂j-kʰɔ̂j",
+        "chinese": "慢慢地/逐步",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_5",
         "thai": "พัฒนา",
         "romanization": "pʰát-tʰá-naa",
         "chinese": "发展/提升",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ปัญญา",
         "romanization": "pan-jaa",
         "chinese": "智慧",
@@ -25896,7 +25575,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -25910,7 +25589,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -25937,7 +25616,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -25970,7 +25649,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -26012,7 +25691,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -26046,7 +25725,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -26068,14 +25747,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -26089,7 +25768,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -26108,7 +25787,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -26123,7 +25802,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -26137,7 +25816,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       }
     ]
@@ -26156,7 +25835,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -26184,7 +25863,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -26198,7 +25877,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -26224,7 +25903,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -26245,7 +25924,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -26266,14 +25945,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -26294,7 +25973,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "อยู่",
         "romanization": "jùu",
-        "chinese": "处于/在",
+        "chinese": "在/处于",
         "isCore": false
       },
       {
@@ -26327,7 +26006,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -26348,7 +26027,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -26370,14 +26049,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -26391,7 +26070,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -26424,14 +26103,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -26445,7 +26124,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ตัว",
         "romanization": "tua",
-        "chinese": "自身/自身",
+        "chinese": "自己/身体/个",
         "isCore": false
       },
       {
@@ -26478,7 +26157,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -26499,14 +26178,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -26525,7 +26204,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -26544,14 +26223,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1616,
     "secondsEnd": 1619,
     "thai": "แล้วค่อยภาวนาไปเรื่อยๆ",
-    "romanization": "lɛ́ɛw kʰɔ̂j pʰaa-wáʔ-naa paj rɯ̂ai ๆ",
+    "romanization": "lɛ́ɛw kʰɔ̂j pʰaa-wáʔ-naa paj rɯ̂aj-rɯ̂aj",
     "chinese": "随后继续绵密不绝地精进修行用功",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -26572,20 +26251,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
-        "chinese": "连续/不断"
-      },
-      {
-        "id": "tok_5",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "เรื่อยๆ",
+        "romanization": "rɯ̂aj-rɯ̂aj",
+        "chinese": "持续不断/接连"
       }
     ]
   },
@@ -26617,7 +26290,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -26658,7 +26331,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -26719,7 +26392,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -26759,7 +26432,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
@@ -26791,7 +26464,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1636,
     "secondsEnd": 1641,
     "thai": "ศาสนาพุทธชาวพุทธเราเรียนรู้เหตุผล",
-    "romanization": "sàat-sà-nǎa pʰút cʰaao pʰút raw rian rúu hèet-pʰǒn",
+    "romanization": "sàat-sà-nǎa pʰút cʰaaw pʰút raw rian rúu hèet-pʰǒn",
     "chinese": "佛教——我们佛弟子所学修的正是因缘因果的法则",
     "words": [
       {
@@ -26811,7 +26484,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "ชาว",
-        "romanization": "cʰaao",
+        "romanization": "cʰaaw",
         "chinese": "族/民众/人等"
       },
       {
@@ -26839,7 +26512,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "รู้",
         "romanization": "rúu",
-        "chinese": "觉了明知",
+        "chinese": "知道/觉知",
         "isCore": false
       },
       {
@@ -26878,28 +26551,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
         "id": "tok_4",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -27014,7 +26687,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เกิด",
         "romanization": "kə̀ət",
-        "chinese": "生/生起",
+        "chinese": "生起/产生",
         "isCore": true
       },
       {
@@ -27041,7 +26714,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1656,
     "thai": "ถ้าเหตุดับสิ่งนั้นก็ดับ",
     "romanization": "tʰâa hèet dàp sìŋ nán kɔ̂ɔ dàp",
-    "chinese": "‘诸法因缘灭’（若因缘息灭，该事物亦随之寂灭）",
+    "chinese": "‘若因灭，彼法亦灭’（若因缘息灭，该事物亦随之寂灭）",
     "words": [
       {
         "id": "tok_0",
@@ -27075,14 +26748,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -27101,13 +26774,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1656,
     "secondsEnd": 1659,
     "thai": "ชาวพุทธเราจะเรียนเรื่องเหตุกับผล",
-    "romanization": "cʰaao pʰút raw càʔ rian rɯ̂aŋ hèet kàp pʰǒn",
+    "romanization": "cʰaaw pʰút raw càʔ rian rɯ̂aŋ hèet kàp pʰǒn",
     "chinese": "我们佛教徒探求修学的正是因与果的实相",
     "words": [
       {
         "id": "tok_0",
         "thai": "ชาว",
-        "romanization": "cʰaao",
+        "romanization": "cʰaaw",
         "chinese": "族/民众/人等"
       },
       {
@@ -27156,7 +26829,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -27189,7 +26862,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -27263,7 +26936,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1663,
     "secondsEnd": 1669,
     "thai": "อริยสัจท่านก็อธิบายเหตุกับผล 2 คู่",
-    "romanization": "ʔà-rí-jáʔ-sàt tʰâan kɔ̂ɔ ʔà-tʰí-baai hèet kàp pʰǒn sɔ̌ɔŋ kʰûu",
+    "romanization": "ʔà-rí-jáʔ-sàt tʰâan kɔ̂ɔ ʔà-tʰí-baaj hèet kàp pʰǒn sɔ̌ɔŋ kʰûu",
     "chinese": "四圣谛向我们详尽阐明了两重因果：",
     "words": [
       {
@@ -27277,20 +26950,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ท่าน",
         "romanization": "tʰâan",
-        "chinese": "尊长/师父",
+        "chinese": "尊者/长老/师父",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "อธิบาย",
-        "romanization": "ʔà-tʰí-baai",
+        "romanization": "ʔà-tʰí-baaj",
         "chinese": "阐明/解说"
       },
       {
@@ -27304,7 +26977,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -27350,7 +27023,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -27364,7 +27037,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
@@ -27414,7 +27087,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -27442,14 +27115,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -27483,7 +27156,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -27497,7 +27170,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       },
       {
@@ -27540,7 +27213,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1680,
     "secondsEnd": 1683,
     "thai": "หรืออริยมรรคมีองค์ 8",
-    "romanization": "rɯ̌ɯ ʔà-rí-já-mák-mii-ʔoŋ-pɛ̀ɛt",
+    "romanization": "rɯ̌ɯ ʔà-rí-jáʔ-mák mii ʔoŋ pɛ̀ɛt",
     "chinese": "也就是完整修习‘八支圣道’（道谛）",
     "words": [
       {
@@ -27553,7 +27226,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "อริยมรรคมีองค์ 8",
-        "romanization": "ʔà-rí-já-mák-mii-ʔoŋ-pɛ̀ɛt",
+        "romanization": "ʔà-rí-jáʔ-mák mii ʔoŋ pɛ̀ɛt",
         "chinese": "八圣道",
         "isCore": true,
         "rootBreakdown": "巴利语 Ariya Aṭṭhaṅgika Magga"
@@ -27574,7 +27247,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -27609,7 +27282,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -27657,7 +27330,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -27685,7 +27358,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -27744,7 +27417,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1692,
     "secondsEnd": 1698,
     "thai": "ฉะนั้นชาวพุทธเราเชื่อเรื่องเหตุผลไม่งมงาย",
-    "romanization": "cʰàʔ-nán cʰaao pʰút raw cʰɯ̂a rɯ̂aŋ hèet-pʰǒn mâj ŋom-ŋaaj",
+    "romanization": "cʰàʔ-nán cʰaaw pʰút raw cʰɯ̂a rɯ̂aŋ hèet-pʰǒn mâj ŋom-ŋaaj",
     "chinese": "因此我们佛教徒深信正因正果，绝不迷信盲从",
     "words": [
       {
@@ -27757,7 +27430,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "ชาว",
-        "romanization": "cʰaao",
+        "romanization": "cʰaaw",
         "chinese": "族/民众/人等"
       },
       {
@@ -27798,7 +27471,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -27831,7 +27504,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -27852,7 +27525,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "เทวนิยม",
         "romanization": "tʰee-wá-ní-jom",
-        "chinese": "天神至上论/宿命神创教"
+        "chinese": "神造论/神创教派"
       }
     ]
   },
@@ -27863,7 +27536,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1701,
     "secondsEnd": 1705,
     "thai": "จะไปร้องขอ ขอพรโน่นขอพรนี่",
-    "romanization": "càʔ paj rɔ́ɔŋ-kʰɔ̌ɔ kʰɔ̌ɔ pʰan nôon kʰɔ̌ɔ pʰan nîi",
+    "romanization": "càʔ paj rɔ́ɔŋ-kʰɔ̌ɔ kʰɔ̌ɔ pʰɔɔn nôon kʰɔ̌ɔ pʰɔɔn nîi",
     "chinese": "四处下跪乞求、祈求赐予这样那样的福佑",
     "words": [
       {
@@ -27877,7 +27550,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -27890,41 +27563,41 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ขอ",
         "romanization": "kʰɔ̌ɔ",
-        "chinese": "请求/请",
+        "chinese": "祈求/请求",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "โน่น",
         "romanization": "nôon",
-        "chinese": "彼方/那里"
+        "chinese": "那儿/那边"
       },
       {
         "id": "tok_6",
         "thai": "ขอ",
         "romanization": "kʰɔ̌ɔ",
-        "chinese": "请求/请",
+        "chinese": "祈求/请求",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       }
     ]
@@ -27936,7 +27609,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1705,
     "secondsEnd": 1708,
     "thai": "ใครเคยดูหนังแขกไหม",
-    "romanization": "kʰraj kʰəəj duu nǎŋ kʰɛ̀ɛk mǎj",
+    "romanization": "kʰraj kʰəəj duu nǎŋ-kʰɛ̀ɛk mǎj",
     "chinese": "大家有谁看过印度的神话电影吗？",
     "words": [
       {
@@ -27957,27 +27630,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "หนัง",
-        "romanization": "nǎŋ",
-        "chinese": "皮肤/电影",
+        "thai": "หนังแขก",
+        "romanization": "nǎŋ-kʰɛ̀ɛk",
+        "chinese": "印度电影",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "แขก",
-        "romanization": "kʰɛ̀ɛk",
-        "chinese": "外来客商/印度戏人"
-      },
-      {
-        "id": "tok_5",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       }
     ]
@@ -28030,7 +27697,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1710,
     "secondsEnd": 1714,
     "thai": "มันก็ไปบำเพ็ญตบะแผดเผา",
-    "romanization": "man kɔ̂ɔ paj bam-pʰen-tà-bàʔ pʰɛ̀ɛt-pʰǎo",
+    "romanization": "man kɔ̂ɔ paj bam-pʰen-tà-bàʔ pʰɛ̀ɛt-pʰǎw",
     "chinese": "跑去修习极端的苦行苦修，烈火焚烧一般",
     "words": [
       {
@@ -28044,14 +27711,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -28065,7 +27732,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "แผดเผา",
-        "romanization": "pʰɛ̀ɛt-pʰǎo",
+        "romanization": "pʰɛ̀ɛt-pʰǎw",
         "chinese": "烈焰煎逼/炽燃"
       }
     ]
@@ -28077,13 +27744,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1714,
     "secondsEnd": 1718,
     "thai": "เผาพระเจ้าจนพระเจ้าร้อนต้องลงมาให้พร",
-    "romanization": "pʰǎo pʰráʔ-câaw con pʰráʔ-câaw rɔ́ɔn tɔ̂ŋ loŋ maa hâj pʰan",
+    "romanization": "pʰǎw pʰráʔ-câaw con pʰráʔ-câaw rɔ́ɔn tɔ̂ŋ loŋ maa hâj pʰɔɔn",
     "chinese": "热力炙烤逼迫得天神坐立难安，不得不下凡来赐予祝福神力",
     "words": [
       {
         "id": "tok_0",
         "thai": "เผา",
-        "romanization": "pʰǎo",
+        "romanization": "pʰǎw",
         "chinese": "焚烧/灼烧"
       },
       {
@@ -28125,28 +27792,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ลง",
         "romanization": "loŋ",
-        "chinese": "沉降收敛",
+        "chinese": "下来/降落",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_9",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       }
     ]
@@ -28158,23 +27825,17 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1718,
     "secondsEnd": 1720,
     "thai": "คล้ายๆ ขู่กรรโชก",
-    "romanization": "kʰláaj ๆ kʰùu-kan-cʰôok",
+    "romanization": "kʰláaj-kʰláaj kʰùu-kan-cʰôok",
     "chinese": "就跟敲诈勒索相差无几",
     "words": [
       {
         "id": "tok_0",
-        "thai": "คล้าย",
-        "romanization": "kʰláaj",
+        "thai": "คล้ายๆ",
+        "romanization": "kʰláaj-kʰláaj",
         "chinese": "宛如/类似于"
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "ขู่กรรโชก",
         "romanization": "kʰùu-kan-cʰôok",
         "chinese": "敲诈勒索/恐吓威逼"
@@ -28188,28 +27849,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1720,
     "secondsEnd": 1722,
     "thai": "ให้พรก็มีฤทธิ์",
-    "romanization": "hâj pʰan kɔ̂ɔ mii rít",
+    "romanization": "hâj pʰɔɔn kɔ̂ɔ mii rít",
     "chinese": "一旦得到了赐福便拥有了神通法力",
     "words": [
       {
         "id": "tok_0",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28235,7 +27896,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1722,
     "secondsEnd": 1726,
     "thai": "พอมีฤทธิ์พื้นฐานมันไม่ได้รักษาศีล",
-    "romanization": "pʰɔɔ mii rít pʰɯ̂ɯn tʰǎan man mâj dâaj rák-sǎa sǐin",
+    "romanization": "pʰɔɔ mii rít pʰɯ́ɯn-tʰǎan man mâj dâaj rák-sǎa sǐin",
     "chinese": "由于心性根本没有持戒修德作为基石",
     "words": [
       {
@@ -28261,48 +27922,41 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_3",
-        "thai": "พื้น",
-        "romanization": "pʰɯ̂ɯn",
-        "chinese": "助词",
+        "thai": "พื้นฐาน",
+        "romanization": "pʰɯ́ɯn-tʰǎan",
+        "chinese": "基础/根基",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ฐาน",
-        "romanization": "tʰǎan",
-        "chinese": "基底/心宅",
-        "isCore": true
-      },
-      {
-        "id": "tok_5",
         "thai": "มัน",
         "romanization": "man",
         "chinese": "它",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
+        "isCore": false
+      },
+      {
+        "id": "tok_6",
+        "thai": "ได้",
+        "romanization": "dâaj",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_7",
-        "thai": "ได้",
-        "romanization": "dâaj",
-        "chinese": "能够/得证",
-        "isCore": false
-      },
-      {
-        "id": "tok_8",
         "thai": "รักษา",
         "romanization": "rák-sǎa",
         "chinese": "持守/维护",
         "isCore": false
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "ศีล",
         "romanization": "sǐin",
         "chinese": "戒律",
@@ -28332,7 +27986,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28370,7 +28024,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -28383,7 +28037,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -28507,7 +28161,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -28521,7 +28175,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -28547,7 +28201,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28575,14 +28229,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -28615,7 +28269,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -28629,14 +28283,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       }
     ]
@@ -28662,7 +28316,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28690,21 +28344,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ชั่ว",
         "romanization": "cʰûa",
-        "chinese": "卑劣过恶",
+        "chinese": "恶/不善/差劲",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -28725,7 +28379,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_10",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       }
     ]
@@ -28758,7 +28412,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -28772,7 +28426,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
@@ -28791,7 +28445,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1752,
     "secondsEnd": 1755,
     "thai": "เจอใครเราก็ด่าไปเรื่อย",
-    "romanization": "cəə kʰraj raw kɔ̂ɔ dàa paj rɯ̂ai",
+    "romanization": "cəə kʰraj raw kɔ̂ɔ dàa paj rɯ̂aj",
     "chinese": "不管见到谁都劈头盖脸一路责骂抱怨",
     "words": [
       {
@@ -28819,7 +28473,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28833,13 +28487,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "เรื่อย",
-        "romanization": "rɯ̂ai",
+        "romanization": "rɯ̂aj",
         "chinese": "连续/不断"
       }
     ]
@@ -28865,7 +28519,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -28879,14 +28533,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -28919,7 +28573,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -28933,7 +28587,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -28954,7 +28608,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -28966,52 +28620,46 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1762,
     "secondsEnd": 1764,
     "thai": "ทั้งๆ ที่เขาไม่มีความผิด",
-    "romanization": "tʰáŋ ๆ tʰîi kʰǎw mâj mii kʰwaam pʰìt",
+    "romanization": "tʰáŋ-tʰáŋ tʰîi kʰǎw mâj mii kʰwaam pʰìt",
     "chinese": "即便人家根本没有犯下任何过错",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ทั้ง",
-        "romanization": "tʰáŋ",
-        "chinese": "全/整",
+        "thai": "ทั้งๆ",
+        "romanization": "tʰáŋ-tʰáŋ",
+        "chinese": "明明/尽管",
         "isCore": false
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
+        "thai": "ที่",
+        "romanization": "tʰîi",
+        "chinese": "的/在/所……",
+        "isCore": false
       },
       {
         "id": "tok_2",
-        "thai": "ที่",
-        "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "thai": "เขา",
+        "romanization": "kʰǎw",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
         "id": "tok_3",
-        "thai": "เขา",
-        "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
-        "isCore": false
-      },
-      {
-        "id": "tok_4",
         "thai": "ไม่มี",
         "romanization": "mâj mii",
         "chinese": "没有",
         "isCore": false
       },
       {
-        "id": "tok_5",
+        "id": "tok_4",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "ผิด",
         "romanization": "pʰìt",
         "chinese": "违背正见",
@@ -29033,7 +28681,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
@@ -29047,14 +28695,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -29080,7 +28728,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เขา",
         "romanization": "kʰǎw",
-        "chinese": "他人/彼等",
+        "chinese": "他/他们/别人",
         "isCore": false
       },
       {
@@ -29101,7 +28749,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -29134,7 +28782,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -29148,7 +28796,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -29162,7 +28810,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -29174,7 +28822,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1771,
     "secondsEnd": 1777,
     "thai": "ฉะนั้นชาวพุทธเราเชื่อเหตุเชื่อผลเชื่อกรรม",
-    "romanization": "cʰàʔ-nán cʰaao pʰút raw cʰɯ̂a hèet cʰɯ̂a pʰǒn cʰɯ̂a kam",
+    "romanization": "cʰàʔ-nán cʰaaw pʰút raw cʰɯ̂a hèet cʰɯ̂a pʰǒn cʰɯ̂a kam",
     "chinese": "所以我们佛弟子深信正因、深信正果、深信业力",
     "words": [
       {
@@ -29187,7 +28835,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "ชาว",
-        "romanization": "cʰaao",
+        "romanization": "cʰaaw",
         "chinese": "族/民众/人等"
       },
       {
@@ -29270,7 +28918,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
@@ -29316,7 +28964,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1782,
     "secondsEnd": 1789,
     "thai": "ประเดี๋ยวเราจะมีพิธีถวายผ้ากฐิน",
-    "romanization": "prà-dǐaw raw càʔ mii pʰí-tʰii tʰà-wǎai pʰâa-kà-tʰǐn",
+    "romanization": "prà-dǐaw raw càʔ mii pʰí-tʰii tʰà-wǎaj pʰâa-kà-tʰǐn",
     "chinese": "稍后我们将举行献供迦絺那功德衣的仪式",
     "words": [
       {
@@ -29356,7 +29004,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "ถวาย",
-        "romanization": "tʰà-wǎai",
+        "romanization": "tʰà-wǎaj",
         "chinese": "供养/呈奉",
         "isCore": true
       },
@@ -29376,28 +29024,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1789,
     "secondsEnd": 1793,
     "thai": "ที่วัดไม่ค่อยสนับสนุน",
-    "romanization": "tʰîi wat mâj kʰɔ̂j sà-nàp-sà-nǔn",
-    "chinese": "在咱们这处寺庙，其实不太提倡——",
+    "romanization": "tʰîi wát mâj kʰɔ̂j sà-nàp-sà-nǔn",
+    "chinese": "在咱们这座寺庙，其实不太提倡——",
     "words": [
       {
         "id": "tok_0",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "วัด",
-        "romanization": "wat",
-        "chinese": "助词",
+        "romanization": "wát",
+        "chinese": "寺庙/寺院",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -29429,7 +29077,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -29450,35 +29098,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "คำ",
         "romanization": "kʰam",
-        "chinese": "句读名言",
+        "chinese": "词/话语",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -29490,14 +29138,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1795,
     "secondsEnd": 1800,
     "thai": "ไม่ค่อยใส่ใจเรื่องพิธีกรรม",
-    "romanization": "mâj kʰɔ̂j sài-cai rɯ̂aŋ pʰí-tʰii-kam",
+    "romanization": "mâj kʰɔ̂j sàj-caj rɯ̂aŋ pʰí-tʰii-kam",
     "chinese": "应该说是‘并不太热衷于繁文缛节的形式仪式’",
     "words": [
       {
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -29510,7 +29158,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "ใส่ใจ",
-        "romanization": "sài-cai",
+        "romanization": "sàj-caj",
         "chinese": "留心作意/关注"
       },
       {
@@ -29542,21 +29190,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ดี",
         "romanization": "dii",
-        "chinese": "良善美好",
+        "chinese": "好/善",
         "isCore": false
       }
     ]
@@ -29575,7 +29223,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -29589,14 +29237,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -29616,14 +29264,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "การ",
         "romanization": "kaan",
-        "chinese": "作务行为",
+        "chinese": "动作词头(……行为/之事)",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "เดิน",
         "romanization": "dəən",
-        "chinese": "经行步履",
+        "chinese": "走/行走",
         "isCore": false
       },
       {
@@ -29664,14 +29312,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
@@ -29685,14 +29333,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       }
     ]
@@ -29705,13 +29353,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1815,
     "thai": "ได้สมาธิได้ปัญญาด้วยเห็นไหม กำไร",
     "romanization": "dâaj sà-maa-tʰí dâaj pan-jaa dûaj hěn mǎj kam-raj",
-    "chinese": "不仅能做功德，更能收获禅定与智慧，看到了吗？这才是大赚大收益！",
+    "chinese": "不仅收获了功德，还收获了禅定与智慧，看到了吗？这真是净赚！",
     "words": [
       {
         "id": "tok_0",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -29726,7 +29374,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -29741,21 +29389,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "也/用/以",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       },
       {
@@ -29773,7 +29421,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1815,
     "secondsEnd": 1820,
     "thai": "ทอดกฐินบางที่ก็ได้หวยได้เบอร์ได้สนุกสนาน",
-    "romanization": "tʰɔ̂ɔt-kà-tʰǐn baaŋ tʰîi kɔ̂ɔ dâaj hǔai dâaj bəə dâaj sà-nùk-sà-nǎan",
+    "romanization": "tʰɔ̂ɔt-kà-tʰǐn baaŋ tʰîi kɔ̂ɔ dâaj hǔaj dâaj bəə dâaj sà-nùk-sà-nǎan",
     "chinese": "在某些地方办功德衣法会，尽是抽彩票买彩码、吃喝玩乐",
     "words": [
       {
@@ -29794,48 +29442,48 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "得到/中(彩)",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "หวย",
-        "romanization": "hǔai",
+        "romanization": "hǔaj",
         "chinese": "彩票/博戏乐透"
       },
       {
         "id": "tok_6",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "得到/中(彩)",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "เบอร์",
         "romanization": "bəə",
-        "chinese": "号(学员号)",
+        "chinese": "彩票号/彩码",
         "isCore": false
       },
       {
         "id": "tok_8",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "得到/中(彩)",
         "isCore": false
       },
       {
@@ -29891,21 +29539,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -29938,7 +29586,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1829,
     "secondsEnd": 1833,
     "thai": "ทอดกฐินที่นี่ไม่มีเรี่ยไร",
-    "romanization": "tʰɔ̂ɔt-kà-tʰǐn tʰîi nîi mâj mii rîa-rai",
+    "romanization": "tʰɔ̂ɔt-kà-tʰǐn tʰîi nîi mâj mii rîa-raj",
     "chinese": "而在咱们这里供功德衣，绝无任何募捐化缘",
     "words": [
       {
@@ -29952,14 +29600,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       },
       {
@@ -29972,7 +29620,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "เรี่ยไร",
-        "romanization": "rîa-rai",
+        "romanization": "rîa-raj",
         "chinese": "化缘/募化资财"
       }
     ]
@@ -29984,14 +29632,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1833,
     "secondsEnd": 1837,
     "thai": "ที่ผ่านมาไม่เคยอนุญาตให้ใครเรี่ยไร",
-    "romanization": "tʰîi pʰàan maa mâj kʰəəj ʔà-nú-jâat hâj kʰraj rîa-rai",
+    "romanization": "tʰîi pʰàan maa mâj kʰəəj ʔà-nú-jâat hâj kʰraj rîa-raj",
     "chinese": "从过去到现在，从未允许过任何人在寺内集资募款",
     "words": [
       {
         "id": "tok_0",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -30005,14 +29653,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -30032,7 +29680,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -30045,7 +29693,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_8",
         "thai": "เรี่ยไร",
-        "romanization": "rîa-rai",
+        "romanization": "rîa-raj",
         "chinese": "化缘/募化资财"
       }
     ]
@@ -30057,13 +29705,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1837,
     "secondsEnd": 1839,
     "thai": "เจ้าภาพอะไร",
-    "romanization": "câo-pʰâap ʔà-raj",
+    "romanization": "câw-pʰâap ʔà-raj",
     "chinese": "也不搞什么认领大功德主大施主之类",
     "words": [
       {
         "id": "tok_0",
         "thai": "เจ้าภาพ",
-        "romanization": "câo-pʰâap",
+        "romanization": "câw-pʰâap",
         "chinese": "斋主/功德主",
         "isCore": true
       },
@@ -30083,7 +29731,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1839,
     "secondsEnd": 1841,
     "thai": "เพราะกฐินจริงๆ",
-    "romanization": "pʰrɔ́ʔ kà-tʰǐn ciŋ ciŋ",
+    "romanization": "pʰrɔ́ʔ kà-tʰǐn ciŋ-ciŋ",
     "chinese": "因为真正正统的迦絺那功德衣",
     "words": [
       {
@@ -30104,8 +29752,8 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "จริงๆ",
-        "romanization": "ciŋ ciŋ",
-        "chinese": "真切确乎",
+        "romanization": "ciŋ-ciŋ",
+        "chinese": "真正/实际上",
         "isCore": false
       }
     ]
@@ -30117,14 +29765,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1841,
     "secondsEnd": 1845,
     "thai": "เอาผ้ามาถวายผืนเดียวก็พอแล้ว",
-    "romanization": "ʔaw pʰâa maa tʰà-wǎai pʰɯ̌ɯn diaw kɔ̂ɔ pʰɔɔ lɛ́ɛw",
+    "romanization": "ʔaw pʰâa maa tʰà-wǎaj pʰɯ̌ɯn diaw kɔ̂ɔ pʰɔɔ lɛ́ɛw",
     "chinese": "只要恭敬捧上一单匹布料虔诚献供，就足够圆满了！",
     "words": [
       {
         "id": "tok_0",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -30137,13 +29785,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ถวาย",
-        "romanization": "tʰà-wǎai",
+        "romanization": "tʰà-wǎaj",
         "chinese": "供养/呈奉",
         "isCore": true
       },
@@ -30164,7 +29812,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -30178,7 +29826,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_8",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -30211,14 +29859,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "นี่",
         "romanization": "nîi",
-        "chinese": "此处即是",
+        "chinese": "这儿/这",
         "isCore": false
       },
       {
@@ -30237,14 +29885,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       }
     ]
@@ -30263,7 +29911,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -30283,21 +29931,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "一起/彼此",
         "isCore": false
       }
     ]
@@ -30309,14 +29957,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1851,
     "secondsEnd": 1854,
     "thai": "เอาสบงมาถวายผืนเดียวก็พอ",
-    "romanization": "ʔaw sà-boŋ maa tʰà-wǎai pʰɯ̌ɯn diaw kɔ̂ɔ pʰɔɔ",
+    "romanization": "ʔaw sà-boŋ maa tʰà-wǎaj pʰɯ̌ɯn diaw kɔ̂ɔ pʰɔɔ",
     "chinese": "奉献供养一条下裙僧袍（安陀会/下衣）便已足够",
     "words": [
       {
         "id": "tok_0",
         "thai": "เอา",
         "romanization": "ʔaw",
-        "chinese": "取受/要",
+        "chinese": "拿/取/要",
         "isCore": false
       },
       {
@@ -30331,13 +29979,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "ถวาย",
-        "romanization": "tʰà-wǎai",
+        "romanization": "tʰà-wǎaj",
         "chinese": "供养/呈奉",
         "isCore": true
       },
@@ -30358,7 +30006,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -30377,27 +30025,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1854,
     "secondsEnd": 1855,
     "thai": "ก็ใช้ได้แล้ว",
-    "romanization": "kɔ̂ɔ cʰái-dâai lɛ́ɛw",
+    "romanization": "kɔ̂ɔ cʰáj-dâaj lɛ́ɛw",
     "chinese": "这就完全合法可用了",
     "words": [
       {
         "id": "tok_0",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ใช้ได้",
-        "romanization": "cʰái-dâai",
+        "romanization": "cʰáj-dâaj",
         "chinese": "足堪使用/可用"
       },
       {
         "id": "tok_2",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -30416,7 +30064,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -30437,7 +30085,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了(语气词)",
         "isCore": false
       }
     ]
@@ -30449,55 +30097,49 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1857,
     "secondsEnd": 1862,
     "thai": "ถูกๆ แค่นั้นก็สำเร็จแล้ว",
-    "romanization": "tʰùuk ๆ kʰɛ̂ɛ nán kɔ̂ɔ sǎm-rèt lɛ́ɛw",
-    "chinese": "价格非常便宜，功德便已功德圆满！",
+    "romanization": "tʰùuk-tʰùuk kʰɛ̂ɛ nán kɔ̂ɔ sǎm-rèt lɛ́ɛw",
+    "chinese": "价格很便宜，仅仅那样便已功德圆满！",
     "words": [
       {
         "id": "tok_0",
-        "thai": "ถูก",
-        "romanization": "tʰùuk",
-        "chinese": "正当/蒙受",
+        "thai": "ถูกๆ",
+        "romanization": "tʰùuk-tʰùuk",
+        "chinese": "很便宜",
         "isCore": true
       },
       {
         "id": "tok_1",
-        "thai": "ๆ",
-        "romanization": "ๆ",
-        "chinese": "（重复标记）"
-      },
-      {
-        "id": "tok_2",
         "thai": "แค่",
         "romanization": "kʰɛ̂ɛ",
         "chinese": "仅仅/止于",
         "isCore": false
       },
       {
-        "id": "tok_3",
+        "id": "tok_2",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
+        "isCore": false
+      },
+      {
+        "id": "tok_3",
+        "thai": "ก็",
+        "romanization": "kɔ̂ɔ",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_4",
-        "thai": "ก็",
-        "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
-        "isCore": false
-      },
-      {
-        "id": "tok_5",
         "thai": "สำเร็จ",
         "romanization": "sǎm-rèt",
         "chinese": "成功/达成",
         "isCore": false
       },
       {
-        "id": "tok_6",
+        "id": "tok_5",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -30509,14 +30151,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1862,
     "secondsEnd": 1865,
     "thai": "ไม่ใช่ต้องหาเงินหลายๆ ล้าน",
-    "romanization": "mâj cʰâj tɔ̂ŋ hǎa ŋən lǎaj lǎaj láan",
+    "romanization": "mâj cʰâj tɔ̂ŋ hǎa ŋən lǎaj-lǎaj láan",
     "chinese": "绝不需要大费周章去筹募成百上千万的巨资",
     "words": [
       {
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -30549,7 +30191,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "หลายๆ",
-        "romanization": "lǎaj lǎaj",
+        "romanization": "lǎaj-lǎaj",
         "chinese": "许许多多",
         "isCore": false
       },
@@ -30575,7 +30217,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -30606,7 +30248,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1868,
     "secondsEnd": 1870,
     "thai": "ตอนนี้ชาวพุทธเราช่วงนี้",
-    "romanization": "tɔɔn níi cʰaao pʰút raw cʰûaŋ níi",
+    "romanization": "tɔɔn níi cʰaaw pʰút raw cʰûaŋ níi",
     "chinese": "当今咱们不少信众在这个时节",
     "words": [
       {
@@ -30620,13 +30262,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ชาว",
-        "romanization": "cʰaao",
+        "romanization": "cʰaaw",
         "chinese": "族/民众/人等"
       },
       {
@@ -30654,7 +30296,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -30666,19 +30308,19 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1870,
     "secondsEnd": 1874,
     "thai": "ห้อยไม้กางเขนเยอะเลย",
-    "romanization": "hɔ̂ɔi mái-kaaŋ-kʰěen jə́ʔ ləəj",
+    "romanization": "hɔ̂ɔj máj-kaaŋ-kʰěen jə́ʔ ləəj",
     "chinese": "身上都戴起了十字架",
     "words": [
       {
         "id": "tok_0",
         "thai": "ห้อย",
-        "romanization": "hɔ̂ɔi",
+        "romanization": "hɔ̂ɔj",
         "chinese": "悬垂/佩戴"
       },
       {
         "id": "tok_1",
         "thai": "ไม้กางเขน",
-        "romanization": "mái-kaaŋ-kʰěen",
+        "romanization": "máj-kaaŋ-kʰěen",
         "chinese": "十字架"
       },
       {
@@ -30692,7 +30334,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "เลย",
         "romanization": "ləəj",
-        "chinese": "究竟直下",
+        "chinese": "完全/简直/直接",
         "isCore": false
       }
     ]
@@ -30711,21 +30353,21 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "防范/躲避",
         "isCore": false
       },
       {
@@ -30738,14 +30380,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了(语气词)",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "กัน",
         "romanization": "kan",
-        "chinese": "相与共同",
+        "chinese": "防范/躲避",
         "isCore": false
       },
       {
@@ -30770,14 +30412,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_0",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       },
       {
@@ -30811,14 +30453,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1884,
     "secondsEnd": 1888,
     "thai": "จากจิตที่นิ่งเมื่อกี้ เปลี่ยนเป็นจิตที่มีความสุข",
-    "romanization": "càak cìt tʰîi nîŋ mɯ̂a kîi plìan pen cìt tʰîi mii kʰwaam sùk",
+    "romanization": "càak cìt tʰîi nîŋ mɯ̂a-kîi plìan pen cìt tʰîi mii kʰwaam sùk",
     "chinese": "从刚才静穆专注的心，瞬间转变为充满欢喜开朗的心",
     "words": [
       {
         "id": "tok_0",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
@@ -30833,7 +30475,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
@@ -30845,34 +30487,27 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       },
       {
         "id": "tok_4",
-        "thai": "เมื่อ",
-        "romanization": "mɯ̂a",
-        "chinese": "及至……时",
+        "thai": "เมื่อกี้",
+        "romanization": "mɯ̂a-kîi",
+        "chinese": "刚才/方才",
         "isCore": false
       },
       {
         "id": "tok_5",
-        "thai": "กี้",
-        "romanization": "kîi",
-        "chinese": "助词",
-        "isCore": false
-      },
-      {
-        "id": "tok_6",
         "thai": "เปลี่ยน",
         "romanization": "plìan",
         "chinese": "改变/变化",
         "isCore": false
       },
       {
-        "id": "tok_7",
+        "id": "tok_6",
         "thai": "เป็น",
         "romanization": "pen",
-        "chinese": "是/作为",
+        "chinese": "是/成为",
         "isCore": false
       },
       {
-        "id": "tok_8",
+        "id": "tok_7",
         "thai": "จิต",
         "romanization": "cìt",
         "chinese": "心/意识",
@@ -30880,28 +30515,28 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "rootBreakdown": "巴利语 Citta"
       },
       {
-        "id": "tok_9",
+        "id": "tok_8",
         "thai": "ที่",
         "romanization": "tʰîi",
-        "chinese": "所/在/处",
+        "chinese": "的/在/所……",
         "isCore": false
       },
       {
-        "id": "tok_10",
+        "id": "tok_9",
         "thai": "มี",
         "romanization": "mii",
         "chinese": "有",
         "isCore": false
       },
       {
-        "id": "tok_11",
+        "id": "tok_10",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
-        "id": "tok_12",
+        "id": "tok_11",
         "thai": "สุข",
         "romanization": "sùk",
         "chinese": "安乐/乐受",
@@ -30931,7 +30566,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       }
     ]
@@ -30957,7 +30592,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ดู",
         "romanization": "duu",
-        "chinese": "觉观注视",
+        "chinese": "看/观察",
         "isCore": false
       },
       {
@@ -30971,7 +30606,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "นี้",
         "romanization": "níi",
-        "chinese": "当此/这",
+        "chinese": "这",
         "isCore": false
       }
     ]
@@ -30983,13 +30618,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1892,
     "secondsEnd": 1934,
     "thai": "เอ้า ต่อไปเชิญพระมาจัดเวที",
-    "romanization": "ʔâo tɔ̀ɔ paj cʰəən pʰráʔ maa cat wee-tʰii",
-    "chinese": "好，接下来恭请僧众前来布置布置讲台法座",
+    "romanization": "ʔâw tɔ̀ɔ paj cʰəən pʰráʔ maa càt wee-tʰii",
+    "chinese": "好，接下来恭请僧众前来布置讲台法座",
     "words": [
       {
         "id": "tok_0",
         "thai": "เอ้า",
-        "romanization": "ʔâo",
+        "romanization": "ʔâw",
         "chinese": "（促发语）且来/好啦"
       },
       {
@@ -31003,7 +30638,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
@@ -31023,14 +30658,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "มา",
         "romanization": "maa",
-        "chinese": "来到/以往",
+        "chinese": "来",
         "isCore": false
       },
       {
         "id": "tok_6",
         "thai": "จัด",
-        "romanization": "cat",
-        "chinese": "助词",
+        "romanization": "càt",
+        "chinese": "布置/安排",
         "isCore": false
       },
       {
@@ -31048,13 +30683,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1934,
     "secondsEnd": 2800,
     "thai": "(เจ้าภาพนำถวายกฐิน)",
-    "romanization": "câo-pʰâap nam tʰà-wǎai kà-tʰǐn",
+    "romanization": "câw-pʰâap nam tʰà-wǎaj kà-tʰǐn",
     "chinese": "（施主代表领众献供迦絺那功德衣）",
     "words": [
       {
         "id": "tok_0",
         "thai": "เจ้าภาพ",
-        "romanization": "câo-pʰâap",
+        "romanization": "câw-pʰâap",
         "chinese": "斋主/功德主",
         "isCore": true
       },
@@ -31068,7 +30703,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "ถวาย",
-        "romanization": "tʰà-wǎai",
+        "romanization": "tʰà-wǎaj",
         "chinese": "供养/呈奉",
         "isCore": true
       },
@@ -31103,7 +30738,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -31115,42 +30750,42 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2803,
     "secondsEnd": 2807,
     "thai": "เห็นไหมว่าจริงๆ แล้ว",
-    "romanization": "hěn mǎj wâa ciŋ ciŋ lɛ́ɛw",
+    "romanization": "hěn mǎj wâa ciŋ-ciŋ lɛ́ɛw",
     "chinese": "看见了吗？追根究底",
     "words": [
       {
         "id": "tok_0",
         "thai": "เห็น",
         "romanization": "hěn",
-        "chinese": "睹见观照",
+        "chinese": "看见/照见",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ไหม",
         "romanization": "mǎj",
-        "chinese": "疑问语助",
+        "chinese": "吗(疑问)",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "จริงๆ",
-        "romanization": "ciŋ ciŋ",
-        "chinese": "真切确乎",
+        "romanization": "ciŋ-ciŋ",
+        "chinese": "真正/实际上",
         "isCore": false
       },
       {
         "id": "tok_4",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       }
     ]
@@ -31184,7 +30819,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ว่า",
         "romanization": "wâa",
-        "chinese": "谓/说",
+        "chinese": "说/……地(连词)",
         "isCore": false
       },
       {
@@ -31337,7 +30972,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -31350,7 +30985,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -31376,20 +31011,20 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2825,
     "secondsEnd": 2828,
     "thai": "แล้วชีวิตเราจะได้มีความสุข",
-    "romanization": "lɛ́ɛw chii-wít raw càʔ dâaj mii kʰwaam sùk",
+    "romanization": "lɛ́ɛw cʰii-wít raw càʔ dâaj mii kʰwaam sùk",
     "chinese": "如此一来我们的生活才能充满轻安与幸福",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
+        "romanization": "cʰii-wít",
         "chinese": "生机/生命",
         "isCore": false
       },
@@ -31411,7 +31046,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ได้",
         "romanization": "dâaj",
-        "chinese": "能够/得证",
+        "chinese": "能/得以/得到",
         "isCore": false
       },
       {
@@ -31425,7 +31060,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ความ",
         "romanization": "kʰwaam",
-        "chinese": "体态境界",
+        "chinese": "抽象词头(……状态/度)",
         "isCore": false
       },
       {
@@ -31458,7 +31093,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
@@ -31486,7 +31121,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -31512,7 +31147,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2831,
     "secondsEnd": 2835,
     "thai": "เดี๋ยวพระก็จะให้พร",
-    "romanization": "dǐaw pʰráʔ kɔ̂ɔ càʔ hâj pʰan",
+    "romanization": "dǐaw pʰráʔ kɔ̂ɔ càʔ hâj pʰɔɔn",
     "chinese": "稍后僧团将齐声为大众诵经祝愿赐福",
     "words": [
       {
@@ -31533,7 +31168,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
@@ -31547,14 +31182,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "ให้",
         "romanization": "hâj",
-        "chinese": "予以/致令",
+        "chinese": "让/给",
         "isCore": false
       },
       {
         "id": "tok_5",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       }
     ]
@@ -31566,35 +31201,35 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2835,
     "secondsEnd": 2841,
     "thai": "แล้วถัดจากนั้นสงฆ์จะไปทำพิธีในโบสถ์",
-    "romanization": "lɛ́ɛw tʰat càak nán sǒŋ càʔ paj tʰam pʰí-tʰii naj bòot",
-    "chinese": "紧接着僧团将前往大雄宝殿内举行正式的僧团羯磨羯仪",
+    "romanization": "lɛ́ɛw tʰàt càak nán sǒŋ càʔ paj tʰam pʰí-tʰii naj bòot",
+    "chinese": "紧接着僧团将前往大雄宝殿内举行正式的僧团羯磨仪轨",
     "words": [
       {
         "id": "tok_0",
         "thai": "แล้ว",
         "romanization": "lɛ́ɛw",
-        "chinese": "然后/已经",
+        "chinese": "了/已经/然后",
         "isCore": false
       },
       {
         "id": "tok_1",
         "thai": "ถัด",
-        "romanization": "tʰat",
-        "chinese": "助词",
+        "romanization": "tʰàt",
+        "chinese": "紧接着/随后",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "จาก",
         "romanization": "càak",
-        "chinese": "从此由彼",
+        "chinese": "从",
         "isCore": false
       },
       {
         "id": "tok_3",
         "thai": "นั้น",
         "romanization": "nán",
-        "chinese": "彼处/那",
+        "chinese": "那",
         "isCore": false
       },
       {
@@ -31615,14 +31250,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "ไป",
         "romanization": "paj",
-        "chinese": "前去/转动",
+        "chinese": "去",
         "isCore": false
       },
       {
         "id": "tok_7",
         "thai": "ทำ",
         "romanization": "tʰam",
-        "chinese": "做/行",
+        "chinese": "做",
         "isCore": false
       },
       {
@@ -31683,7 +31318,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_3",
         "thai": "ไม่",
         "romanization": "mâj",
-        "chinese": "非/不",
+        "chinese": "不/非",
         "isCore": false
       },
       {
@@ -31716,14 +31351,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "ก็",
         "romanization": "kɔ̂ɔ",
-        "chinese": "便/就",
+        "chinese": "就/也/便",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "ขอ",
         "romanization": "kʰɔ̌ɔ",
-        "chinese": "请求/请",
+        "chinese": "谨祝/祈愿",
         "isCore": false
       },
       {
@@ -31738,7 +31373,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "和/与",
         "isCore": false
       },
       {
@@ -31752,7 +31387,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_6",
         "thai": "คน",
         "romanization": "kʰon",
-        "chinese": "世人",
+        "chinese": "人",
         "isCore": false
       }
     ]
@@ -31764,7 +31399,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2860,
     "secondsEnd": 3176,
     "thai": "กรวดน้ำรับพร",
-    "romanization": "krùat-náam ráp pʰan",
+    "romanization": "krùat-náam ráp pʰɔɔn",
     "chinese": "大家静心滴水回向、领纳祝福",
     "words": [
       {
@@ -31778,14 +31413,14 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "รับ",
         "romanization": "ráp",
-        "chinese": "领受/感知",
+        "chinese": "领纳",
         "isCore": false
       },
       {
         "id": "tok_2",
         "thai": "พร",
-        "romanization": "pʰan",
-        "chinese": "助词",
+        "romanization": "pʰɔɔn",
+        "chinese": "祝福/福佑",
         "isCore": false
       }
     ]
@@ -31797,7 +31432,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3176,
     "secondsEnd": 3188,
     "thai": "เชิญ เชิญญาติโยมตามอัธยาศัย",
-    "romanization": "cʰəən cʰəən jâat-joom taam-ʔàt-tʰá-jaa-sǎi",
+    "romanization": "cʰəən cʰəən jâat-joom taam-ʔàt-tʰá-jaa-sǎj",
     "chinese": "请各位居士信众随意随喜安排，吉祥如意！",
     "words": [
       {
@@ -31821,7 +31456,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "ตามอัธยาศัย",
-        "romanization": "taam-ʔàt-tʰá-jaa-sǎi",
+        "romanization": "taam-ʔàt-tʰá-jaa-sǎj",
         "chinese": "随心自便/自由"
       }
     ]

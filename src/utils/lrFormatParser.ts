@@ -56,7 +56,7 @@ export function offlineTokenizeThaiText(thaiText: string): WordToken[] {
         id: `tok_${Date.now()}_${wordIndex++}`,
         thai: piece,
         romanization: transliterateThaiSyllableToChulaIPA(piece),
-        chinese: '助词',
+        chinese: '（待校释义）',
         tip: '朱拉 Adapted IPA 标音',
         status: 'unmarked' as WordStatus,
         startOffset: wordIndex * 0.8,
@@ -533,7 +533,7 @@ export const AI_SRT_CONVERSION_PROMPT = `# 任务指令：将传统双语/单语
 - สมาธิ -> 音标: sà-maa-tʰí | 释义: 禅定/正定
 - สัมมาสมาธิ -> 音标: sǎm-maa-sà-maa-tʰí | 释义: 正定
 - มิจฉาสมาธิ -> 音标: mít-cʰǎa-sà-maa-tʰí | 释义: 邪定
-- ฉันทะ -> 音标: chǎn-tʰáʔ | 释义: 善法欲/乐修好善
+- ฉันทะ -> 音标: cʰǎn-tʰáʔ | 释义: 善法欲/乐修好善
 - วิริยะ -> 音标: wí-rí-jáʔ | 释义: 精进/勤勉勇悍
 - ความสุข -> 音标: kʰwaam-sùk | 释义: 喜乐(定之近因)
 - ความว่าง -> 音标: kʰwaam wâaŋ | 释义: 空旷/空境(勿满足于此)
