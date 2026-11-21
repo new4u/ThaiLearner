@@ -60,6 +60,8 @@ async function createAppServer() {
     '2026-10-17': 'lesson_20261017',
     '2026-10-18': 'lesson_20261018',
     '2026-10-31': 'lesson_20261031',
+    '2026-11-01': 'lesson_20261101',
+    '2026-11-08': 'lesson_20261108',
   };
 
   function parseCodeToGregorian(fileCode: string): string | null {
@@ -920,6 +922,78 @@ async function createAppServer() {
             item.thaiCaptionStatus = await detectThaiCaptionViaOfficialApi(item.thai.videoId, ytApiKey);
           })
         );
+      } else {
+        // 无 API Key 时使用 YouTube 官方 CC 筛选器（sp=EgIoAQ%3D%3D）+ 已固化 CC 集合做 30 分钟缓存检测
+        const ccCacheKey = 'luangpor_cc_id_set_v1';
+        let ccEntry = catalogCache.get(ccCacheKey);
+        if (!ccEntry || Date.now() - ccEntry.fetchedAt > 30 * 60 * 1000) {
+          const ccIds = new Set<string>();
+          try {
+            const { SOLIDIFIED_YOUTUBE_CATALOG } = await import('./src/data/solidifiedYouTubeCatalog');
+            for (const row of SOLIDIFIED_YOUTUBE_CATALOG.items || []) {
+              if (row.thaiCaptionStatus === 'manual' && row.thai?.videoId) {
+                ccIds.add(row.thai.videoId);
+              }
+            }
+          } catch {}
+
+          // 动态扫描当前与上一泰历月份已挂出的 CC 视频
+          const nowDate = new Date();
+          const beYear = nowDate.getUTCFullYear() + 543;
+          const thMonthAbbr = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+          const curM = nowDate.getUTCMonth();
+          const prevM = (curM + 11) % 12;
+          const prevBeYear = curM === 0 ? beYear - 1 : beYear;
+          const ccQueries = [
+            `หลวงปู่ปราโมทย์ ปาโมชฺโช ${thMonthAbbr[curM]} ${beYear}`,
+            `หลวงปู่ปราโมทย์ ปาโมชฺโช ${thMonthAbbr[prevM]} ${prevBeYear}`,
+          ];
+          for (const q of ccQueries) {
+            try {
+              const sRes = await fetch(
+                `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=EgIoAQ%253D%253D`,
+                {
+                  headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                  },
+                  signal: AbortSignal.timeout(4500),
+                }
+              );
+              if (sRes.ok) {
+                const sHtml = await sRes.text();
+                const sData = extractJsonAfterMarker(sHtml, 'var ytInitialData =');
+                if (sData) {
+                  const walkCC = (node: any) => {
+                    if (!node || typeof node !== 'object') return;
+                    if (node.videoRenderer?.videoId) {
+                      const ch = node.videoRenderer.ownerText?.runs?.[0]?.text || '';
+                      if (ch.includes('หลวงปู่ปราโมทย์')) {
+                        ccIds.add(node.videoRenderer.videoId);
+                      }
+                    }
+                    if (Array.isArray(node)) node.forEach(walkCC);
+                    else Object.values(node).forEach(walkCC);
+                  };
+                  walkCC(sData);
+                }
+              }
+            } catch {}
+          }
+          ccEntry = { fetchedAt: Date.now(), payload: ccIds };
+          catalogCache.set(ccCacheKey, ccEntry);
+        }
+
+        const ccIdSet: Set<string> = ccEntry.payload;
+        for (const item of items) {
+          const candIds = [
+            item.thai?.videoId,
+            ...(item.thaiCandidates || []).map((c: any) => c.videoId),
+          ].filter(Boolean);
+          if (candIds.some((id) => ccIdSet.has(id))) {
+            item.thaiCaptionStatus = 'manual';
+          }
+        }
       }
 
       const pairedCount = items.filter((i) => i.thai && i.chinese).length;
@@ -1121,7 +1195,10 @@ async function createAppServer() {
     }
   });
 
-  // 泰语词句语音合成代理（当浏览器本地无 th-TH 语音包或网络受限时提供稳定泰语 MP3 朗读）
+  // 泰语词句语音合成代理（优先提供稳定的服务端泰语 MP3 朗读并内置内存缓存）
+  const thaiTtsCache = new Map<string, Buffer>();
+  const THAI_TTS_CACHE_MAX = 500;
+
   app.get('/api/thai-tts', async (req: Request, res: Response) => {
     const rawText = typeof req.query.text === 'string' ? req.query.text.trim() : '';
     if (!rawText) {
@@ -1129,8 +1206,17 @@ async function createAppServer() {
       return;
     }
 
-    // 拆分为 <= 150 字符片段，避免长泰文句子触发 400
     const safeText = rawText.slice(0, 600);
+    const cached = thaiTtsCache.get(safeText);
+    if (cached && cached.length > 0) {
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Length', String(cached.length));
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+      res.send(cached);
+      return;
+    }
+
+    // 拆分为 <= 150 字符片段，避免长泰文句子触发 400
     const words = safeText.split(/\s+/);
     const chunks: string[] = [];
     let current = '';
@@ -1151,25 +1237,52 @@ async function createAppServer() {
     }
     if (current) chunks.push(current);
 
+    const fetchChunkAudio = async (chunk: string): Promise<Buffer> => {
+      const endpoints = [
+        `https://translate.google.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${encodeURIComponent(chunk)}`,
+        `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=th&client=gtx&q=${encodeURIComponent(chunk)}`,
+      ];
+      let lastError: any = null;
+      for (const ttsUrl of endpoints) {
+        try {
+          const upstream = await fetch(ttsUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+              Referer: 'https://translate.google.com/',
+            },
+            signal: AbortSignal.timeout(10000),
+          });
+          if (!upstream.ok) {
+            lastError = new Error(`TTS upstream status ${upstream.status}`);
+            continue;
+          }
+          const ab = await upstream.arrayBuffer();
+          const buf = Buffer.from(ab);
+          if (buf.length > 0) {
+            return buf;
+          }
+        } catch (e) {
+          lastError = e;
+        }
+      }
+      throw lastError || new Error('TTS upstream failed');
+    };
+
     try {
       const buffers: Buffer[] = [];
       for (const chunk of chunks) {
-        const ttsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${encodeURIComponent(chunk)}`;
-        const upstream = await fetch(ttsUrl, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; TaixueThaiTTS/1.0)',
-            Referer: 'https://translate.google.com/',
-          },
-          signal: AbortSignal.timeout(10000),
-        });
-        if (!upstream.ok) {
-          throw new Error(`TTS upstream status ${upstream.status}`);
-        }
-        const ab = await upstream.arrayBuffer();
-        buffers.push(Buffer.from(ab));
+        buffers.push(await fetchChunkAudio(chunk));
       }
 
       const merged = Buffer.concat(buffers);
+      if (merged.length > 0) {
+        if (thaiTtsCache.size >= THAI_TTS_CACHE_MAX) {
+          const firstKey = thaiTtsCache.keys().next().value;
+          if (firstKey) thaiTtsCache.delete(firstKey);
+        }
+        thaiTtsCache.set(safeText, merged);
+      }
+
       res.setHeader('Content-Type', 'audio/mpeg');
       res.setHeader('Content-Length', String(merged.length));
       res.setHeader('Cache-Control', 'public, max-age=604800');

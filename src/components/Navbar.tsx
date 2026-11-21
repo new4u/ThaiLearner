@@ -9,6 +9,7 @@ import {
   Settings,
   Headphones,
   Compass,
+  CalendarDays,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -77,7 +78,22 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="sm:hidden">学习</span>
           </button>
 
-          {/* 2. 泰语打字 */}
+          {/* 2. 日常 3 小时共修（每周课表与站内法谈联动） */}
+          <button
+            onClick={() => onTabChange('daily_three_hour')}
+            className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
+              activeTab === 'daily_three_hour'
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-md shadow-amber-500/20 font-black'
+                : 'text-amber-200/85 hover:text-white hover:bg-slate-800/80'
+            }`}
+            title="日常 3 小时共修课表（每周更新，直连站内法谈与外搜提示）"
+          >
+            <CalendarDays className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden md:inline">日常 3 小时共修</span>
+            <span className="md:hidden">3小时共修</span>
+          </button>
+
+          {/* 3. 泰语打字 */}
           <button
             onClick={() => onTabChange('keyboard_lab')}
             className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${
@@ -92,7 +108,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="sm:hidden">打字</span>
           </button>
 
-          {/* 3. 每日打卡 */}
+          {/* 4. 每日打卡 */}
           <button
             onClick={() => onTabChange('registration_checkin')}
             className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition flex items-center gap-1 sm:gap-1.5 cursor-pointer ${

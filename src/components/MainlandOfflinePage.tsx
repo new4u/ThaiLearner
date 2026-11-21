@@ -2089,8 +2089,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
               </div>
             )}
 
-            <div className="text-base sm:text-lg font-medium text-[#5b3f1e] mt-2 border-t border-amber-200/50 pt-2">
-              {currentLine.chinese}
+            <div className="text-xs sm:text-sm font-normal text-stone-400 opacity-75 hover:opacity-100 transition-opacity mt-2 border-t border-amber-200/40 pt-2">
+              <span className="text-[11px] text-stone-400/80 mr-1.5 select-none">机器翻译仅供参考：</span>
+              <span>{currentLine.chinese}</span>
             </div>
           </div>
         )}
@@ -2148,7 +2149,10 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                       第 {sub.id} 句 · {sub.timeStart}
                     </div>
                     <div className="text-sm font-semibold text-[#2d2a26]">{sub.thai}</div>
-                    <div className="text-xs text-[#5b3f1e]">{sub.chinese}</div>
+                    <div className="text-[11px] text-stone-400 opacity-80">
+                      <span className="text-stone-400/75 mr-1">机器翻译仅供参考：</span>
+                      <span>{sub.chinese}</span>
+                    </div>
                   </div>
 
                   <button
@@ -2317,8 +2321,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                 )}
               </div>
 
-              <div className="text-base sm:text-xl text-slate-200 text-center leading-relaxed max-w-3xl border-t border-slate-800/80 pt-4">
-                {currentLine.chinese}
+              <div className="text-sm sm:text-base text-slate-400/75 opacity-75 hover:opacity-100 transition-opacity text-center leading-relaxed max-w-3xl border-t border-slate-800/80 pt-4">
+                <span className="text-xs text-slate-500 mr-1.5 select-none">机器翻译仅供参考：</span>
+                <span>{currentLine.chinese}</span>
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-2.5">

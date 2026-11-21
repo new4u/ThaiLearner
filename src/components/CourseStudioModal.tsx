@@ -391,7 +391,16 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
                   AI 批量转换提示词 (标准朱拉隆功音标与五声调)
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="/tools/Luangpor_Dhamma_Colab_Pipeline.ipynb"
+                  download="Luangpor_Dhamma_Colab_Pipeline.ipynb"
+                  className="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 text-[11px] font-bold flex items-center gap-1 transition shadow-xs"
+                  title="下载 Google Colab GPU 全自动泰语识别+翻译流水线 (.ipynb)"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  <span>下载 Colab GPU 流水线 (.ipynb)</span>
+                </a>
                 <button
                   type="button"
                   onClick={() => setShowPromptDetails(!showPromptDetails)}
@@ -411,7 +420,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
             </div>
 
             <p className="text-[11px] text-stone-600 leading-relaxed">
-              💡 将你的原始生肉 SRT 与此提示词发给 AI（ChatGPT、Claude、DeepSeek、Gemini），AI 将自动为你生成带标准朱拉隆功实用音标（5声调 <code>mid, à, â, á, ǎ</code>）、音节连字符断词以及核心法义对照的增强型字幕。
+              💡 将你的原始生肉 SRT 与此提示词发给 AI（ChatGPT、Claude、DeepSeek、Gemini），或用上方 <strong>Colab GPU 流水线</strong> 跑出 <code>.enhanced.srt</code> / <code>.taixue.json</code>，即可生成带标准朱拉隆功实用音标（5声调 <code>mid, à, â, á, ǎ</code>）与逐词释义的课件。
             </p>
 
             {showPromptDetails && (
@@ -424,7 +433,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
           {/* 2. 上传文件区 */}
           <div>
             <label className="text-xs font-bold text-stone-800 block mb-1.5">
-              📁 上传字幕或 Language Reactor 导出文件 (.srt, .html, .htm, .txt, .tsv)
+              📁 上传字幕或结构化文件 (.srt, .json, .html, .htm, .txt, .tsv)
             </label>
             <input
               type="file"

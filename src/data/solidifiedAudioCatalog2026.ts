@@ -51,6 +51,7 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
       "id": "lp_2026-11-08",
       "date": "2026-11-08",
       "sessionSuffix": "",
+      "matchedLessonId": "lesson_20261108",
       "thai": null,
       "chinese": {
         "id": "cn_2026_D26.90_2026-11-08",
@@ -62,7 +63,8 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
         "sizeBytes": 29122196,
         "wikiUrl": "https://www.dhamma.cn/luangpor/D26.90%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%888%E6%97%A5",
         "trackType": "chinese_audio",
-        "sourceDomain": "media.dhamma.cn"
+        "sourceDomain": "media.dhamma.cn",
+        "matchedLessonId": "lesson_20261108"
       }
     },
     {
@@ -87,6 +89,7 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
       "id": "lp_2026-11-01",
       "date": "2026-11-01",
       "sessionSuffix": "",
+      "matchedLessonId": "lesson_20261101",
       "thai": null,
       "chinese": {
         "id": "cn_2026_D26.88_2026-11-01",
@@ -94,6 +97,7 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
         "fileName": "D26.88《隆波帕默尊者开示》-2026年11月1日.mp3",
         "title": "D26.88《隆波帕默尊者开示》-2026年11月1日",
         "gregorianDate": "2026-11-01",
+        "matchedLessonId": "lesson_20261101",
         "mp3Url": "https://media.dhamma.cn/d/da/D26.88%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%881%E6%97%A5.mp3",
         "sizeBytes": 28304821,
         "wikiUrl": "https://www.dhamma.cn/luangpor/D26.88%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%881%E6%97%A5",

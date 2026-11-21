@@ -373,23 +373,27 @@ export const ParagraphAnalyzerView: React.FC<ParagraphAnalyzerViewProps> = ({
                   <div className="font-mono text-indigo-300">
                     /{sent.romanization}/
                   </div>
-                  <div className="text-amber-300 font-medium">
-                    {sent.chinese}
+                  <div className="text-slate-400/80 opacity-80 hover:opacity-100 transition-opacity font-normal">
+                    <span className="text-[11px] text-slate-500 mr-1.5 select-none">机器翻译仅供参考：</span>
+                    <span>{sent.chinese}</span>
                   </div>
 
                   {/* 单词拆解 */}
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {sent.words.map(w => (
-                      <span
+                      <button
+                        type="button"
                         key={w.id}
-                        className={`px-2 py-0.5 rounded text-[10px] border ${
+                        onClick={() => onSpeak(w.thai)}
+                        className={`px-2 py-0.5 rounded text-[10px] border cursor-pointer transition hover:border-amber-400/70 ${
                           w.isCore
                             ? 'bg-amber-500/15 border-amber-500/30 text-amber-200'
-                            : 'bg-slate-900 border-slate-800 text-slate-400'
+                            : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
                         }`}
+                        title={`点击朗读：${w.thai}`}
                       >
                         {w.thai} /{w.romanization}/
-                      </span>
+                      </button>
                     ))}
                   </div>
                 </div>

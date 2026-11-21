@@ -254,12 +254,13 @@ export const CourseStudyView: React.FC<CourseStudyViewProps> = ({
                     <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">
                       中文殊胜法义
                     </div>
-                    <div className={`text-lg sm:text-xl font-medium leading-relaxed transition ${
+                    <div className={`text-sm sm:text-base font-normal leading-relaxed transition-opacity ${
                       maskMode === 'blur_cn' 
-                        ? 'filter blur-sm hover:blur-none cursor-pointer text-slate-300 select-none' 
-                        : 'text-amber-300'
+                        ? 'filter blur-sm hover:blur-none cursor-pointer text-slate-400 select-none opacity-75' 
+                        : 'text-slate-400/80 opacity-75 hover:opacity-100'
                     }`}>
-                      {currentLine?.chinese}
+                      <span className="text-xs text-slate-500 mr-1.5 select-none">机器翻译仅供参考：</span>
+                      <span>{currentLine?.chinese}</span>
                     </div>
                     {maskMode === 'blur_cn' && (
                       <span className="text-[11px] text-slate-500 mt-1 inline-block">
@@ -277,13 +278,16 @@ export const CourseStudyView: React.FC<CourseStudyViewProps> = ({
                       {currentLine?.words.map(token => (
                         <button
                           key={token.id}
-                          onClick={() => onSelectWord(token)}
+                          onClick={() => {
+                            onSpeak(token.thai, playbackRate);
+                            onSelectWord(token);
+                          }}
                           className={`px-3 py-2 rounded-xl text-left transition border cursor-pointer ${
                             token.isCore
                               ? 'bg-amber-500/15 border-amber-500/40 hover:bg-amber-500/25 text-amber-200'
                               : 'bg-slate-900 border-slate-800 hover:bg-slate-800 text-slate-200'
                           }`}
-                          title={`点击解构: ${token.thai} /${token.romanization}/`}
+                          title={`点击朗读并解构: ${token.thai} /${token.romanization}/`}
                         >
                           <div className="font-bold text-sm" style={{ fontFamily: selectedFont }}>
                             {token.thai}
@@ -463,8 +467,9 @@ export const CourseStudyView: React.FC<CourseStudyViewProps> = ({
                         <div className="font-semibold text-amber-300" style={{ fontFamily: selectedFont }}>
                           {sub.thai}
                         </div>
-                        <div className="text-slate-400 text-xs mt-0.5">
-                          {sub.chinese}
+                        <div className="text-slate-500 text-xs mt-0.5 opacity-80">
+                          <span className="text-slate-500/80 mr-1">机器翻译仅供参考：</span>
+                          <span>{sub.chinese}</span>
                         </div>
                       </div>
                     </div>

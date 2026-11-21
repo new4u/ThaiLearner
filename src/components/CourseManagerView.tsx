@@ -5,6 +5,7 @@ import {
   exportToEnhancedSRT, AI_SRT_CONVERSION_PROMPT 
 } from '../utils/lrFormatParser';
 import { PRESET_COURSE_LIBRARY } from '../data/luangporCourseData';
+import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { 
   FileSpreadsheet, Upload, Download, Copy, Check, Sparkles, 
   BookOpen, CheckCircle2, AlertCircle, ArrowRight, RefreshCw, FileText,
@@ -259,6 +260,16 @@ export const CourseManagerView: React.FC<CourseManagerViewProps> = ({
                   <Code className="w-3.5 h-3.5" />
                   <span>SRT-GLOSS 格式规范</span>
                 </button>
+
+                <a
+                  href="/tools/Luangpor_Dhamma_Colab_Pipeline.ipynb"
+                  download="Luangpor_Dhamma_Colab_Pipeline.ipynb"
+                  className="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-xs font-bold border border-emerald-500/40 flex items-center gap-1.5 transition"
+                  title="下载 Google Colab GPU 全自动泰语 Whisper 识别 + 泰译中结构化笔记本 (.ipynb)"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Colab GPU 流水线 (.ipynb)</span>
+                </a>
               </div>
             </div>
 
@@ -456,14 +467,17 @@ export const CourseManagerView: React.FC<CourseManagerViewProps> = ({
                         {sub.words && sub.words.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 pt-1">
                             {sub.words.map(w => (
-                              <div
+                              <button
+                                type="button"
                                 key={w.id}
-                                className="inline-flex flex-col items-center bg-slate-900 border border-slate-700/70 hover:border-amber-500/50 px-2 py-1 rounded-lg text-left shadow-xs transition"
+                                onClick={() => thaiAudio.speakWord(w.thai)}
+                                className="inline-flex flex-col items-center bg-slate-900 border border-slate-700/70 hover:border-amber-500/50 px-2 py-1 rounded-lg text-left shadow-xs transition cursor-pointer"
+                                title={`点击朗读：${w.thai}`}
                               >
                                 <span className="font-bold text-slate-100 text-xs">{w.thai}</span>
                                 <span className="text-[9px] font-mono text-indigo-300">/{w.romanization}/</span>
                                 <span className="text-[10px] text-amber-300 font-medium">{w.chinese}</span>
-                              </div>
+                              </button>
                             ))}
                           </div>
                         )}
@@ -476,8 +490,9 @@ export const CourseManagerView: React.FC<CourseManagerViewProps> = ({
                         )}
 
                         {/* 中文翻译 */}
-                        <div className="text-amber-200/90 text-xs border-t border-slate-800/80 pt-1.5 font-medium">
-                          {sub.chinese}
+                        <div className="text-slate-400/80 opacity-80 text-xs border-t border-slate-800/80 pt-1.5 font-normal">
+                          <span className="text-slate-500 mr-1.5 select-none">机器翻译仅供参考：</span>
+                          <span>{sub.chinese}</span>
                         </div>
                       </div>
                     ))}

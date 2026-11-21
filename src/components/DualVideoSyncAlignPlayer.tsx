@@ -2915,8 +2915,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             )}
 
             {/* 中文翻译 */}
-            <div className="text-base sm:text-lg font-medium text-[#5b3f1e] mt-2 border-t border-amber-200/50 pt-2">
-              {currentLine.chinese}
+            <div className="text-xs sm:text-sm font-normal text-stone-400 opacity-75 hover:opacity-100 transition-opacity mt-2 border-t border-amber-200/40 pt-2">
+              <span className="text-[11px] text-stone-400/80 mr-1.5 select-none">机器翻译仅供参考：</span>
+              <span>{currentLine.chinese}</span>
             </div>
           </div>
         )}
@@ -3119,8 +3120,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                       </div>
                     )}
 
-                    <div className="text-xs text-[#5b3f1e]">
-                      {sub.chinese}
+                    <div className="text-[11px] text-stone-400 opacity-80">
+                      <span className="text-stone-400/75 mr-1">机器翻译仅供参考：</span>
+                      <span>{sub.chinese}</span>
                     </div>
                   </div>
 

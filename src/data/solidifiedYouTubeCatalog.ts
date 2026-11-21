@@ -78,7 +78,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-11-14",
       "date": "2026-11-14",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "RrSkZnoUX1k",
         "title": "สภาวะหลงและสภาวะเพ่งสำคัญมาก :: หลวงปู่ปราโมทย์ ปาโมชฺโช 14 พ.ย. 2569",
@@ -140,7 +140,8 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-11-08",
       "date": "2026-11-08",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "matchedLessonId": "lesson_20261108",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "2FkVMAUcaoE",
         "title": "สมาธิที่เห็นไตรลักษณ์ได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 8 พ.ย. 2569",
@@ -202,7 +203,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-11-07",
       "date": "2026-11-07",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "ue_RkSAgal4",
         "title": "จิตเข้าสู่ความเป็นกลาง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 7 พ.ย. 2569",
@@ -264,7 +265,8 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-11-01",
       "date": "2026-11-01",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "matchedLessonId": "lesson_20261101",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "rsHw7pQE0Qc",
         "title": "ฟังธรรมให้เกิดสมาธิและปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 1 พ.ย. 2569",
@@ -327,7 +329,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "date": "2026-10-31",
       "isRerun": false,
       "matchedLessonId": "lesson_20261031",
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "Ydoxq7Hw-8Y",
         "title": "อย่าพอใจอยู่แค่ความว่าง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 31 ต.ค. 2569",
@@ -389,7 +391,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-29",
       "date": "2026-10-29",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "WdX3XFcCWIU",
         "title": "ปฏิบัติเพื่อมุ่งสร้างสัมมาทิฏฐิ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 29 ต.ค. 2569",
@@ -425,7 +427,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-27",
       "date": "2026-10-27",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "-u6K6NN53lI",
         "title": "งานหลักคืองานล้างกิเลส :: หลวงปู่ปราโมทย์ ปาโมชฺโช 27 ต.ค. 2569",
@@ -461,7 +463,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-25",
       "date": "2026-10-25",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "9xEhuuR8Dng",
         "title": "จากสมถะสู่วิปัสสนา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 25 ต.ค. 2569",
@@ -523,7 +525,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-24",
       "date": "2026-10-24",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "QsK_SHOdO9E",
         "title": "หน้าที่ต่อทุกข์คือรู้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 24 ต.ค. 2569",
@@ -586,7 +588,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "date": "2026-10-18",
       "isRerun": false,
       "matchedLessonId": "lesson_20261018",
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "zFYNiNBFHuk",
         "title": "นิยตมิจฉาทิฎฐิ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2569",
@@ -662,7 +664,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "date": "2026-10-17",
       "isRerun": false,
       "matchedLessonId": "lesson_20261017",
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "wx6pzQ9QltQ",
         "title": "ปฏิบัติในที่ทุกสถานในกาลทุกเมื่อ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 17 ต.ค. 2569",
@@ -724,7 +726,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-16",
       "date": "2026-10-16",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "ebqfZ4W4lQA",
         "title": "ทำงานเผยแผ่ศาสนาควบคู่กับการภาวนา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 16 ต.ค. 2569",
@@ -760,7 +762,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-11",
       "date": "2026-10-11",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "LfvkA-42iDg",
         "title": "วิภัชชวิธี :: หลวงปู่ปราโมทย์ ปาโมชฺโช 11 ต.ค. 2569",
@@ -823,7 +825,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "date": "2026-10-10",
       "isRerun": false,
       "matchedLessonId": "lesson_20261010",
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "gQknwH_hz6Q",
         "title": "ทำกรรมฐานตามระดับของตัวเอง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 10 ต.ค. 2569",
@@ -898,7 +900,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-04",
       "date": "2026-10-04",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "t5eTaqu2eHE",
         "title": "ทีแรกก็เพ่งทุกคน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 4 ต.ค. 2569",
@@ -973,7 +975,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-10-03",
       "date": "2026-10-03",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "DDwwesVzVpU",
         "title": "ธรรมนิยาม :: หลวงปู่ปราโมทย์ ปาโมชฺโช 3 ต.ค. 2569",
@@ -1035,7 +1037,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-27",
       "date": "2026-09-27",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "fDYyDiGk_Tg",
         "title": "เข้าใจความเป็นจริงของโลก :: หลวงปู่ปราโมทย์ ปาโมชฺโช 27 ก.ย. 2569",
@@ -1097,7 +1099,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-26",
       "date": "2026-09-26",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "CcTkuVH7qa4",
         "title": "รู้อารมณ์กรรมฐานเพื่อจะรู้ทันจิต :: หลวงปู่ปราโมทย์ ปาโมชฺโช 26 ก.ย. 2569",
@@ -1159,7 +1161,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-25",
       "date": "2026-09-25",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "L_GgfvvMBAo",
         "title": "อดทนฝึกแล้วฝึกอีก :: หลวงปู่ปราโมทย์ ปาโมชฺโช 25 ก.ย. 2569",
@@ -1221,7 +1223,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-21",
       "date": "2026-09-21",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "8kLIZZ93Szs",
         "title": "ปฏิบัติถูกต้องจะพ้นทุกข์ด้วยตัวเอง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 21 ก.ย. 2569",
@@ -1332,7 +1334,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-13",
       "date": "2026-09-13",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "qkVYvc1g1u0",
         "title": "ชาวพุทธที่แท้จริงไม่หวั่นไหว :: หลวงปู่ปราโมทย์ ปาโมชฺโช 13 ก.ย. 2569",
@@ -1381,7 +1383,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-12",
       "date": "2026-09-12",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "8msL_PlpyC0",
         "title": "สิ่งที่เหนือดวงคือกรรม :: หลวงปู่ปราโมทย์ ปาโมชฺโช 12 ก.ย. 2569",
@@ -1443,7 +1445,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-09-05",
       "date": "2026-09-05",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "YerofUSr7IE",
         "title": "รูปธรรมนามธรรมเป็นไตรลักษณ์ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 5 ก.ย. 2569",
@@ -1515,7 +1517,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-30",
       "date": "2026-08-30",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "txP6hOB1f0E",
         "title": "จิตบังคับไม่ได้แต่ฝึกได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 30 ส.ค. 2569",
@@ -1577,7 +1579,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-29",
       "date": "2026-08-29",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "K9bRfeBIw4o",
         "title": "ฝึกใจให้เป็นพระ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 29 ส.ค. 2569",
@@ -1613,7 +1615,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-28",
       "date": "2026-08-28",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "obTCysqgRhM",
         "title": "บุญจากการภาวนา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 28 ส.ค. 2569",
@@ -1675,7 +1677,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-23",
       "date": "2026-08-23",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "GHyNWOoBRXo",
         "title": "รู้สึกตัวเพื่อเห็นความจริงของกายของใจ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 23 ส.ค. 2569",
@@ -1711,7 +1713,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-22",
       "date": "2026-08-22",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "QmDwWvQdyww",
         "title": "เข้าถึงพระนิพพานในปัจจุบัน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 22 ส.ค. 2569",
@@ -1747,7 +1749,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-16",
       "date": "2026-08-16",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "2QO1ff_-sOs",
         "title": "ทุกข์เพราะยึดว่าขันธ์เป็นตัวเรา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 16 ส.ค. 2569",
@@ -1783,7 +1785,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-15",
       "date": "2026-08-15",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "nCTv8tgcKos",
         "title": "ใจเป็นคนรู้ได้ถึงจะทำสติปัฏฐานได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 15 ส.ค. 2569",
@@ -2002,7 +2004,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-08-01",
       "date": "2026-08-01",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "_SnjhTcc3oA",
         "title": "แบบฝึกหัดซ้อมดูจิตเคลื่อน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 1 ส.ค. 2569",
@@ -2064,7 +2066,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-30",
       "date": "2026-07-30",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "S2ytyEFVcoQ",
         "title": "ธรรมะของฆราวาส :: หลวงปู่ปราโมทย์ ปาโมชฺโช 30 ก.ค. 2569",
@@ -2100,7 +2102,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-29",
       "date": "2026-07-29",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "ByZ7rhIZMYQ",
         "title": "เดินตามรอยเท้าพระพุทธเจ้า :: หลวงปู่ปราโมทย์ ปาโมชฺโช 29 ก.ค. 2569 (บ่าย)",
@@ -2175,7 +2177,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-28",
       "date": "2026-07-28",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "djILZrfgL8k",
         "title": "การดูจิตเป็นวิธีปฏิบัติที่ลัดสั้นที่สุด :: หลวงปู่ปราโมทย์ ปาโมชฺโช 28 ก.ค. 2569",
@@ -2211,7 +2213,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-26",
       "date": "2026-07-26",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "7VmwmA8i7dY",
         "title": "หัวใจของการปฏิบัติคือการเจริญสติ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 26 ก.ค. 2569",
@@ -2247,7 +2249,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-25",
       "date": "2026-07-25",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "sQ-a3bbl6UU",
         "title": "อย่าไปยินดียินร้ายกับนิมิต :: หลวงปู่ปราโมทย์ ปาโมชฺโช 25 ก.ค. 2569",
@@ -2358,7 +2360,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-17",
       "date": "2026-07-17",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "tUctVoB3O1E",
         "title": "หลักสูตรของฆราวาส :: หลวงปู่ปราโมทย์ ปาโมชฺโช 17 ก.ค. 2569",
@@ -2394,7 +2396,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-07-12",
       "date": "2026-07-12",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "4pEPHYyM160",
         "title": "คุณค่าของความรู้สึกตัว :: หลวงปู่ปราโมทย์ ปาโมชฺโช 12 ก.ค. 2569",
@@ -2515,7 +2517,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-06-27",
       "date": "2026-06-27",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "70fUQLi2D8s",
         "title": "ปัญญาเกิดจากการเห็นด้วยตัวเอง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 27 มิ.ย. 2569",
@@ -2551,7 +2553,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-06-21",
       "date": "2026-06-21",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "R1vzRiSpbMw",
         "title": "ไม่ยึดมั่นถือมั่นเพราะเห็นความจริง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 21 มิ.ย. 2569",
@@ -2695,7 +2697,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-05-24",
       "date": "2026-05-24",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "xVil-K_fCoY",
         "title": "การเดินปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 24 พ.ค. 2569",
@@ -2731,7 +2733,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-05-23",
       "date": "2026-05-23",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "CkC13gxCsgU",
         "title": "เจริญสติปัฏฐานจนเกิดปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 23 พ.ค. 2569",
@@ -2767,7 +2769,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-05-09",
       "date": "2026-05-09",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "oWiX4T0Smw8",
         "title": "กรรมแก้ไม่ได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 9 พ.ค. 2569",
@@ -2803,7 +2805,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-04-25",
       "date": "2026-04-25",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "EAOjm3PtKKQ",
         "title": "ถ้าไม่ยึดถือก็ไม่ทุกข์ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 25 เม.ย. 2569",
@@ -2839,7 +2841,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-04-19",
       "date": "2026-04-19",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "klKTgh9jkHE",
         "title": "การศึกษาธรรมะมีบทเรียน 3 บท :: หลวงปู่ปราโมทย์ ปาโมชฺโช 19 เม.ย. 2569",
@@ -2875,7 +2877,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-04-18",
       "date": "2026-04-18",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "45KZC0ruCQs",
         "title": "เจริญสติปัฏฐานให้ถูกต้อง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 เม.ย. 2569",
@@ -2911,7 +2913,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-04-11",
       "date": "2026-04-11",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "NfTRdVg0a5w",
         "title": "นิโรธคือความดับทุกข์ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 11 เม.ย. 2569",
@@ -2947,7 +2949,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-04-04",
       "date": "2026-04-04",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "WPe4sObGmWo",
         "title": "กรรมฐานของแต่ละคนไม่เหมือนกัน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 4 เม.ย. 2569",
@@ -2983,7 +2985,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-03-29",
       "date": "2026-03-29",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "yT-P_CG7mS0",
         "title": "รากของตัณหาคือความไม่รู้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 29 มี.ค. 2569",
@@ -3019,7 +3021,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-03-21",
       "date": "2026-03-21",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "eg-sHxjRYUk",
         "title": "ธรรมะที่ควรเจริญด้วยปัญญาอันยิ่ง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 21 มี.ค. 2569",
@@ -3091,7 +3093,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-03-08",
       "date": "2026-03-08",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "7WCKa3fQ5D0",
         "title": "ปัญญามี 2 ส่วน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 8 มี.ค. 2569",
@@ -3199,7 +3201,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-02-07",
       "date": "2026-02-07",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "fvSV87RyFrc",
         "title": "วิญญาณไม่ใช่เรา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 7 ก.พ. 2569",
@@ -3235,7 +3237,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-01-24",
       "date": "2026-01-24",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "cDOUao71wHc",
         "title": "ข้อดีและข้อด้อยของกรรมฐานต่างๆ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 24 ม.ค. 2569",
@@ -3271,7 +3273,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-01-17",
       "date": "2026-01-17",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "YFHluNceUUc",
         "title": "ประโยชน์ของการทำสมถะ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 17 ม.ค. 2569",
@@ -3307,7 +3309,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-01-10",
       "date": "2026-01-10",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "k6VuLeMWFLw",
         "title": "แผนที่การเดินทางในสังสารวัฏ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 10 ม.ค. 2569",
@@ -3343,7 +3345,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2026-01-03",
       "date": "2026-01-03",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "no2m9InOjog",
         "title": "ยอมรับความเป็นธรรมดา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 3 ม.ค. 2569",
@@ -3379,7 +3381,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "id": "yt_2025-12-31",
       "date": "2025-12-31",
       "isRerun": false,
-      "thaiCaptionStatus": "client_check_needed",
+      "thaiCaptionStatus": "manual",
       "thai": {
         "videoId": "WSiwNH1Fkzg",
         "title": "ทำกรรมฐานที่เราถนัด :: หลวงปู่ปราโมทย์ ปาโมชฺโช 31 ธ.ค. 2568",

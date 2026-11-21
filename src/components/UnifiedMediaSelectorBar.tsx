@@ -135,6 +135,7 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
   const [ytError, setYtError] = useState<string | null>(null);
   const [ytQuery, setYtQuery] = useState('');
   const [ytOnlyPaired, setYtOnlyPaired] = useState(false);
+  const [ytOnlyCC, setYtOnlyCC] = useState(false);
 
   // 贴链接 / 本地导入输入状态
   const [linkMediaType, setLinkMediaType] = useState<'audio' | 'video'>(mode);
@@ -246,10 +247,28 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
     );
   }, [effectiveAudioCatalog, audioQuery]);
 
+  const audioPairDateSet = useMemo(() => {
+    const map = new Map<string, { hasThai: boolean; hasChinese: boolean }>();
+    const allAudio = [
+      ...(effectiveAudioCatalog?.items || []),
+      ...SOLIDIFIED_AUDIO_CATALOG_2026.items,
+      ...SOLIDIFIED_AUDIO_CATALOG_2025.items,
+    ];
+    for (const row of allAudio) {
+      const prev = map.get(row.date) || { hasThai: false, hasChinese: false };
+      map.set(row.date, {
+        hasThai: prev.hasThai || Boolean(row.thai),
+        hasChinese: prev.hasChinese || Boolean(row.chinese),
+      });
+    }
+    return map;
+  }, [effectiveAudioCatalog]);
+
   const filteredYouTubeItems = useMemo<YouTubePairedTalkItem[]>(() => {
     const q = ytQuery.trim().toLowerCase();
     return (ytCatalog?.items || []).filter((item) => {
       if (ytOnlyPaired && !(item.thai && item.chinese)) return false;
+      if (ytOnlyCC && item.thaiCaptionStatus !== 'manual') return false;
       if (!q) return true;
       return (
         item.date.toLowerCase().includes(q) ||
@@ -257,7 +276,7 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
         (item.chinese?.title || '').toLowerCase().includes(q)
       );
     });
-  }, [ytCatalog, ytQuery, ytOnlyPaired]);
+  }, [ytCatalog, ytQuery, ytOnlyPaired, ytOnlyCC]);
 
   const handleLessonSelectChange = (val: string) => {
     if (val === '__unmatched__') return;
@@ -768,6 +787,18 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
                     </button>
                     <button
                       type="button"
+                      onClick={() => setYtOnlyCC((v) => !v)}
+                      className={`min-h-[36px] px-2.5 rounded-xl text-xs font-bold border transition cursor-pointer whitespace-nowrap ${
+                        ytOnlyCC
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-white text-stone-700 border-stone-300 hover:bg-stone-50'
+                      }`}
+                      title="筛选已检测到 YouTube 官方 CC 字幕的视频，便于直接打开或导出"
+                    >
+                      {ytOnlyCC ? '✓ 仅看官方 CC' : '官方 CC'}
+                    </button>
+                    <button
+                      type="button"
                       disabled={ytLoading}
                       onClick={() => loadYouTubeCatalog(true)}
                       className="min-h-[36px] px-2.5 rounded-xl bg-white hover:bg-stone-50 text-stone-700 border border-stone-300 text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50"
@@ -822,10 +853,35 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2">
-                            <div className="text-[11px] font-mono text-[#2d2a26] truncate">
+                            <div className="text-[11px] font-mono text-[#2d2a26] truncate flex items-center gap-1.5 flex-wrap">
                               <span className="font-bold tabular-nums">{item.date}</span>
-                              {item.thai && item.chinese ? ' · 泰中双语' : item.thai ? ' · 仅泰语' : ' · 仅中文'}
-                              {matchedLesson ? ` · 已有字幕(${matchedLesson.totalSentences}句)` : ''}
+                              <span className="font-sans text-[#7a6f5f]">
+                                {item.thai && item.chinese ? '· 泰中双语' : item.thai ? '· 仅泰语' : '· 仅中文'}
+                              </span>
+                              {item.thaiCaptionStatus === 'manual' && (
+                                <span
+                                  className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-sans text-[10px] font-bold"
+                                  title="已检测到 YouTube 官方 CC 字幕"
+                                >
+                                  官方 CC
+                                </span>
+                              )}
+                              {(() => {
+                                const au = audioPairDateSet.get(item.date);
+                                if (au?.hasThai && au?.hasChinese) {
+                                  return (
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-50 text-[#8f6724] border border-amber-200 font-sans text-[10px] font-semibold">
+                                      泰/中录音齐
+                                    </span>
+                                  );
+                                }
+                                return null;
+                              })()}
+                              {matchedLesson && (
+                                <span className="font-sans text-[10px] font-bold text-[#b58940]">
+                                  · 已有字幕({matchedLesson.totalSentences}句)
+                                </span>
+                              )}
                             </div>
                             <button
                               type="button"
@@ -839,10 +895,21 @@ export const UnifiedMediaSelectorBar: React.FC<UnifiedMediaSelectorBarProps> = (
                               <span>{matchedLesson ? '载入课件' : '载入视频'}</span>
                             </button>
                           </div>
-                          <div className="text-[11px] text-[#5b3f1e] truncate flex items-center gap-1">
+                          <div className="text-[11px] text-[#5b3f1e] flex items-center justify-between gap-1.5">
                             <span className="truncate">
                               🇹🇭 {thaiBadge ? `[${thaiBadge}] ` : ''}{item.thai?.title || '暂无同日泰语视频'}
                             </span>
+                            {item.thai?.url && (
+                              <a
+                                href={item.thai.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="shrink-0 text-[10px] text-stone-400 hover:text-[#b58940] inline-flex items-center gap-0.5"
+                                title="在 YouTube 打开泰文原版视频（便于查字幕或导出）"
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
                           </div>
                           <div className="text-[11px] text-[#7a6f5f] truncate flex items-center gap-1">
                             <span className="truncate">

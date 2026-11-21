@@ -162,16 +162,16 @@ export const KaraokeLineDisplay: React.FC<KaraokeLineDisplayProps> = ({
 
       {/* Chinese Translation Line (with blur mask option) */}
       <div
-        className={`p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-base sm:text-lg font-medium text-slate-100 transition-all ${
+        className={`p-4 rounded-2xl bg-slate-900/70 border border-slate-800 text-sm sm:text-base font-normal text-slate-400/80 opacity-75 hover:opacity-100 transition-all ${
           maskMode === 'blur_cn'
             ? 'blur-sm hover:blur-none select-none cursor-pointer border-dashed border-amber-500/40 bg-slate-950/70'
             : ''
         }`}
       >
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs text-slate-400 font-normal">完整对译：</span>
+          <span className="text-xs text-slate-500 font-normal">机器翻译仅供参考：</span>
           {maskMode === 'blur_cn' && (
-            <span className="text-xs text-amber-400 font-normal">
+            <span className="text-xs text-amber-400/80 font-normal">
               (已开启抓耳遮挡，触控或悬停查看中文)
             </span>
           )}

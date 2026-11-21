@@ -384,7 +384,7 @@ export function parseLanguageReactorText(rawText: string): {
         });
         return {
           subtitles,
-          detectedTitle: parsed.title || subtitles[0]?.thai?.slice(0, 30),
+          detectedTitle: parsed.title || parsed.thaiTitle || parsed.chineseTitle || subtitles[0]?.thai?.slice(0, 30),
           totalParsed: subtitles.length
         };
       }

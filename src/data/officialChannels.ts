@@ -4,6 +4,8 @@ import { DAILY_PRACTICE_SUBTITLES, DAILY_PRACTICE_TALK_TITLE, DAILY_PRACTICE_TAL
 import { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_TALK_ZH_TITLE } from './luangporTalk18Oct';
 import { TALK_10OCT_TITLE, TALK_10OCT_ZH_TITLE, LUANGPOR_OCT_10_SUBTITLES } from './luangporTalk10OctChantha';
 import { LUANGPOR_OCT_31_TALK_TITLE, LUANGPOR_OCT_31_TALK_ZH_TITLE, LUANGPOR_OCT_31_SUBTITLES } from './luangporTalk31Oct';
+import { LUANGPOR_NOV_08_TALK_TITLE, LUANGPOR_NOV_08_TALK_ZH_TITLE, LUANGPOR_NOV_08_SUBTITLES } from './luangporTalk08Nov';
+import { LUANGPOR_NOV_01_TALK_TITLE, LUANGPOR_NOV_01_TALK_ZH_TITLE, LUANGPOR_NOV_01_SUBTITLES } from './luangporTalk01Nov';
 
 // 官方频道直接直达链接（供师兄师姐直接点击，避免复制粘贴繁琐步骤）
 export const OFFICIAL_THAI_STREAMS_URL = 'https://www.youtube.com/@luangpupramote/streams';
@@ -51,6 +53,42 @@ export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
     offsetSeconds: 0.0,
     subtitles: LUANGPOR_OCT_10_SUBTITLES,
     description: 'Wat Suan Santidham 官方原声精选，全篇 29 句朱拉隆功实用五调音标、佛法拆词与深研释义。'
+  },
+  {
+    id: 'lesson_20261108',
+    date: '2026-11-08',
+    dateDisplay: '2026年11月08日',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=2FkVMAUcaoE',
+    thaiVideoId: '2FkVMAUcaoE',
+    thaiTitle: LUANGPOR_NOV_08_TALK_TITLE,
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=UTWpguoj7Zo',
+    chineseVideoId: 'UTWpguoj7Zo',
+    chineseTitle: LUANGPOR_NOV_08_TALK_ZH_TITLE,
+    combinedTitle: `${LUANGPOR_NOV_08_TALK_ZH_TITLE} ｜ ${LUANGPOR_NOV_08_TALK_TITLE}`,
+    subtitleType: 'manual_verified',
+    subtitleStatusLabel: '官方人工精校字幕 (1,179句全篇)',
+    sentenceCount: 1179,
+    offsetSeconds: 0.0,
+    subtitles: LUANGPOR_NOV_08_SUBTITLES,
+    description: 'Wat Suan Santidham 官方开示《สมาธิที่เห็นไตรลักษณ์ได้ (能见到三法印的禅定)》，已完成全篇 1,179 句精细拆词、朱拉隆功五调音标核校与双轨精准绑定。'
+  },
+  {
+    id: 'lesson_20261101',
+    date: '2026-11-01',
+    dateDisplay: '2026年11月01日',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=rsHw7pQE0Qc',
+    thaiVideoId: 'rsHw7pQE0Qc',
+    thaiTitle: LUANGPOR_NOV_01_TALK_TITLE,
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=wKItc8GjIVs',
+    chineseVideoId: 'wKItc8GjIVs',
+    chineseTitle: LUANGPOR_NOV_01_TALK_ZH_TITLE,
+    combinedTitle: `${LUANGPOR_NOV_01_TALK_ZH_TITLE} ｜ ${LUANGPOR_NOV_01_TALK_TITLE}`,
+    subtitleType: 'manual_verified',
+    subtitleStatusLabel: '官方人工精校字幕 (543句全篇)',
+    sentenceCount: 543,
+    offsetSeconds: 0.0,
+    subtitles: LUANGPOR_NOV_01_SUBTITLES,
+    description: 'Wat Suan Santidham 官方供僧法会开示《ฟังธรรมให้เกิดสมาธิและปัญญา (听法生起禅定与智慧)》，已完成全篇 543 句精细拆词、朱拉隆功五调音标核校与双轨音视频精准绑定。'
   },
   {
     id: 'lesson_20261031',

@@ -6,6 +6,7 @@ import { MainlandOfflinePage } from './src/components/MainlandOfflinePage';
 import { ThaiKeyboardPractice } from './src/components/ThaiKeyboardPractice';
 import { WordDetailModal } from './src/components/WordDetailModal';
 import { RegistrationCheckinView } from './src/components/RegistrationCheckinView';
+import { DailyThreeHourView } from './src/components/DailyThreeHourView';
 import { AdminSanctuaryModal } from './src/components/AdminSanctuaryModal';
 import { StatementIdentityModal } from './src/components/StatementIdentityModal';
 import { FirstVisitOnboardingModal } from './src/components/FirstVisitOnboardingModal';
@@ -56,6 +57,9 @@ const App: React.FC = () => {
   // 音频优先默认入口：仅在明确指定 #/video 或用户首次选择「视频学习」时进入双视频，否则一律默认音频学习
   const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
     if (typeof window !== 'undefined') {
+      if (window.location.hash === '#/3h' || window.location.hash === '#/daily') {
+        return 'daily_three_hour';
+      }
       if (window.location.hash === '#/video') {
         return 'dual_sync_player';
       }
@@ -178,14 +182,25 @@ const App: React.FC = () => {
       setLastMediaTab(tab);
     }
     if (typeof window !== 'undefined') {
-      if (tab === 'dual_sync_player') {
+      if (tab === 'daily_three_hour') {
+        if (window.location.hash !== '#/3h') {
+          window.location.hash = '#/3h';
+        }
+      } else if (tab === 'dual_sync_player') {
         if (window.location.hash !== '#/video') {
           window.location.hash = '#/video';
         }
       } else if (tab === 'mainland_offline') {
-        if (window.location.hash === '#/video' || window.location.hash === '#/mainland') {
+        if (
+          window.location.hash === '#/video' ||
+          window.location.hash === '#/mainland' ||
+          window.location.hash === '#/3h' ||
+          window.location.hash === '#/daily'
+        ) {
           window.history.replaceState(null, '', window.location.pathname + window.location.search);
         }
+      } else if (window.location.hash === '#/3h' || window.location.hash === '#/daily') {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -204,10 +219,14 @@ const App: React.FC = () => {
         }
         return;
       }
-      if (window.location.hash === '#/video') {
+      if (window.location.hash === '#/3h' || window.location.hash === '#/daily') {
+        setActiveTab('daily_three_hour');
+      } else if (window.location.hash === '#/video') {
         setActiveTab('dual_sync_player');
       } else if (window.location.hash === '#/mainland' || window.location.hash === '#/audio' || window.location.hash === '') {
-        setActiveTab((prev) => (prev === 'dual_sync_player' ? 'mainland_offline' : prev));
+        setActiveTab((prev) =>
+          prev === 'dual_sync_player' || prev === 'daily_three_hour' ? 'mainland_offline' : prev
+        );
       }
     };
     window.addEventListener('hashchange', onHashChange);
@@ -523,7 +542,34 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {/* 4. 学员免费注册、个人学修打卡与禅修共学动态 */}
+        {/* 4. 日常 3 小时共修课表 */}
+        {activeTab === 'daily_three_hour' && (
+          <DailyThreeHourView
+            allLessons={allLessons}
+            onOpenAudioTrack={(track) => {
+              setPendingAudioSelection({ ...track, nonce: Date.now() });
+              navigateToTab('mainland_offline');
+            }}
+            onOpenVideoPair={(pair) => {
+              const existing = readOnboardingPrefs();
+              saveOnboardingPrefs({
+                completed: true,
+                canUseYouTube: true,
+                tourCompleted: existing?.tourCompleted ?? true,
+                updatedAt: Date.now(),
+              });
+              setPendingVideoSelection({ ...pair, nonce: Date.now() });
+              navigateToTab('dual_sync_player');
+            }}
+            onOpenCuratedLesson={(lessonId) => {
+              handleSelectLessonId(lessonId);
+              navigateToTab(lastMediaTab);
+            }}
+            onBackToStudy={() => navigateToTab(lastMediaTab)}
+          />
+        )}
+
+        {/* 5. 学员免费注册、个人学修打卡与禅修共学动态 */}
         {activeTab === 'registration_checkin' && (
           <RegistrationCheckinView
             currentStudent={currentStudent}

@@ -21,6 +21,18 @@ import {
   LUANGPOR_OCT_31_KEY_TERMS,
   LUANGPOR_OCT_31_SUBTITLES
 } from './luangporTalk31Oct';
+import {
+  LUANGPOR_NOV_08_TALK_TITLE,
+  LUANGPOR_NOV_08_TALK_ZH_TITLE,
+  LUANGPOR_NOV_08_KEY_TERMS,
+  LUANGPOR_NOV_08_SUBTITLES
+} from './luangporTalk08Nov';
+import {
+  LUANGPOR_NOV_01_TALK_TITLE,
+  LUANGPOR_NOV_01_TALK_ZH_TITLE,
+  LUANGPOR_NOV_01_KEY_TERMS,
+  LUANGPOR_NOV_01_SUBTITLES
+} from './luangporTalk01Nov';
 
 // 2026 最新《在日常生活与工作中修行》开示 6 大核心巴利法词
 export const DAILY_PRACTICE_KEY_TERMS = [
@@ -134,6 +146,44 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     tags: ['10月10日精选开示', '朱拉隆功五调音标', '纯泰原声精进', '善法欲与精进修行'],
     keyTerms: TALK_10OCT_KEY_TERMS,
     subtitles: LUANGPOR_OCT_10_SUBTITLES
+  },
+  {
+    id: 'lesson_20261108',
+    date: '2026-11-08',
+    title: LUANGPOR_NOV_08_TALK_TITLE,
+    chineseTitle: LUANGPOR_NOV_08_TALK_ZH_TITLE,
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版视频 & 解脱园中文同传 (1179句全篇精准对齐)',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=2FkVMAUcaoE',
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=UTWpguoj7Zo',
+    thaiVideoId: '2FkVMAUcaoE',
+    chineseVideoId: 'UTWpguoj7Zo',
+    defaultOffsetSeconds: 0.0,
+    totalSentences: 1179,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
+    tags: ['11月08日最新开示', '1179句全篇精准对齐', '能见到三法印的禅定', '特相禅那与观心'],
+    keyTerms: LUANGPOR_NOV_08_KEY_TERMS,
+    subtitles: LUANGPOR_NOV_08_SUBTITLES
+  },
+  {
+    id: 'lesson_20261101',
+    date: '2026-11-01',
+    title: LUANGPOR_NOV_01_TALK_TITLE,
+    chineseTitle: LUANGPOR_NOV_01_TALK_ZH_TITLE,
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版供僧法会视频 & 解脱园中文同传 (543句全篇精准对齐)',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=rsHw7pQE0Qc',
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=wKItc8GjIVs',
+    thaiVideoId: 'rsHw7pQE0Qc',
+    chineseVideoId: 'wKItc8GjIVs',
+    defaultOffsetSeconds: 0.0,
+    totalSentences: 543,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
+    tags: ['11月01日功德衣法会', '543句全篇精准对齐', '听法生起禅定与智慧', '十善业道与四圣谛'],
+    keyTerms: LUANGPOR_NOV_01_KEY_TERMS,
+    subtitles: LUANGPOR_NOV_01_SUBTITLES
   },
   {
     id: 'lesson_20261031',
