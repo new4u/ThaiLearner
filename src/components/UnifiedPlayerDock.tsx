@@ -7,6 +7,7 @@ interface UnifiedPlayerDockProps {
   clockLabel?: string;
   isPlaying: boolean;
   audioFocus: 'thai' | 'both' | 'chinese';
+  hasThaiTrack?: boolean;
   hasChineseTrack?: boolean;
   isLoopSentence: boolean;
   playbackRate: number;
@@ -28,6 +29,7 @@ export const UnifiedPlayerDock: React.FC<UnifiedPlayerDockProps> = ({
   clockLabel,
   isPlaying,
   audioFocus,
+  hasThaiTrack = true,
   hasChineseTrack = true,
   isLoopSentence,
   playbackRate,
@@ -40,22 +42,32 @@ export const UnifiedPlayerDock: React.FC<UnifiedPlayerDockProps> = ({
   onChangePlaybackRate,
   tourId,
 }) => {
+  const hasBothTracks = hasThaiTrack && hasChineseTrack;
+
   const focusLabel =
-    !hasChineseTrack
-      ? isPlaying
-        ? '暂停'
-        : '播放'
-      : audioFocus === 'both'
-      ? isPlaying
-        ? '双轨暂停'
-        : '双轨播放'
-      : audioFocus === 'thai'
+    hasBothTracks
+      ? audioFocus === 'both'
+        ? isPlaying
+          ? '双轨暂停'
+          : '双轨播放'
+        : audioFocus === 'thai'
+        ? isPlaying
+          ? '泰语暂停'
+          : '泰语播放'
+        : isPlaying
+        ? '中文暂停'
+        : '中文播放'
+      : hasThaiTrack
       ? isPlaying
         ? '泰语暂停'
         : '泰语播放'
+      : hasChineseTrack
+      ? isPlaying
+        ? '中文暂停'
+        : '中文播放'
       : isPlaying
-      ? '中文暂停'
-      : '中文播放';
+      ? '暂停'
+      : '播放';
 
   const sentenceCounter =
     totalLines > 0 ? `第 ${currentLineIndex + 1} / ${totalLines} 句` : '0 / 0 句';
@@ -103,7 +115,7 @@ export const UnifiedPlayerDock: React.FC<UnifiedPlayerDockProps> = ({
             </button>
           </div>
 
-          {hasChineseTrack && (
+          {hasBothTracks && (
             <div className="flex items-center bg-stone-950/80 p-0.5 sm:p-1 rounded-xl border border-stone-800 shrink-0 text-xs gap-0.5 sm:gap-1">
               {(
                 [
@@ -249,7 +261,7 @@ export const UnifiedPlayerDock: React.FC<UnifiedPlayerDockProps> = ({
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          {hasChineseTrack && (
+          {hasBothTracks && (
             <div className="flex items-center bg-stone-950/80 p-1 rounded-xl border border-stone-800 shadow-inner gap-1">
               {(
                 [

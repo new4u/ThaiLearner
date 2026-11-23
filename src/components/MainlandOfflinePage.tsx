@@ -252,7 +252,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   const [chineseDuration, setChineseDuration] = useState(0);
 
   // 声道焦点 & 伴弱音量（与视频学习保持一致交互）
-  const [audioFocus, setAudioFocus] = useState<'thai' | 'both' | 'chinese'>('thai');
+  const [audioFocus, setAudioFocus] = useState<'thai' | 'both' | 'chinese'>('both');
   const [chineseVol, setChineseVol] = useState<number>(() => {
     try {
       const saved = localStorage.getItem('luangpor_chinese_dim_vol');
@@ -305,6 +305,18 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
   const [pairedCatalog, setPairedCatalog] = useState<LuangporPairedCatalogResponse | null>(null);
   const [isCatalogLoading, setIsCatalogLoading] = useState(false);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+
+  const hasThaiTrack = Boolean(thaiTrack);
+  const hasChineseTrack = Boolean(chineseTrack);
+
+  // 当只有单一语种音轨时，自动锁定到有效声道，避免出现无声轨或中文被静音
+  useEffect(() => {
+    if (hasThaiTrack && !hasChineseTrack && audioFocus !== 'thai') {
+      setAudioFocus('thai');
+    } else if (!hasThaiTrack && hasChineseTrack && audioFocus !== 'chinese') {
+      setAudioFocus('chinese');
+    }
+  }, [hasThaiTrack, hasChineseTrack, audioFocus]);
 
   const replaceThaiTrack = useCallback((next: TrackAudioState | null) => {
     if (thaiBlobUrlRef.current && thaiBlobUrlRef.current !== next?.srcUrl) {
@@ -574,21 +586,37 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     };
   }, [currentLesson.id, currentLesson.date, datePairedCandidates, replaceThaiTrack, replaceChineseTrack]);
 
-  // 同步倍速与音量
+  // 同步倍速与音量（单轨时绝不将唯一可用声道消音）
   useEffect(() => {
     if (thaiAudioRef.current) {
       thaiAudioRef.current.playbackRate = playbackRate;
-      thaiAudioRef.current.volume = audioFocus === 'chinese' ? 0.15 : 1.0;
+      thaiAudioRef.current.volume =
+        audioFocus === 'chinese' && hasChineseTrack && !isThaiPlaying ? 0.15 : 1.0;
     }
     if (chineseAudioRef.current) {
       chineseAudioRef.current.playbackRate = playbackRate;
-      chineseAudioRef.current.volume = audioFocus === 'thai' ? 0 : Math.max(0, Math.min(1, chineseVol / 100));
+      const baseCnVol = Math.max(0, Math.min(1, chineseVol / 100));
+      chineseAudioRef.current.volume =
+        audioFocus === 'thai' && hasThaiTrack && !isChinesePlaying ? 0 : baseCnVol;
     }
-  }, [playbackRate, audioFocus, chineseVol, thaiTrack?.srcUrl, chineseTrack?.srcUrl]);
+  }, [
+    playbackRate,
+    audioFocus,
+    chineseVol,
+    hasThaiTrack,
+    hasChineseTrack,
+    isThaiPlaying,
+    isChinesePlaying,
+    thaiTrack?.srcUrl,
+    chineseTrack?.srcUrl,
+  ]);
 
   const handleChangeChineseVol = (nextVol: number) => {
     const clamped = Math.max(0, Math.min(100, nextVol));
     setChineseVol(clamped);
+    if (audioFocus === 'thai') {
+      setAudioFocus(hasThaiTrack ? 'both' : 'chinese');
+    }
     try {
       localStorage.setItem('luangpor_chinese_dim_vol', String(clamped));
     } catch {}
@@ -782,6 +810,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     }
     if (thaiAudioRef.current.paused) {
       setIsKaraokeDemoPlaying(false);
+      if (audioFocus === 'chinese') {
+        setAudioFocus(chineseTrack && !chineseAudioRef.current?.paused ? 'both' : 'thai');
+      }
       thaiAudioRef.current.play().catch(() => {});
     } else {
       thaiAudioRef.current.pause();
@@ -796,6 +827,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
     }
     if (chineseAudioRef.current.paused) {
       setIsKaraokeDemoPlaying(false);
+      if (audioFocus === 'thai') {
+        setAudioFocus(thaiTrack && !thaiAudioRef.current?.paused ? 'both' : 'chinese');
+      }
       chineseAudioRef.current.play().catch(() => {});
     } else {
       chineseAudioRef.current.pause();
@@ -906,6 +940,19 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         fallbackTried: false,
       };
 
+      const targetDate = inferredDate || params.dateLabel;
+      const prevCn = chineseAudioRefLatest.current;
+      const hasSameDateCn = Boolean(
+        prevCn && (!targetDate || !prevCn.dateLabel || prevCn.dateLabel === targetDate)
+      );
+      if (prevCn && !hasSameDateCn) {
+        chineseAudioRef.current?.pause();
+        replaceChineseTrack(null);
+        setIsChinesePlaying(false);
+        setChineseRawTime(0);
+        setChineseDuration(0);
+      }
+
       if (matchedLesson && matchedLesson.id !== currentLesson.id) {
         pendingExplicitTrackRef.current = {
           lessonId: matchedLesson.id,
@@ -917,6 +964,11 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
         showToast(`已切换至对应课件「${matchedLesson.date}」并加载泰语音频：${params.fileName}`);
       } else {
         replaceThaiTrack(nextState);
+        if (!hasSameDateCn) {
+          setAudioFocus('thai');
+        } else if (audioFocus === 'chinese') {
+          setAudioFocus('both');
+        }
         const bound = getBoundSubtitlesForMedia(audioKey);
         if (matchedLesson) {
           showToast(`已挂载同场泰语音频：${params.fileName}`);
@@ -929,15 +981,28 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       return;
     }
 
+    const targetDate = inferredDate || params.dateLabel;
+    const prevThai = thaiAudioRefLatest.current;
+    const hasSameDateThai = Boolean(
+      prevThai && (!targetDate || !prevThai.dateLabel || prevThai.dateLabel === targetDate)
+    );
+    if (prevThai && !hasSameDateThai) {
+      thaiAudioRef.current?.pause();
+      replaceThaiTrack(null);
+      setIsThaiPlaying(false);
+      setThaiRawTime(0);
+      setThaiDuration(0);
+    }
+
     replaceTrack({
       srcUrl: buildAudioProxyUrl(params.mp3Url),
       rawMp3Url: params.mp3Url,
       isBlobUrl: false,
       fileName: params.fileName,
       fileCode: params.fileCode,
-      dateLabel: inferredDate || params.dateLabel,
+      dateLabel: targetDate,
       mediaKey: audioKey,
-      sourceLabel: params.dateLabel || inferredDate ? `官方存档 · ${inferredDate || params.dateLabel}` : '手动选定 MP3',
+      sourceLabel: targetDate ? `官方存档 · ${targetDate}` : '手动选定 MP3',
       matchMode: 'manual',
       offsetSeconds: 0,
       lessonId: currentLesson.id,
@@ -946,7 +1011,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       fallbackTried: false,
     });
 
-    if (audioFocus === 'thai') {
+    if (!hasSameDateThai) {
+      setAudioFocus('chinese');
+    } else if (audioFocus === 'thai') {
       setAudioFocus('both');
     }
     showToast(`已挂载中文音频：${params.fileName}`);
@@ -1157,7 +1224,8 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       } else {
         replaceChineseTrack(nextState);
       }
-      if (audioFocus === 'thai') setAudioFocus('both');
+      if (!thaiAudioRefLatest.current) setAudioFocus('chinese');
+      else if (audioFocus === 'thai') setAudioFocus('both');
     } else {
       if (!isUnmatchedSlot && !isConflictingDate && lessonId !== currentLessonId) {
         pendingExplicitTrackRef.current = { lessonId, trackType: 'thai_audio', trackState: nextState };
@@ -1522,6 +1590,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                     onPlay={() => {
                       setIsThaiPlaying(true);
                       setIsKaraokeDemoPlaying(false);
+                      if (audioFocus === 'chinese') {
+                        setAudioFocus(chineseTrack && !chineseAudioRef.current?.paused ? 'both' : 'thai');
+                      }
                     }}
                     onPause={() => setIsThaiPlaying(false)}
                     onEnded={() => setIsThaiPlaying(false)}
@@ -1737,6 +1808,9 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                     onPlay={() => {
                       setIsChinesePlaying(true);
                       setIsKaraokeDemoPlaying(false);
+                      if (audioFocus === 'thai') {
+                        setAudioFocus(thaiTrack && !thaiAudioRef.current?.paused ? 'both' : 'chinese');
+                      }
                     }}
                     onPause={() => setIsChinesePlaying(false)}
                     onEnded={() => setIsChinesePlaying(false)}
@@ -2177,17 +2251,31 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
       <UnifiedPlayerDock
         currentLineIndex={currentLineIndex}
         totalLines={activeSubtitles.length}
-        clockLabel={formatClock(thaiRawTime)}
+        clockLabel={formatClock(audioFocus === 'chinese' || !hasThaiTrack ? chineseRawTime : thaiRawTime)}
         isPlaying={isCurrentModePlaying}
         audioFocus={audioFocus}
-        hasChineseTrack={true}
+        hasThaiTrack={hasThaiTrack}
+        hasChineseTrack={hasChineseTrack}
         isLoopSentence={isLoopSentence}
         playbackRate={playbackRate}
         onAlignCurrent={() => handleAlignCurrentTrack(audioFocus === 'chinese' ? 'chinese_audio' : 'thai_audio')}
         onPrevLine={() => handleJumpToSentence(Math.max(0, currentLineIndex - 1), isCurrentModePlaying)}
         onTogglePlay={handleMasterPlayToggle}
         onNextLine={() => handleJumpToSentence(Math.min(activeSubtitles.length - 1, currentLineIndex + 1), isCurrentModePlaying)}
-        onSelectFocus={(focus) => setAudioFocus(focus)}
+        onSelectFocus={(focus) => {
+          setAudioFocus(focus);
+          const anyPlaying = isThaiPlaying || isChinesePlaying;
+          if (focus === 'thai') {
+            chineseAudioRef.current?.pause();
+            if (anyPlaying && thaiTrack) thaiAudioRef.current?.play().catch(() => {});
+          } else if (focus === 'chinese') {
+            thaiAudioRef.current?.pause();
+            if (anyPlaying && chineseTrack) chineseAudioRef.current?.play().catch(() => {});
+          } else if (anyPlaying) {
+            if (thaiTrack) thaiAudioRef.current?.play().catch(() => {});
+            if (chineseTrack) chineseAudioRef.current?.play().catch(() => {});
+          }
+        }}
         onToggleLoop={() => setIsLoopSentence((v) => !v)}
         onChangePlaybackRate={(rate) => setPlaybackRate(rate)}
       />

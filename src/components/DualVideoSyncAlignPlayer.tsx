@@ -339,6 +339,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputChineseUrl(lesson.chineseVideoUrl);
     setInputTitle(combinedTitle);
     onSelectLessonId?.(lesson.id);
+    setAudioFocus(
+      lesson.thaiVideoUrl && lesson.chineseVideoUrl
+        ? 'both'
+        : lesson.thaiVideoUrl
+        ? 'thai'
+        : 'chinese'
+    );
     setCurrentLineIndex(0);
     triggerToast(`已成功调入课件: ${lesson.chineseTitle}`);
   };
@@ -375,6 +382,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputThaiUrl(thaiUrl);
     setInputChineseUrl(chineseUrl);
     setInputTitle(displayTitle);
+    setAudioFocus(thaiUrl && chineseUrl ? 'both' : thaiUrl ? 'thai' : 'chinese');
     setCurrentLineIndex(0);
     setBindingVersion(v => v + 1);
 
@@ -384,7 +392,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         ? `已载入视频并严格匹配到对应字幕（${checkBinding.subtitles.length} 句）`
         : thaiUrl
         ? '已载入新泰文视频；本视频暂未匹配字幕（已自动隐藏其他场次字幕）'
-        : '已更新中文伴播视频'
+        : '已切换为中文视频/音频单播'
     );
   }, [curatedLessons, chineseVol, isOffsetLocked, onOffsetChange]);
 
@@ -435,6 +443,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputThaiUrl(thaiUrl);
     setInputChineseUrl(chineseUrl);
     setInputTitle(displayTitle);
+    setAudioFocus(thaiUrl && chineseUrl ? 'both' : thaiUrl ? 'thai' : 'chinese');
     setCurrentLineIndex(0);
     setBindingVersion(v => v + 1);
     const checkBinding = resolveVideoSubtitlesBinding({ thaiVideoUrl: thaiUrl, lessons: curatedLessons });
@@ -535,6 +544,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   const thaiVideoId = extractYouTubeId(config.thaiVideoUrl);
   const chineseVideoId = extractYouTubeId(config.chineseVideoUrl);
+  const hasThaiMedia = Boolean(
+    thaiVideoId ||
+    (config.thaiVideoUrl && config.thaiVideoUrl.trim() !== '') ||
+    isThaiOfflineActive
+  );
   const hasChineseMedia = Boolean(
     chineseVideoId ||
     (config.chineseVideoUrl && config.chineseVideoUrl.trim() !== '') ||
@@ -542,10 +556,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
   );
 
   useEffect(() => {
-    if (!hasChineseMedia && audioFocus !== 'thai') {
+    if (!hasChineseMedia && hasThaiMedia && audioFocus !== 'thai') {
       setAudioFocus('thai');
+    } else if (!hasThaiMedia && hasChineseMedia && audioFocus !== 'chinese') {
+      setAudioFocus('chinese');
     }
-  }, [hasChineseMedia, audioFocus]);
+  }, [hasThaiMedia, hasChineseMedia, audioFocus]);
 
   const videoSubtitleBinding = useMemo(
     () => resolveVideoSubtitlesBinding({ thaiVideoUrl: config.thaiVideoUrl, lessons: curatedLessons }),
@@ -792,26 +808,27 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [onUpdateSubtitles, config.thaiVideoUrl, config.chineseVideoUrl, config.title, currentCuratedLesson, propLessonId]);
 
-  // 应用声道设置与音量 (同步支持 YouTube 与 HTML5 离线纯音频)
+  // 应用声道设置与音量 (同步支持 YouTube 与 HTML5 离线纯音频，单轨时绝不将唯一可用声道静音)
   const applyAudioSettings = useCallback((focus: 'thai' | 'chinese' | 'both', tVol: number, cVol: number) => {
+    const muteThai = focus === 'chinese' && hasChineseMedia;
+    const muteChinese = focus === 'thai' && hasThaiMedia;
     try {
-      if (focus === 'thai') {
-        thaiPlayerRef.current?.unMute?.();
-        thaiPlayerRef.current?.setVolume?.(tVol);
-        chinesePlayerRef.current?.mute?.();
-      } else if (focus === 'chinese') {
+      if (muteThai) {
         thaiPlayerRef.current?.mute?.();
-        chinesePlayerRef.current?.unMute?.();
-        chinesePlayerRef.current?.setVolume?.(cVol);
       } else {
         thaiPlayerRef.current?.unMute?.();
         thaiPlayerRef.current?.setVolume?.(tVol);
+      }
+
+      if (muteChinese) {
+        chinesePlayerRef.current?.mute?.();
+      } else {
         chinesePlayerRef.current?.unMute?.();
         chinesePlayerRef.current?.setVolume?.(cVol);
       }
 
       if (thaiHtml5AudioRef.current) {
-        if (focus === 'chinese') {
+        if (muteThai) {
           thaiHtml5AudioRef.current.muted = true;
         } else {
           thaiHtml5AudioRef.current.muted = false;
@@ -820,7 +837,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       }
 
       if (chineseHtml5MediaRef.current) {
-        if (focus === 'thai') {
+        if (muteChinese) {
           chineseHtml5MediaRef.current.muted = true;
         } else {
           chineseHtml5MediaRef.current.muted = false;
@@ -830,7 +847,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     } catch {
       // ignore
     }
-  }, []);
+  }, [hasThaiMedia, hasChineseMedia]);
 
   useEffect(() => {
     applyAudioSettings(audioFocus, thaiVol, chineseVol);
@@ -853,9 +870,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       localStorage.setItem('luangpor_chinese_dim_vol', vol.toString());
     } catch {}
 
-    // 如果之前是仅听泰语模式，用户调节中文音量表明需要伴随听中文，自动切换为双声道
+    // 如果之前是仅听泰语模式，用户调节中文音量表明需要伴随听中文，自动切换为有效声道
     if (audioFocus === 'thai') {
-      setAudioFocus('both');
+      setAudioFocus(hasThaiMedia ? 'both' : 'chinese');
     }
 
     try {
@@ -871,7 +888,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       ? '中文伴弱 Dim: 40% (-60% 递减) · 轻声随听'
       : '中文伴弱 Dim: 10% (-90% 递减) · 微声浸润';
     triggerToast(tip);
-  }, [audioFocus]);
+  }, [audioFocus, hasThaiMedia]);
 
   // 循环递减中文音量 (移动端一键 Dim 快捷切换：100% -> 70% -> 40% -> 10% -> 100%)
   const handleCycleChineseDim = useCallback(() => {
@@ -1276,11 +1293,18 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       pauseThaiTrack();
       setIsThaiPlaying(false);
     } else {
+      const nextFocus =
+        audioFocus === 'chinese'
+          ? hasChineseMedia && isChineseTrackPlaying()
+            ? 'both'
+            : 'thai'
+          : audioFocus;
+      if (nextFocus !== audioFocus) setAudioFocus(nextFocus);
       playThaiTrack();
       setIsThaiPlaying(true);
-      applyAudioSettings(audioFocus, thaiVol, chineseVol);
+      applyAudioSettings(nextFocus, thaiVol, chineseVol);
     }
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, pauseThaiTrack, playThaiTrack]);
+  }, [audioFocus, hasChineseMedia, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, isChineseTrackPlaying, pauseThaiTrack, playThaiTrack]);
 
   // 核心操作 3：中文轨道单独播放/暂停
   const handleToggleChineseAlone = useCallback(() => {
@@ -1288,11 +1312,18 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       pauseChineseTrack();
       setIsChinesePlaying(false);
     } else {
+      const nextFocus =
+        audioFocus === 'thai'
+          ? hasThaiMedia && isThaiTrackPlaying()
+            ? 'both'
+            : 'chinese'
+          : audioFocus;
+      if (nextFocus !== audioFocus) setAudioFocus(nextFocus);
       playChineseTrack();
       setIsChinesePlaying(true);
-      applyAudioSettings(audioFocus, thaiVol, chineseVol);
+      applyAudioSettings(nextFocus, thaiVol, chineseVol);
     }
-  }, [audioFocus, thaiVol, chineseVol, applyAudioSettings, isChineseTrackPlaying, pauseChineseTrack, playChineseTrack]);
+  }, [audioFocus, hasThaiMedia, thaiVol, chineseVol, applyAudioSettings, isThaiTrackPlaying, isChineseTrackPlaying, pauseChineseTrack, playChineseTrack]);
 
   // 跳转到指定句子 (遵循当前声道/单播模式)
   const handleJumpToSentence = (index: number) => {
@@ -1941,7 +1972,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-sm sm:text-base font-bold text-[#2d2a26] whitespace-nowrap">
-                  {hasChineseMedia ? '泰中双视频同步对齐' : '泰文原版视频同步对齐'}
+                  {hasThaiMedia && hasChineseMedia
+                    ? '泰中双视频同步对齐'
+                    : hasChineseMedia && !hasThaiMedia
+                    ? '中文译版视频同步对齐'
+                    : '泰文原版视频同步对齐'}
                 </h1>
                 <span className="text-xs font-mono tabular-nums text-[#7a6f5f]">
                   {activeSubtitles.length > 0
@@ -2123,9 +2158,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 <span className={`w-2 h-2 rounded-full ${isThaiPlaying ? 'bg-emerald-400' : 'bg-stone-500'}`} />
                 <span className="font-bold whitespace-nowrap">🇹🇭 泰文原版</span>
                 <span className="text-[10px] text-stone-300 whitespace-nowrap">
-                  ({isThaiPlaying ? '播放中' : '已暂停'})
+                  ({!hasThaiMedia ? '待关联' : isThaiPlaying ? '播放中' : '已暂停'})
                 </span>
-                {!hasChineseMedia && (
+                {hasThaiMedia && !hasChineseMedia && (
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                     纯泰原声精研
                   </span>
@@ -2194,7 +2229,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                     src={thaiOfflineAudio.url}
                     controls
                     className="w-full max-w-md h-10"
-                    onPlay={() => setIsThaiPlaying(true)}
+                    onPlay={() => {
+                      setIsThaiPlaying(true);
+                      if (audioFocus === 'chinese') {
+                        const nextFocus = hasChineseMedia && isChineseTrackPlaying() ? 'both' : 'thai';
+                        setAudioFocus(nextFocus);
+                        applyAudioSettings(nextFocus, thaiVol, chineseVol);
+                      }
+                    }}
                     onPause={() => setIsThaiPlaying(false)}
                     onEnded={() => setIsThaiPlaying(false)}
                   />
@@ -2249,6 +2291,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 <span className="text-[10px] text-stone-300 whitespace-nowrap">
                   ({!hasChineseMedia ? '待关联' : isChinesePlaying ? '播放中' : '已暂停'})
                 </span>
+                {!hasThaiMedia && hasChineseMedia && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    纯中文译版
+                  </span>
+                )}
                 {hasChineseMedia && offsetSeconds !== 0 && (
                   <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 whitespace-nowrap">
                     {offsetSeconds >= 0 ? `+${offsetSeconds}` : offsetSeconds}s
@@ -2446,7 +2493,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                       playsInline
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-contain"
-                      onPlay={() => setIsChinesePlaying(true)}
+                      onPlay={() => {
+                        setIsChinesePlaying(true);
+                        if (audioFocus === 'thai') {
+                          const nextFocus = hasThaiMedia && isThaiTrackPlaying() ? 'both' : 'chinese';
+                          setAudioFocus(nextFocus);
+                          applyAudioSettings(nextFocus, thaiVol, chineseVol);
+                        }
+                      }}
                       onPause={() => setIsChinesePlaying(false)}
                       onError={() => {
                         console.warn('HTML5 Video load failed:', config.chineseVideoUrl);
@@ -2508,7 +2562,14 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                         controls
                         referrerPolicy="no-referrer"
                         className="w-full max-w-md mt-3 h-8"
-                        onPlay={() => setIsChinesePlaying(true)}
+                        onPlay={() => {
+                          setIsChinesePlaying(true);
+                          if (audioFocus === 'thai') {
+                            const nextFocus = hasThaiMedia && isThaiTrackPlaying() ? 'both' : 'chinese';
+                            setAudioFocus(nextFocus);
+                            applyAudioSettings(nextFocus, thaiVol, chineseVol);
+                          }
+                        }}
                         onPause={() => setIsChinesePlaying(false)}
                         onError={() => {
                           console.warn('HTML5 Audio load failed:', config.chineseVideoUrl);
@@ -2575,7 +2636,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         </div>
 
         {/* 🍎 苹果 iOS 设备专属温馨提示 (仅在真机 iOS/iPadOS 且有双播时展示，安卓/PC 绝不出现) */}
-        {isIOS && hasChineseMedia && (
+        {isIOS && hasThaiMedia && hasChineseMedia && (
           <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 sm:p-4 text-xs text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
             <div className="flex items-start sm:items-center gap-2.5">
               <span className="text-xl shrink-0">🍎</span>
@@ -3202,6 +3263,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         clockLabel={formatSecondsToTime(currentTime)}
         isPlaying={isCurrentModePlaying}
         audioFocus={audioFocus}
+        hasThaiTrack={hasThaiMedia}
         hasChineseTrack={hasChineseMedia}
         isLoopSentence={isLoopSentence}
         playbackRate={playbackRate}
