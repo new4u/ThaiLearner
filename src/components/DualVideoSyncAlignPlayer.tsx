@@ -554,6 +554,13 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
 
   const currentCuratedLesson = videoSubtitleBinding.matchedLesson;
 
+  const displayTitle = useMemo(() => {
+    if (videoSubtitleBinding.source === 'curated' && currentCuratedLesson) {
+      return `${currentCuratedLesson.chineseTitle} ｜ ${currentCuratedLesson.title}`;
+    }
+    return config.title;
+  }, [videoSubtitleBinding.source, currentCuratedLesson, config.title]);
+
   const activeSubtitles = useMemo<SubtitleLine[]>(() => {
     if (videoSubtitleBinding.source === 'custom_bound') {
       return videoSubtitleBinding.subtitles;
@@ -593,7 +600,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     if (!target) return;
     const combinedTitle = `${target.chineseTitle} ｜ ${target.title}`;
     setConfig(prevConf => {
-      if (prevConf.thaiVideoUrl === target.thaiVideoUrl && prevConf.chineseVideoUrl === target.chineseVideoUrl) {
+      if (
+        prevConf.thaiVideoUrl === target.thaiVideoUrl &&
+        prevConf.chineseVideoUrl === target.chineseVideoUrl &&
+        prevConf.title === combinedTitle
+      ) {
         return prevConf;
       }
       const next: DualVideoConfig = {
@@ -613,6 +624,33 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setInputTitle(combinedTitle);
     setOffsetSeconds(target.defaultOffsetSeconds);
   }, [propLessonId, lessonSyncNonce, curatedLessons]);
+
+  // 自动刷新本地缓存中与官方课件匹配的旧版自定义标题
+  useEffect(() => {
+    if (videoSubtitleBinding.source !== 'curated' || !currentCuratedLesson) return;
+    const canonicalTitle = `${currentCuratedLesson.chineseTitle} ｜ ${currentCuratedLesson.title}`;
+    if (
+      config.thaiVideoUrl === currentCuratedLesson.thaiVideoUrl &&
+      config.chineseVideoUrl === currentCuratedLesson.chineseVideoUrl &&
+      config.title !== canonicalTitle
+    ) {
+      setConfig(prevConf => {
+        if (prevConf.title === canonicalTitle) return prevConf;
+        const next: DualVideoConfig = { ...prevConf, title: canonicalTitle };
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch {}
+        return next;
+      });
+      setInputTitle(canonicalTitle);
+    }
+  }, [
+    videoSubtitleBinding.source,
+    currentCuratedLesson,
+    config.thaiVideoUrl,
+    config.chineseVideoUrl,
+    config.title,
+  ]);
 
   // 切换课程时自动检索 IndexedDB 中的离线纯音频
   useEffect(() => {
@@ -1923,7 +1961,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 </span>
               </div>
               <p className="text-xs text-[#7a6f5f] truncate max-w-md sm:max-w-xl">
-                {config.title}
+                {displayTitle}
               </p>
             </div>
           </div>
@@ -2003,7 +2041,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             onOpenSubtitleImporter={() => {
               setInputThaiUrl(config.thaiVideoUrl);
               setInputChineseUrl(config.chineseVideoUrl);
-              setInputTitle(config.title);
+              setInputTitle(displayTitle);
               setShowPasteModal(true);
             }}
             externalExpandSignal={videoSelectorExpandSignal}
@@ -2023,7 +2061,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
             <div className="max-w-6xl w-full mx-auto flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800/80">
               <div className="min-w-0 flex items-center gap-2 text-xs">
                 <Video className="w-4 h-4 text-amber-400 shrink-0" />
-                <span className="font-bold text-white truncate max-w-[180px] sm:max-w-md">{config.title}</span>
+                <span className="font-bold text-white truncate max-w-[180px] sm:max-w-md">{displayTitle}</span>
                 <span className="text-slate-400 font-mono tabular-nums shrink-0">
                   {activeSubtitles.length > 0
                     ? `· 第 ${safeLineIndex + 1} / ${activeSubtitles.length} 句`
@@ -2456,7 +2494,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="text-xs font-bold text-white truncate">
-                            {config.title || '中文同传随动音频 (MP3)'}
+                            {displayTitle || '中文同传随动音频 (MP3)'}
                           </div>
                           <div className="text-[10px] text-amber-400 font-mono mt-0.5">
                             {isChinesePlaying ? '▶ 正在伴随发声' : '⏸ 已就绪 / 暂停'}
@@ -2633,7 +2671,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               if (isFullscreen) exitFullscreen();
               setInputThaiUrl(config.thaiVideoUrl);
               setInputChineseUrl(config.chineseVideoUrl);
-              setInputTitle(config.title);
+              setInputTitle(displayTitle);
               setShowPasteModal(true);
             }}
             onSwitchBackToMatchedLesson={() => {

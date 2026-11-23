@@ -1,6 +1,6 @@
 // 2026年10月18日 隆波帕默尊者开示《以四念处对治邪见》官方 746 句高精准转译数据集
 // 包含：朱拉隆功大学标准音标 (Chula Adapted IPA)、逐词泰中对照 (Interlinear Gloss) 及精确时间戳
-import { SubtitleLine } from '../types';
+import { SubtitleLine } from "../types";
 
 export const LUANGPOR_OCT_18_TALK_TITLE = "แก้มิจฉาทิฏฐิด้วยสติปัฏฐาน :: หลวงปู่ปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568";
 export const LUANGPOR_OCT_18_TALK_ZH_TITLE = "2026年10月18日隆波帕默尊者网络直播（中文同声翻译）";
@@ -13,13 +13,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1.2,
     "secondsEnd": 10.3,
     "thai": "เวลาของพวกเราแต่ละคนมีไม่มากมีโอกาสเรียนธรรมะรีบเรียน",
-    "romanization": "weː-laa kʰɔ̌ɔŋ pʰûak-raw tɛ̀ɛ-láʔ-kʰon mii mâj mâak mii ʔoo-kàat rian tʰam-máʔ rîip rian",
+    "romanization": "wee-laa kʰɔ̌ɔŋ pʰûak-raw tɛ̀ɛ-láʔ-kʰon mii mâj mâak mii ʔoo-kàat rian tʰam-máʔ rîip rian",
     "chinese": "我们每个人的时间都不多，有机会学习佛法就赶紧去学。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -1606,7 +1606,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 192,
     "secondsEnd": 198.8,
     "thai": "แต่ว่าชีวิตเราเป็นไปตามเหตุตามปัจจัยที่มาปรุงแต่ง",
-    "romanization": "tɛ̀ɛ wâa chii-wít raw pen paj taam hèet taam pàt-caj tʰîi maa pruŋ tɛ̀ŋ",
+    "romanization": "tɛ̀ɛ wâa cʰii-wít raw pen paj taam hèet taam pàt-caj tʰîi maa pruŋ tɛ̀ŋ",
     "chinese": "但我们的生活是根据因缘和合而运转的",
     "words": [
       {
@@ -1619,7 +1619,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "ชีวิตเรา",
-        "romanization": "chii-wít raw",
+        "romanization": "cʰii-wít raw",
         "chinese": "吾人性命",
         "isCore": false
       },
@@ -1899,7 +1899,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 223.9,
     "secondsEnd": 230.8,
     "thai": "ทุกอย่างมีเหตุที่เราเจอประสบในชีวิตเรามีเหตุทั้งสิ้น",
-    "romanization": "tʰúk jàaŋ mii hèet tʰîi raw cəə prà-sòp naj chii-wít raw mii hèet tʰáŋ-sîn",
+    "romanization": "tʰúk jàaŋ mii hèet tʰîi raw cəə prà-sòp naj cʰii-wít raw mii hèet tʰáŋ-sîn",
     "chinese": "我们遇到生活中的一切经历都有缘由，全都是有原因的。",
     "words": [
       {
@@ -1947,7 +1947,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_6",
         "thai": "ชีวิตเรา",
-        "romanization": "chii-wít raw",
+        "romanization": "cʰii-wít raw",
         "chinese": "吾人性命",
         "isCore": false
       },
@@ -3071,7 +3071,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -3146,7 +3146,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_7",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -3597,7 +3597,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 376.3,
     "secondsEnd": 378.3,
     "thai": "เข้าใจความจริงของชีวิต",
-    "romanization": "kʰâw-caj kʰwaam ciŋ kʰɔ̌ɔŋ chii-wít",
+    "romanization": "kʰâw-caj kʰwaam ciŋ kʰɔ̌ɔŋ cʰii-wít",
     "chinese": "明白生命的真相",
     "words": [
       {
@@ -3624,8 +3624,8 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_3",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
-        "chinese": "生机/生命",
+        "romanization": "cʰii-wít",
+        "chinese": "生命/生活",
         "isCore": false
       }
     ]
@@ -4421,7 +4421,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -4630,7 +4630,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       }
     ]
@@ -4642,7 +4642,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 449.6,
     "secondsEnd": 452,
     "thai": "แล้วจะได้เห็นความจริงของชีวิต",
-    "romanization": "lɛ́ɛw càʔ dâaj hěn kʰwaam ciŋ kʰɔ̌ɔŋ chii-wít",
+    "romanization": "lɛ́ɛw càʔ dâaj hěn kʰwaam ciŋ kʰɔ̌ɔŋ cʰii-wít",
     "chinese": "就能看清生命的真相",
     "words": [
       {
@@ -4683,8 +4683,8 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_5",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
-        "chinese": "生机/生命",
+        "romanization": "cʰii-wít",
+        "chinese": "生命/生活",
         "isCore": false
       }
     ]
@@ -4826,7 +4826,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 466.4,
     "thai": "การเจริญสติปัฏฐานจะเป็นวิธีการที่สำคัญที่สุดเลย",
     "romanization": "kaan cà-rəən sà-tì-pàt-tʰǎan càʔ pen wí-tʰii kaan tʰîi sǎm-kʰan tʰîi sùt ləəj",
-    "chinese": "四念住的修习会是最重要的方法。",
+    "chinese": "四念处的修习会是最重要的方法。",
     "words": [
       {
         "id": "t_0",
@@ -6696,7 +6696,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_16",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -9117,7 +9117,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_11",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -9435,7 +9435,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 776.4,
     "thai": "ที่หลวงพ่อสอนมาตลอดก็คือเรื่องของการเจริญสติปัฏฐาน",
     "romanization": "tʰîi lǔaŋ-pʰɔ̂ɔ sɔ̌ɔn maa tàʔ-lɔ̀ɔt kɔ̂ɔ kʰɯɯ rɯ̂aŋ kʰɔ̌ɔŋ kaan cà-rəən sà-tì-pàt-tʰǎan",
-    "chinese": "หลวงพ่อ一直教导的就是修习四念处这件事",
+    "chinese": "隆波一直教导的，就是修习四念处这件事。",
     "words": [
       {
         "id": "t_0",
@@ -10399,7 +10399,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_19",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       }
     ]
@@ -11615,13 +11615,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 931.5,
     "secondsEnd": 935.4,
     "thai": "เวลาจะหายใจเอาจิตไปแนบไว้ที่ลม",
-    "romanization": "weː-laa càʔ hǎaj caj ʔaw cìt paj nɛ̂ɛp wáj tʰîi lom",
+    "romanization": "wee-laa càʔ hǎaj caj ʔaw cìt paj nɛ̂ɛp wáj tʰîi lom",
     "chinese": "呼吸时，要将意念专注于呼吸。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -12306,7 +12306,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_13",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -12353,7 +12353,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -12928,7 +12928,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -14195,7 +14195,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -14983,7 +14983,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "นะ",
         "romanization": "náʔ",
-        "chinese": "当领受助词",
+        "chinese": "呀/呢（柔和语气词）",
         "isCore": false
       },
       {
@@ -15051,7 +15051,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_1",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -15248,7 +15248,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_0",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -15323,7 +15323,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -15980,7 +15980,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -15994,7 +15994,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       }
     ]
@@ -16006,7 +16006,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1244.5,
     "secondsEnd": 1251.1,
     "thai": "ไม่ได้หลงระเริงเพลิดเพลินอย่างที่ชาวโลกเวลามีความสุขก็หลงเตลิดเปิดเปิง",
-    "romanization": "mâj dâaj lǒŋ rá-rəəŋ pʰlə̂ət-pʰləən jàaŋ tʰîi cʰaaw lôok weː-laa mii kʰwaam sùk kɔ̂ɔ lǒŋ tà-lə̀ət pə̀ət pəəŋ",
+    "romanization": "mâj dâaj lǒŋ rá-rəəŋ pʰlə̂ət-pʰləən jàaŋ tʰîi cʰaaw lôok wee-laa mii kʰwaam sùk kɔ̂ɔ lǒŋ tà-lə̀ət pə̀ət pəəŋ",
     "chinese": "不会沉溺于享乐，不会像世人那样在快乐时迷失心智。",
     "words": [
       {
@@ -16061,7 +16061,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_7",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -16749,7 +16749,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -16763,7 +16763,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -16960,7 +16960,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1314.1,
     "secondsEnd": 1319.1,
     "thai": "พวกเราส่วนใหญ่เวลาทำสมาธิสังเกตไหมพอคิดถึงการทำสมาธิ",
-    "romanization": "pʰûak-raw sùan jài weː-laa tʰam sà-maa-tʰí sǎŋ-kèet mǎj pʰɔɔ kʰít tʰɯ̌ŋ kaan tʰam sà-maa-tʰí",
+    "romanization": "pʰûak-raw sùan jài wee-laa tʰam sà-maa-tʰí sǎŋ-kèet mǎj pʰɔɔ kʰít tʰɯ̌ŋ kaan tʰam sà-maa-tʰí",
     "chinese": "我们大多数人在打坐的时候，有没有注意到？一想到要打坐，",
     "words": [
       {
@@ -16980,7 +16980,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -17638,7 +17638,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1360.8,
     "thai": "มันไม่ใช่ทางหรอกการนั่งเพ่งเพื่อให้จิตนิ่ง",
     "romanization": "man mâj cʰâj tʰaaŋ rɔ̀ɔk kaan nâŋ pʰêŋ pʰɯ̂a hâj cìt nîŋ",
-    "chinese": "一味地静坐冥想要让心静止，这是不对的。",
+    "chinese": "一味地打坐紧盯想要让心静止，这是不对的。",
     "words": [
       {
         "id": "t_0",
@@ -17665,7 +17665,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       },
       {
@@ -18136,7 +18136,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -18778,7 +18778,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_1",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -19172,7 +19172,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1457.8,
     "secondsEnd": 1462.6,
     "thai": "อย่างเวลาฟังหลวงพ่อเทศน์จิตพวกเราจะเกิดสมาธิ",
-    "romanization": "jàaŋ weː-laa faŋ lǔaŋ-pʰɔ̂ɔ tʰêet cìt pʰûak-raw càʔ kə̀ət sà-maa-tʰí",
+    "romanization": "jàaŋ wee-laa faŋ lǔaŋ-pʰɔ̂ɔ tʰêet cìt pʰûak-raw càʔ kə̀ət sà-maa-tʰí",
     "chinese": "比如在听师父讲法的时候，我们的心就会生出禅定",
     "words": [
       {
@@ -19185,7 +19185,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -21129,13 +21129,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1581.2,
     "secondsEnd": 1585.4,
     "thai": "เวลาเขาโปรโมทสินค้าใช่ไหมเขามีของแถม",
-    "romanization": "weː-laa kʰǎw proo-môot sǐn-kʰáa cʰâj mǎj kʰǎw mii kʰɔ̌ɔŋ tʰɛ̌ɛm",
+    "romanization": "wee-laa kʰǎw proo-môot sǐn-kʰáa cʰâj mǎj kʰǎw mii kʰɔ̌ɔŋ tʰɛ̌ɛm",
     "chinese": "是他推广产品的时候对吧，他有赠品",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -21164,7 +21164,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "ใช่",
         "romanization": "cʰâj",
-        "chinese": "信然真实",
+        "chinese": "是/对",
         "isCore": false
       },
       {
@@ -21525,7 +21525,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -21539,7 +21539,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_7",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -21593,7 +21593,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -21607,7 +21607,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -21736,7 +21736,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -22958,13 +22958,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1685.8,
     "secondsEnd": 1689.3,
     "thai": "เวลามีความสุขใจก็จะไหลเพลินไปในความสุข",
-    "romanization": "weː-laa mii kʰwaam sùk caj kɔ̂ɔ càʔ lǎj pʰləən paj naj kʰwaam sùk",
+    "romanization": "wee-laa mii kʰwaam sùk caj kɔ̂ɔ càʔ lǎj pʰləən paj naj kʰwaam sùk",
     "chinese": "当处于快乐的时光，就会畅快地沉浸在幸福之中。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -23073,13 +23073,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1692.3,
     "secondsEnd": 1695.5,
     "thai": "เวลามีความทุกข์ใจก็จมลงไปอยู่ในความทุกข์",
-    "romanization": "weː-laa mii kʰwaam tʰúk caj kɔ̂ɔ com loŋ paj jùu naj kʰwaam tʰúk",
+    "romanization": "wee-laa mii kʰwaam tʰúk caj kɔ̂ɔ com loŋ paj jùu naj kʰwaam tʰúk",
     "chinese": "每当感到痛苦时，就会陷入痛苦之中",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -24325,7 +24325,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -24426,7 +24426,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_1",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -25797,7 +25797,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_1",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -25832,7 +25832,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "เอื้ออำนวย",
         "romanization": "ʔɯ̂a-ʔam-nuaj",
-        "chinese": "嘉惠便利",
+        "chinese": "有助于/资助",
         "isCore": false
       },
       {
@@ -26052,7 +26052,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -26305,7 +26305,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -26483,7 +26483,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1899,
     "secondsEnd": 1902.8,
     "thai": "แต่เวลาท่านสอนคนวงกว้างท่านก็บอกให้พุทโธไป",
-    "romanization": "tɛ̀ɛ weː-laa tʰâan sɔ̌ɔn kʰon woŋ kwâaŋ tʰâan kɔ̂ɔ bɔ̀ɔk hâj pʰút-tʰoo paj",
+    "romanization": "tɛ̀ɛ wee-laa tʰâan sɔ̌ɔn kʰon woŋ kwâaŋ tʰâan kɔ̂ɔ bɔ̀ɔk hâj pʰút-tʰoo paj",
     "chinese": "但当您教导众人时，您会让他们念“佛陀”。",
     "words": [
       {
@@ -26496,7 +26496,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -26765,7 +26765,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1914.3,
     "thai": "ขนาดหลวงตามหาบัว",
     "romanization": "kʰà-nàat lǔaŋ-taa má-hǎa bua",
-    "chinese": "龙婆布瓦（หลวงตามหาบัว）",
+    "chinese": "就连隆达摩诃布瓦尊者（หลวงตามหาบัว）",
     "words": [
       {
         "id": "t_0",
@@ -26859,7 +26859,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1924.1,
     "thai": "ต้องพุทโธพิจารณากายนี่มาตรฐานท่านเลย",
     "romanization": "tɔ̂ŋ pʰút-tʰoo pʰí-caa-rá-naa kaaj nîi maa-trà-tʰǎan tʰâan ləəj",
-    "chinese": "都得用“พุทโธ”来检视这个身体，这就是他的标准啊。",
+    "chinese": "都必须念诵“佛陀（พุทโธ）”并省察身体，这就是长老一贯的标准啊。",
     "words": [
       {
         "id": "t_0",
@@ -27118,7 +27118,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       },
       {
@@ -27622,7 +27622,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       },
       {
@@ -28187,7 +28187,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -28682,7 +28682,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -28776,7 +28776,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2037.1,
     "secondsEnd": 2042.8,
     "thai": "ฉะนั้นพวกเราศีล ห้า ต้องรักษาเวลาเจอหลวงพ่อจะได้ไม่กลัว",
-    "romanization": "cʰàʔ-nán pʰûak-raw sǐin hâa tɔ̂ŋ rák-sǎa weː-laa cəə lǔaŋ-pʰɔ̂ɔ càʔ dâaj mâj klua",
+    "romanization": "cʰàʔ-nán pʰûak-raw sǐin hâa tɔ̂ŋ rák-sǎa wee-laa cəə lǔaŋ-pʰɔ̂ɔ càʔ dâaj mâj klua",
     "chinese": "所以我们必须遵守五戒，遇到师父时就不会害怕了。",
     "words": [
       {
@@ -28817,7 +28817,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_5",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -28933,7 +28933,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2052.9,
     "secondsEnd": 2058.3,
     "thai": "แล้วมองลึกลงไปอย่างเวลาทำอะไรอยู่หลวงพ่อหันไปมอง",
-    "romanization": "lɛ́ɛw mɔɔŋ lɯ́k loŋ paj jàaŋ weː-laa tʰam ʔà-raj jùu lǔaŋ-pʰɔ̂ɔ hǎn paj mɔɔŋ",
+    "romanization": "lɛ́ɛw mɔɔŋ lɯ́k loŋ paj jàaŋ wee-laa tʰam ʔà-raj jùu lǔaŋ-pʰɔ̂ɔ hǎn paj mɔɔŋ",
     "chinese": "然后就像专注做某件事时那样深深地注视着，师父转头看了过去",
     "words": [
       {
@@ -28974,7 +28974,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_5",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -29259,7 +29259,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       },
       {
@@ -29465,7 +29465,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -29554,7 +29554,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_10",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -29566,7 +29566,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2093.2,
     "secondsEnd": 2099.3,
     "thai": "พวกที่ศีลไม่ดีแล้วก็ภาวนาบ้างไม่ภาวนาบ้างเวลาเจอหลวงพ่อมันจะเกร็ง",
-    "romanization": "pʰûak tʰîi sǐin mâj dii lɛ́ɛw kɔ̂ɔ pʰaa-wáʔ-naa bâaŋ mâj pʰaa-wáʔ-naa bâaŋ weː-laa cəə lǔaŋ-pʰɔ̂ɔ man càʔ kreŋ",
+    "romanization": "pʰûak tʰîi sǐin mâj dii lɛ́ɛw kɔ̂ɔ pʰaa-wáʔ-naa bâaŋ mâj pʰaa-wáʔ-naa bâaŋ wee-laa cəə lǔaŋ-pʰɔ̂ɔ man càʔ kreŋ",
     "chinese": "那些品行不好、时而念佛时而不念佛的人，见到师父就会紧张。",
     "words": [
       {
@@ -29649,7 +29649,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_11",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -29746,7 +29746,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -29758,13 +29758,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2105.2,
     "secondsEnd": 2108.3,
     "thai": "เวลาเราเจอครูบาอาจารย์เราไม่กลัวแต่เราเคารพ",
-    "romanization": "weː-laa raw cəə kʰruu-baa-ʔaa-caan raw mâj klua tɛ̀ɛ raw kʰaw-róp",
+    "romanization": "wee-laa raw cəə kʰruu-baa-ʔaa-caan raw mâj klua tɛ̀ɛ raw kʰaw-róp",
     "chinese": "我们见到师父时，不是害怕，而是恭敬。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -29866,7 +29866,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2113.4,
     "secondsEnd": 2118.7,
     "thai": "หลวงพ่อเวลาเจอครูบาอาจารย์ท่านพูดเหมือนกันทุกองค์เลยว่าจิตหลวงพ่อนี่อ่อน",
-    "romanization": "lǔaŋ-pʰɔ̂ɔ weː-laa cəə kʰruu-baa-ʔaa-caan tʰâan pʰûut mɯ̌an kan tʰúk ʔoŋ ləəj wâa cìt lǔaŋ-pʰɔ̂ɔ nîi ʔɔ̀ɔn",
+    "romanization": "lǔaŋ-pʰɔ̂ɔ wee-laa cəə kʰruu-baa-ʔaa-caan tʰâan pʰûut mɯ̌an kan tʰúk ʔoŋ ləəj wâa cìt lǔaŋ-pʰɔ̂ɔ nîi ʔɔ̀ɔn",
     "chinese": "师父（高僧）见到师父们（师父、阿阇梨）时，每位都会说师父的心境很柔和。",
     "words": [
       {
@@ -29879,7 +29879,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -30803,13 +30803,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2173.2,
     "secondsEnd": 2179.7,
     "thai": "เวลาจิตหลงไปแล้วพอเรารู้อย่าดึงคืนถ้าดึงคืนนี่ผิดทันทีเลย",
-    "romanization": "weː-laa cìt lǒŋ paj lɛ́ɛw pʰɔɔ raw rúu jàa dɯŋ kʰɯɯn tʰâa dɯŋ kʰɯɯn nîi pʰìt tʰan tʰii ləəj",
+    "romanization": "wee-laa cìt lǒŋ paj lɛ́ɛw pʰɔɔ raw rúu jàa dɯŋ kʰɯɯn tʰâa dɯŋ kʰɯɯn nîi pʰìt tʰan tʰii ləəj",
     "chinese": "当心已经迷失后，一旦我们察觉到，就不要强行将它拉回来。要是硬拉回来，立刻就错了。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -31229,7 +31229,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2197.5,
     "secondsEnd": 2200.6,
     "thai": "จิตไม่ได้มีดวงเดียวจิตเกิดดับตลอดเวลา",
-    "romanization": "cìt mâj dâaj mii duaŋ diaw cìt kə̀ət dàp tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "cìt mâj dâaj mii duaŋ diaw cìt kə̀ət dàp tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "心并非只有一个，心每时每刻都在生灭变化",
     "words": [
       {
@@ -31298,7 +31298,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_9",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -31346,7 +31346,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "ปัจจุบัน",
         "romanization": "pàt-cù-ban",
-        "chinese": "当体此刻",
+        "chinese": "当下/现在",
         "isCore": false
       },
       {
@@ -32136,7 +32136,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       },
       {
@@ -32177,7 +32177,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2262.7,
     "thai": "ถ้าเราอยากทำสมาธิให้จิตสงบอย่าไปบังคับจิตจิตเครียด",
     "romanization": "tʰâa raw jàak tʰam sà-maa-tʰí hâj cìt sà-ŋòp jàa paj baŋ-kʰáp cìt cìt kʰrîat",
-    "chinese": "如果我们想要冥想让心平静，就别强迫它，心会紧张。",
+    "chinese": "如果我们想要修定让心平静，千万别强迫它，否则心会紧绷。",
     "words": [
       {
         "id": "t_0",
@@ -32647,7 +32647,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -32757,7 +32757,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -33460,7 +33460,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -33760,7 +33760,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -33856,7 +33856,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_8",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -33924,7 +33924,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -33985,7 +33985,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -34034,7 +34034,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -34069,7 +34069,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_14",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -34165,7 +34165,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -34589,7 +34589,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -34631,7 +34631,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -35095,13 +35095,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2442.9,
     "secondsEnd": 2447,
     "thai": "เวลาเพ่งลงไปมันเครียดร่างกายก็เครียดใจก็เครียด",
-    "romanization": "weː-laa pʰêŋ loŋ paj man kʰrîat râaŋ-kaaj kɔ̂ɔ kʰrîat caj kɔ̂ɔ kʰrîat",
+    "romanization": "wee-laa pʰêŋ loŋ paj man kʰrîat râaŋ-kaaj kɔ̂ɔ kʰrîat caj kɔ̂ɔ kʰrîat",
     "chinese": "当专注于某个点时，身体会紧张，内心也会焦虑。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -35306,7 +35306,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2454.1,
     "secondsEnd": 2457.6,
     "thai": "อย่างเวลาเราจะนอนหลับแล้วเราเครียดเราก็นอนไม่หลับใช่ไหม",
-    "romanization": "jàaŋ weː-laa raw càʔ nɔɔn làp lɛ́ɛw raw kʰrîat raw kɔ̂ɔ nɔɔn mâj làp cʰâj mǎj",
+    "romanization": "jàaŋ wee-laa raw càʔ nɔɔn làp lɛ́ɛw raw kʰrîat raw kɔ̂ɔ nɔɔn mâj làp cʰâj mǎj",
     "chinese": "就像我们要睡觉的时候，如果很焦虑，就会睡不着，对吧？",
     "words": [
       {
@@ -35319,7 +35319,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -35404,7 +35404,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_13",
         "thai": "ใช่",
         "romanization": "cʰâj",
-        "chinese": "信然真实",
+        "chinese": "是/对",
         "isCore": false
       },
       {
@@ -36478,7 +36478,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2515.8,
     "thai": "เราเคยฝึกที่จะรู้ทันจิตตัวเองพอไปคิดเรื่องนี้",
     "romanization": "raw kʰəəj fɯ̀k tʰîi càʔ rúu-tʰan cìt tua ʔeeŋ pʰɔɔ paj kʰít rɯ̂aŋ níi",
-    "chinese": "我们曾训练过能察觉自己的思绪，一旦开始想这件事。",
+    "chinese": "我们曾训练过及时觉知自心，一旦起心动念去想这件事，",
     "words": [
       {
         "id": "t_0",
@@ -36857,7 +36857,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_1",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -36885,7 +36885,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -36913,7 +36913,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -36927,7 +36927,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_11",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -37138,7 +37138,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2545.7,
     "secondsEnd": 2549.8,
     "thai": "เพราะฉะนั้นเวลาเราภาวนาเราเจริญสติไม่ต้องดับกิเลส",
-    "romanization": "pʰrɔ́ʔ cʰàʔ-nán weː-laa raw pʰaa-wáʔ-naa raw cà-rəən sà-tì mâj tɔ̂ŋ dàp kì-lèet",
+    "romanization": "pʰrɔ́ʔ cʰàʔ-nán wee-laa raw pʰaa-wáʔ-naa raw cà-rəən sà-tì mâj tɔ̂ŋ dàp kì-lèet",
     "chinese": "所以我们修行的时候培养正念，不用刻意去断除烦恼。",
     "words": [
       {
@@ -37151,7 +37151,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -37180,7 +37180,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       },
       {
@@ -37262,7 +37262,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       },
       {
@@ -37527,7 +37527,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2573.3,
     "secondsEnd": 2576.3,
     "thai": "กระทั่งสักกายทิฏฐิไม่ได้เกิดตลอดเวลา",
-    "romanization": "krà-tʰâŋ sàk-kaa-jáʔ-tʰít-tʰì mâj dâaj kə̀ət tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "krà-tʰâŋ sàk-kaa-jáʔ-tʰít-tʰì mâj dâaj kə̀ət tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "直到身见不会生起的时刻，",
     "words": [
       {
@@ -37575,7 +37575,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_6",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -37745,7 +37745,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -37853,7 +37853,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2596,
     "secondsEnd": 2602.2,
     "thai": "เพราะฉะนั้นเวลาที่เราฝึกตัวเองเราเกิดสติเกิดจิตที่ตั้งมั่นขึ้นมาปัญญาก็เกิด",
-    "romanization": "pʰrɔ́ʔ cʰàʔ-nán weː-laa tʰîi raw fɯ̀k tua ʔeeŋ raw kə̀ət sà-tì kə̀ət cìt tʰîi tâŋ-mân kʰɯ̂n maa pan-jaa kɔ̂ɔ kə̀ət",
+    "romanization": "pʰrɔ́ʔ cʰàʔ-nán wee-laa tʰîi raw fɯ̀k tua ʔeeŋ raw kə̀ət sà-tì kə̀ət cìt tʰîi tâŋ-mân kʰɯ̂n maa pan-jaa kɔ̂ɔ kə̀ət",
     "chinese": "所以当我们训练自己，生起正念、生起坚定的心时，智慧就会生起。",
     "words": [
       {
@@ -37866,7 +37866,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -38734,13 +38734,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2647.9,
     "secondsEnd": 2651.2,
     "thai": "เวลาเกิดอริยมรรคอริยผลมันมีกระบวนการของมัน",
-    "romanization": "weː-laa kə̀ət ʔà-rí-jáʔ-mák ʔà-rí-jáʔ-pʰǒn man mii krà-buan-kaan kʰɔ̌ɔŋ man",
+    "romanization": "wee-laa kə̀ət ʔà-rí-jáʔ-mák ʔà-rí-jáʔ-pʰǒn man mii krà-buan-kaan kʰɔ̌ɔŋ man",
     "chinese": "當出現聖道、聖果時，自有其相應的過程。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -38865,7 +38865,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_7",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -39048,7 +39048,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -39293,7 +39293,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2685.5,
     "thai": "เขาบอกเขาไม่มีตัวตนเขานั่งสมาธิอยู่ดูลงไป",
     "romanization": "kʰǎw bɔ̀ɔk kʰǎw mâj mii tua ton kʰǎw nâŋ sà-maa-tʰí jùu duu loŋ paj",
-    "chinese": "他说他没有自我，他坐着冥想去观察内心。",
+    "chinese": "他说他没有自我，正打坐修定往内观察，",
     "words": [
       {
         "id": "t_0",
@@ -39538,7 +39538,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2697.4,
     "secondsEnd": 2703,
     "thai": "เพราะมันขาดสติสักกายทิฏฐิก็เป็นกิเลสตัวหนึ่งไม่ได้มีตลอดเวลา",
-    "romanization": "pʰrɔ́ʔ man kʰàat sà-tì sàk-kaa-jáʔ-tʰít-tʰì kɔ̂ɔ pen kì-lèet tua nɯ̀ŋ mâj dâaj mii tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "pʰrɔ́ʔ man kʰàat sà-tì sàk-kaa-jáʔ-tʰít-tʰì kɔ̂ɔ pen kì-lèet tua nɯ̀ŋ mâj dâaj mii tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "因为它缺少正见，也就是一种并非时刻存在的烦恼。",
     "words": [
       {
@@ -39635,7 +39635,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_13",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -39920,7 +39920,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2720.8,
     "secondsEnd": 2724,
     "thai": "แล้วเวลามันทำงานมันกระทบอารมณ์มันก็ขึ้นมา",
-    "romanization": "lɛ́ɛw weː-laa man tʰam ŋaan man krà-tʰóp ʔaa-rom man kɔ̂ɔ kʰɯ̂n maa",
+    "romanization": "lɛ́ɛw wee-laa man tʰam ŋaan man krà-tʰóp ʔaa-rom man kɔ̂ɔ kʰɯ̂n maa",
     "chinese": "然后当它运作时，它触碰到情绪，情绪就会浮现。",
     "words": [
       {
@@ -39933,7 +39933,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -40867,7 +40867,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_11",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -40914,7 +40914,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -41466,7 +41466,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -41541,7 +41541,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_8",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -42495,7 +42495,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "รวม",
         "romanization": "ruam",
-        "chinese": "聚首一统",
+        "chinese": "收摄/集中",
         "isCore": false
       },
       {
@@ -42890,7 +42890,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "หรอก",
         "romanization": "rɔ̀ɔk",
-        "chinese": "断语助词",
+        "chinese": "罢了/才不是/呢",
         "isCore": false
       }
     ]
@@ -43102,7 +43102,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2920.7,
     "thai": "หลวงพ่อไม่ตกใจตอนนี้ยังจำอะไรไม่ได้ไม่รู้ว่าจะไปไหน",
     "romanization": "lǔaŋ-pʰɔ̂ɔ mâj tòk caj tɔɔn níi jaŋ cam ʔà-raj mâj dâaj mâj rúu wâa càʔ paj nǎj",
-    "chinese": "วัดหลวงพ่อตอนนี้ไม่ตกใจ，ยังจำอะไรไม่ได้，ไม่รู้ว่าจะไปไหน",
+    "chinese": "隆波一点也不慌张，当时什么都记不得，也不知道自己要去哪里，",
     "words": [
       {
         "id": "t_0",
@@ -43452,13 +43452,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 2937.5,
     "secondsEnd": 2943.2,
     "thai": "เวลาเราภาวนาเรื่อยๆตั้งอกตั้งใจไปบางทีจิตมันก็สอนธรรมะเราได้",
-    "romanization": "weː-laa raw pʰaa-wáʔ-naa rɯ̂aj rɯ̂aj tâŋ-ʔòk tâŋ-caj paj baaŋ tʰii cìt man kɔ̂ɔ sɔ̌ɔn tʰam-máʔ raw dâaj",
+    "romanization": "wee-laa raw pʰaa-wáʔ-naa rɯ̂aj rɯ̂aj tâŋ-ʔòk tâŋ-caj paj baaŋ tʰii cìt man kɔ̂ɔ sɔ̌ɔn tʰam-máʔ raw dâaj",
     "chinese": "我们时常虔诚念佛、心意专注时，心有时会为我们开示佛法。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -43563,7 +43563,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2947.4,
     "thai": "บางครั้งมันก็มีนิมิตประกอบ",
     "romanization": "baaŋ kʰráŋ man kɔ̂ɔ mii ní-mít prà-kɔ̀ɔp",
-    "chinese": "有时也会出现幻视的征兆。",
+    "chinese": "有时也会伴随出现禅相（นิมิต）。",
     "words": [
       {
         "id": "t_0",
@@ -43617,7 +43617,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 2950.5,
     "thai": "เราภาวนาไปแล้วรู้สึกติดขัด",
     "romanization": "raw pʰaa-wáʔ-naa paj lɛ́ɛw rúu-sɯ̀k tìt-kʰàt",
-    "chinese": "我们祈祷时感到不顺畅。",
+    "chinese": "我们修行到卡住、觉得不顺畅时，",
     "words": [
       {
         "id": "t_0",
@@ -44787,7 +44787,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 3021.3,
     "thai": "หลวงพ่อเคยถามหลวงปู่ดูลย์บอกหลวงปู่ครับ",
     "romanization": "lǔaŋ-pʰɔ̂ɔ kʰəəj tʰǎam lǔaŋ-pùu dùun bɔ̀ɔk lǔaŋ-pùu kʰráp",
-    "chinese": "หลวงพ่อเคยถามหลวงปู่ดูลย์ บอกหลวงปู่ครับ",
+    "chinese": "隆波曾请教隆普敦长老，禀告长老说：",
     "words": [
       {
         "id": "t_0",
@@ -44835,7 +44835,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "ครับ",
         "romanization": "kʰráp",
-        "chinese": "敬白助词",
+        "chinese": "（男众敬语尾音）",
         "isCore": false
       }
     ]
@@ -44889,7 +44889,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -44938,7 +44938,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_12",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -45025,7 +45025,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "ครับ",
         "romanization": "kʰráp",
-        "chinese": "敬白助词",
+        "chinese": "（男众敬语尾音）",
         "isCore": false
       },
       {
@@ -45088,7 +45088,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_14",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -45205,7 +45205,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_13",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -45254,7 +45254,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_20",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -45308,7 +45308,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -45862,7 +45862,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -46678,13 +46678,13 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3135.8,
     "secondsEnd": 3141.9,
     "thai": "เวลาเราภาวนาติดขัดบางทีก็เห็นครูบาอาจารย์มาสอนให้ก็เป็นเรื่องปกติ",
-    "romanization": "weː-laa raw pʰaa-wáʔ-naa tìt-kʰàt baaŋ tʰii kɔ̂ɔ hěn kʰruu-baa-ʔaa-caan maa sɔ̌ɔn hâj kɔ̂ɔ pen rɯ̂aŋ pà-kà-tì",
+    "romanization": "wee-laa raw pʰaa-wáʔ-naa tìt-kʰàt baaŋ tʰii kɔ̂ɔ hěn kʰruu-baa-ʔaa-caan maa sɔ̌ɔn hâj kɔ̂ɔ pen rɯ̂aŋ pà-kà-tì",
     "chinese": "当我们修行遇到阻碍时，有时会看到师父前来教导，这是很正常的。",
     "words": [
       {
         "id": "t_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -47449,7 +47449,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_5",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -47594,7 +47594,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_12",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -47648,7 +47648,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3196.2,
     "secondsEnd": 3199.1,
     "thai": "ฉะนั้นเวลามีความสุขต้องสังเกตตัวเองให้ดี",
-    "romanization": "cʰàʔ-nán weː-laa mii kʰwaam sùk tɔ̂ŋ sǎŋ-kèet tua ʔeeŋ hâj dii",
+    "romanization": "cʰàʔ-nán wee-laa mii kʰwaam sùk tɔ̂ŋ sǎŋ-kèet tua ʔeeŋ hâj dii",
     "chinese": "因此，感到快乐时要好好观察自己。",
     "words": [
       {
@@ -47661,7 +47661,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -49017,7 +49017,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_2",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -49106,7 +49106,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3275.8,
     "secondsEnd": 3281.9,
     "thai": "มันเห็นว่าเป็นแค่ธรรมชาติที่รู้อารมณ์ไม่มีรูปร่างแสงสีเสียงใดๆทั้งสิ้น",
-    "romanization": "man hěn wâa pen kʰɛ̂ɛ tʰam-máʔ-cʰâat tʰîi rúu ʔaa-rom mâj mii rûup râaŋ sɛ̌ɛŋ sǐi sǐaŋ àjt àjt tʰáŋ-sîn",
+    "romanization": "man hěn wâa pen kʰɛ̂ɛ tʰam-máʔ-cʰâat tʰîi rúu ʔaa-rom mâj mii rûup râaŋ sɛ̌ɛŋ sǐi sǐaŋ daj-daj tʰáŋ-sîn",
     "chinese": "它会明白这只是纯粹感知情绪的本性，没有任何形相、光或声音。",
     "words": [
       {
@@ -49217,8 +49217,8 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_15",
         "thai": "ใดๆ",
-        "romanization": "àjt àjt",
-        "chinese": "助词(重复)"
+        "romanization": "daj-daj",
+        "chinese": "任何/一切"
       },
       {
         "id": "t_16",
@@ -49325,7 +49325,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_3",
         "thai": "ด้วย",
         "romanization": "dûaj",
-        "chinese": "藉由兼具",
+        "chinese": "以/也/一并",
         "isCore": false
       },
       {
@@ -50942,7 +50942,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_8",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -51368,7 +51368,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_6",
         "thai": "เข้า",
         "romanization": "kʰâw",
-        "chinese": "潜入/进",
+        "chinese": "进入",
         "isCore": false
       },
       {
@@ -52401,7 +52401,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_9",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       }
     ]
@@ -52628,7 +52628,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_19",
         "thai": "กับ",
         "romanization": "kàp",
-        "chinese": "并与",
+        "chinese": "与/和",
         "isCore": false
       },
       {
@@ -52785,7 +52785,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3491.9,
     "secondsEnd": 3495.6,
     "thai": "วันนี้เทศน์ให้ฟังตามเวลาเป๊ะๆเลย",
-    "romanization": "wan níi tʰêet hâj faŋ taam weː-laa péʔ péʔ ləəj",
+    "romanization": "wan níi tʰêet hâj faŋ taam wee-laa péʔ péʔ ləəj",
     "chinese": "今天按准确的时间讲法给大家听。",
     "words": [
       {
@@ -52819,7 +52819,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_4",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -53003,14 +53003,14 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
         "id": "t_4",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       },
       {
         "id": "t_5",
         "thai": "เจริญ",
         "romanization": "cà-rəən",
-        "chinese": "勤勇增益",
+        "chinese": "修习/培育",
         "isCore": false
       },
       {
@@ -53036,7 +53036,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3509.9,
     "secondsEnd": 3512.9,
     "thai": "ส่วนชีวิตทางโลกก็สุขบ้างทุกข์บ้าง",
-    "romanization": "sùan chii-wít tʰaaŋ lôok kɔ̂ɔ sùk bâaŋ tʰúk bâaŋ",
+    "romanization": "sùan cʰii-wít tʰaaŋ lôok kɔ̂ɔ sùk bâaŋ tʰúk bâaŋ",
     "chinese": "至于世俗生活，有时快乐，有时痛苦。",
     "words": [
       {
@@ -53049,8 +53049,8 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "ชีวิต",
-        "romanization": "chii-wít",
-        "chinese": "生机/生命",
+        "romanization": "cʰii-wít",
+        "chinese": "生命/生活",
         "isCore": false
       },
       {
@@ -53549,7 +53549,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 3545.3,
     "secondsEnd": 3546.7,
     "thai": "ฟ้าร้องหมดเวลาแล้ว",
-    "romanization": "fâa-rɔ́ɔŋ mòt weː-laa lɛ́ɛw",
+    "romanization": "fâa-rɔ́ɔŋ mòt wee-laa lɛ́ɛw",
     "chinese": "雷声已经到时间了",
     "words": [
       {
@@ -53562,7 +53562,7 @@ export const LUANGPOR_OCT_18_SUBTITLES: SubtitleLine[] = [
       {
         "id": "t_1",
         "thai": "หมดเวลา",
-        "romanization": "mòt weː-laa",
+        "romanization": "mòt wee-laa",
         "chinese": "时间到了",
         "isCore": false
       },

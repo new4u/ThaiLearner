@@ -174,7 +174,7 @@ export const DailyThreeHourView: React.FC<DailyThreeHourViewProps> = ({
               </span>
               <span className="text-slate-600">·</span>
               <span className="font-mono tabular-nums text-slate-400">
-                第 1949–1955 天
+                第 {schedule.days[0]?.dayIndex ?? 1}–{schedule.days[schedule.days.length - 1]?.dayIndex ?? 7} 天
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
@@ -658,7 +658,7 @@ export const DailyThreeHourView: React.FC<DailyThreeHourViewProps> = ({
             <div className="flex-1 overflow-auto p-3 sm:p-4 bg-slate-950 flex items-start justify-center">
               <img
                 src={schedule.posterImageUrl}
-                alt="Zoom 播放课表 2026.11.16-11.22"
+                alt={`Zoom 播放课表 ${schedule.weekRangeLabel}`}
                 referrerPolicy="no-referrer"
                 className="max-w-full h-auto rounded-lg shadow-lg"
               />

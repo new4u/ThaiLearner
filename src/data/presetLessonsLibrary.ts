@@ -34,7 +34,7 @@ import {
   LUANGPOR_NOV_01_SUBTITLES
 } from './luangporTalk01Nov';
 
-// 2026 最新《在日常生活与工作中修行》开示 6 大核心巴利法词
+// 2026年10月17日官方开示 6 大核心巴利法词
 export const DAILY_PRACTICE_KEY_TERMS = [
   {
     thai: 'มีสติ',
@@ -143,7 +143,7 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     totalSentences: 29,
     curationType: 'official',
     alignedBy: '官方周度精校',
-    tags: ['10月10日精选开示', '朱拉隆功五调音标', '纯泰原声精进', '善法欲与精进修行'],
+    tags: ['10月10日官方开示', '29句精研对照', '纯泰原声', '朱拉隆功五调音标'],
     keyTerms: TALK_10OCT_KEY_TERMS,
     subtitles: LUANGPOR_OCT_10_SUBTITLES
   },
@@ -162,7 +162,7 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     totalSentences: 1179,
     curationType: 'official',
     alignedBy: '官方周度精校',
-    tags: ['11月08日最新开示', '1179句全篇精准对齐', '能见到三法印的禅定', '特相禅那与观心'],
+    tags: ['11月08日官方开示', '1179句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: LUANGPOR_NOV_08_KEY_TERMS,
     subtitles: LUANGPOR_NOV_08_SUBTITLES
   },
@@ -181,7 +181,7 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     totalSentences: 543,
     curationType: 'official',
     alignedBy: '官方周度精校',
-    tags: ['11月01日功德衣法会', '543句全篇精准对齐', '听法生起禅定与智慧', '十善业道与四圣谛'],
+    tags: ['11月01日官方开示', '543句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: LUANGPOR_NOV_01_KEY_TERMS,
     subtitles: LUANGPOR_NOV_01_SUBTITLES
   },
@@ -200,7 +200,7 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     totalSentences: 1195,
     curationType: 'official',
     alignedBy: '官方周度精校',
-    tags: ['10月31日最新开示', '1195句全篇精准对齐', '莫停留在空', '双视频实测校准'],
+    tags: ['10月31日官方开示', '1195句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: LUANGPOR_OCT_31_KEY_TERMS,
     subtitles: LUANGPOR_OCT_31_SUBTITLES
   },

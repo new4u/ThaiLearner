@@ -70,7 +70,7 @@ export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
     sentenceCount: 1179,
     offsetSeconds: 0.0,
     subtitles: LUANGPOR_NOV_08_SUBTITLES,
-    description: 'Wat Suan Santidham 官方开示《สมาธิที่เห็นไตรลักษณ์ได้ (能见到三法印的禅定)》，已完成全篇 1,179 句精细拆词、朱拉隆功五调音标核校与双轨精准绑定。'
+    description: 'Wat Suan Santidham 官方直播 & 解脱园中文同传（2026年11月08日），已完成全篇 1,179 句精细拆词、朱拉隆功五调音标核校与双轨精准绑定。'
   },
   {
     id: 'lesson_20261101',
@@ -88,7 +88,7 @@ export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
     sentenceCount: 543,
     offsetSeconds: 0.0,
     subtitles: LUANGPOR_NOV_01_SUBTITLES,
-    description: 'Wat Suan Santidham 官方供僧法会开示《ฟังธรรมให้เกิดสมาธิและปัญญา (听法生起禅定与智慧)》，已完成全篇 543 句精细拆词、朱拉隆功五调音标核校与双轨音视频精准绑定。'
+    description: 'Wat Suan Santidham 官方供僧法会直播 & 解脱园中文同传（2026年11月01日），已完成全篇 543 句精细拆词、朱拉隆功五调音标核校与双轨音视频精准绑定。'
   },
   {
     id: 'lesson_20261031',
@@ -106,7 +106,7 @@ export const OFFICIAL_PAIRED_DISCOURSES: OfficialPairedDiscourse[] = [
     sentenceCount: 1195,
     offsetSeconds: 0.0,
     subtitles: LUANGPOR_OCT_31_SUBTITLES,
-    description: 'Wat Suan Santidham 官方最新开示《不要满足于仅仅停留在空》，已完成全篇 1,195 句双视频毫秒对齐。'
+    description: 'Wat Suan Santidham 官方直播 & 解脱园中文同传（2026年10月31日），已完成全篇 1,195 句双视频毫秒对齐。'
   },
   {
     id: 'lesson_20261018',

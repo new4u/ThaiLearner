@@ -12,7 +12,7 @@ import { DAILY_PRACTICE_SUBTITLES } from './luangporTalkDailyPractice';
 export { LUANGPOR_OCT_18_SUBTITLES, LUANGPOR_OCT_18_TALK_TITLE, LUANGPOR_OCT_18_TALK_ZH_TITLE, DAILY_PRACTICE_SUBTITLES };
 
 export const LUANGPOR_EXCERPT_METADATA = {
-  title: '隆波帕默尊者开示实况共学（2026年10月18日）',
+  title: LUANGPOR_OCT_18_TALK_ZH_TITLE,
   thaiTitle: 'ธรรมะปฏิบัติ :: หลวงพ่อปราโมทย์ ปาโมชฺโช 18 ต.ค. 2568',
   speaker: '隆波帕默尊者 (หลวงพ่อปราโมทย์ ปาโมชฺโช)',
   source: 'Wat Suan Santidham 官方直播 & 解脱园中文同传 (2026-10-18)',
@@ -179,7 +179,7 @@ export const TEACHING_PHILOSOPHY = {
 export const SAMPLE_DHAMMA_PARAGRAPHS = [
   {
     id: 'para_1',
-    title: '以四念处对治邪见（2026年10月18日开示核心段落）',
+    title: `${LUANGPOR_OCT_18_TALK_ZH_TITLE}（核心段落）`,
     thai: 'ถ้าเราเข้าใจธรรมะในเบื้องต้นนะ ล้างความเห็นผิดจิตว่าขันธ์ 5 เป็นตัวเรา เราก็จะเข้าสู่จุดที่ปลอดภัยในสังสารวัฏนะ ตราบใดที่เรายังไม่ได้โสดาบันนะ เรายังอยู่ท่ามกลางความไม่แน่นอน อาจจะเวียนว่ายตายเกิดไปไม่รู้จักจบจักสิ้น แล้วก็ทุกข์แล้วทุกข์อีก ทุกคราวที่เกิดล้วนแต่ทุกข์ทั้งสิ้น',
     summary: '隆波开示第一阶段要领：破除“五蕴即自身”的萨迦耶见；未证须陀洹之前，众生依然漂泊于生死苦海的大不确定中。'
   }

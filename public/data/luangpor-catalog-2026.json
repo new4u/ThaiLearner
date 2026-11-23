@@ -1,9 +1,9 @@
 {
   "year": "2026",
   "buddhistYear": "2569",
-  "fetchedAt": 1794812247145,
-  "total": 119,
-  "thaiCount": 112,
+  "fetchedAt": 1795337394875,
+  "total": 124,
+  "thaiCount": 119,
   "chineseCount": 94,
   "thaiCatalogUrl": "https://www.dhamma.com/download/2569/",
   "chineseCatalogUrl": "https://www.dhamma.cn/luangpor/2026%E5%B9%B4%E5%BA%A6%E6%97%A5%E5%B8%B8%E5%BC%80%E7%A4%BA",
@@ -83,23 +83,68 @@
       }
     },
     {
+      "id": "lp_2026-11-04",
+      "date": "2026-11-04",
+      "sessionSuffix": "",
+      "thai": {
+        "id": "th_2569_691104",
+        "fileCode": "691104",
+        "fileName": "691104.mp3",
+        "title": "จิตตั้งมั่นแล้วต้องเดินปัญญา : หลวงปู่ปราโมทย์ ปาโมชฺโช 4 พฤศจิกายน 2569",
+        "gregorianDate": "2026-11-04",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691104.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569"
+      },
+      "chinese": null
+    },
+    {
+      "id": "lp_2026-11-02",
+      "date": "2026-11-02",
+      "sessionSuffix": "",
+      "thai": {
+        "id": "th_2569_691102",
+        "fileCode": "691102",
+        "fileName": "691102.mp3",
+        "title": "ยิ่งคิดยิ่งหลุดจากความจริง : หลวงปู่ปราโมทย์ ปาโมชฺโช 2 พฤศจิกายน 2569",
+        "gregorianDate": "2026-11-02",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691102.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569"
+      },
+      "chinese": null
+    },
+    {
       "id": "lp_2026-11-01",
       "date": "2026-11-01",
       "sessionSuffix": "",
       "matchedLessonId": "lesson_20261101",
-      "thai": null,
+      "thai": {
+        "id": "th_2569_691101",
+        "fileCode": "691101",
+        "fileName": "691101.mp3",
+        "title": "ฟังธรรมให้เกิดสมาธิและปัญญา : หลวงปู่ปราโมทย์ ปาโมชฺโช 1 พฤศจิกายน 2569",
+        "gregorianDate": "2026-11-01",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691101.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569",
+        "matchedLessonId": "lesson_20261101"
+      },
       "chinese": {
         "id": "cn_2026_D26.88_2026-11-01",
         "fileCode": "D26.88",
         "fileName": "D26.88《隆波帕默尊者开示》-2026年11月1日.mp3",
         "title": "D26.88《隆波帕默尊者开示》-2026年11月1日",
         "gregorianDate": "2026-11-01",
-        "matchedLessonId": "lesson_20261101",
         "mp3Url": "https://media.dhamma.cn/d/da/D26.88%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%881%E6%97%A5.mp3",
         "sizeBytes": 28304821,
         "wikiUrl": "https://www.dhamma.cn/luangpor/D26.88%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%881%E6%97%A5",
         "trackType": "chinese_audio",
-        "sourceDomain": "media.dhamma.cn"
+        "sourceDomain": "media.dhamma.cn",
+        "matchedLessonId": "lesson_20261101"
       }
     },
     {
@@ -107,7 +152,18 @@
       "date": "2026-10-31",
       "sessionSuffix": "",
       "matchedLessonId": "lesson_20261031",
-      "thai": null,
+      "thai": {
+        "id": "th_2569_691031",
+        "fileCode": "691031",
+        "fileName": "691031.mp3",
+        "title": "อย่าพอใจอยู่แค่ความว่าง : หลวงปู่ปราโมทย์ ปาโมชฺโช 31 ตุลาคม 2569",
+        "gregorianDate": "2026-10-31",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691031.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569",
+        "matchedLessonId": "lesson_20261031"
+      },
       "chinese": {
         "id": "cn_2026_D26.87_2026-10-31",
         "fileCode": "D26.87",
@@ -121,6 +177,57 @@
         "sourceDomain": "media.dhamma.cn",
         "matchedLessonId": "lesson_20261031"
       }
+    },
+    {
+      "id": "lp_2026-10-30",
+      "date": "2026-10-30",
+      "sessionSuffix": "",
+      "thai": {
+        "id": "th_2569_691030",
+        "fileCode": "691030",
+        "fileName": "691030.mp3",
+        "title": "ดูสภาวะแบบคนวงนอก : หลวงปู่ปราโมทย์ ปาโมชฺโช 30 ตุลาคม 2569",
+        "gregorianDate": "2026-10-30",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691030.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569"
+      },
+      "chinese": null
+    },
+    {
+      "id": "lp_2026-10-29",
+      "date": "2026-10-29",
+      "sessionSuffix": "",
+      "thai": {
+        "id": "th_2569_691029",
+        "fileCode": "691029",
+        "fileName": "691029.mp3",
+        "title": "ปฏิบัติเพื่อมุ่งสร้างสัมมาทิฏฐิ : หลวงปู่ปราโมทย์ ปาโมชฺโช 29 ตุลาคม 2569",
+        "gregorianDate": "2026-10-29",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691029.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569"
+      },
+      "chinese": null
+    },
+    {
+      "id": "lp_2026-10-27",
+      "date": "2026-10-27",
+      "sessionSuffix": "",
+      "thai": {
+        "id": "th_2569_691027",
+        "fileCode": "691027",
+        "fileName": "691027.mp3",
+        "title": "งานหลักคืองานล้างกิเลส : หลวงปู่ปราโมทย์ ปาโมชฺโช 27 ตุลาคม 2569",
+        "gregorianDate": "2026-10-27",
+        "buddhistYear": "2569",
+        "mp3Url": "https://media.dhamma.com/pramote/cd/2569/691027.mp3",
+        "trackType": "thai_audio",
+        "sourceDomain": "media.dhamma.com/pramote/cd/2569"
+      },
+      "chinese": null
     },
     {
       "id": "lp_2026-10-26",
@@ -3012,5 +3119,5 @@
     }
   ],
   "isSolidified": true,
-  "solidifiedAt": "2026-11-16T06:57:43.783Z"
+  "solidifiedAt": "2026-11-22T08:50:01.289Z"
 }

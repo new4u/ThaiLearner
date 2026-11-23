@@ -276,8 +276,8 @@ export const CHULA_IPA_DICTIONARY: Record<string, ChulaDictEntry> = {
   "ถูกต้อง": { ipa: "tʰùuk-tɔ̂ŋ", cn: "中道确当", isCore: true },
 
   // === 常用动词、虚词与对话构件 ===
-  "เวลา": { ipa: "weː-laa", cn: "时间" },
-  "หมดเวลา": { ipa: "mòt weː-laa", cn: "时间到了" },
+  "เวลา": { ipa: "wee-laa", cn: "时间" },
+  "หมดเวลา": { ipa: "mòt wee-laa", cn: "时间到了" },
   "ของ": { ipa: "kʰɔ̌ɔŋ", cn: "的/属于" },
   "พวกเรา": { ipa: "pʰûak-raw", cn: "我们" },
   "พวกนั้น": { ipa: "pʰûak nán", cn: "那些人/外道" },
@@ -495,7 +495,7 @@ export const CHULA_IPA_DICTIONARY: Record<string, ChulaDictEntry> = {
   "ห้า": { ipa: "hâa", cn: "其五" },
   "อย่างนี้": { ipa: "jàaŋ níi", cn: "如是这般" },
   "ตรง": { ipa: "troŋ", cn: "端直纯一" },
-  "หรอก": { ipa: "rɔ̀ɔk", cn: "断语助词" },
+  "หรอก": { ipa: "rɔ̀ɔk", cn: "罢了/才不是/呢" },
   "ไว้": { ipa: "wáj", cn: "置放安顿" },
   "แค่": { ipa: "kʰɛ̂ɛ", cn: "仅仅/止于" },
   "คำ": { ipa: "kʰam", cn: "句读名言" },
@@ -578,7 +578,7 @@ export const CHULA_IPA_DICTIONARY: Record<string, ChulaDictEntry> = {
   "ตกตะกอน": { ipa: "tòk tà-kɔɔn", cn: "沉淀澄清" },
   "แสดงให้ดู": { ipa: "sà-dɛɛŋ hâj duu", cn: "表露垂范" },
   "ภาษามนุษย์": { ipa: "pʰaa-sǎa má-nút", cn: "人境语言" },
-  "ครับ": { ipa: "kʰráp", cn: "敬白助词" },
+  "ครับ": { ipa: "kʰráp", cn: "（男众敬语尾音）" },
   "เบิกบาน": { ipa: "bə̀ək-baan", cn: "花开颜舒" },
   "กิจ": { ipa: "kìt", cn: "当尽事务" },
   "นี่ล่ะ": { ipa: "nîi lâʔ", cn: "此即是" },
@@ -652,14 +652,575 @@ export const CHULA_IPA_DICTIONARY: Record<string, ChulaDictEntry> = {
   "หลายๆ": { ipa: "lǎaj-lǎaj", cn: "许许多多" },
   "อื่นๆ": { ipa: "ʔɯ̀ɯn-ʔɯ̀ɯn", cn: "其他的" },
   "วันๆ": { ipa: "wan-wan", cn: "逐日/一天到晚" },
-  "ไหนๆ": { ipa: "nǎj-nǎj", cn: "既然" }
+  "ไหนๆ": { ipa: "nǎj-nǎj", cn: "既然" },
+
+  // === 共修法谈高频补充词库 (Oct 17 & Oct 31 精校扩充) ===
+  "รถเมล์": { ipa: "rót-mee", cn: "公交车" },
+  "ป้ายรถเมล์": { ipa: "pâaj rót-mee", cn: "公交车站" },
+  "เมล์": { ipa: "mee", cn: "班车/邮件" },
+  "รถไฟฟ้า": { ipa: "rót-faj-fáa", cn: "轻轨/地铁" },
+  "รถยนต์": { ipa: "rót-jon", cn: "汽车" },
+  "ส้วม": { ipa: "sûam", cn: "厕所/茅厕" },
+  "ส้วมหลุม": { ipa: "sûam-lǔm", cn: "土坑旱厕" },
+  "ส้วมโบราณ": { ipa: "sûam boo-raan", cn: "老式旱厕" },
+  "หลุมส้วม": { ipa: "lǔm-sûam", cn: "粪坑" },
+  "หลุม": { ipa: "lǔm", cn: "坑洞" },
+  "ปากหลุม": { ipa: "pàak-lǔm", cn: "坑口" },
+  "ขี้เกียจ": { ipa: "kʰîi-kìat", cn: "懒惰/懈怠" },
+  "คล่องแคล่ว": { ipa: "kʰlɔ̂ŋ-kʰlɛ̂w", cn: "敏捷/利落" },
+  "คล่องๆ": { ipa: "kʰlɔ̂ŋ kʰlɔ̂ŋ", cn: "娴熟/流畅地" },
+  "ปราดเปรียว": { ipa: "pràat-priaw", cn: "敏捷敏锐" },
+  "ย่อหย่อน": { ipa: "jɔ̂ɔ-jɔ̀n", cn: "松懈/懈怠" },
+  "ครอบงำ": { ipa: "kʰrɔ̂ɔp-ŋam", cn: "笼罩/支配控制" },
+  "กายานุปัสสนา": { ipa: "kaa-jaa-nú-pàt-sà-naa", cn: "身念处（身随观）", isCore: true },
+  "เดรัจฉาน": { ipa: "dee-rát-cʰǎan", cn: "畜生道/旁生", isCore: true },
+  "คุณากร": { ipa: "kʰú-naa-kɔɔn", cn: "功德之源泉", isCore: true },
+  "อากร": { ipa: "ʔaa-kɔɔn", cn: "矿藏/源泉" },
+  "ทุกขสัจ": { ipa: "tʰúk-kʰà-sàt", cn: "苦谛", isCore: true },
+  "ผัสสะ": { ipa: "pʰàt-sàʔ", cn: "触（六根对六尘）", isCore: true },
+  "สุคติ": { ipa: "sù-kʰà-tìʔ", cn: "善趣", isCore: true },
+  "เปรต": { ipa: "prèet", cn: "饿鬼道", isCore: true },
+  "อสุรกาย": { ipa: "ʔà-sù-rá-kaaj", cn: "阿修罗道", isCore: true },
+  "ถิรสัญญา": { ipa: "tʰì-rá-sǎn-jaa", cn: "坚固想（错觉恒常）", isCore: true },
+  "อุเบกขา": { ipa: "ʔù-bèek-kʰǎa", cn: "舍/平等心", isCore: true },
+  "พรหมจรรย์": { ipa: "pʰrom-má-can", cn: "梵行（清净修持）", isCore: true },
+  "ตบะ": { ipa: "tà-bàʔ", cn: "苦行/定力火候", isCore: true },
+  "ไตรจีวร": { ipa: "traj cii-wɔɔn", cn: "三衣（僧衣）", isCore: true },
+  "สังฆาฏิ": { ipa: "sǎŋ-kʰaa-tìʔ", cn: "大衣（九条衣/僧伽梨）", isCore: true },
+  "บิณฑบาต": { ipa: "bin-tʰá-bàat", cn: "托钵乞食", isCore: true },
+  "สรงน้ำ": { ipa: "sǒŋ-nám", cn: "沐浴（尊称僧侣）" },
+  "มรณภาพ": { ipa: "mɔɔ-rá-ná-pʰâap", cn: "圆寂（僧侣逝世）", isCore: true },
+  "ฆราวาส": { ipa: "kʰá-raa-wâat", cn: "在家人/居士", isCore: true },
+  "ปฏิเวธ": { ipa: "pà-tì-wêet", cn: "证悟/亲证果位", isCore: true },
+  "คัมภีร์": { ipa: "kʰam-pʰii", cn: "经典/典籍" },
+  "พระวินัย": { ipa: "pʰráʔ wí-naj", cn: "戒律/佛制毗奈耶", isCore: true },
+  "ระเบียบวินัย": { ipa: "rá-bìap wí-naj", cn: "规矩纪律" },
+  "บำเพ็ญประโยชน์": { ipa: "bam-pʰen prà-jòot", cn: "行善利他" },
+  "บำเพ็ญ": { ipa: "bam-pʰen", cn: "修持/奉行" },
+  "ภวังค์": { ipa: "pʰá-waŋ", cn: "有分心（深沉潜意识/睡梦昏沉）", isCore: true },
+  "ภพ": { ipa: "pʰóp", cn: "有/生命境界", isCore: true },
+  "อรูป": { ipa: "ʔà-rûup", cn: "无色界", isCore: true },
+  "อัตตา": { ipa: "ʔàt-taa", cn: "自我/我执", isCore: true },
+  "ศีลด่างพร้อย": { ipa: "sǐin dàaŋ pʰrɔ́ɔj", cn: "戒行有缺损" },
+  "กัณฑ์": { ipa: "kan", cn: "一堂开示/法席" },
+  "อรรถรส": { ipa: "ʔàt-tʰà-rót", cn: "法义滋味" },
+  "ทุรนทุราย": { ipa: "tʰú-ron tʰú-raaj", cn: "焦躁不安/挣扎" },
+  "ไขว่คว้า": { ipa: "kʰwàj-kʰwáa", cn: "攀缘追求/抓取" },
+  "สลัดคืน": { ipa: "sà-lát kʰɯɯn", cn: "舍弃归还/彻底放下" },
+  "หลอมรวม": { ipa: "lɔ̌ɔm ruam", cn: "融汇一体" },
+  "จิตดั้งเดิม": { ipa: "cìt dâŋ dəəm", cn: "原本之心", isCore: true },
+  "ดั้งเดิม": { ipa: "dâŋ dəəm", cn: "原本/最初" },
+  "สะกดจิต": { ipa: "sà-kòt cìt", cn: "自我催眠/压制心" },
+  "เบื่อหน่าย": { ipa: "bɯ̀a-nàaj", cn: "厌倦/厌离" },
+  "ขยะแขยง": { ipa: "kʰà-jàʔ-kʰɛ̌ɛŋ", cn: "厌恶作呕" },
+  "หวาดเสียว": { ipa: "wàat-sǐaw", cn: "惊心/提心吊胆" },
+  "หวาด": { ipa: "wàat", cn: "畏惧" },
+  "วิจารณ์": { ipa: "wí-caan", cn: "评判/议论" },
+  "ติเตียน": { ipa: "tì-tian", cn: "批评指责" },
+  "ติ": { ipa: "tì", cn: "挑剔/批评" },
+  "สรรเสริญ": { ipa: "sǎn-rá-sə̌ən", cn: "赞叹/称誉" },
+  "อิจฉา": { ipa: "ʔìt-cʰǎa", cn: "嫉妒" },
+  "หวงแหน": { ipa: "hǔaŋ-hɛ̌ɛn", cn: "贪恋吝护" },
+  "ตระหนี่": { ipa: "trà-nìi", cn: "悭吝" },
+  "ก้าวร้าว": { ipa: "kâaw-ráaw", cn: "暴躁/具有攻击性" },
+  "ทะยาน": { ipa: "tʰá-jaan", cn: "飞跃/贪求躁动" },
+  "อ้าง": { ipa: "ʔâaŋ", cn: "声称/托辞" },
+  "กีดขวาง": { ipa: "kìit-kʰwǎaŋ", cn: "妨碍/阻挠" },
+  "คอร์รัปชัน": { ipa: "kʰɔɔ-ráp-cʰan", cn: "腐败/偷工减料" },
+  "คอร์ส": { ipa: "kʰɔ́ɔt", cn: "课程/禅修营" },
+  "เซ็นชื่อ": { ipa: "sen cʰɯ̂ɯ", cn: "签到" },
+  "หัวหน้ากอง": { ipa: "hǔa-nâa kɔɔŋ", cn: "处长/科长" },
+  "ทำเนียบรัฐบาล": { ipa: "tʰam-nîap rát-tʰà-baan", cn: "总理府" },
+  "รับราชการ": { ipa: "ráp râat-cʰá-kaan", cn: "当公务员/供职" },
+  "งานประชุม": { ipa: "ŋaan prà-cʰum", cn: "会议" },
+  "ประชุม": { ipa: "prà-cʰum", cn: "开会" },
+  "สมาชิก": { ipa: "sà-maa-cʰík", cn: "成员/委员" },
+  "งานวิจัย": { ipa: "ŋaan wí-caj", cn: "研究课题" },
+  "นิด้า": { ipa: "ní-dâa", cn: "NIDA（泰国国家发展管理学院）" },
+  "แนวความคิด": { ipa: "nɛɛw kʰwaam-kʰít", cn: "思维方式/理念" },
+  "หน่วยงาน": { ipa: "nùaj-ŋaan", cn: "机构单位" },
+  "มูลนิธิ": { ipa: "muun-lá-ní-tʰí", cn: "基金会" },
+  "พฤศจิกายน": { ipa: "pʰrɯ́t-sà-cì-kaa-jon", cn: "十一月" },
+  "มติ": { ipa: "má-tì", cn: "决议" },
+  "เอกฉันท์": { ipa: "ʔèek-kà-cʰǎn", cn: "一致通过" },
+  "ยุติ": { ipa: "jút-tì", cn: "结束/定案" },
+  "กลั่นกรอง": { ipa: "klàn-krɔɔŋ", cn: "筛选过滤" },
+  "คัดเลือก": { ipa: "kʰát-lɯ̂ak", cn: "甄选" },
+  "ไลฟ์สด": { ipa: "láj-sòt", cn: "现场直播" },
+  "อินเทอร์เน็ต": { ipa: "ʔin-tʰəə-nèt", cn: "互联网" },
+  "เซิร์ช": { ipa: "sə̀ət", cn: "搜索" },
+  "คอมพ์": { ipa: "kʰɔm", cn: "电脑" },
+  "ชาร์จ": { ipa: "cʰáat", cn: "充电" },
+  "แบตเตอรี": { ipa: "bɛ̀t-təə-rîi", cn: "电池" },
+  "สวิตช์": { ipa: "sà-wít", cn: "开关" },
+  "วิทยุ": { ipa: "wít-tʰá-jú", cn: "收音机" },
+  "ดูทีวี": { ipa: "duu tʰii-wii", cn: "看电视" },
+  "ช่องฟรีซ": { ipa: "cʰɔ̂ŋ fríit", cn: "冷冻室" },
+  "ตู้เย็น": { ipa: "tûu-jen", cn: "冰箱" },
+  "กีตาร์": { ipa: "kii-tâa", cn: "吉他" },
+  "สรพงศ์": { ipa: "sɔ̌ɔ-rá-pʰoŋ", cn: "索拉朋（著名演员）" },
+  "ชาตรี": { ipa: "cʰaa-trii", cn: "查特里" },
+  "หินหมากเป้ง": { ipa: "hǐn màak pêŋ", cn: "欣玛邦寺（泰东北圣地）" },
+  "เทสรังสี": { ipa: "tʰêet-raŋ-sǐi", cn: "阿姜帖长老名号" },
+  "วงศาอุดม": { ipa: "woŋ-sǎa-ʔù-dom", cn: "翁沙乌敦（姓氏）" },
+  "จุฬาฯ": { ipa: "cù-laa", cn: "朱拉隆功大学" },
+  "มัธยม": { ipa: "mát-tʰá-jom", cn: "中学" },
+  "ประถม": { ipa: "prà-tʰǒm", cn: "小学" },
+  "วิทยาลัย": { ipa: "wít-tʰá-jaa-laj", cn: "学院" },
+  "รัฐศาสตร์": { ipa: "rát-tʰà-sàat", cn: "政治学" },
+  "คณิตศาสตร์": { ipa: "kʰá-nít-tà-sàat", cn: "数学" },
+  "คณิต": { ipa: "kʰá-nít", cn: "数学" },
+  "เอนทรานซ์": { ipa: "ʔen-tʰráan", cn: "大学入学考试" },
+  "แอกทิฟ": { ipa: "ʔɛ́k-tʰìip", cn: "活跃积极" },
+  "ชิลๆ": { ipa: "cʰiw-cʰiw", cn: "悠闲自在" },
+  "เป๊ะ": { ipa: "péʔ", cn: "分毫不差/精准" },
+  "ชัวร์": { ipa: "cʰua", cn: "确定/稳妥" },
+  "ดร็อป": { ipa: "drɔ̀p", cn: "低落/滑坡" },
+  "สเต็ป": { ipa: "sà-tèp", cn: "步骤/台阶" },
+  "กุญแจ": { ipa: "kun-cɛɛ", cn: "钥匙/锁" },
+  "โต๊ะ": { ipa: "tóʔ", cn: "桌子" },
+  "เก้าอี้": { ipa: "kâw-ʔîi", cn: "椅子" },
+  "เตียง": { ipa: "tiaŋ", cn: "床" },
+  "กาแฟ": { ipa: "kaa-fɛɛ", cn: "咖啡" },
+  "เหล้า": { ipa: "lâw", cn: "酒" },
+  "บาร์": { ipa: "baa", cn: "酒吧" },
+  "ไพ่": { ipa: "pʰâj", cn: "纸牌" },
+  "สามี": { ipa: "sǎa-mii", cn: "丈夫" },
+  "ภรรยา": { ipa: "pʰan-rá-jaa", cn: "妻子" },
+  "ครอบครัว": { ipa: "kʰrɔ̂ɔp-kʰrua", cn: "家庭" },
+  "ผู้หญิง": { ipa: "pʰûu-jǐŋ", cn: "女性" },
+  "บุรุษ": { ipa: "bù-rùt", cn: "男子" },
+  "อิสตรี": { ipa: "ʔìt-sà-trii", cn: "女性" },
+  "แก": { ipa: "kɛɛ", cn: "她/他（口语）" },
+  "กวาดบ้าน": { ipa: "kwàat bâan", cn: "扫地/打扫" },
+  "ถูบ้าน": { ipa: "tʰǔu bâan", cn: "拖地/擦地" },
+  "อาบน้ำ": { ipa: "ʔàap-nám", cn: "洗澡" },
+  "ซัก": { ipa: "sák", cn: "洗刷/追问" },
+  "ปวดท้อง": { ipa: "pùat-tʰɔ́ɔŋ", cn: "肚子痛" },
+  "ปวดขา": { ipa: "pùat-kʰǎa", cn: "腿痛" },
+  "ปวดฉี่": { ipa: "pùat-cʰìi", cn: "尿急" },
+  "ปวด": { ipa: "pùat", cn: "疼痛/酸胀" },
+  "ท้องผูก": { ipa: "tʰɔ́ɔŋ-pʰùuk", cn: "便秘" },
+  "ถ่าย": { ipa: "tʰàaj", cn: "排便/拍照" },
+  "ฉี่": { ipa: "cʰìi", cn: "小便" },
+  "อุจจาระ": { ipa: "ʔùt-caa-ráʔ", cn: "粪便" },
+  "อึ": { ipa: "ʔɯ̀ʔ", cn: "大便（口语）" },
+  "เปื้อน": { ipa: "pɯ̂an", cn: "沾染/弄脏" },
+  "เลอะเทอะ": { ipa: "lə́ʔ-tʰə́ʔ", cn: "污浊/凌乱" },
+  "หนอน": { ipa: "nɔ̌ɔn", cn: "蛆虫" },
+  "แมว": { ipa: "mɛɛw", cn: "猫" },
+  "ขโมย": { ipa: "kʰà-mooj", cn: "偷盗" },
+  "เห่า": { ipa: "hàw", cn: "吠叫" },
+  "นก": { ipa: "nók", cn: "鸟" },
+  "ดอกไม้": { ipa: "dɔ̀ɔk-máj", cn: "花朵" },
+  "สวน": { ipa: "sǔan", cn: "花园/园子" },
+  "สนามหญ้า": { ipa: "sà-nǎam-jâa", cn: "草坪" },
+  "หยาดน้ำค้าง": { ipa: "jàat-nám-kʰáaŋ", cn: "露珠" },
+  "แสงแดด": { ipa: "sɛ̌ɛŋ-dɛ̀ɛt", cn: "阳光" },
+  "แพรวพราว": { ipa: "pʰrɛɛw-pʰraaw", cn: "晶莹闪烁" },
+  "พระอาทิตย์": { ipa: "pʰráʔ-ʔaa-tʰít", cn: "太阳" },
+  "เช้ามืด": { ipa: "cʰáaw-mɯ̂ɯt", cn: "清晨未亮时" },
+  "มืดๆ": { ipa: "mɯ̂ɯt mɯ̂ɯt", cn: "昏暗地" },
+  "มัวๆ": { ipa: "mua mua", cn: "模糊不清地" },
+  "มืด": { ipa: "mɯ̂ɯt", cn: "黑暗/昏暗" },
+  "ง่วง": { ipa: "ŋûaŋ", cn: "困倦" },
+  "ความง่วง": { ipa: "kʰwaam ŋûaŋ", cn: "困意/昏沉" },
+  "งัวเงีย": { ipa: "ŋua-ŋia", cn: "迷糊睡意" },
+  "หยิบ": { ipa: "jìp", cn: "拿起/拾取" },
+  "พาด": { ipa: "pʰâat", cn: "搭放/横架" },
+  "พาดไหล่": { ipa: "pʰâat làj", cn: "搭在肩上" },
+  "กระบอก": { ipa: "krà-bɔ̀ɔk", cn: "竹筒/圆筒" },
+  "ไม้ไผ่": { ipa: "máj-pʰàj", cn: "竹子" },
+  "ทะลวง": { ipa: "tʰá-luaŋ", cn: "疏通/捅通" },
+  "นั่งยองๆ": { ipa: "nâŋ jɔɔŋ-jɔɔŋ", cn: "蹲着" },
+  "แฉะๆ": { ipa: "cʰɛ̀ʔ-cʰɛ̀ʔ", cn: "泥泞潮湿" },
+  "เหยียบ": { ipa: "jìap", cn: "踩踏" },
+  "โหน": { ipa: "hǒon", cn: "悬吊抓握" },
+  "ต่องแต่ง": { ipa: "tɔ̀ŋ-tɛ̀ŋ", cn: "晃荡垂悬" },
+  "เหวี่ยงไปเหวี่ยงมา": { ipa: "wìaŋ paj wìaŋ maa", cn: "左右摇晃" },
+  "บันได": { ipa: "ban-daj", cn: "台阶/楼梯" },
+  "ประตู": { ipa: "prà-tuu", cn: "门" },
+  "ฝา": { ipa: "fǎa", cn: "盖子/墙壁" },
+  "กั้น": { ipa: "kân", cn: "隔开/遮挡" },
+  "ถังน้ำ": { ipa: "tʰǎŋ-nám", cn: "水桶" },
+  "ตะกอน": { ipa: "tà-kɔɔn", cn: "泥沙沉淀" },
+  "น้ำขุ่น": { ipa: "nám kʰùn", cn: "浊水" },
+  "ขุ่น": { ipa: "kʰùn", cn: "浑浊" },
+  "ใส": { ipa: "sǎj", cn: "清澈" },
+  "กวน": { ipa: "kuan", cn: "搅动/打扰" },
+  "จางหายไป": { ipa: "caaŋ hǎaj paj", cn: "淡去消散" },
+  "แวบขึ้นมา": { ipa: "wɛ̂ɛp kʰɯ̂n maa", cn: "一闪而现" },
+  "ขุด": { ipa: "kʰùt", cn: "挖掘" },
+  "ตระกูล": { ipa: "trà-kuun", cn: "家族/类别" },
+  "เสาร์": { ipa: "sǎw", cn: "星期六" },
+  "อาทิตย์": { ipa: "ʔaa-tʰít", cn: "星期日/周" },
+  "กรุงเทพฯ": { ipa: "kruŋ-tʰêep", cn: "曼谷" },
+  "เสวย": { ipa: "sà-wə̌əj", cn: "纳受/体验" },
+  "เออ": { ipa: "ʔəə", cn: "嗯/哦（语气词）" },
+  "อ๋อ": { ipa: "ʔɔ̌ɔ", cn: "哦（恍然大悟）" },
+  "อ้อ": { ipa: "ʔɔ̂ɔ", cn: "哦（明白了）" },
+  "โอเค": { ipa: "ʔoo-kʰee", cn: "好的/行" },
+  "ปั๊บ": { ipa: "páp", cn: "立刻/啪地一下" },
+  "พรึบ": { ipa: "pʰrɯ́p", cn: "刷地一下" },
+  "โฮ": { ipa: "hoo", cn: "呜呜（大哭声）" },
+  "เอี๊ยดอ๊าดๆ": { ipa: "ʔîat-ʔâat ʔîat-ʔâat", cn: "吱呀吱呀响" },
+  "น้ำลายหยดติ๋งๆ": { ipa: "nám-laaj jòt tǐŋ-tǐŋ", cn: "口水滴答直滴" },
+  "ชก": { ipa: "cʰók", cn: "出拳击打" },
+  "ดุ": { ipa: "dù", cn: "严厉/凶" },
+  "ดุๆ": { ipa: "dù dù", cn: "凶巴巴地" },
+  "เบา": { ipa: "baw", cn: "轻/柔和" },
+  "เบาลง": { ipa: "baw loŋ", cn: "减轻" },
+  "ยิ้ม": { ipa: "jím", cn: "微笑" },
+  "ยิ้มหวานๆ": { ipa: "jím wǎan wǎan", cn: "甜甜地微笑" },
+  "ร้องไห้": { ipa: "rɔ́ɔŋ-hâj", cn: "哭泣" },
+  "ร้องไห้คร่ำครวญ": { ipa: "rɔ́ɔŋ-hâj kʰrâm-kʰruan", cn: "痛哭哀号" },
+  "ร้อง": { ipa: "rɔ́ɔŋ", cn: "呼喊/哭叫" },
+  "ช่วยด้วยๆ": { ipa: "cʰûaj dûaj cʰûaj dûaj", cn: "救命啊救命啊" },
+  "ช่วยกัน": { ipa: "cʰûaj kan", cn: "互相帮助" },
+  "ช่วยงาน": { ipa: "cʰûaj ŋaan", cn: "帮忙做事" },
+  "ช่วย": { ipa: "cʰûaj", cn: "帮助/救助" },
+  "ผู้ช่วยสอน": { ipa: "pʰûu-cʰûaj-sɔ̌ɔn", cn: "助教" },
+  "สู้กับ": { ipa: "sûu kàp", cn: "与……对抗" },
+  "สู้": { ipa: "sûu", cn: "拼搏/对抗" },
+  "รบ": { ipa: "róp", cn: "争战" },
+  "เถียง": { ipa: "tʰǐaŋ", cn: "争辩/顶嘴" },
+  "พิรี้พิไร": { ipa: "pʰí-ríi-pʰí-raj", cn: "啰嗦抱怨" },
+  "เซ้าซี้": { ipa: "sáw-sîi", cn: "纠缠/一再劝说" },
+  "ตะลุมบอน": { ipa: "tà-lum-bɔɔn", cn: "混战一团" },
+  "ตะครุบ": { ipa: "tà-kʰrúp", cn: "扑抓" },
+  "สะดุ้ง": { ipa: "sà-dûŋ", cn: "惊吓/惊醒" },
+  "สะใจ": { ipa: "sà-caj", cn: "痛快/解气" },
+  "เจ็บปวด": { ipa: "cèp-pùat", cn: "疼痛痛苦" },
+  "บาดเจ็บ": { ipa: "bàat-cèp", cn: "受伤" },
+  "สงสาร": { ipa: "sǒŋ-sǎan", cn: "怜悯/同情" },
+  "สงคราม": { ipa: "sǒŋ-kʰraam", cn: "战争" },
+  "โรค": { ipa: "rôok", cn: "疾病" },
+  "ยา": { ipa: "jaa", cn: "药物" },
+  "คุ้นเคย": { ipa: "kʰún-kʰəəj", cn: "熟悉/习惯" },
+  "เข้มแข็ง": { ipa: "kʰêm-kʰɛ̌ŋ", cn: "坚强有力" },
+  "ใจเด็ด": { ipa: "caj-dèt", cn: "果决毅然" },
+  "พร้อม": { ipa: "pʰrɔ́ɔm", cn: "准备就绪/同时" },
+  "ครบ": { ipa: "kʰróp", cn: "齐全/完整" },
+  "ครบชุด": { ipa: "kʰróp cʰút", cn: "整套齐备" },
+  "ร่วมร้อย": { ipa: "rûam rɔ́ɔj", cn: "近百人" },
+  "จำนวน": { ipa: "cam-nuan", cn: "数量" },
+  "ชิ้น": { ipa: "cʰín", cn: "件/篇（量词）" },
+  "รอบ": { ipa: "rɔ̂ɔp", cn: "圈/轮/趟" },
+  "ราวๆ": { ipa: "raaw-raaw", cn: "大约/左右" },
+  "ใกล้ชิด": { ipa: "klâj-cʰít", cn: "亲近贴近" },
+  "ภายใน": { ipa: "pʰaaj-naj", cn: "内部/在……之内" },
+  "แนว": { ipa: "nɛɛw", cn: "方向/路数" },
+  "เส้นทาง": { ipa: "sên-tʰaaŋ", cn: "路线/道路" },
+  "ต้นตอ": { ipa: "tôn-tɔɔ", cn: "源头/根源" },
+  "แก่นสาร": { ipa: "kɛ̀n-sǎan", cn: "精髓/实质" },
+  "สาระ": { ipa: "sǎa-ráʔ", cn: "要义/实质" },
+  "กายวาจา": { ipa: "kaaj waa-caa", cn: "身口（二业）" },
+  "ตรรกะ": { ipa: "tàk-kàʔ", cn: "逻辑" },
+  "ทฤษฎี": { ipa: "tʰrít-sà-dii", cn: "理论" },
+  "จักรวาล": { ipa: "càk-krà-waan", cn: "宇宙" },
+  "กาแล็กซี": { ipa: "kaa-lɛ́k-sîi", cn: "星系/银河系" },
+  "สำนวน": { ipa: "sǎm-nuan", cn: "俗语/措辞" },
+  "เสงี่ยม": { ipa: "sà-ŋìam", cn: "端庄文静" },
+  "มอมแมม": { ipa: "mɔɔm-mɛɛm", cn: "灰头土脸" },
+  "ก้ม": { ipa: "kôm", cn: "低头/俯身" },
+  "ดีดตัว": { ipa: "dìit tua", cn: "弹起/跳脱" },
+  "กลิ้ง": { ipa: "klîŋ", cn: "滚动" },
+  "พยัก": { ipa: "pʰá-ják", cn: "点头" },
+  "พุ่ง": { ipa: "pʰûŋ", cn: "冲刺/射出" },
+  "ไต่": { ipa: "tàj", cn: "攀爬" },
+  "ขยาย": { ipa: "kʰà-jǎaj", cn: "扩展/放大" },
+  "ขยายตัว": { ipa: "kʰà-jǎaj tua", cn: "扩张蔓延" },
+  "เชื่อม": { ipa: "cʰɯ̂am", cn: "连接" },
+  "เตรียม": { ipa: "triam", cn: "准备" },
+  "จอง": { ipa: "cɔɔŋ", cn: "预订/预约" },
+  "จ้าง": { ipa: "câaŋ", cn: "雇佣" },
+  "ปรับ": { ipa: "pràp", cn: "调整" },
+  "ตรวจ": { ipa: "trùat", cn: "检查/检视" },
+  "สอบ": { ipa: "sɔ̀ɔp", cn: "考试/核验" },
+  "ท่อง": { ipa: "tʰɔ̂ŋ", cn: "诵读/背诵" },
+  "ซ้ำๆ": { ipa: "sám-sám", cn: "反复地" },
+  "ย้ำ": { ipa: "jám", cn: "强调/重申" },
+  "เนืองๆ": { ipa: "nɯaŋ-nɯaŋ", cn: "时常/反复" },
+  "บ่อยๆ": { ipa: "bɔ̀j-bɔ̀j", cn: "常常" },
+  "เมื่อวาน": { ipa: "mɯ̂a-waan", cn: "昨天" },
+  "เพิ่ง": { ipa: "pʰə̂ŋ", cn: "刚刚/才" },
+  "คง": { ipa: "kʰoŋ", cn: "大概/稳固" },
+  "จึง": { ipa: "cɯŋ", cn: "于是/因而" },
+  "หาก": { ipa: "hàak", cn: "若/如果" },
+  "เพียง": { ipa: "pʰiaŋ", cn: "仅仅" },
+  "สำหรับ": { ipa: "sǎm-ràp", cn: "对于/为了" },
+  "เหนือ": { ipa: "nɯ̌a", cn: "超越/之上" },
+  "ด้าน": { ipa: "dâan", cn: "方面/麻木" },
+  "มุม": { ipa: "mum", cn: "角度/角落" },
+  "ฝั่ง": { ipa: "fàŋ", cn: "岸边/那一侧" },
+  "ก้าว": { ipa: "kâaw", cn: "迈步/步" },
+  "ก้าวหน้า": { ipa: "kâaw-nâa", cn: "进步/进展" },
+  "เสื่อม": { ipa: "sɯ̀am", cn: "衰退/败坏" },
+  "ความเสื่อม": { ipa: "kʰwaam sɯ̀am", cn: "退步/衰败" },
+  "ความจำเสื่อม": { ipa: "kʰwaam-cam sɯ̀am", cn: "失忆/记忆衰退" },
+  "พลาดพลั้ง": { ipa: "pʰlâat-pʰláŋ", cn: "失手/失误" },
+  "หลุดออกไป": { ipa: "lùt ʔɔ̀ɔk paj", cn: "脱落而出" },
+  "หลุด": { ipa: "lùt", cn: "脱离/掉落" },
+  "ย้อนกลับมา": { ipa: "jɔ́ɔn klàp maa", cn: "折返回来" },
+  "ย้อน": { ipa: "jɔ́ɔn", cn: "回溯/倒退" },
+  "ยืดยาว": { ipa: "jɯ̂ɯt-jaaw", cn: "漫长/拖长" },
+  "สาธร": { ipa: "sǎa-tʰɔɔn", cn: "沙吞（曼谷地名）" },
+  "กทม": { ipa: "kɔɔ-tʰɔɔ-mɔɔ", cn: "曼谷" },
+  "รัชกาล": { ipa: "rát-cʰá-kaan", cn: "朝代/王世" },
+  "หลวงตา": { ipa: "lǔaŋ-taa", cn: "隆达长老（年长出家师）", isCore: true },
+  "สมภาร": { ipa: "sǒm-pʰaan", cn: "住持/方丈" },
+  "ดูแล": { ipa: "duu-lɛɛ", cn: "照顾/照料" },
+  "เผย": { ipa: "pʰə̌əj", cn: "流露/显露" },
+  "แผ่": { ipa: "pʰɛ̀ɛ", cn: "散播/延展" },
+  "ฟื้น": { ipa: "fɯ́ɯn", cn: "苏醒/恢复" },
+  "คลุม": { ipa: "kʰlum", cn: "覆盖" },
+  "ย้อม": { ipa: "jɔ́ɔm", cn: "染（色）" },
+  "ซับ": { ipa: "sáp", cn: "吸收/擦拭" },
+  "ฝ่า": { ipa: "fàa", cn: "突破/违逆/手掌" },
+  "ก่อ": { ipa: "kɔ̀ɔ", cn: "造作/引发" },
+  "แนะ": { ipa: "nɛ́ʔ", cn: "建议/指引" },
+  "แย็บ": { ipa: "jɛ́p", cn: "轻点/刺探" },
+  "ตอบ": { ipa: "tɔ̀ɔp", cn: "回答" },
+  "ตัดสิน": { ipa: "tàt-sǐn", cn: "裁决/判断" },
+  "เกี่ยง": { ipa: "kìaŋ", cn: "推诿/挑剔" },
+  "เหลวไหล": { ipa: "lěew-lǎj", cn: "荒唐/胡闹" },
+  "ล้า": { ipa: "láa", cn: "疲乏" },
+  "ชรา": { ipa: "cʰá-raa", cn: "衰老" },
+  "เนื่อง": { ipa: "nɯ̂aŋ", cn: "由于/连贯" },
+  "ต่อเนื่อง": { ipa: "tɔ̀ɔ-nɯ̂aŋ", cn: "连续不断" },
+  "แอบดู": { ipa: "ʔɛ̀ɛp duu", cn: "偷看/暗中观察" },
+  "เผยแผ่": { ipa: "pʰə̌əj-pʰɛ̀ɛ", cn: "弘扬传播" },
+  "เวจ": { ipa: "wêet", cn: "厕所（古称）" },
+  "กระดิก": { ipa: "krà-dìk", cn: "动弹" },
+  "ยัน": { ipa: "jan", cn: "一直到/支撑" },
+  "ฉวย": { ipa: "cʰǔaj", cn: "趁机抓取" },
+  "สุดขีด": { ipa: "sùt-kʰìit", cn: "到极点" },
+  "เทียบ": { ipa: "tʰîap", cn: "比较/对照" },
+  "เลียนแบบ": { ipa: "lian-bɛ̀ɛp", cn: "模仿" },
+  "เผอิญ": { ipa: "pʰà-ʔəən", cn: "恰巧" },
+  "สาหัส": { ipa: "sǎa-hàt", cn: "极其艰辛/严重" },
+  "สาธารณะ": { ipa: "sǎa-tʰaa-rá-náʔ", cn: "公共的" },
+  "เต็มที่": { ipa: "tem-tʰîi", cn: "彻底/尽情" },
+  "รวด": { ipa: "rûat", cn: "一气呵成" },
+  "นุ่มนวล": { ipa: "nûm-nuan", cn: "柔和温柔" },
+  "หลงลืม": { ipa: "lǒŋ-lɯɯm", cn: "遗忘/失念" },
+  "เฝ้า": { ipa: "fâw", cn: "守候/看守" },
+  "คุม": { ipa: "kʰum", cn: "控制" },
+  "บ่อ": { ipa: "bɔ̀ɔ", cn: "井/池/泉眼" },
+  "กาลทุกเมื่อ": { ipa: "kaan tʰúk mɯ̂a", cn: "一切时/随时", isCore: true },
+  "กาล": { ipa: "kaan", cn: "时间/时节" },
+  "เอ็น": { ipa: "ʔen", cn: "筋腱" },
+  "ขุม": { ipa: "kʰǔm", cn: "坑/层次" },
+  "ปั้นมือ": { ipa: "pân mɯɯ", cn: "捏手/握拳" },
+  "เขก": { ipa: "kʰèek", cn: "敲打" },
+  "แทบ": { ipa: "tʰɛ̂ɛp", cn: "几乎" },
+  "แถว": { ipa: "tʰɛ̌ɛw", cn: "队列/一带" },
+  "เข้าแถว": { ipa: "kʰâw tʰɛ̌ɛw", cn: "排队" },
+  "ปวดเมื่อย": { ipa: "pùat-mɯ̂aj", cn: "酸痛疲乏" },
+  "กระจาย": { ipa: "krà-caaj", cn: "分散/散开" },
+  "เกลี้ยง": { ipa: "klîaŋ", cn: "净尽/彻底" },
+  "ฟู": { ipa: "fuu", cn: "蓬松/轻飘" },
+  "โต่ง": { ipa: "tòoŋ", cn: "极端" },
+  "สุดโต่ง": { ipa: "sùt-tòoŋ", cn: "走极端" },
+  "เฉื่อย": { ipa: "cʰɯ̀aj", cn: "迟钝懒散" },
+  "ขวัญ": { ipa: "kʰwǎn", cn: "魂魄/士气" },
+  "อุ้ม": { ipa: "ʔûm", cn: "抱起" },
+  "กัด": { ipa: "kàt", cn: "咬" },
+  "ลาย": { ipa: "laaj", cn: "花纹/口水" },
+  "น้ำลาย": { ipa: "nám-laaj", cn: "口水" },
+  "หยด": { ipa: "jòt", cn: "滴落" },
+  "ซอย": { ipa: "sɔɔj", cn: "巷子/切碎" },
+  "วิทย์": { ipa: "wít", cn: "理科/科学" },
+  "แฟน": { ipa: "fɛɛn", cn: "恋人/伴侣" },
+  "แขม่วๆ": { ipa: "kʰà-mɛ̀w kʰà-mɛ̀w", cn: "一缩一缩（收腹）" },
+  "ที่ว่าง": { ipa: "tʰîi wâaŋ", cn: "空位/空闲处" },
+  "ไม่มีที่ว่าง": { ipa: "mâj mii tʰîi wâaŋ", cn: "没有空位" },
+  "จอด": { ipa: "cɔ̀ɔt", cn: "停靠（车）" },
+  "กระทบ": { ipa: "krà-tʰóp", cn: "触及/撞击", isCore: true },
+  "มากระทบ": { ipa: "maa krà-tʰóp", cn: "前来触及" },
+  "ทำงานวิจัย": { ipa: "tʰam ŋaan wí-caj", cn: "做研究课题" },
+  "วิจัย": { ipa: "wí-caj", cn: "研究/考察" },
+  "เอกสาร": { ipa: "ʔèek-kà-sǎan", cn: "文件/资料" },
+  "หลอกลวง": { ipa: "lɔ̀ɔk-luaŋ", cn: "欺骗/蒙蔽" },
+  "กลางอก": { ipa: "klaaŋ ʔòk", cn: "胸口正中" },
+  "ทีม": { ipa: "tʰiim", cn: "团队" },
+  "อาบท่า": { ipa: "ʔàap-tʰâa", cn: "（连用）沐浴洗漱" },
+  "อาบ": { ipa: "ʔàap", cn: "沐浴/淋洗" },
+  "ขาด": { ipa: "kʰàat", cn: "缺乏/断绝" },
+  "อบอุ่น": { ipa: "ʔòp-ʔùn", cn: "温暖" },
+  "สดๆ": { ipa: "sòt-sòt", cn: "现场/新鲜地" },
+  "ขรึมๆ": { ipa: "kʰrɯ̌m-kʰrɯ̌m", cn: "沉闷板着脸" },
+  "เงียบๆ": { ipa: "ŋîap-ŋîap", cn: "静静地" },
+  "เค้น": { ipa: "kʰén", cn: "强逼/用力榨取" },
+  "ค้น": { ipa: "kʰón", cn: "搜寻/查阅" },
+  "แบ่ง": { ipa: "bɛ̀ŋ", cn: "分配/划分" },
+  "เลข": { ipa: "lêek", cn: "数字" },
+  "เซ็ง": { ipa: "seŋ", cn: "郁闷/烦闷" },
+  "ชุด": { ipa: "cʰút", cn: "套/衣服" },
+  "สะดวก": { ipa: "sà-dùak", cn: "方便/顺畅" },
+  "ราง": { ipa: "raaŋ", cn: "水槽/导槽" },
+  "ขา": { ipa: "kʰǎa", cn: "腿/脚" },
+  "โล่ง": { ipa: "lôoŋ", cn: "舒畅/开阔" },
+  "กลืน": { ipa: "klɯɯn", cn: "融入/吞咽" },
+  "ญาติๆ": { ipa: "jâat-jâat", cn: "亲戚们" },
+  "ออกค่าย": { ipa: "ʔɔ̀ɔk kʰâaj", cn: "下乡营队" },
+  "ค่าย": { ipa: "kʰâaj", cn: "营地/训练营" },
+  "ชี้แนะ": { ipa: "cʰîi-nɛ́ʔ", cn: "指点开导" },
+  "รวมกัน": { ipa: "ruam kan", cn: "合在一起" },
+  "รองรับ": { ipa: "rɔɔŋ-ráp", cn: "承载/承接" },
+  "ทุกขเวทนา": { ipa: "tʰúk-kʰà-wee-tʰá-naa", cn: "苦受", isCore: true },
+  "เสียบ": { ipa: "sìap", cn: "插入" },
+  "วิปลาส": { ipa: "wí-pà-lâat", cn: "颠倒妄想", isCore: true },
+  "สุภสัญญา": { ipa: "sù-pʰá-sǎn-jaa", cn: "净想（误执不净为净）", isCore: true },
+  "เวทนานุปัสสนา": { ipa: "wee-tʰá-naa-nú-pàt-sà-naa", cn: "受念处（受随观）", isCore: true },
+  "กายา": { ipa: "kaa-jaa", cn: "色身（巴利语身）", isCore: true },
+  "สัจธรรม": { ipa: "sàt-cà-tʰam", cn: "真理/实相法", isCore: true },
+  "ตรัสรู้": { ipa: "tràt-sà-rúu", cn: "觉悟/成正觉", isCore: true },
+  "ดำรง": { ipa: "dam-roŋ", cn: "存续/安住" },
+  "กฎ": { ipa: "kòt", cn: "法则/规律" },
+  "สากล": { ipa: "sǎa-kon", cn: "普世/通用" },
+  "โมง": { ipa: "mooŋ", cn: "点钟" },
+  "เฉลียวใจ": { ipa: "cʰà-lǐaw caj", cn: "灵光一闪/警觉起疑" },
+  "ดีดกีตาร์": { ipa: "dìit kii-tâa", cn: "弹吉他" },
+  "ดีด": { ipa: "dìit", cn: "弹拨/弹起" },
+  "พระอาจารย์": { ipa: "pʰráʔ-ʔaa-caan", cn: "阿姜师父（尊称）", isCore: true },
+  "เครื่องจักร": { ipa: "kʰrɯ̂aŋ-càk", cn: "机器" },
+  "เครื่องกล": { ipa: "kʰrɯ̂aŋ-kon", cn: "机械" },
+  "มหาวิทยาลัย": { ipa: "má-hǎa-wít-tʰá-jaa-laj", cn: "大学" },
+  "ขยันขันแข็ง": { ipa: "kʰà-jǎn-kʰǎn-kʰɛ̌ŋ", cn: "勤奋努力" },
+  "อุปนิสัย": { ipa: "ʔù-pà-ní-sǎj", cn: "习性/禀性", isCore: true },
+  "ลักษณะ": { ipa: "lák-sà-nàʔ", cn: "特征/相状", isCore: true },
+  "พรหม": { ipa: "pʰrom", cn: "梵天", isCore: true },
+  "หมา": { ipa: "mǎa", cn: "狗" },
+  "ตาก": { ipa: "tàak", cn: "晾晒" },
+  "พ่อแม่ครูอาจารย์": { ipa: "pʰɔ̂ɔ-mɛ̂ɛ kʰruu-ʔaa-caan", cn: "大善知识/尊师", isCore: true },
+  "ครูอาจารย์": { ipa: "kʰruu-ʔaa-caan", cn: "师长", isCore: true },
+  "ทั้งปวง": { ipa: "tʰáŋ-puang", cn: "一切/全体" },
+  "โทสจริต": { ipa: "tʰoo-sà-cà-rìt", cn: "嗔行者/易怒性格", isCore: true },
+  "เจ้าความคิด": { ipa: "câaw kʰwaam-kʰít", cn: "好思虑/爱胡思乱想" },
+  "อิน": { ipa: "ʔin", cn: "入戏/投入" },
+  "ทิฏฐิ": { ipa: "tʰít-tʰì", cn: "见解/成见", isCore: true },
+  "ลูกน้อง": { ipa: "lûuk-nɔ́ɔŋ", cn: "下属/部下" },
+  "วนๆ": { ipa: "won-won", cn: "兜圈子/反复打转" },
+  "พอทน": { ipa: "pʰɔɔ tʰon", cn: "尚能忍受" },
+  "ลาออก": { ipa: "laa ʔɔ̀ɔk", cn: "辞职" },
+  "วิชา": { ipa: "wí-cʰaa", cn: "学科/课程" },
+  "ภาคอีสาน": { ipa: "pʰâak ʔii-sǎan", cn: "泰国东北部（依善地区）" },
+  "โดดๆ": { ipa: "dòot-dòot", cn: "孤零零地" },
+  "นิยมชมชอบ": { ipa: "ní-jom cʰom-cʰɔ̂ɔp", cn: "喜爱赞叹" },
+  "ว่องไว": { ipa: "wɔ̂ŋ-waj", cn: "灵敏迅捷" },
+  "เป้าหมาย": { ipa: "pâw-mǎaj", cn: "目标" },
+  "ฝัน": { ipa: "fǎn", cn: "做梦/幻想" },
+  "อ๊า": { ipa: "ʔáa", cn: "阿（人名）" },
+  "โห": { ipa: "hǒo", cn: "哇（惊叹词）" },
+  "เอ๊ย": { ipa: "ʔə́əj", cn: "哎呀（口误更正词）" },
+  "ไฉน": { ipa: "cʰà-nǎj", cn: "为何/岂能" },
+  "ทีไร": { ipa: "tʰii-raj", cn: "每当……之时" },
+  "เมีย": { ipa: "mia", cn: "妻子" },
+  "แก่น": { ipa: "kɛ̀n", cn: "核心/真髓", isCore: true },
+  "รอย": { ipa: "rɔɔj", cn: "痕迹/足迹" },
+  "ควบ": { ipa: "kʰûap", cn: "并驾齐驱/合修" },
+  "จิตตานุปัสสนา": { ipa: "cìt-taa-nú-pàt-sà-naa", cn: "心念处（观心无常）", isCore: true, root: "巴利语 Cittānupassanā" },
+  "ธัมมานุปัสสนา": { ipa: "tʰam-maa-nú-pàt-sà-naa", cn: "法念处（观法无我）", isCore: true, root: "巴利语 Dhammānupassanā" },
+  "เบื้องหลัง": { ipa: "bɯ̂aŋ-lǎŋ", cn: "背后/潜藏在后方" },
+  "มือ": { ipa: "mɯɯ", cn: "手" },
+  "นาย": { ipa: "naaj", cn: "上司/老板/先生" },
+  "นะ": { ipa: "náʔ", cn: "呀/呢（柔和语气词）" },
+  "ทีวี": { ipa: "tʰii-wii", cn: "电视机" },
+  "คอมพ์ฯ": { ipa: "kʰɔɔm", cn: "电脑（简称）" },
+  "มูลนิธิฯ": { ipa: "muun-lá-ní-tʰí", cn: "基金会（简称）" },
+  "เอ": { ipa: "ʔee", cn: "甲等/A级" },
+  "ม.ศ.": { ipa: "mɔɔ-sɔ̌ɔ", cn: "泰国旧制中学（M.S.）" },
+  "ป.": { ipa: "pɔɔ", cn: "小学年级（P.）" },
+  "รวม": { ipa: "ruam", cn: "聚集/汇聚/凝聚", isCore: true },
+  "มารวม": { ipa: "maa ruam", cn: "汇聚到一起", isCore: true },
+  "จงกรม": { ipa: "coŋ-krom", cn: "经行（行走禅修）", isCore: true },
+  "กลางวัน": { ipa: "klaaŋ-wan", cn: "白天/日间" },
+  "ฟุ้งซ่าน": { ipa: "fúŋ-sâan", cn: "散乱/妄念纷飞", isCore: true },
+  "ปล่อย": { ipa: "plɔ̀j", cn: "放任/任由/放下" },
+  "รอด": { ipa: "rɔ̂ɔt", cn: "过关/幸免/得以解脱" },
+  "เย็น": { ipa: "jen", cn: "傍晚/清凉" },
+  "ค่ำ": { ipa: "kʰâm", cn: "夜晚/黄昏" },
+  "สวยๆ": { ipa: "sǔaj-sǔaj", cn: "漂漂亮亮地" },
+  "กว้างๆ": { ipa: "kwâaŋ-kwâaŋ", cn: "宽广开阔地" },
+  "ยากๆ": { ipa: "jâak-jâak", cn: "很艰难的事" },
+  "หลังๆ": { ipa: "lǎŋ-lǎŋ", cn: "后来/后期" },
+  "หนักๆ": { ipa: "nàk-nàk", cn: "沉重地/严重地" },
+  "ปีๆ": { ipa: "pii-pii", cn: "一年又一年" },
+  "ชัดๆ": { ipa: "cʰát-cʰát", cn: "清清楚楚地" },
+  "รู้ไปๆ": { ipa: "rúu paj-paj", cn: "持续觉知下去" },
+  "สั้นลง": { ipa: "sân loŋ", cn: "变得更短暂", isCore: true },
+  "เร็วขึ้น": { ipa: "rew kʰɯ̂n", cn: "变得更加敏锐迅捷", isCore: true },
+  "อะไรๆ": { ipa: "ʔà-raj ʔà-raj", cn: "种种一切事物" },
+  "สมัย": { ipa: "sà-mǎj", cn: "时期/年代" },
+  "หัวหน้า": { ipa: "hǔa-nâa", cn: "主管/上司" },
+  "เคร่งเครียด": { ipa: "kʰrêŋ-kʰrîat", cn: "严谨紧张/一丝不苟" },
+  "น่าสงสาร": { ipa: "nâa sǒŋ-sǎan", cn: "令人怜悯/值得同情" },
+  "น่าเกลียด": { ipa: "nâa klìat", cn: "难看/不雅" },
+  "ชั่วร้าย": { ipa: "cʰûa-ráaj", cn: "邪恶坏人" },
+  "มั่นใจ": { ipa: "mân-caj", cn: "自信/有把握" },
+  "ไปเรื่อย": { ipa: "paj rɯ̂aj", cn: "一直持续下去" },
+  "แก้งาน": { ipa: "kɛ̂ɛ ŋaan", cn: "修改工作文稿" },
+  "จนกระทั่ง": { ipa: "con-krà-tʰâŋ", cn: "直到/以至于" },
+  "เหนื่อย": { ipa: "nɯ̀aj", cn: "疲惫/累" },
+  "โมโห": { ipa: "moo-hǒo", cn: "发脾气/恼火" },
+  "ห้อง": { ipa: "hɔ̂ŋ", cn: "房间/办公室" },
+  "ขวัญอ่อน": { ipa: "kʰwǎn ʔɔ̀ɔn", cn: "胆小易受惊" },
+  "ยาย": { ipa: "jaaj", cn: "老太太/大姐（口语）" },
+  "ผุด": { ipa: "pʰùt", cn: "涌现/冒出来" },
+  "ยุ่ง": { ipa: "jûŋ", cn: "纠缠/麻烦/忙碌" },
+  "เก่ง": { ipa: "kèŋ", cn: "能干/擅长" },
+  "รัก": { ipa: "rák", cn: "喜爱/爱" },
+  "โอ๊ย": { ipa: "ʔóoj", cn: "哎呀/天哪" },
+  "หงุดหงิด": { ipa: "ŋùt-ŋìt", cn: "烦躁/心烦" },
+  "ช่วงเวลา": { ipa: "cʰûaŋ wee-laa", cn: "时段/时间段" },
+  "นรก": { ipa: "ná-rók", cn: "地狱", isCore: true },
+  "เรื่อย": { ipa: "rɯ̂aj", cn: "不断/接连" },
+  "ทั้งวัน": { ipa: "tʰáŋ wan", cn: "一整天" },
+  "ตอนเย็น": { ipa: "tɔɔn jen", cn: "傍晚时分" },
+  "ตอนค่ำ": { ipa: "tɔɔn kʰâm", cn: "夜晚时分" },
+  "อ่อน": { ipa: "ʔɔ̀ɔn", cn: "虚弱/柔软" },
+  "ติดกัน": { ipa: "tìt kan", cn: "相邻/连续" },
+  "เหมือนกัน": { ipa: "mɯ̌an-kan", cn: "同样/一样" },
+  "น่า": { ipa: "nâa", cn: "值得/令人……" },
+  "ร้าย": { ipa: "ráaj", cn: "凶恶/糟糕" },
+  "แก้": { ipa: "kɛ̂ɛ", cn: "修改/化解/对治" },
+  "งาน": { ipa: "ŋaan", cn: "工作/事务" },
+  "เคย": { ipa: "kʰəəj", cn: "曾经" },
+  "เดิม": { ipa: "dəəm", cn: "原本/以前" },
+  "เลือก": { ipa: "lɯ̂ak", cn: "选择" },
+  "วันจันทร์": { ipa: "wan can", cn: "星期一" },
+  "ติด": { ipa: "tìt", cn: "紧邻/执着/堵塞" },
+  "รอ": { ipa: "rɔɔ", cn: "等待" },
+  "จริงจัง": { ipa: "ciŋ-caŋ", cn: "认真严肃" },
+  "เดินจงกรม": { ipa: "dəən coŋ-krom", cn: "经行禅修", isCore: true },
+  "นิกาย": { ipa: "ní-kaaj", cn: "宗派/部派", isCore: true },
+  "เซน": { ipa: "seen", cn: "禅宗", isCore: true },
+  "นิกายเซน": { ipa: "ní-kaaj seen", cn: "禅宗", isCore: true }
 };
 
 // 通用朱拉隆功音标规则推导引擎 (Algorithmic Chulalongkorn IPA System)
 export function transliterateThaiSyllableToChulaIPA(thai: string): string {
-  const clean = thai.trim();
-  if (!clean) return "";
+  const rawClean = thai.trim();
+  if (!rawClean) return "";
 
+  if (CHULA_IPA_DICTIONARY[rawClean]) return CHULA_IPA_DICTIONARY[rawClean].ipa;
+
+  // 处理数字与重叠号 ๆ
+  if (/^[0-9.,\-–—]+$/.test(rawClean)) return rawClean;
+  if (rawClean.endsWith('ๆ')) {
+    const base = rawClean.slice(0, -1).trim();
+    if (!base) return "";
+    const baseIpa = transliterateThaiSyllableToChulaIPA(base);
+    return baseIpa ? `${baseIpa} ${baseIpa}` : "";
+  }
+
+  // 剥离末尾不发音的 ์（如 คอมพ์ -> คอม）
+  const clean = rawClean
+    .replace(/[ก-ฮ][ัิีึืุู]?์/g, '')
+    .replace(/[์ฯ“”"'\(\)\[\],.!?…]/g, '')
+    .trim();
+  if (!clean) return "";
   if (CHULA_IPA_DICTIONARY[clean]) return CHULA_IPA_DICTIONARY[clean].ipa;
 
   const consonants: Record<string, { sound: string; class: 'mid' | 'high' | 'low' }> = {
@@ -700,26 +1261,46 @@ export function transliterateThaiSyllableToChulaIPA(thai: string): string {
     'ว': 'w'
   };
 
+  // 先跳过前置元音 เ แ โ ใ ไ 来定位声母位置
+  const leadingVowel = /^[เแโใไ]/.test(clean) ? clean[0] : '';
+  const consBody = leadingVowel ? clean.slice(1) : clean;
+
   let initial = "";
   let initialClass: 'mid' | 'high' | 'low' = "mid";
+  let initialLen = 0;
 
-  if (clean.startsWith('ห') && clean.length > 1 && consonants[clean[1]] && consonants[clean[1]].class === 'low') {
-    initial = consonants[clean[1]].sound;
+  if (consBody.startsWith('ห') && consBody.length > 1 && consonants[consBody[1]] && consonants[consBody[1]].class === 'low') {
+    initial = consonants[consBody[1]].sound;
     initialClass = 'high';
-  } else if (clean.startsWith('อ') && clean[1] === 'ย') {
+    initialLen = 2;
+  } else if (consBody.startsWith('อ') && consBody[1] === 'ย') {
     initial = 'j';
     initialClass = 'mid';
-  } else {
-    const firstCh = clean[0];
-    const secondCh = clean[1];
-    if (consonants[firstCh]) {
-      if ((secondCh === 'ร' || secondCh === 'ล' || secondCh === 'ว') && clean.length > 2) {
-        initial = consonants[firstCh].sound + secondCh;
-        initialClass = consonants[firstCh].class;
-      } else {
-        initial = consonants[firstCh].sound;
-        initialClass = consonants[firstCh].class;
-      }
+    initialLen = 2;
+  } else if (consBody.startsWith('ทร')) {
+    initial = 's';
+    initialClass = 'low';
+    initialLen = 2;
+  } else if (/^[สศซจ]ร/.test(consBody)) {
+    initial = consonants[consBody[0]].sound;
+    initialClass = consonants[consBody[0]].class;
+    initialLen = 2;
+  } else if (consBody.length > 0 && consonants[consBody[0]]) {
+    const firstCh = consBody[0];
+    const secondCh = consBody[1];
+    const clusterOk =
+      (secondCh === 'ร' || secondCh === 'ล' || secondCh === 'ว') &&
+      /^[กขคตปผพ]/.test(firstCh) &&
+      consBody.length > 2;
+    if (clusterOk) {
+      const secRoman = secondCh === 'ร' ? 'r' : secondCh === 'ล' ? 'l' : 'w';
+      initial = consonants[firstCh].sound + secRoman;
+      initialClass = consonants[firstCh].class;
+      initialLen = 2;
+    } else {
+      initial = consonants[firstCh].sound;
+      initialClass = consonants[firstCh].class;
+      initialLen = 1;
     }
   }
 
@@ -729,40 +1310,71 @@ export function transliterateThaiSyllableToChulaIPA(thai: string): string {
   else if (clean.includes('๊')) toneMark = 3;
   else if (clean.includes('๋')) toneMark = 4;
 
+  // 去掉声调符号与声母后再识别韵母和韵尾
+  const afterInitial = consBody.slice(initialLen).replace(/[่้๊๋]/g, '');
+
   let vowel = "a";
   let isDead = false;
   let finalSound = "";
 
-  if (clean.includes('าย')) { vowel = "aaj"; }
-  else if (clean.includes('า')) { vowel = "aa"; }
-  else if (clean.includes('ิ')) { vowel = "i"; isDead = true; }
-  else if (clean.includes('ี')) { vowel = "ii"; }
-  else if (clean.includes('ึ')) { vowel = "ɯ"; isDead = true; }
-  else if (clean.includes('ือ') || clean.includes('ื')) { vowel = "ɯɯ"; }
-  else if (clean.includes('ุ')) { vowel = "u"; isDead = true; }
-  else if (clean.includes('ู')) { vowel = "uu"; }
-  else if (clean.startsWith('เ') && clean.includes('าะ')) { vowel = "ɔ"; isDead = true; }
-  else if (clean.startsWith('เ') && clean.includes('ีย')) { vowel = "ia"; }
-  else if (clean.startsWith('เ') && clean.includes('ือ')) { vowel = "ɯa"; }
-  else if (clean.startsWith('เ') && clean.includes('อ')) { vowel = "əə"; }
-  else if (clean.startsWith('เ')) { vowel = "ee"; }
-  else if (clean.startsWith('แ')) { vowel = "ɛɛ"; }
-  else if (clean.startsWith('โ')) { vowel = "oo"; }
-  else if (clean.startsWith('ใ') || clean.startsWith('ไ') || clean.includes('ัย')) { vowel = "aj"; }
-  else if (clean.startsWith('เ') && clean.includes('า')) { vowel = "aw"; }
-  else if (clean.includes('ำ')) { vowel = "am"; }
-  else if (clean.includes('ัว') || clean.includes('ว')) { vowel = "ua"; }
-  else if (clean.includes('ะ')) { vowel = "aʔ"; isDead = true; }
-  else if (clean.includes('ั')) { vowel = "a"; isDead = true; }
-  else if (clean.includes('็')) { vowel = "e"; isDead = true; }
-  else if (clean.includes('ฤๅ')) { vowel = "rɯɯ"; }
-  else if (clean.includes('ฤ')) { vowel = "rɯ"; }
+  if (leadingVowel === 'เ') {
+    if (afterInitial.includes('ียะ')) { vowel = "iaʔ"; isDead = true; }
+    else if (afterInitial.includes('ีย')) { vowel = "ia"; }
+    else if (afterInitial.includes('ือะ')) { vowel = "ɯaʔ"; isDead = true; }
+    else if (afterInitial.includes('ือ')) { vowel = "ɯa"; }
+    else if (afterInitial.includes('าะ')) { vowel = "ɔʔ"; isDead = true; }
+    else if (afterInitial.includes('า')) { vowel = "aw"; }
+    else if (afterInitial.includes('อะ')) { vowel = "əʔ"; isDead = true; }
+    else if (afterInitial.includes('อ')) { vowel = "əə"; }
+    else if (afterInitial.includes('ิ')) { vowel = "əə"; }
+    else if (afterInitial.includes('็')) { vowel = "e"; isDead = true; }
+    else if (afterInitial.includes('ะ')) { vowel = "eʔ"; isDead = true; }
+    else { vowel = "ee"; }
+  } else if (leadingVowel === 'แ') {
+    if (afterInitial.includes('็')) { vowel = "ɛ"; isDead = true; }
+    else if (afterInitial.includes('ะ')) { vowel = "ɛʔ"; isDead = true; }
+    else { vowel = "ɛɛ"; }
+  } else if (leadingVowel === 'โ') {
+    if (afterInitial.includes('ะ')) { vowel = "oʔ"; isDead = true; }
+    else { vowel = "oo"; }
+  } else if (leadingVowel === 'ใ' || leadingVowel === 'ไ') {
+    vowel = "aj";
+  } else if (afterInitial.includes('าย')) { vowel = "aaj"; }
+  else if (afterInitial.includes('า')) { vowel = "aa"; }
+  else if (afterInitial.includes('ิ')) { vowel = "i"; isDead = true; }
+  else if (afterInitial.includes('ี')) { vowel = "ii"; }
+  else if (afterInitial.includes('ึ')) { vowel = "ɯ"; isDead = true; }
+  else if (afterInitial.includes('ื')) { vowel = "ɯɯ"; }
+  else if (afterInitial.includes('ุ')) { vowel = "u"; isDead = true; }
+  else if (afterInitial.includes('ู')) { vowel = "uu"; }
+  else if (afterInitial.includes('ำ')) { vowel = "am"; }
+  else if (afterInitial.includes('ัว')) { vowel = "ua"; }
+  else if (afterInitial.includes('ั') && afterInitial.includes('ย')) { vowel = "aj"; }
+  else if (afterInitial.includes('ั')) { vowel = "a"; isDead = true; }
+  else if (afterInitial.includes('ะ')) { vowel = "aʔ"; isDead = true; }
+  else if (afterInitial.includes('็')) { vowel = "ɔ"; isDead = true; }
+  else if (afterInitial.includes('ฤๅ')) { vowel = "rɯɯ"; }
+  else if (afterInitial.includes('ฤ')) { vowel = "rɯ"; }
+  else if (afterInitial.includes('อ')) { vowel = "ɔɔ"; }
+  else if (afterInitial.includes('ว') && afterInitial.length >= 2) { vowel = "ua"; }
   else {
     vowel = "o";
   }
 
-  const lastCh = clean[clean.length - 1];
-  if (lastCh !== '์' && lastCh !== 'ะ' && lastCh !== 'า' && lastCh !== 'อ' && finalMap[lastCh]) {
+  const cleanNoMarks = clean.replace(/[่้๊๋]/g, '');
+  const lastCh = cleanNoMarks[cleanNoMarks.length - 1];
+  const vowelEndsWithDiphthong =
+    vowel === 'aaj' || vowel === 'aj' || vowel === 'aw' || vowel === 'am';
+  if (
+    !vowelEndsWithDiphthong &&
+    lastCh &&
+    lastCh !== 'ะ' &&
+    lastCh !== 'า' &&
+    lastCh !== 'อ' &&
+    !(lastCh === 'ย' && (vowel === 'ia' || vowel === 'iaʔ')) &&
+    !(lastCh === 'ว' && vowel === 'ua') &&
+    finalMap[lastCh]
+  ) {
     finalSound = finalMap[lastCh];
     if (finalSound === 'k' || finalSound === 't' || finalSound === 'p') {
       isDead = true;
@@ -773,22 +1385,18 @@ export function transliterateThaiSyllableToChulaIPA(thai: string): string {
 
   let tone = 1;
   if (toneMark === 1) {
-    if (initialClass === 'low') tone = 3;
-    else tone = 2;
+    tone = initialClass === 'low' ? 3 : 2;
   } else if (toneMark === 2) {
-    if (initialClass === 'low') tone = 4;
-    else tone = 3;
+    tone = initialClass === 'low' ? 4 : 3;
   } else if (toneMark === 3) {
     tone = 4;
   } else if (toneMark === 4) {
     tone = 5;
   } else {
     if (isDead) {
-      if (initialClass === 'low') tone = 4;
-      else tone = 2;
+      tone = initialClass === 'low' ? 4 : 2;
     } else {
-      if (initialClass === 'high') tone = 5;
-      else tone = 1;
+      tone = initialClass === 'high' ? 5 : 1;
     }
   }
 

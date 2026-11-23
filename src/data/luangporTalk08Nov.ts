@@ -1,9 +1,9 @@
-// 2026年11月08日 隆波帕默尊者开示《สมาธิที่เห็นไตรลักษณ์ได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 8 พ.ย. 2569》
+// 2026年11月08日隆波帕默尊者网络直播（中文同声翻译）｜ สมาธิที่เห็นไตรลักษณ์ได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 8 พ.ย. 2569
 // 官方 1,179 句全篇高清转译数据集：含朱拉隆功大学标准 Adapted IPA 五声调音标、逐词细粒度拆词及时间戳
-import { SubtitleLine } from '../types';
+import { SubtitleLine } from "../types";
 
 export const LUANGPOR_NOV_08_TALK_TITLE = "สมาธิที่เห็นไตรลักษณ์ได้ :: หลวงปู่ปราโมทย์ ปาโมชฺโช 8 พ.ย. 2569";
-export const LUANGPOR_NOV_08_TALK_ZH_TITLE = "2026年11月08日 隆波帕默尊者：能见到三法印的禅定";
+export const LUANGPOR_NOV_08_TALK_ZH_TITLE = "2026年11月08日隆波帕默尊者网络直播（中文同声翻译）";
 
 export const LUANGPOR_NOV_08_KEY_TERMS = [
   {
@@ -18635,7 +18635,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "正在",
         "isCore": false
       },
       {
@@ -30429,7 +30429,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_1",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {
@@ -32014,7 +32014,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
     "secondsEnd": 1684,
     "thai": "ให้มันเศร้าดับเบิล",
     "romanization": "hâj man sâw dàp-bə̂n",
-    "chinese": "让那种悲伤加倍（double）——",
+    "chinese": "让那种悲伤加倍——",
     "words": [
       {
         "id": "tok_0",
@@ -35528,7 +35528,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "正在",
         "isCore": false
       },
       {
@@ -35542,7 +35542,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {
@@ -35582,7 +35582,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_2",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "正在",
         "isCore": false
       },
       {
@@ -35596,7 +35596,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {
@@ -36014,7 +36014,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "正在",
         "isCore": false
       },
       {
@@ -55406,7 +55406,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_4",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {
@@ -58846,9 +58846,9 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
   },
   {
     "id": 1006,
-    "timeStart": "50:35",
+    "timeStart": "50:36",
     "timeEnd": "50:38",
-    "secondsStart": 3035,
+    "secondsStart": 3036,
     "secondsEnd": 3038,
     "thai": "คล้ายๆ เราปีนขึ้นไปอยู่บนหอคอย",
     "romanization": "kʰláaj kʰláaj raw piin kʰɯ̂n paj jùu bon hɔ̌ɔ-kʰɔɔj",
@@ -63851,7 +63851,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {
@@ -67439,7 +67439,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_5",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "正在",
         "isCore": false
       },
       {
@@ -67453,7 +67453,7 @@ export const LUANGPOR_NOV_08_SUBTITLES: SubtitleLine[] = [
         "id": "tok_7",
         "thai": "กำลัง",
         "romanization": "kam-laŋ",
-        "chinese": "力量/正在",
+        "chinese": "力量/定力",
         "isCore": false
       },
       {

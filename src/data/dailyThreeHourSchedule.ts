@@ -11,7 +11,7 @@ export interface DailyPracticeSession {
   periodLabel: string;       // e.g. "早课" | "午前" | "晚课"
   rawTitle: string;          // 课表原始法谈标题
   dateStr: string;           // YYYY-MM-DD 用于自动匹配站内 2025/2026/视频库
-  talkDateDisplay: string;   // 课表展示的开示日期，如 "2026.05.09" / "2018/2/10"
+  talkDateDisplay: string;   // 课表展示的开示日期，如 "2026.05.07" / "2020/12/26"
   sessionSuffix?: 'A' | 'B';
   sequenceNote?: string;     // 如 "第1场" / "第2场"
   isLiveBroadcast?: boolean; // 周六/周日 10:00 实时开示直播
@@ -19,9 +19,9 @@ export interface DailyPracticeSession {
 }
 
 export interface DailyPracticeDay {
-  dayIndex: number;          // 1949..1955
+  dayIndex: number;          // 1956..1962
   date: string;              // YYYY-MM-DD (当周日期)
-  dateDisplay: string;       // "11月16日"
+  dateDisplay: string;       // "11月23日"
   weekdayLabel: string;      // "星期一"
   sessions: DailyPracticeSession[];
 }
@@ -52,252 +52,240 @@ export interface ResolvedSessionResources {
 }
 
 export const CURRENT_THREE_HOUR_SCHEDULE: WeeklyPracticeSchedule = {
-  weekId: '2026-11-16_11-22',
+  weekId: '2026-11-23_11-29',
   title: '日常 3 小时共修 · Zoom 播放课表',
-  weekRangeLabel: '2026.11.16 – 11.22',
+  weekRangeLabel: '2026.11.23 – 11.29',
   zoomId: '8337654321',
   zoomPasscode: '123456',
   zoomJoinUrl: 'https://zoom.us/j/8337654321',
-  posterImageUrl: '/assets/aistudio/mmexport1795144103332_52935f8e.jpg',
+  posterImageUrl: '/assets/aistudio/mmexport1795344595252_a97f8fba.jpg',
   days: [
     {
-      dayIndex: 1949,
-      date: '2026-11-16',
-      dateDisplay: '11月16日',
+      dayIndex: 1956,
+      date: '2026-11-23',
+      dateDisplay: '11月23日',
       weekdayLabel: '星期一',
       sessions: [
         {
-          id: 'd1949_0620',
+          id: 'd1956_0620',
           timeSlot: '06:20',
           periodLabel: '早课',
-          rawTitle: '2026.05.09 隆波帕默尊者直播',
-          dateStr: '2026-05-09',
-          talkDateDisplay: '2026.05.09',
-          searchQueryHint: '2026年5月9日 隆波帕默尊者',
+          rawTitle: '2026.05.07 阿姜给尊者开示（上）',
+          dateStr: '2026-05-07',
+          talkDateDisplay: '2026.05.07',
+          searchQueryHint: '阿姜给尊者 2026.05.07 开示',
         },
         {
-          id: 'd1949_1000',
+          id: 'd1956_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '《一心》——隆波帕默尊者',
-          dateStr: '2018-02-10',
-          talkDateDisplay: '2018/2/10',
-          searchQueryHint: '一心 2018年2月10日 隆波帕默',
+          rawTitle: '《辨识不出自身的烦恼，修行就无法进步》——隆波帕默尊者',
+          dateStr: '2019-08-03',
+          talkDateDisplay: '2019年8月3日A',
+          sessionSuffix: 'A',
+          searchQueryHint: '辨识不出自身的烦恼 2019年8月3日 隆波帕默',
         },
         {
-          id: 'd1949_2000',
+          id: 'd1956_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《四种执着》——隆波帕默尊者',
-          dateStr: '2025-06-07',
-          talkDateDisplay: '2025年06月07日',
-          searchQueryHint: '四种执着 2025年6月7日 隆波帕默',
+          rawTitle: '《隆波帕默尊者开示》——隆波帕默尊者',
+          dateStr: '2025-06-28',
+          talkDateDisplay: '2025年06月28日',
+          searchQueryHint: '连鬼都怕三法印 2025年6月28日 隆波帕默',
         },
       ],
     },
     {
-      dayIndex: 1950,
-      date: '2026-11-17',
-      dateDisplay: '11月17日',
+      dayIndex: 1957,
+      date: '2026-11-24',
+      dateDisplay: '11月24日',
       weekdayLabel: '星期二',
       sessions: [
         {
-          id: 'd1950_0620',
+          id: 'd1957_0620',
           timeSlot: '06:20',
           periodLabel: '早课',
-          rawTitle: '2026.05.10 隆波帕默尊者直播',
-          dateStr: '2026-05-10',
-          talkDateDisplay: '2026.05.10',
-          searchQueryHint: '2026年5月10日 隆波帕默尊者',
+          rawTitle: '2026.05.07 阿姜给尊者开示（下）',
+          dateStr: '2026-05-07',
+          talkDateDisplay: '2026.05.07',
+          searchQueryHint: '阿姜给尊者 2026.05.07 开示',
         },
         {
-          id: 'd1950_1000',
+          id: 'd1957_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '《四圣谛》——隆波帕默尊者',
-          dateStr: '2018-06-16',
-          talkDateDisplay: '2018年6月16日A',
-          sessionSuffix: 'A',
-          searchQueryHint: '四圣谛 2018年6月16日 隆波帕默',
+          rawTitle: '《心安住是工具，心宁静是力量》——隆波帕默尊者',
+          dateStr: '2020-12-26',
+          talkDateDisplay: '2020/12/26',
+          searchQueryHint: '心安住是工具 心宁静是力量 2020年12月26日',
         },
         {
-          id: 'd1950_2000',
+          id: 'd1957_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《万般带不走，唯有业随身》——隆波帕默尊者',
-          dateStr: '2025-06-08',
-          talkDateDisplay: '2025年06月08日',
-          searchQueryHint: '万般带不走，唯有业随身 2025年6月8日',
+          rawTitle: '《求功德享世间乐，悟善法破生死链》——隆波帕默尊者',
+          dateStr: '2025-06-29',
+          talkDateDisplay: '2025年06月29日',
+          searchQueryHint: '求功德享世间乐 悟善法破生死链 2025年6月29日',
         },
       ],
     },
     {
-      dayIndex: 1951,
-      date: '2026-11-18',
-      dateDisplay: '11月18日',
+      dayIndex: 1958,
+      date: '2026-11-25',
+      dateDisplay: '11月25日',
       weekdayLabel: '星期三',
       sessions: [
         {
-          id: 'd1951_0620',
+          id: 'd1958_0620',
           timeSlot: '06:20',
           periodLabel: '早课',
-          rawTitle: '2026.05.16 隆波帕默尊者直播',
-          dateStr: '2026-05-16',
-          talkDateDisplay: '2026.05.16',
-          searchQueryHint: '2026年5月16日 隆波帕默尊者',
+          rawTitle: '2026.05.07 阿姜纳开示（上）',
+          dateStr: '2026-05-07',
+          talkDateDisplay: '2026.05.07',
+          searchQueryHint: '阿姜纳 2026.05.07 开示',
         },
         {
-          id: 'd1951_1000',
+          id: 'd1958_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '《心是自生，亦或上帝创造的？》——隆波帕默尊者',
-          dateStr: '2019-02-16',
-          talkDateDisplay: '2019/2/16',
-          searchQueryHint: '心是自生 2019年2月16日 隆波帕默',
+          rawTitle: '《训练减少自己的自私》——隆波帕默尊者',
+          dateStr: '2021-01-24',
+          talkDateDisplay: '2021/1/24',
+          searchQueryHint: '训练减少自己的自私 2021年1月24日',
         },
         {
-          id: 'd1951_2000',
+          id: 'd1958_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《功德应如何做》——隆波帕默尊者',
-          dateStr: '2025-06-14',
-          talkDateDisplay: '2025年06月14日',
-          searchQueryHint: '功德应如何做 2025年6月14日',
+          rawTitle: '《戒定慧的要点》——隆波帕默尊者',
+          dateStr: '2025-07-05',
+          talkDateDisplay: '2025年07月05日',
+          searchQueryHint: '戒定慧的要点 2025年7月5日 隆波帕默',
         },
       ],
     },
     {
-      dayIndex: 1952,
-      date: '2026-11-19',
-      dateDisplay: '11月19日',
+      dayIndex: 1959,
+      date: '2026-11-26',
+      dateDisplay: '11月26日',
       weekdayLabel: '星期四',
       sessions: [
         {
-          id: 'd1952_0620',
+          id: 'd1959_0620',
           timeSlot: '06:20',
           periodLabel: '早课',
-          rawTitle: '2026.05.17 隆波帕默尊者直播',
-          dateStr: '2026-05-17',
-          talkDateDisplay: '2026.05.17',
-          searchQueryHint: '2026年5月17日 隆波帕默尊者',
+          rawTitle: '2026.05.07 阿姜纳开示（下）',
+          dateStr: '2026-05-07',
+          talkDateDisplay: '2026.05.07',
+          searchQueryHint: '阿姜纳 2026.05.07 开示',
         },
         {
-          id: 'd1952_1000',
+          id: 'd1959_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '《生活中遇到问题，就会看到修行的好处》——隆波帕默尊者',
-          dateStr: '2019-06-15',
-          talkDateDisplay: '2019/6/15',
-          searchQueryHint: '生活中遇到问题 2019年6月15日 隆波帕默',
+          rawTitle: '《自己的身心就是道场》——隆波帕默尊者',
+          dateStr: '2021-04-30',
+          talkDateDisplay: '2021/4/30',
+          searchQueryHint: '自己的身心就是道场 2021年4月30日',
         },
         {
-          id: 'd1952_2000',
+          id: 'd1959_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《修习念处直至摆脱诸苦》——隆波帕默尊者',
-          dateStr: '2025-06-15',
-          talkDateDisplay: '2025年06月15日',
-          searchQueryHint: '修习念处直至摆脱诸苦 2025年6月15日',
+          rawTitle: '《每天前进一步也很好》——隆波帕默尊者',
+          dateStr: '2025-07-06',
+          talkDateDisplay: '2025年07月06日',
+          searchQueryHint: '每天前进一步也很好 2025年7月6日',
         },
       ],
     },
     {
-      dayIndex: 1953,
-      date: '2026-11-20',
-      dateDisplay: '11月20日',
+      dayIndex: 1960,
+      date: '2026-11-27',
+      dateDisplay: '11月27日',
       weekdayLabel: '星期五',
       sessions: [
         {
-          id: 'd1953_0620',
+          id: 'd1960_0620',
           timeSlot: '06:20',
           periodLabel: '早课',
-          rawTitle: '2026.05.23 隆波帕默尊者直播',
-          dateStr: '2026-05-23',
-          talkDateDisplay: '2026.05.23',
-          searchQueryHint: '2026年5月23日 隆波帕默尊者',
+          rawTitle: '2026.05.07 阿姜妮开示（上）',
+          dateStr: '2026-05-07',
+          talkDateDisplay: '2026.05.07',
+          searchQueryHint: '阿姜妮 2026.05.07 开示',
         },
         {
-          id: 'd1953_1000',
+          id: 'd1960_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '《修行中的陷阱》——隆波帕默尊者',
-          dateStr: '2019-06-30',
-          talkDateDisplay: '2019/6/30',
-          searchQueryHint: '修行中的陷阱 2019年6月30日 隆波帕默',
+          rawTitle: '《你信吗？看破世间的方式居然是向内自我探索》——隆波帕默尊者',
+          dateStr: '2021-08-28',
+          talkDateDisplay: '2021/8/28',
+          searchQueryHint: '你信吗 看破世间的方式 2021年8月28日',
         },
         {
-          id: 'd1953_2000_1',
+          id: 'd1960_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          sequenceNote: '1)',
-          rawTitle: '《空顶师名，不行师道：皆是投机客》——隆波帕默尊者',
-          dateStr: '2025-06-20',
-          talkDateDisplay: '2025年06月20日',
-          searchQueryHint: '空顶师名，不行师道 2025年6月20日',
-        },
-        {
-          id: 'd1953_2000_2',
-          timeSlot: '20:00',
-          periodLabel: '晚课',
-          sequenceNote: '2)',
-          rawTitle: '《杯中冷暖，心间自知》——隆波帕默尊者',
-          dateStr: '2025-08-01',
-          talkDateDisplay: '2025年08月01日',
-          searchQueryHint: '杯中冷暖，心间自知 2025年8月1日',
+          rawTitle: '《以实修呵护佛教》——隆波帕默尊者',
+          dateStr: '2025-07-10',
+          talkDateDisplay: '2025年07月10日',
+          sessionSuffix: 'A',
+          searchQueryHint: '以实修呵护佛教 2025年7月10日',
         },
       ],
     },
     {
-      dayIndex: 1954,
-      date: '2026-11-21',
-      dateDisplay: '11月21日',
+      dayIndex: 1961,
+      date: '2026-11-28',
+      dateDisplay: '11月28日',
       weekdayLabel: '星期六',
       sessions: [
         {
-          id: 'd1954_1000',
+          id: 'd1961_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '隆波帕默尊者开示直播',
-          dateStr: '2026-11-21',
-          talkDateDisplay: '2026.11.21 直播',
-          isLiveBroadcast: true,
-          searchQueryHint: '2026年11月21日 隆波帕默尊者',
+          rawTitle: '《中道的“中”》——隆波帕默尊者',
+          dateStr: '2021-08-29',
+          talkDateDisplay: '2021/8/29',
+          searchQueryHint: '中道的中 2021年8月29日 隆波帕默',
         },
         {
-          id: 'd1954_2000',
+          id: 'd1961_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《分离名色进而照见实相》——隆波帕默尊者',
-          dateStr: '2025-06-21',
-          talkDateDisplay: '2025年06月21日',
-          searchQueryHint: '分离名色进而照见实相 2025年6月21日',
+          rawTitle: '《如何呵护好佛教》——隆波帕默尊者',
+          dateStr: '2025-07-12',
+          talkDateDisplay: '2025年07月12日',
+          searchQueryHint: '如何呵护好佛教 2025年7月12日',
         },
       ],
     },
     {
-      dayIndex: 1955,
-      date: '2026-11-22',
-      dateDisplay: '11月22日',
+      dayIndex: 1962,
+      date: '2026-11-29',
+      dateDisplay: '11月29日',
       weekdayLabel: '星期日',
       sessions: [
         {
-          id: 'd1955_1000',
+          id: 'd1962_1000',
           timeSlot: '10:00',
           periodLabel: '午前',
-          rawTitle: '隆波帕默尊者开示直播',
-          dateStr: '2026-11-22',
-          talkDateDisplay: '2026.11.22 直播',
-          isLiveBroadcast: true,
-          searchQueryHint: '2026年11月22日 隆波帕默尊者',
+          rawTitle: '《就算学阿毗达摩，也别小瞧经藏》——隆波帕默尊者',
+          dateStr: '2021-05-01',
+          talkDateDisplay: '2021/5/1',
+          searchQueryHint: '就算学阿毗达摩 也别小瞧经藏 2021年5月1日',
         },
         {
-          id: 'd1955_2000',
+          id: 'd1962_2000',
           timeSlot: '20:00',
           periodLabel: '晚课',
-          rawTitle: '《戒定慧的修习之道》——隆波帕默尊者',
-          dateStr: '2025-06-22',
-          talkDateDisplay: '2025年06月22日',
-          searchQueryHint: '戒定慧的修习之道 2025年6月22日',
+          rawTitle: '《苦是生命的常态》——隆波帕默尊者',
+          dateStr: '2025-07-13',
+          talkDateDisplay: '2025年07月13日',
+          searchQueryHint: '苦是生命的常态 2025年7月13日',
         },
       ],
     },
@@ -310,30 +298,52 @@ function cleanKeywordForSearch(rawTitle: string): string {
   return rawTitle.replace(/——.*$/, '').trim();
 }
 
+const DHAMMA_COM_BE_ARCHIVE: Record<string, string> = {
+  '2018': 'https://www.dhamma.com/download/2561/',
+  '2019': 'https://www.dhamma.com/download/2562/',
+  '2020': 'https://www.dhamma.com/download/2563/',
+  '2021': 'https://www.dhamma.com/download/2564/',
+  '2022': 'https://www.dhamma.com/download/2565/',
+  '2023': 'https://www.dhamma.com/download/2566/',
+  '2024': 'https://www.dhamma.com/download/2567/',
+  '2025': 'https://www.dhamma.com/download/2568/',
+  '2026': 'https://www.dhamma.com/download/2569/',
+};
+
 export function resolveScheduleSessionResources(
   session: DailyPracticeSession,
   allLessons: CuratedLesson[] = CURATED_LESSONS_PRESETS
 ): ResolvedSessionResources {
-  const { dateStr, sessionSuffix } = session;
+  const { dateStr, sessionSuffix, rawTitle } = session;
+  const isOtherTeacher = /阿姜/.test(rawTitle) && !/隆波帕默/.test(rawTitle);
 
-  const matchedLesson =
-    allLessons.find((l) => l.date === dateStr) || null;
+  const matchedLesson = isOtherTeacher
+    ? null
+    : allLessons.find((l) => l.date === dateStr) || null;
 
   const allAudioItems = [
     ...SOLIDIFIED_AUDIO_CATALOG_2026.items,
     ...SOLIDIFIED_AUDIO_CATALOG_2025.items,
   ];
+  const sameDateAudio = isOtherTeacher
+    ? []
+    : allAudioItems.filter((item) => item.date === dateStr);
   const matchedAudio =
-    allAudioItems.find(
+    sameDateAudio.find(
       (item) =>
-        item.date === dateStr &&
-        (!sessionSuffix || !item.sessionSuffix || item.sessionSuffix === sessionSuffix)
+        (!sessionSuffix || !item.sessionSuffix || item.sessionSuffix === sessionSuffix) &&
+        Boolean(item.chinese?.mp3Url)
     ) ||
-    allAudioItems.find((item) => item.date === dateStr) ||
+    sameDateAudio.find(
+      (item) =>
+        !sessionSuffix || !item.sessionSuffix || item.sessionSuffix === sessionSuffix
+    ) ||
+    sameDateAudio[0] ||
     null;
 
-  const matchedYouTube =
-    SOLIDIFIED_YOUTUBE_CATALOG.items.find((item) => item.date === dateStr) || null;
+  const matchedYouTube = isOtherTeacher
+    ? null
+    : SOLIDIFIED_YOUTUBE_CATALOG.items.find((item) => item.date === dateStr) || null;
 
   const hasAnySiteContent = Boolean(
     matchedLesson ||
@@ -353,12 +363,7 @@ export function resolveScheduleSessionResources(
     hasAnySiteContent,
     externalSearchLinks: {
       dhammaCnSearchUrl: `https://www.dhamma.cn/index.php?search=${encodeURIComponent(keyword)}`,
-      dhammaComArchiveUrl:
-        cnYear === '2018'
-          ? 'https://www.dhamma.com/download/2561/'
-          : cnYear === '2019'
-          ? 'https://www.dhamma.com/download/2562/'
-          : 'https://www.dhamma.com/audio/',
+      dhammaComArchiveUrl: DHAMMA_COM_BE_ARCHIVE[cnYear] || 'https://www.dhamma.com/audio/',
       youtubeChineseSearchUrl: `https://www.youtube.com/@JieTuoYuan/search?query=${encodeURIComponent(keyword)}`,
       youtubeThaiLiveUrl: 'https://www.youtube.com/@luangpupramote/streams',
       youtubeChineseLiveUrl: 'https://www.youtube.com/@JieTuoYuan/streams',

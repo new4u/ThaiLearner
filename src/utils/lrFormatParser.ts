@@ -4,6 +4,9 @@ import { CHULA_IPA_DICTIONARY, transliterateThaiSyllableToChulaIPA } from './chu
 // 导出与朱拉隆功大学标准音标库完全同步的离线词典
 export const THAI_OFFLINE_DICTIONARY = CHULA_IPA_DICTIONARY;
 
+// 缓存按长度降序排列的词条键，避免每句重复排序
+const SORTED_DICT_KEYS = Object.keys(THAI_OFFLINE_DICTIONARY).sort((a, b) => b.length - a.length);
+
 /**
  * 离线快速对泰文分词（基于离线词库最大前缀匹配算法 + 动态朱拉隆功音标推导）
  */
@@ -11,23 +14,60 @@ export function offlineTokenizeThaiText(thaiText: string): WordToken[] {
   const clean = thaiText.trim();
   if (!clean) return [];
 
-  // 获取所有已知词条，按长度降序排序
-  const dictKeys = Object.keys(THAI_OFFLINE_DICTIONARY).sort((a, b) => b.length - a.length);
   const tokens: WordToken[] = [];
   let remaining = clean;
   let wordIndex = 0;
 
   while (remaining.length > 0) {
     // 去除开头空格标点
-    const leadSpaceMatch = remaining.match(/^[\s,，、.。!！?？:：;；-]+/);
+    const leadSpaceMatch = remaining.match(/^[\s,，、.。!！?？:：;；\-–—()（）“”"'…]+/);
     if (leadSpaceMatch) {
       remaining = remaining.slice(leadSpaceMatch[0].length);
       continue;
     }
 
+    // 处理 ฯ / ๆ 附着于前一词
+    if (/^[ๆฯ]+/.test(remaining)) {
+      const mark = remaining.match(/^[ๆฯ]+/)![0];
+      remaining = remaining.slice(mark.length);
+      const prev = tokens[tokens.length - 1];
+      if (prev && !prev.thai.endsWith(mark)) {
+        prev.thai += mark;
+        if (mark.includes('ๆ') && prev.romanization) {
+          prev.romanization = `${prev.romanization}-${prev.romanization}`;
+        }
+      }
+      continue;
+    }
+
+    // 处理嵌入的英文单词或数字（如 Alert, Logic, 1-2, 30）
+    const asciiMatch = remaining.match(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*/);
+    if (asciiMatch) {
+      const val = asciiMatch[0];
+      const isNum = /^[0-9\-]+$/.test(val);
+      tokens.push({
+        id: `tok_${Date.now()}_${wordIndex++}`,
+        thai: val,
+        romanization: val,
+        chinese: isNum ? '（数字）' : '（英文词）',
+        tip: isNum ? '数值' : '英文术语',
+        isCore: false,
+        rootBreakdown: '',
+        status: 'unmarked' as WordStatus,
+        startOffset: wordIndex * 0.8,
+        endOffset: (wordIndex + 1) * 0.8
+      });
+      remaining = remaining.slice(val.length);
+      continue;
+    }
+
     let matchedWord: string | null = null;
-    for (const key of dictKeys) {
+    for (const key of SORTED_DICT_KEYS) {
       if (remaining.startsWith(key)) {
+        const after = remaining.slice(key.length);
+        if (after.length > 0 && /^[\u0E30-\u0E3A\u0E47-\u0E4E]/.test(after)) {
+          continue;
+        }
         matchedWord = key;
         break;
       }

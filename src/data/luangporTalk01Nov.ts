@@ -1,9 +1,9 @@
-// 2026年11月01日 隆波帕默尊者开示《听法生起禅定与智慧 (ฟังธรรมให้เกิดสมาธิและปัญญา)》
+// 2026年11月01日隆波帕默尊者网络直播（中文同声翻译）｜ ฟังธรรมให้เกิดสมาธิและปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 1 พ.ย. 2569
 // 供养功德衣法会专场法谈 · 官方 543 句全篇精校版高清转译数据集：含朱拉隆功大学标准 Adapted IPA 五声调音标、语境化逐词泰汉对照及精确时间戳
-import { SubtitleLine } from '../types';
+import { SubtitleLine } from "../types";
 
 export const LUANGPOR_NOV_01_TALK_TITLE = "ฟังธรรมให้เกิดสมาธิและปัญญา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 1 พ.ย. 2569";
-export const LUANGPOR_NOV_01_TALK_ZH_TITLE = "2026年11月01日 隆波帕默尊者：听法生起禅定与智慧";
+export const LUANGPOR_NOV_01_TALK_ZH_TITLE = "2026年11月01日隆波帕默尊者网络直播（中文同声翻译）";
 
 export const LUANGPOR_NOV_01_KEY_TERMS = [
   {
@@ -693,13 +693,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 65,
     "secondsEnd": 68,
     "thai": "เวลาเราตั้งใจฟังธรรม",
-    "romanization": "weː-laa raw tâŋ-caj faŋ tʰam",
+    "romanization": "wee-laa raw tâŋ-caj faŋ tʰam",
     "chinese": "当我们专心听法时",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -929,13 +929,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 80,
     "secondsEnd": 85,
     "thai": "เวลานี้ไม่ใช่เวลาว่อกแว่ก",
-    "romanization": "weː-laa níi mâj cʰâj weː-laa wɔ̂ɔk-wɛ̂ɛk",
+    "romanization": "wee-laa níi mâj cʰâj wee-laa wɔ̂ɔk-wɛ̂ɛk",
     "chinese": "此时此刻不是心散乱分心的时候",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -963,7 +963,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -982,7 +982,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 85,
     "secondsEnd": 88,
     "thai": "ฉะนั้นเวลาคนจะมาฟังหลวงพ่อเทศน์",
-    "romanization": "cʰàʔ-nán weː-laa kʰon càʔ maa faŋ lǔaŋ-pʰɔ̂ɔ tʰêet",
+    "romanization": "cʰàʔ-nán wee-laa kʰon càʔ maa faŋ lǔaŋ-pʰɔ̂ɔ tʰêet",
     "chinese": "所以当大家来听隆波讲法时",
     "words": [
       {
@@ -995,7 +995,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -2143,7 +2143,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 155,
     "secondsEnd": 160,
     "thai": "ฉะนั้นเวลามาฟังธรรมที่วัด",
-    "romanization": "cʰàʔ-nán weː-laa maa faŋ tʰam tʰîi wát",
+    "romanization": "cʰàʔ-nán wee-laa maa faŋ tʰam tʰîi wát",
     "chinese": "因此，来到寺庙听法的时候",
     "words": [
       {
@@ -2156,7 +2156,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -2204,7 +2204,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 160,
     "secondsEnd": 162,
     "thai": "ไม่ใช่เวลานั่งคุยสังสรรค์",
-    "romanization": "mâj cʰâj weː-laa nâŋ kʰuj sǎŋ-sǎn",
+    "romanization": "mâj cʰâj wee-laa nâŋ kʰuj sǎŋ-sǎn",
     "chinese": "不是坐在一起闲聊社交的时候",
     "words": [
       {
@@ -2224,7 +2224,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -2257,7 +2257,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 162,
     "secondsEnd": 168,
     "thai": "เป็นเวลาที่เราจะสงบสำรวม",
-    "romanization": "pen weː-laa tʰîi raw càʔ sà-ŋòp sǎm-ruam",
+    "romanization": "pen wee-laa tʰîi raw càʔ sà-ŋòp sǎm-ruam",
     "chinese": "而是我们静心收摄防守身心的时刻",
     "words": [
       {
@@ -2270,7 +2270,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -2596,7 +2596,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 185,
     "secondsEnd": 191,
     "thai": "ไม่คุย โดยเฉพาะเวลาฟังธรรมไม่คุย",
-    "romanization": "mâj kʰuj dooj cʰà-pʰɔ́ʔ weː-laa faŋ tʰam mâj kʰuj",
+    "romanization": "mâj kʰuj dooj cʰà-pʰɔ́ʔ wee-laa faŋ tʰam mâj kʰuj",
     "chinese": "不要闲聊，特别是在听法期间绝不交头接耳",
     "words": [
       {
@@ -2630,7 +2630,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_4",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -5630,7 +5630,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 398,
     "secondsEnd": 400,
     "thai": "เราเอาศพมาฝังตลอดเวลา",
-    "romanization": "raw ʔaw sòp maa fǎŋ tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "raw ʔaw sòp maa fǎŋ tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "我们时时刻刻都在把尸体埋进这里面",
     "words": [
       {
@@ -5676,7 +5676,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_6",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -8783,7 +8783,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 573,
     "secondsEnd": 577,
     "thai": "ร่างกายนี้ถูกความทุกข์บีบคั้นอยู่ตลอดเวลา",
-    "romanization": "râaŋ-kaaj níi tʰùuk kʰwaam tʰúk bìip kʰán jùu tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "râaŋ-kaaj níi tʰùuk kʰwaam tʰúk bìip kʰán jùu tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "这个身体时时刻刻都在被苦受所逼迫",
     "words": [
       {
@@ -8853,7 +8853,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_9",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -9783,7 +9783,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 635,
     "secondsEnd": 640,
     "thai": "มีธาตุไหลเข้ามีธาตุไหลออกตลอดเวลา",
-    "romanization": "mii tʰâat lǎj kʰâw mii tʰâat lǎj ʔɔ̀ɔk tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "mii tʰâat lǎj kʰâw mii tʰâat lǎj ʔɔ̀ɔk tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "时时刻刻都有元素在流入、有元素在流出",
     "words": [
       {
@@ -9854,7 +9854,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_9",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -12107,7 +12107,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 777,
     "secondsEnd": 782,
     "thai": "มีธาตุไหลเข้าไหลออกตลอดเวลา",
-    "romanization": "mii tʰâat lǎj kʰâw lǎj ʔɔ̀ɔk tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "mii tʰâat lǎj kʰâw lǎj ʔɔ̀ɔk tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "时时刻刻都有元素在流入流出",
     "words": [
       {
@@ -12163,7 +12163,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_7",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -12388,7 +12388,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 792,
     "secondsEnd": 796,
     "thai": "ต่อไปเวลามีอะไรเกิดขึ้นในร่างกาย",
-    "romanization": "tɔ̀ɔ paj weː-laa mii ʔà-raj kə̀ət kʰɯ̂n naj râaŋ-kaaj",
+    "romanization": "tɔ̀ɔ paj wee-laa mii ʔà-raj kə̀ət kʰɯ̂n naj râaŋ-kaaj",
     "chinese": "从此以后无论身体发生任何变化",
     "words": [
       {
@@ -12408,7 +12408,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -12713,13 +12713,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 810,
     "secondsEnd": 814,
     "thai": "เวลาแก่ก็ร่างกายมันแก่ไม่ใช่เราแก่",
-    "romanization": "weː-laa kɛ̀ɛ kɔ̂ɔ râaŋ-kaaj man kɛ̀ɛ mâj cʰâj raw kɛ̀ɛ",
+    "romanization": "wee-laa kɛ̀ɛ kɔ̂ɔ râaŋ-kaaj man kɛ̀ɛ mâj cʰâj raw kɛ̀ɛ",
     "chinese": "老去的时候，是身体在衰老而非我们在变老",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -12795,13 +12795,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 814,
     "secondsEnd": 818,
     "thai": "เวลาเจ็บก็ร่างกายมันเจ็บไม่ใช่เราเจ็บ",
-    "romanization": "weː-laa cèp kɔ̂ɔ râaŋ-kaaj man cèp mâj cʰâj raw cèp",
+    "romanization": "wee-laa cèp kɔ̂ɔ râaŋ-kaaj man cèp mâj cʰâj raw cèp",
     "chinese": "生病的时候，是身体在疼痛而非我们在受病",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -12877,13 +12877,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 818,
     "secondsEnd": 824,
     "thai": "เวลาตายก็คือร่างกายมันตายไม่ใช่เราตาย",
-    "romanization": "weː-laa taaj kɔ̂ɔ kʰɯɯ râaŋ-kaaj man taaj mâj cʰâj raw taaj",
+    "romanization": "wee-laa taaj kɔ̂ɔ kʰɯɯ râaŋ-kaaj man taaj mâj cʰâj raw taaj",
     "chinese": "死亡的时候，仅仅是身体走向死亡而非我们在死",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -14343,7 +14343,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 910,
     "secondsEnd": 913,
     "thai": "โอ้ มันเดี๋ยวจะถึงเวลาทำงานอีกแล้ว",
-    "romanization": "ʔôo man dǐaw càʔ tʰɯ̌ŋ weː-laa tʰam ŋaan ʔìik lɛ́ɛw",
+    "romanization": "ʔôo man dǐaw càʔ tʰɯ̌ŋ wee-laa tʰam ŋaan ʔìik lɛ́ɛw",
     "chinese": "‘唉！转眼间又马上该去上班工作了！’",
     "words": [
       {
@@ -14384,7 +14384,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_5",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -14874,7 +14874,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 938,
     "secondsEnd": 940,
     "thai": "แต่ละช่วงเวลาในวันเดียวกัน",
-    "romanization": "tɛ̀ɛ-láʔ cʰûaŋ weː-laa naj wan diaw kan",
+    "romanization": "tɛ̀ɛ-láʔ cʰûaŋ wee-laa naj wan diaw kan",
     "chinese": "即便是同一天当中的不同时段",
     "words": [
       {
@@ -14894,7 +14894,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -15299,7 +15299,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 964,
     "secondsEnd": 969,
     "thai": "พอได้เวลาออกจากบ้านเจอรถติดเยอะแยะ",
-    "romanization": "pʰɔɔ dâaj weː-laa ʔɔ̀ɔk càak bâan cəə rót-tìt jə́ʔ jɛ́ʔ",
+    "romanization": "pʰɔɔ dâaj wee-laa ʔɔ̀ɔk càak bâan cəə rót-tìt jə́ʔ jɛ́ʔ",
     "chinese": "一出门遇到大塞车",
     "words": [
       {
@@ -15319,7 +15319,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -15836,7 +15836,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1000,
     "secondsEnd": 1003,
     "thai": "พอตกเวลาเลิกงานแล้ว",
-    "romanization": "pʰɔɔ tòk weː-laa lə̂ək ŋaan lɛ́ɛw",
+    "romanization": "pʰɔɔ tòk wee-laa lə̂ək ŋaan lɛ́ɛw",
     "chinese": "到了下班的时刻",
     "words": [
       {
@@ -15856,7 +15856,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_2",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -16894,7 +16894,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1054,
     "secondsEnd": 1058,
     "thai": "เคลื่อนไหวเปลี่ยนแปลงตลอดเวลา",
-    "romanization": "kʰlɯ̂an-wǎj plìan-plɛɛŋ tàʔ-lɔ̀ɔt weː-laa",
+    "romanization": "kʰlɯ̂an-wǎj plìan-plɛɛŋ tàʔ-lɔ̀ɔt wee-laa",
     "chinese": "时时刻刻都在迁变运动",
     "words": [
       {
@@ -16921,7 +16921,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       }
@@ -17280,13 +17280,13 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1077,
     "secondsEnd": 1082,
     "thai": "เวลาเราเห็นใครเดินมาเราอยากดู",
-    "romanization": "weː-laa raw hěn kʰraj dəən maa raw jàak duu",
+    "romanization": "wee-laa raw hěn kʰraj dəən maa raw jàak duu",
     "chinese": "当我们看见有人走过来，我们想去看",
     "words": [
       {
         "id": "tok_0",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -20962,7 +20962,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1283,
     "secondsEnd": 1289,
     "thai": "ว่าเวลาบรรลุธรรมเกิดวิมุตติ",
-    "romanization": "wâa weː-laa ban-lú tʰam kə̀ət wí-mút-tìʔ",
+    "romanization": "wâa wee-laa ban-lú tʰam kə̀ət wí-mút-tìʔ",
     "chinese": "证悟正法、生起心解脱的时刻",
     "words": [
       {
@@ -20975,7 +20975,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_1",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },
@@ -22291,7 +22291,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 1367,
     "secondsEnd": 1369,
     "thai": "ตรงนี้ใช้เวลานิดเดียว",
-    "romanization": "troŋ níi cʰáj weː-laa nít diaw",
+    "romanization": "troŋ níi cʰáj wee-laa nít diaw",
     "chinese": "这一整个过程仅仅花费了极微短的时间",
     "words": [
       {
@@ -22318,7 +22318,7 @@ export const LUANGPOR_NOV_01_SUBTITLES: SubtitleLine[] = [
       {
         "id": "tok_3",
         "thai": "เวลา",
-        "romanization": "weː-laa",
+        "romanization": "wee-laa",
         "chinese": "时间",
         "isCore": false
       },

@@ -1,50 +1,50 @@
-import { SubtitleLine } from '../types';
+import { SubtitleLine } from "../types";
 
-export const TALK_10OCT_TITLE = 'มีฉันทะคือขยันภาวนา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 10 ต.ค. 2569';
-export const TALK_10OCT_ZH_TITLE = '2026年10月10日 隆波帕默尊者：有善法欲即是精进修行';
+export const TALK_10OCT_TITLE = "มีฉันทะคือขยันภาวนา :: หลวงปู่ปราโมทย์ ปาโมชฺโช 10 ต.ค. 2569";
+export const TALK_10OCT_ZH_TITLE = "有善法欲即是勤奋修行 :: 隆波帕默尊者 2026年10月10日";
 
 export const TALK_10OCT_KEY_TERMS = [
   {
-    thai: 'ฉันทะ',
-    romanization: 'chǎn-tʰáʔ',
-    chinese: '善法欲 / 乐修好善',
-    explanation: '对修习戒定慧与参究解脱实相的清净乐意与愿力，四神足之首，修行不竭精进之源泉',
-    shortcutKey: 'C'
+    "thai": "ฉันทะ",
+    "romanization": "cʰǎn-tʰáʔ",
+    "chinese": "善法欲 / 乐修好善",
+    "explanation": "对修习戒定慧与参究解脱实相的清净乐意与愿力，四神足之首，修行不竭精进之源泉",
+    "shortcutKey": "C"
   },
   {
-    thai: 'วิริยะ',
-    romanization: 'wí-rí-jáʔ',
-    chinese: '精进 / 勤勉勇悍',
-    explanation: '依凭对正法的净信与乐意而自然生起的恒久修行力，非咬牙强撑，而是乐此不疲',
-    shortcutKey: 'W'
+    "thai": "วิริยะ",
+    "romanization": "wí-rí-jáʔ",
+    "chinese": "精进 / 勤勉勇悍",
+    "explanation": "依凭对正法的净信与乐意而自然生起的恒久修行力，非咬牙强撑，而是乐此不疲",
+    "shortcutKey": "W"
   },
   {
-    thai: 'สมาธิ',
-    romanization: 'sà-maa-tʰí',
-    chinese: '定 / 宁静与安住',
-    explanation: '心因具足喜乐与清净法味而自然归于寂止、挺拔安住，无喜乐则心必躁动难安',
-    shortcutKey: 'S'
+    "thai": "สมาธิ",
+    "romanization": "sà-maa-tʰí",
+    "chinese": "定 / 宁静与安住",
+    "explanation": "心因具足喜乐与清净法味而自然归于寂止、挺拔安住，无喜乐则心必躁动难安",
+    "shortcutKey": "S"
   },
   {
-    thai: 'ความสุข',
-    romanization: 'kʰwaam-sùk',
-    chinese: '喜乐 (Sukha)',
-    explanation: '喜乐是得定的近因（Sukho samādhissa padaṭṭhānaṃ），心有快乐喜悦方能真正安住得定',
-    shortcutKey: 'K'
+    "thai": "ความสุข",
+    "romanization": "kʰwaam-sùk",
+    "chinese": "喜乐 (Sukha)",
+    "explanation": "喜乐是得定的近因（Sukho samādhissa padaṭṭhānaṃ），心有快乐喜悦方能真正安住得定",
+    "shortcutKey": "K"
   },
   {
-    thai: 'ตัณหา',
-    romanization: 'tan-hǎa',
-    chinese: '渴爱 / 贪求渴求',
-    explanation: '急于求成、贪图修行果报的染污执取，愈贪愈挣扎，愈挣扎愈远离解脱正道',
-    shortcutKey: 'T'
+    "thai": "ตัณหา",
+    "romanization": "tan-hǎa",
+    "chinese": "渴爱 / 贪求渴求",
+    "explanation": "急于求成、贪图修行果报的染污执取，愈贪愈挣扎，愈挣扎愈远离解脱正道",
+    "shortcutKey": "T"
   },
   {
-    thai: 'สม่ำเสมอ',
-    romanization: 'sà-màm-sà-mə̌ə',
-    chinese: '持之以恒 / 持续不断',
-    explanation: '修行贵在念念相续、日日如常，不暴十寒，水滴石穿方显佛法真实大力',
-    shortcutKey: 'M'
+    "thai": "สม่ำเสมอ",
+    "romanization": "sà-màm-sà-mə̌ə",
+    "chinese": "持之以恒 / 持续不断",
+    "explanation": "修行贵在念念相续、日日如常，不暴十寒，水滴石穿方显佛法真实大力",
+    "shortcutKey": "M"
   }
 ];
 
@@ -56,7 +56,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 0,
     "secondsEnd": 5,
     "thai": "ค่อยๆ ฝึกเป็นลำดับ เป็นขั้นเป็นตอนไป อย่าใจร้อน",
-    "romanization": "kʰɔ̂j-kʰɔ̂j fɯ̀k pen lam-dàp, pen kʰân pen tɔɔn paj, jàa caj-rɔ́ɔn",
+    "romanization": "kʰɔ̂j-kʰɔ̂j fɯ̀k pen lam-dàp pen kʰân pen tɔɔn paj jàa caj rɔ́ɔn",
     "chinese": "慢慢地、循序渐进有次第地去练习，切莫性急心躁。",
     "words": [
       {
@@ -152,7 +152,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 5,
     "secondsEnd": 8,
     "thai": "ใจร้อน โลภมากยากนาน",
-    "romanization": "caj-rɔ́ɔn, lôop-mâak jâak-naan",
+    "romanization": "caj rɔ́ɔn lôop mâak jâak naan",
     "chinese": "心急就容易贪多，贪多则欲速不达、长久难成。",
     "words": [
       {
@@ -206,7 +206,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 8,
     "secondsEnd": 16,
     "thai": "ยิ่งอยากก็ยิ่งดิ้นรน ยิ่งดิ้นรนก็ยิ่งห่างไกลธรรมะออกไปเรื่อยๆ",
-    "romanization": "jîŋ jàak kɔ̂ɔ jîŋ dîn-ron, jîŋ dîn-ron kɔ̂ɔ jîŋ hàaŋ-klaj tʰam-máʔ ɔ̀ɔk paj rɯ̂aj-rɯ̂aj",
+    "romanization": "jîŋ jàak kɔ̂ɔ jîŋ dîn-ron jîŋ dîn-ron kɔ̂ɔ jîŋ hàaŋ klaj tʰam-máʔ ʔɔ̀ɔk paj rɯ̂aj-rɯ̂aj",
     "chinese": "越是渴望就越挣扎翻滚，越是挣扎翻滚就离佛法真理越行越远。",
     "words": [
       {
@@ -323,7 +323,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 16,
     "secondsEnd": 23,
     "thai": "มีฉันทะคือขยันภาวนา พึงพอใจที่จะปฏิบัติ มีความสุขที่จะปฏิบัติ",
-    "romanization": "mii chǎn-tʰáʔ kʰɯɯ kʰà-jǎn pʰaa-wá-naa, pʰɯŋ-pʰɔɔ-caj tʰîi jà pà-tì-bàt, mii kʰwaam-sùk tʰîi jà pà-tì-bàt",
+    "romanization": "mii cʰǎn-tʰáʔ kʰɯɯ kʰà-jǎn pʰaa-wá-naa pʰɯŋ pʰɔɔ-caj tʰîi jà pà-tì-bàt mii kʰwaam-sùk tʰîi jà pà-tì-bàt",
     "chinese": "具备善法欲即是勤勉修行，乐于去修习，并享受在修行中的喜悦。",
     "words": [
       {
@@ -336,7 +336,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w4_2",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       },
@@ -440,13 +440,13 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 23,
     "secondsEnd": 30,
     "thai": "แล้วก็ทำของเราให้สม่ำเสมอ ทำสม่ำเสมอสำคัญมาก",
-    "romanization": "lɛ́ɛo kɔ̂ɔ tʰam kʰɔ̌ɔŋ raw hâj sà-màm-sà-mə̌ə, tʰam sà-màm-sà-mə̌ə sǎm-kʰan mâak",
+    "romanization": "lɛ́ɛw kɔ̂ɔ tʰam kʰɔ̌ɔŋ raw hâj sà-màm-sà-mə̌ə tʰam sà-màm-sà-mə̌ə sǎm-kʰan mâak",
     "chinese": "然后持之以恒地做我们的工夫，持续不断是至关重要的。",
     "words": [
       {
         "id": "w5_1",
         "thai": "แล้ว",
-        "romanization": "lɛ́ɛo",
+        "romanization": "lɛ́ɛw",
         "chinese": "然后",
         "isCore": false
       },
@@ -529,7 +529,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 30,
     "secondsEnd": 35,
     "thai": "ทำบ้างไม่ทำบ้าง ไม่ได้กินหรอก ต้องทำสม่ำเสมอ",
-    "romanization": "tʰam bâaŋ mâj tʰam bâaŋ, mâj dâj kin rɔ̀ɔk, tɔ̂ŋ tʰam sà-màm-sà-mə̌ə",
+    "romanization": "tʰam bâaŋ mâj tʰam bâaŋ mâj dâj kin rɔ̀ɔk tɔ̂ŋ tʰam sà-màm-sà-mə̌ə",
     "chinese": "三天打鱼两天晒网是一无所获的，必须持续用功。",
     "words": [
       {
@@ -625,7 +625,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 35,
     "secondsEnd": 39,
     "thai": "เราจะทำสม่ำเสมอได้ เราต้องมีฉันทะ",
-    "romanization": "raw jà tʰam sà-màm-sà-mə̌ə dâj, raw tɔ̂ŋ mii chǎn-tʰáʔ",
+    "romanization": "raw jà tʰam sà-màm-sà-mə̌ə dâj raw tɔ̂ŋ mii cʰǎn-tʰáʔ",
     "chinese": "我们若想能够持之以恒，就必须生起善法欲。",
     "words": [
       {
@@ -687,7 +687,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w7_9",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       }
@@ -700,7 +700,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 39,
     "secondsEnd": 44,
     "thai": "เรามีความพอใจที่จะเรียนรู้จิตใจตัวเอง",
-    "romanization": "raw mii kʰwaam pʰɔɔ-caj tʰîi jà rian-rúu jìt-caj tua-eeŋ",
+    "romanization": "raw mii kʰwaam-pʰɔɔ-caj tʰîi jà rian-rúu cìt caj tua ʔeeŋ",
     "chinese": "我们欢喜乐于去探究了知自己的心灵。",
     "words": [
       {
@@ -782,7 +782,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 44,
     "secondsEnd": 48,
     "thai": "หรือเรียนรู้ร่างกาย เรียนรู้ขันธ์ 5 ของตัวเราเอง",
-    "romanization": "rɯ̌ɯ rian-rúu râaŋ-kaaj, rian-rúu kʰǎn hâa kʰɔ̌ɔŋ tua raw eeŋ",
+    "romanization": "rɯ̌ɯ rian-rúu râaŋ-kaaj rian-rúu kʰǎn hâa kʰɔ̌ɔŋ tua raw ʔeeŋ",
     "chinese": "或是去探究了知色身，探究属于我们自身的五蕴。",
     "words": [
       {
@@ -857,7 +857,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 48,
     "secondsEnd": 56,
     "thai": "เราต้องมีฉันทะ มีความต้องการที่จะเรียนรู้ มีความพึงพอใจ",
-    "romanization": "raw tɔ̂ŋ mii chǎn-tʰáʔ, mii kʰwaam tɔ̂ŋ-kaan tʰîi jà rian-rúu, mii kʰwaam pʰɯŋ-pʰɔɔ-caj",
+    "romanization": "raw tɔ̂ŋ mii cʰǎn-tʰáʔ mii kʰwaam-tɔ̂ŋ-kaan tʰîi jà rian-rúu mii kʰwaam-pʰɯŋ-pʰɔɔ-caj",
     "chinese": "我们必须具备善法欲，有一心渴望去学习探究的愿力与满足。",
     "words": [
       {
@@ -884,7 +884,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w10_4",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       },
@@ -946,7 +946,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 56,
     "secondsEnd": 62,
     "thai": "ถ้าเรามีความพึงพอใจที่จะเรียนรู้ เราก็จะขยันเรียนรู้",
-    "romanization": "tʰâa raw mii kʰwaam pʰɯŋ-pʰɔɔ-caj tʰîi jà rian-rúu, raw kɔ̂ɔ jà kʰà-jǎn rian-rúu",
+    "romanization": "tʰâa raw mii kʰwaam-pʰɯŋ-pʰɔɔ-caj tʰîi jà rian-rúu raw kɔ̂ɔ jà kʰà-jǎn rian-rúu",
     "chinese": "如果我们对学习探究感到欢喜，就会自发精进地去学。",
     "words": [
       {
@@ -1150,7 +1150,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 69,
     "secondsEnd": 71,
     "thai": "ท่านพ่อลีท่านสอนหายใจเข้าพุทออกโธ",
-    "romanization": "tʰân-pʰɔ̂ɔ lii tʰân sɔ̌ɔn hǎaj-caj kʰâo pʰút ɔ̀ɔk tʰoo",
+    "romanization": "tʰân-pʰɔ̂ɔ lii tʰân sɔ̌ɔn hǎaj-caj kʰâw pʰút ʔɔ̀ɔk tʰoo",
     "chinese": "坡理尊者教导吸气念“佛”、呼气念“陀”。",
     "words": [
       {
@@ -1184,7 +1184,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w14_5",
         "thai": "เข้า",
-        "romanization": "kʰâo",
+        "romanization": "kʰâw",
         "chinese": "入/吸",
         "isCore": true
       },
@@ -1218,7 +1218,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 71,
     "secondsEnd": 75,
     "thai": "เราทำไปแล้ว มันเจออะไรที่แปลกๆ",
-    "romanization": "raw tʰam paj lɛ́ɛo, man cəə ʔà-raj tʰîi plɛ̀ɛk-plɛ̀ɛk",
+    "romanization": "raw tʰam paj lɛ́ɛw man cəə ʔà-raj tʰîi plɛ̀ɛk-plɛ̀ɛk",
     "chinese": "我们照着实践之后，体验到了许多前所未有的奇妙景象。",
     "words": [
       {
@@ -1245,7 +1245,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w15_4",
         "thai": "แล้ว",
-        "romanization": "lɛ́ɛo",
+        "romanization": "lɛ́ɛw",
         "chinese": "之后",
         "isCore": false
       },
@@ -1293,7 +1293,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 75,
     "secondsEnd": 79,
     "thai": "ของไม่เคยรู้ได้รู้ ไม่เคยเห็นได้เห็น",
-    "romanization": "kʰɔ̌ɔŋ mâj kʰəəj rúu dâj rúu, mâj kʰəəj hěn dâj hěn",
+    "romanization": "kʰɔ̌ɔŋ mâj kʰəəj rúu dâj rúu mâj kʰəəj hěn dâj hěn",
     "chinese": "未曾知道的得以知晓，未曾见过的得以亲见。",
     "words": [
       {
@@ -1382,7 +1382,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 79,
     "secondsEnd": 83,
     "thai": "ไม่เคยเข้าใจได้เข้าใจขึ้นมา มันได้รู้ได้อะไรขึ้นมา",
-    "romanization": "mâj kʰəəj kʰâo-caj dâj kʰâo-caj kʰɯ̂n maa, man dâj rúu dâj ʔà-raj kʰɯ̂n maa",
+    "romanization": "mâj kʰəəj kʰâw-caj dâj kʰâw-caj kʰɯ̂n maa man dâj rúu dâj ʔà-raj kʰɯ̂n maa",
     "chinese": "未曾明白的豁然领悟通达，真正有所体会和体证。",
     "words": [
       {
@@ -1402,7 +1402,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w17_3",
         "thai": "เข้าใจ",
-        "romanization": "kʰâo-caj",
+        "romanization": "kʰâw-caj",
         "chinese": "领悟/明白",
         "isCore": true
       },
@@ -1416,7 +1416,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w17_5",
         "thai": "เข้าใจ",
-        "romanization": "kʰâo-caj",
+        "romanization": "kʰâw-caj",
         "chinese": "领悟/明白",
         "isCore": true
       },
@@ -1492,7 +1492,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 83,
     "secondsEnd": 89,
     "thai": "มันมีความชอบ มีความรักใคร่พอใจที่จะภาวนา",
-    "romanization": "man mii kʰwaam cʰɔ̂ɔp, mii kʰwaam rák-kʰrâj pʰɔɔ-caj tʰîi jà pʰaa-wá-naa",
+    "romanization": "man mii kʰwaam-cʰɔ̂ɔp mii kʰwaam-rák-kʰrâj pʰɔɔ-caj tʰîi jà pʰaa-wá-naa",
     "chinese": "产生了欢喜与钟爱，满怀喜乐地去修习。",
     "words": [
       {
@@ -1567,7 +1567,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 89,
     "secondsEnd": 93,
     "thai": "ไม่มีใครมาสั่งเลย ว่าจงภาวนาทุกวัน",
-    "romanization": "mâj mii kʰraj maa sàŋ ləəj, wâa coŋ pʰaa-wá-naa tʰúk wan",
+    "romanization": "mâj mii kʰraj maa sàŋ ləəj wâa coŋ pʰaa-wá-naa tʰúk wan",
     "chinese": "从没有任何人来发号施令，要求每天必须修行。",
     "words": [
       {
@@ -1656,7 +1656,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 93,
     "secondsEnd": 98,
     "thai": "อย่าขี้เกียจ ปฏิบัติให้ได้ทุกวัน",
-    "romanization": "jàa kʰîi-kìat, pà-tì-bàt hâj dâj tʰúk wan",
+    "romanization": "jàa kʰîi-kìat pà-tì-bàt hâj dâj tʰúk wan",
     "chinese": "“不要懒惰，每天都要切实实践！”",
     "words": [
       {
@@ -1778,7 +1778,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 101,
     "secondsEnd": 104,
     "thai": "ท่านบอกวิธีแล้ว หลวงพ่อใจมันมีฉันทะ",
-    "romanization": "tʰân bɔ̀ɔk wí-tʰii lɛ́ɛo, lǔaŋ-pʰɔ̂ɔ caj man mii chǎn-tʰáʔ",
+    "romanization": "tʰân bɔ̀ɔk wí-tʰii lɛ́ɛw lǔaŋ-pʰɔ̂ɔ caj man mii cʰǎn-tʰáʔ",
     "chinese": "尊师指明了方法，隆波的心早已充满善法欲。",
     "words": [
       {
@@ -1805,7 +1805,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w22_4",
         "thai": "แล้ว",
-        "romanization": "lɛ́ɛo",
+        "romanization": "lɛ́ɛw",
         "chinese": "之后",
         "isCore": false
       },
@@ -1840,7 +1840,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w22_9",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       }
@@ -1853,7 +1853,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 104,
     "secondsEnd": 111,
     "thai": "เมื่อมีฉันทะเสียอย่างเดียว การปฏิบัติไม่ใช่เรื่องกล้ำกลืนฝืนทน",
-    "romanization": "mɯ̂a mii chǎn-tʰáʔ sǐa jàaŋ diao, kaan pà-tì-bàt mâj châj rɯ̂aŋ klâm-klɯɯn fɯ̌ɯn-tʰon",
+    "romanization": "mɯ̂a mii cʰǎn-tʰáʔ sǐa jàaŋ diao kaan-pà-tì-bàt mâj cʰâj rɯ̂aŋ klâm-klɯɯn fɯ̌ɯn-tʰon",
     "chinese": "只要单单具备了善法欲，修行就绝非苦楚强忍、咬牙强撑之事。",
     "words": [
       {
@@ -1873,7 +1873,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w23_3",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       },
@@ -1915,7 +1915,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w23_9",
         "thai": "ใช่",
-        "romanization": "châj",
+        "romanization": "cʰâj",
         "chinese": "是",
         "isCore": false
       },
@@ -1949,7 +1949,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 111,
     "secondsEnd": 118,
     "thai": "มันมีความสุขที่ได้ปฏิบัติ วันไหนที่ไม่ได้ปฏิบัติรู้สึกแปลกๆ",
-    "romanization": "man mii kʰwaam-sùk tʰîi dâj pà-tì-bàt, wan nǎj tʰîi mâj dâj pà-tì-bàt rúu-sɯ̀k plɛ̀ɛk-plɛ̀ɛk",
+    "romanization": "man mii kʰwaam-sùk tʰîi dâj pà-tì-bàt wan nǎj tʰîi mâj dâj pà-tì-bàt rúu-sɯ̀k plɛ̀ɛk-plɛ̀ɛk",
     "chinese": "修行能让人感到由衷快乐，哪天若没修行反而觉得浑身别扭。",
     "words": [
       {
@@ -2059,13 +2059,13 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 118,
     "secondsEnd": 122,
     "thai": "เพราะฉะนั้นอยู่ที่มีฉันทะหรือไม่มี",
-    "romanization": "pʰrɔ́ʔ-chà-nán jùu tʰîi mii chǎn-tʰáʔ rɯ̌ɯ mâj mii",
+    "romanization": "pʰrɔ́ʔ-cʰà-nán jùu tʰîi mii cʰǎn-tʰáʔ rɯ̌ɯ mâj mii",
     "chinese": "因此关键全在于是否有善法欲。",
     "words": [
       {
         "id": "w25_1",
         "thai": "เพราะฉะนั้น",
-        "romanization": "pʰrɔ́ʔ-chà-nán",
+        "romanization": "pʰrɔ́ʔ-cʰà-nán",
         "chinese": "因此之故",
         "isCore": false
       },
@@ -2093,7 +2093,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
       {
         "id": "w25_5",
         "thai": "ฉันทะ",
-        "romanization": "chǎn-tʰáʔ",
+        "romanization": "cʰǎn-tʰáʔ",
         "chinese": "善法欲",
         "isCore": true
       },
@@ -2127,7 +2127,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 122,
     "secondsEnd": 127,
     "thai": "แต่ถ้ามีตัณหา มีโลภะ อยากได้ผลของการปฏิบัติ",
-    "romanization": "tɛ̀ɛ tʰâa mii tan-hǎa, mii loo-pʰáʔ, jàak dâj pʰǒn kʰɔ̌ɔŋ kaan pà-tì-bàt",
+    "romanization": "tɛ̀ɛ tʰâa mii tan-hǎa mii loo-pʰáʔ jàak dâj pʰǒn kʰɔ̌ɔŋ kaan-pà-tì-bàt",
     "chinese": "但若怀着渴爱与贪心，急于贪求修行的果报。",
     "words": [
       {
@@ -2216,7 +2216,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 127,
     "secondsEnd": 131,
     "thai": "แต่ขี้เกียจทำเหตุ แต่ฝืนใจทำเหตุ จิตใจไม่มีความสุข",
-    "romanization": "tɛ̀ɛ kʰîi-kìat tʰam hèet, tɛ̀ɛ fɯ̌ɯn caj tʰam hèet, jìt-caj mâj mii kʰwaam-sùk",
+    "romanization": "tɛ̀ɛ kʰîi-kìat tʰam hèet tɛ̀ɛ fɯ̌ɯn caj tʰam hèet cìt caj mâj mii kʰwaam-sùk",
     "chinese": "却懒于培植正因、勉强违心地去造因，内心自然毫无喜乐。",
     "words": [
       {
@@ -2326,7 +2326,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 131,
     "secondsEnd": 138,
     "thai": "จิตไม่มีความสุข ไม่มีสมาธิ จิตจะไม่สงบ",
-    "romanization": "jìt mâj mii kʰwaam-sùk, mâj mii sà-maa-tʰí, jìt jà mâj sà-ŋòp",
+    "romanization": "cìt mâj mii kʰwaam-sùk mâj mii sà-maa-tʰí cìt jà mâj sà-ŋòp",
     "chinese": "心没有喜乐便无法生起正定，心就不会真正安宁。",
     "words": [
       {
@@ -2415,7 +2415,7 @@ export const LUANGPOR_OCT_10_SUBTITLES: SubtitleLine[] = [
     "secondsStart": 138,
     "secondsEnd": 150,
     "thai": "จิตสงบได้ ทำสมาธิให้จิตสงบได้ จิตต้องมีความสุข",
-    "romanization": "jìt sà-ŋòp dâj, tʰam sà-maa-tʰí hâj jìt sà-ŋòp dâj, jìt tɔ̂ŋ mii kʰwaam-sùk",
+    "romanization": "cìt sà-ŋòp dâj tʰam sà-maa-tʰí hâj cìt sà-ŋòp dâj cìt tɔ̂ŋ mii kʰwaam-sùk",
     "chinese": "心要归于寂静、修持禅定让心平静，心必须先安住于喜乐之中。",
     "words": [
       {
