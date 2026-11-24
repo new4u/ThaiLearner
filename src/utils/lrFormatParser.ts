@@ -7,46 +7,145 @@ export const THAI_OFFLINE_DICTIONARY = CHULA_IPA_DICTIONARY;
 // 缓存按长度降序排列的词条键，避免每句重复排序
 const SORTED_DICT_KEYS = Object.keys(THAI_OFFLINE_DICTIONARY).sort((a, b) => b.length - a.length);
 
+const THAI_WORD_SEGMENTER: Intl.Segmenter | null =
+  typeof Intl !== 'undefined' && typeof (Intl as any).Segmenter === 'function'
+    ? new (Intl as any).Segmenter('th', { granularity: 'word' })
+    : null;
+
 /**
- * 离线快速对泰文分词（基于离线词库最大前缀匹配算法 + 动态朱拉隆功音标推导）
+ * 离线快速对泰文分词（基于词边界对齐的最大前缀匹配算法 + Intl.Segmenter 泰语整词切分 + 动态朱拉隆功音标推导）
+ * 彻底杜绝短词条切碎长词（如 "ว่าง" 切碎 "ระหว่าง"）或 2 字符强行截断。
  */
 export function offlineTokenizeThaiText(thaiText: string): WordToken[] {
   const clean = thaiText.trim();
   if (!clean) return [];
 
   const tokens: WordToken[] = [];
-  let remaining = clean;
   let wordIndex = 0;
 
-  while (remaining.length > 0) {
-    // 去除开头空格标点
+  // 计算 Intl.Segmenter 词边界，防止短字典词抢占长词内部片段
+  const wordStarts = new Set<number>();
+  const wordEnds = new Set<number>();
+  if (THAI_WORD_SEGMENTER) {
+    for (const seg of THAI_WORD_SEGMENTER.segment(clean)) {
+      if (seg.isWordLike) {
+        wordStarts.add(seg.index);
+        wordEnds.add(seg.index + seg.segment.length);
+      }
+    }
+  }
+
+  let cursor = 0;
+  let unalignedBuffer = '';
+
+  const flushUnalignedBuffer = () => {
+    const buf = unalignedBuffer.trim();
+    unalignedBuffer = '';
+    if (!buf) return;
+
+    if (THAI_WORD_SEGMENTER) {
+      for (const seg of THAI_WORD_SEGMENTER.segment(buf)) {
+        if (!seg.isWordLike) continue;
+        const w = seg.segment.trim();
+        if (!w) continue;
+        if (/^[ๆฯ]+$/.test(w)) {
+          const prev = tokens[tokens.length - 1];
+          if (prev && !prev.thai.endsWith(w)) {
+            prev.thai += w;
+            if (w.includes('ๆ') && prev.romanization) {
+              prev.romanization = `${prev.romanization} ${prev.romanization}`;
+            }
+          }
+          continue;
+        }
+        const dictHit = THAI_OFFLINE_DICTIONARY[w];
+        if (dictHit) {
+          tokens.push({
+            id: `tok_${wordIndex++}`,
+            thai: w,
+            romanization: dictHit.ipa,
+            chinese: dictHit.cn,
+            tip: dictHit.tip || '朱拉 Adapted IPA 标音',
+            isCore: dictHit.isCore || false,
+            rootBreakdown: dictHit.root || '',
+            status: 'unmarked' as WordStatus,
+            startOffset: wordIndex * 0.8,
+            endOffset: (wordIndex + 1) * 0.8,
+          });
+        } else if (/^[A-Za-z0-9\-]+$/.test(w)) {
+          const isNum = /^[0-9\-]+$/.test(w);
+          tokens.push({
+            id: `tok_${wordIndex++}`,
+            thai: w,
+            romanization: w,
+            chinese: isNum ? '（数字）' : '（英文词）',
+            tip: isNum ? '数值' : '英文术语',
+            isCore: false,
+            rootBreakdown: '',
+            status: 'unmarked' as WordStatus,
+            startOffset: wordIndex * 0.8,
+            endOffset: (wordIndex + 1) * 0.8,
+          });
+        } else {
+          tokens.push({
+            id: `tok_${wordIndex++}`,
+            thai: w,
+            romanization: transliterateThaiSyllableToChulaIPA(w),
+            chinese: '（待校释义）',
+            tip: '朱拉 Adapted IPA 标音',
+            status: 'unmarked' as WordStatus,
+            startOffset: wordIndex * 0.8,
+            endOffset: (wordIndex + 1) * 0.8,
+          });
+        }
+      }
+      return;
+    }
+
+    // 极端老旧环境无 Intl.Segmenter 时的保底整段处理
+    tokens.push({
+      id: `tok_${wordIndex++}`,
+      thai: buf,
+      romanization: transliterateThaiSyllableToChulaIPA(buf),
+      chinese: '（待校释义）',
+      tip: '朱拉 Adapted IPA 标音',
+      status: 'unmarked' as WordStatus,
+      startOffset: wordIndex * 0.8,
+      endOffset: (wordIndex + 1) * 0.8,
+    });
+  };
+
+  while (cursor < clean.length) {
+    const remaining = clean.slice(cursor);
+
     const leadSpaceMatch = remaining.match(/^[\s,，、.。!！?？:：;；\-–—()（）“”"'…]+/);
     if (leadSpaceMatch) {
-      remaining = remaining.slice(leadSpaceMatch[0].length);
+      flushUnalignedBuffer();
+      cursor += leadSpaceMatch[0].length;
       continue;
     }
 
-    // 处理 ฯ / ๆ 附着于前一词
     if (/^[ๆฯ]+/.test(remaining)) {
+      flushUnalignedBuffer();
       const mark = remaining.match(/^[ๆฯ]+/)![0];
-      remaining = remaining.slice(mark.length);
+      cursor += mark.length;
       const prev = tokens[tokens.length - 1];
       if (prev && !prev.thai.endsWith(mark)) {
         prev.thai += mark;
         if (mark.includes('ๆ') && prev.romanization) {
-          prev.romanization = `${prev.romanization}-${prev.romanization}`;
+          prev.romanization = `${prev.romanization} ${prev.romanization}`;
         }
       }
       continue;
     }
 
-    // 处理嵌入的英文单词或数字（如 Alert, Logic, 1-2, 30）
     const asciiMatch = remaining.match(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*/);
-    if (asciiMatch) {
+    if (asciiMatch && (!THAI_WORD_SEGMENTER || wordStarts.has(cursor))) {
       const val = asciiMatch[0];
+      flushUnalignedBuffer();
       const isNum = /^[0-9\-]+$/.test(val);
       tokens.push({
-        id: `tok_${Date.now()}_${wordIndex++}`,
+        id: `tok_${wordIndex++}`,
         thai: val,
         romanization: val,
         chinese: isNum ? '（数字）' : '（英文词）',
@@ -55,28 +154,46 @@ export function offlineTokenizeThaiText(thaiText: string): WordToken[] {
         rootBreakdown: '',
         status: 'unmarked' as WordStatus,
         startOffset: wordIndex * 0.8,
-        endOffset: (wordIndex + 1) * 0.8
+        endOffset: (wordIndex + 1) * 0.8,
       });
-      remaining = remaining.slice(val.length);
+      cursor += val.length;
+      if (THAI_WORD_SEGMENTER && cursor < clean.length) {
+        wordStarts.add(cursor);
+      }
       continue;
     }
 
     let matchedWord: string | null = null;
-    for (const key of SORTED_DICT_KEYS) {
-      if (remaining.startsWith(key)) {
-        const after = remaining.slice(key.length);
-        if (after.length > 0 && /^[\u0E30-\u0E3A\u0E47-\u0E4E]/.test(after)) {
-          continue;
+    const canStartDict = !THAI_WORD_SEGMENTER || wordStarts.has(cursor);
+    if (canStartDict) {
+      for (const key of SORTED_DICT_KEYS) {
+        if (remaining.startsWith(key)) {
+          const endPos = cursor + key.length;
+          const after = remaining.slice(key.length);
+          if (after.length > 0 && /^[\u0E30-\u0E3A\u0E47-\u0E4E]/.test(after)) {
+            continue;
+          }
+          // 若存在词边界索引，要求匹配终点也是词边界（或后接标点/空白/ๆ）
+          if (
+            THAI_WORD_SEGMENTER &&
+            wordEnds.size > 0 &&
+            !wordEnds.has(endPos) &&
+            endPos < clean.length &&
+            !/^[\s,，、.。!！?？:：;；\-–—()（）“”"'…ๆฯ]/.test(after)
+          ) {
+            continue;
+          }
+          matchedWord = key;
+          break;
         }
-        matchedWord = key;
-        break;
       }
     }
 
     if (matchedWord) {
+      flushUnalignedBuffer();
       const info = THAI_OFFLINE_DICTIONARY[matchedWord];
       tokens.push({
-        id: `tok_${Date.now()}_${wordIndex++}`,
+        id: `tok_${wordIndex++}`,
         thai: matchedWord,
         romanization: info.ipa,
         chinese: info.cn,
@@ -85,27 +202,16 @@ export function offlineTokenizeThaiText(thaiText: string): WordToken[] {
         rootBreakdown: info.root || '',
         status: 'unmarked' as WordStatus,
         startOffset: wordIndex * 0.8,
-        endOffset: (wordIndex + 1) * 0.8
+        endOffset: (wordIndex + 1) * 0.8,
       });
-      remaining = remaining.slice(matchedWord.length);
+      cursor += matchedWord.length;
     } else {
-      // 未命中词库：提取单个泰文字符/音节并进行朱拉隆功音标推导
-      const charMatch = remaining.match(/^[ก-๙][ัิีึืฺุู็์่้๊๋]*[ก-๙]?/);
-      const piece = charMatch ? charMatch[0] : remaining[0];
-      tokens.push({
-        id: `tok_${Date.now()}_${wordIndex++}`,
-        thai: piece,
-        romanization: transliterateThaiSyllableToChulaIPA(piece),
-        chinese: '（待校释义）',
-        tip: '朱拉 Adapted IPA 标音',
-        status: 'unmarked' as WordStatus,
-        startOffset: wordIndex * 0.8,
-        endOffset: (wordIndex + 1) * 0.8
-      });
-      remaining = remaining.slice(piece.length);
+      unalignedBuffer += clean[cursor];
+      cursor += 1;
     }
   }
 
+  flushUnalignedBuffer();
   return tokens;
 }
 
@@ -148,7 +254,23 @@ export function formatSecondsToTime(sec: number): string {
  * 4. 容忍 [ROMAN] / [IPA] 标签行缺失或简写
  */
 export function parseSRTToSubtitles(rawContent: string): { subtitles: SubtitleLine[]; format: string; count: number } {
-  const content = rawContent.trim();
+  const cleanedRaw = rawContent
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/)
+    .filter((ln, idx, arr) => {
+      // 跳过顶部以 # / ; / // 开头的泰学元数据注释头（直到遇到第一个包含 --> 的时间戳块之前）
+      const trimmed = ln.trim();
+      if (/^(?:#|;|\/\/)\s*(?:@?taixue|标题\s*[:：]|日期\s*[:：]|泰文原版\s*[:：]|中文同传\s*[:：]|title\s*[:：]|date\s*[:：])/i.test(trimmed)) {
+        return false;
+      }
+      if (trimmed.startsWith('#') && !arr.slice(0, idx).some((prev) => prev.includes('-->'))) {
+        return false;
+      }
+      return true;
+    })
+    .join('\n')
+    .trim();
+  const content = cleanedRaw;
   if (!content) {
     throw new Error('SRT 文本内容为空');
   }

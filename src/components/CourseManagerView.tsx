@@ -11,6 +11,7 @@ import {
   BookOpen, CheckCircle2, AlertCircle, ArrowRight, RefreshCw, FileText,
   Bot, HelpCircle, Code, Layers, FileCode, ChevronDown, ChevronUp, ExternalLink
 } from 'lucide-react';
+import { TampermonkeyCopyAction } from './TampermonkeyCopyAction';
 
 interface CourseManagerViewProps {
   currentSubtitles: SubtitleLine[];
@@ -261,15 +262,7 @@ export const CourseManagerView: React.FC<CourseManagerViewProps> = ({
                   <span>SRT-GLOSS 格式规范</span>
                 </button>
 
-                <a
-                  href="/tools/taixue-youtube-cc.user.js"
-                  download="taixue-youtube-cc.user.js"
-                  className="px-3 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-xs font-bold border border-amber-500/40 flex items-center gap-1.5 transition"
-                  title="下载 Tampermonkey 油猴脚本 v1.1.0（支持抓当前视频、选期抓取并直出 .srt / .linked.json）"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>油猴抓词器 v1.1.0 (.user.js)</span>
-                </a>
+                <TampermonkeyCopyAction variant="amber-badge" label="📋 复制油猴脚本 v1.1.1" />
 
                 <a
                   href="/tools/Luangpor_Dhamma_Colab_Pipeline.ipynb"

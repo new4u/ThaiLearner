@@ -33,6 +33,12 @@ import {
   LUANGPOR_NOV_01_KEY_TERMS,
   LUANGPOR_NOV_01_SUBTITLES
 } from './luangporTalk01Nov';
+import {
+  LUANGPOR_NOV_07_TALK_TITLE,
+  LUANGPOR_NOV_07_TALK_ZH_TITLE,
+  LUANGPOR_NOV_07_KEY_TERMS,
+  LUANGPOR_NOV_07_SUBTITLES
+} from './luangporTalk07Nov';
 
 // 2026年10月17日官方开示 6 大核心巴利法词
 export const DAILY_PRACTICE_KEY_TERMS = [
@@ -165,6 +171,25 @@ export const CURATED_LESSONS_PRESETS: CuratedLesson[] = [
     tags: ['11月08日官方开示', '1179句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
     keyTerms: LUANGPOR_NOV_08_KEY_TERMS,
     subtitles: LUANGPOR_NOV_08_SUBTITLES
+  },
+  {
+    id: 'lesson_20261107',
+    date: '2026-11-07',
+    title: LUANGPOR_NOV_07_TALK_TITLE,
+    chineseTitle: LUANGPOR_NOV_07_TALK_ZH_TITLE,
+    speaker: '隆波帕默尊者 (หลวงปู่ปราโมทย์ ปาโมชฺโช)',
+    source: 'Wat Suan Santidham 官方原版视频 & 解脱园中文同传 (1009句全篇精准对齐)',
+    thaiVideoUrl: 'https://www.youtube.com/watch?v=ue_RkSAgal4',
+    chineseVideoUrl: 'https://www.youtube.com/watch?v=mOb-rO7f3wE',
+    thaiVideoId: 'ue_RkSAgal4',
+    chineseVideoId: 'mOb-rO7f3wE',
+    defaultOffsetSeconds: 0.0,
+    totalSentences: 1009,
+    curationType: 'official',
+    alignedBy: '官方周度精校',
+    tags: ['11月07日官方开示', '1009句全篇精准对齐', '双视频实测校准', '逐词泰中释义'],
+    keyTerms: LUANGPOR_NOV_07_KEY_TERMS,
+    subtitles: LUANGPOR_NOV_07_SUBTITLES
   },
   {
     id: 'lesson_20261101',

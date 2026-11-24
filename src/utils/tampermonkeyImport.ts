@@ -235,6 +235,33 @@ export function inspectSubtitleImportPayload(
     } catch {}
   }
 
+  // 兼容可读注释头（即便未包含或手动改写了 @taixue_meta JSON）
+  const headerTopSlice = trimmed.slice(0, 2000);
+  const titleLineMatch = headerTopSlice.match(/^(?:#|;|\/\/)\s*(?:标题|title)\s*[:：]\s*(.+)$/im);
+  const dateLineMatch = headerTopSlice.match(/^(?:#|;|\/\/)\s*(?:日期|date)\s*[:：]\s*(\d{4}-\d{2}-\d{2})/im);
+  const vidInHeaderMatch = headerTopSlice.match(/^(?:#|;|\/\/)\s*[^\r\n]*?(?:视频ID|videoId)\s*[:：]\s*([A-Za-z0-9_-]{11})/im);
+  const thaiUrlMatch = headerTopSlice.match(/^(?:#|;|\/\/)\s*(?:泰文原版|thai(?:VideoUrl)?)\s*[:：]\s*(https?:\/\/\S+)/im);
+  const cnUrlMatch = headerTopSlice.match(/^(?:#|;|\/\/)\s*(?:中文同传|chinese(?:VideoUrl)?)\s*[:：]\s*(https?:\/\/\S+)/im);
+
+  if (!headerMeta.title && titleLineMatch?.[1]) {
+    headerMeta.title = titleLineMatch[1].trim();
+  }
+  if (!headerMeta.date && dateLineMatch?.[1]) {
+    headerMeta.date = dateLineMatch[1].trim();
+  }
+  if (!headerMeta.videoId && vidInHeaderMatch?.[1]) {
+    headerMeta.videoId = vidInHeaderMatch[1].trim();
+  }
+  if (!headerMeta.thaiVideoUrl && thaiUrlMatch?.[1]) {
+    headerMeta.thaiVideoUrl = thaiUrlMatch[1].trim();
+    if (!headerMeta.videoId) {
+      headerMeta.videoId = extractYouTubeVideoId(headerMeta.thaiVideoUrl) || undefined;
+    }
+  }
+  if (!headerMeta.chineseVideoUrl && cnUrlMatch?.[1]) {
+    headerMeta.chineseVideoUrl = cnUrlMatch[1].trim();
+  }
+
   // 从文件名反推日期与 VideoID（兼容 Tampermonkey 命名 `2026-11-21_4j72ImUi_eY.th.srt` 与 Colab `2026-11-21_enhanced.srt`）
   let fnDate = '';
   let fnVid = '';

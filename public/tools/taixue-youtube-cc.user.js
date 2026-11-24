@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         泰学 · 隆波法谈 CC 字幕抓取器 (当前视频 + 选期单抓 + 共学互助直连版)
 // @namespace    https://taixue.dhamma/userscripts
-// @version      1.1.0
-// @description  在 youtube.com 页面内零 Cookie 同源抓取隆波帕默尊者官方 CC 字幕：1) 一键抓当前视频（可选字幕轨）；2) 选期/多选精确抓取全库 1045 场；3) 输出标准 .srt 与完整关联 .linked.json，与共学互助中心/Colab/装载法谈完美对接。
+// @version      1.1.1
+// @description  在 youtube.com 页面内零 Cookie 同源抓取隆波帕默尊者官方 CC 字幕：1) 一键抓当前视频（可选字幕轨）；2) 选期/多选精确抓取全库；3) 输出带标题与 @taixue_meta 关联头的标准 .srt 与 .linked.json，防字幕错配。
 // @match        https://www.youtube.com/*
 // @run-at       document-start
 // @grant        none
@@ -130,11 +130,11 @@
     return;
   }
 
-  // ==================== 模式 2：顶层页面抓取控制台 (v1.1.0) ====================
+  // ==================== 模式 2：顶层页面抓取控制台 (v1.1.1) ====================
   if (window.__TAIXUE_CC_USERSCRIPT_LOADED__) return;
   window.__TAIXUE_CC_USERSCRIPT_LOADED__ = true;
 
-  const SCRIPT_VERSION = '1.1.0';
+  const SCRIPT_VERSION = '1.1.1';
   const CATALOG_ITEMS = [
     {"id":"039BPpzqYdc","d":"2026-11-22","t":"รีรัน l 22 พ.ย. 2569 ไลฟ์สดหลวงปู่ปราโมทย์ ปาโมชฺโช","sp":"lp","cnYt":"https://www.youtube.com/watch?v=KLurLPg8m1w","thMp3":"","cnMp3":""},
     {"id":"4j72ImUi_eY","d":"2026-11-21","t":"ต่อไปนี้อ่านจิตตนเอง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 21 พ.ย. 2569","sp":"lp","cnYt":"https://www.youtube.com/watch?v=VDO2XNA8YsM","thMp3":"","cnMp3":""},
@@ -1349,11 +1349,41 @@
     });
   }
 
-  function buildStandardSrt(lines) {
+  function buildSrtMetaHeader(meta) {
+    if (!meta || (!meta.videoId && !meta.title && !meta.date)) return '';
+    const headerObj = {
+      schema: 'taixue.srt_header.v1',
+      videoId: meta.videoId || '',
+      date: meta.date || '',
+      title: meta.title || meta.thaiTitle || '',
+      thaiVideoUrl: meta.thaiVideoUrl || meta.youtubeUrl || (meta.videoId ? 'https://www.youtube.com/watch?v=' + meta.videoId : ''),
+      chineseVideoUrl: meta.chineseVideoUrl || meta.chineseYouTubeUrl || '',
+      captionLang: meta.captionLang || 'th',
+      isManualCC: meta.isManualCC !== false,
+      sentenceCount: meta.sentenceCount || 0,
+    };
+    const headerLines = [];
+    if (headerObj.title) headerLines.push('# 标题: ' + headerObj.title);
+    headerLines.push(
+      '# 日期: ' + (headerObj.date || 'undated') +
+      ' | 视频ID: ' + (headerObj.videoId || 'unknown') +
+      ' | 语种: ' + headerObj.captionLang +
+      (headerObj.isManualCC ? ' (人工CC)' : ' (ASR自动)')
+    );
+    if (headerObj.thaiVideoUrl) headerLines.push('# 泰文原版: ' + headerObj.thaiVideoUrl);
+    if (headerObj.chineseVideoUrl) headerLines.push('# 中文同传: ' + headerObj.chineseVideoUrl);
+    headerLines.push('# @taixue_meta: ' + JSON.stringify(headerObj));
+    return headerLines.join('\n') + '\n\n';
+  }
+
+  function buildStandardSrt(lines, meta) {
     const norm = normalizeCaptionLines(lines);
-    return norm
+    const headerMeta = meta ? Object.assign({}, meta, { sentenceCount: meta.sentenceCount || norm.length }) : null;
+    const header = buildSrtMetaHeader(headerMeta);
+    const body = norm
       .map((ln, idx) => (idx + 1) + '\n' + fmtSrtTs(ln.secondsStart) + ' --> ' + fmtSrtTs(ln.secondsEnd) + '\n' + ln.thai)
       .join('\n\n') + '\n';
+    return header + body;
   }
 
   function buildLinkedPayload(item, res) {
@@ -2018,7 +2048,7 @@
     });
     if (dirHandle) {
       const prefix = payload.date + '_' + payload.videoId;
-      await saveToFolder(prefix + '.' + payload.captionLang + '.srt', buildStandardSrt(payload.subtitles));
+      await saveToFolder(prefix + '.' + payload.captionLang + '.srt', buildStandardSrt(payload.subtitles, payload));
       await saveToFolder(prefix + '.linked.json', JSON.stringify(payload, null, 2));
     }
     return payload;
@@ -2324,7 +2354,10 @@
         currentCapturedPayload = cachedSub;
         resultBox.style.display = 'block';
         resultSummary.textContent = '✅ 已就绪 ' + cachedSub.subtitles.length + ' 句 | 语种 ' + (cachedSub.captionLang || 'th') + (cachedSub.isManualCC === false ? ' (ASR自动)' : ' (人工CC)') + ' | ' + (cachedSub.engineUsed || 'IDB');
-        const srtPreview = buildStandardSrt(cachedSub.subtitles.slice(0, 4));
+        const srtPreview = buildStandardSrt(
+          cachedSub.subtitles.slice(0, 4),
+          Object.assign({}, cachedSub, { sentenceCount: cachedSub.subtitles.length })
+        );
         previewBox.textContent = srtPreview;
       } else {
         currentCapturedPayload = null;
@@ -2493,10 +2526,20 @@
         actions.appendChild(targetTabBtn);
 
         if (sub && Array.isArray(sub.subtitles) && sub.subtitles.length) {
+          const itemSrtMeta = {
+            videoId: it.id,
+            date: it.d,
+            title: sub.title || it.t || it.id,
+            thaiVideoUrl: 'https://www.youtube.com/watch?v=' + it.id,
+            chineseVideoUrl: it.cnYt || '',
+            captionLang: sub.captionLang || 'th',
+            isManualCC: sub.isManualCC !== false,
+            sentenceCount: sub.subtitles.length,
+          };
           const rCopySrt = el('button', 'background:#f59e0b;color:#0f172a;border:none;border-radius:6px;padding:3px 7px;font-size:10px;font-weight:800;cursor:pointer;', '📋 SRT');
           rCopySrt.addEventListener('click', async () => {
-            await copyText(buildStandardSrt(sub.subtitles));
-            appendLog('📋 已复制 ' + it.d + ' 标准 SRT（' + sub.subtitles.length + '句），可直接贴入共学互助中心！');
+            await copyText(buildStandardSrt(sub.subtitles, itemSrtMeta));
+            appendLog('📋 已复制 ' + it.d + ' | ' + it.id + ' 《' + itemSrtMeta.title + '》 标准 SRT（' + sub.subtitles.length + '句，已附标题与链接头）！');
           });
           const rCopyJson = el('button', 'background:#38bdf8;color:#082f49;border:none;border-radius:6px;padding:3px 7px;font-size:10px;font-weight:800;cursor:pointer;', '🔗 JSON');
           rCopyJson.addEventListener('click', async () => {
@@ -2509,11 +2552,11 @@
               lines: sub.subtitles,
             });
             await copyText(JSON.stringify(linked, null, 2));
-            appendLog('🔗 已复制 ' + it.d + ' 关联数据包 (.linked.json)！');
+            appendLog('🔗 已复制 ' + it.d + ' | ' + it.id + ' 关联数据包 (.linked.json)！');
           });
           const rDlSrt = el('button', 'background:#334155;color:#fcd34d;border:none;border-radius:6px;padding:3px 7px;font-size:10px;font-weight:700;cursor:pointer;', '⬇ SRT');
           rDlSrt.addEventListener('click', () => {
-            downloadBlob(it.d + '_' + it.id + '.' + (sub.captionLang || 'th') + '.srt', buildStandardSrt(sub.subtitles));
+            downloadBlob(it.d + '_' + it.id + '.' + (sub.captionLang || 'th') + '.srt', buildStandardSrt(sub.subtitles, itemSrtMeta));
           });
           actions.appendChild(rCopySrt);
           actions.appendChild(rCopyJson);
@@ -2692,9 +2735,10 @@
 
     copySrtBtn.addEventListener('click', async () => {
       if (!currentCapturedPayload || !currentCapturedPayload.subtitles) return;
-      const srt = buildStandardSrt(currentCapturedPayload.subtitles);
+      const srt = buildStandardSrt(currentCapturedPayload.subtitles, currentCapturedPayload);
       const ok = await copyText(srt);
-      appendLog(ok ? '📋 已复制标准 SRT（' + currentCapturedPayload.subtitles.length + ' 句），可直接粘贴到共学互助中心 / AI 提示词！' : '⚠️ 剪贴板写入受限，请点「⬇ 下载 .srt」');
+      const titleTag = currentCapturedPayload.title ? ' 《' + currentCapturedPayload.title + '》' : '';
+      appendLog(ok ? '📋 已复制 ' + (currentCapturedPayload.date || '') + ' | ' + currentCapturedPayload.videoId + titleTag + ' 标准 SRT（' + currentCapturedPayload.subtitles.length + ' 句，已附标题头），可直接粘贴到共学互助中心 / AI 提示词！' : '⚠️ 剪贴板写入受限，请点「⬇ 下载 .srt」');
     });
 
     copyLinkedBtn.addEventListener('click', async () => {
@@ -2706,7 +2750,7 @@
     dlSrtBtn.addEventListener('click', () => {
       if (!currentCapturedPayload || !currentCapturedPayload.subtitles) return;
       const prefix = (currentCapturedPayload.date || 'undated') + '_' + currentCapturedPayload.videoId;
-      downloadBlob(prefix + '.' + (currentCapturedPayload.captionLang || 'th') + '.srt', buildStandardSrt(currentCapturedPayload.subtitles));
+      downloadBlob(prefix + '.' + (currentCapturedPayload.captionLang || 'th') + '.srt', buildStandardSrt(currentCapturedPayload.subtitles, currentCapturedPayload));
       appendLog('⬇ 已下载 ' + prefix + '.' + (currentCapturedPayload.captionLang || 'th') + '.srt');
     });
 

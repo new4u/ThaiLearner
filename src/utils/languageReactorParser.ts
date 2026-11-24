@@ -234,6 +234,12 @@ export function extractThaiAndTimestampsOnly(raw: string): {
     const line = rawLines[i].trim();
     if (!line) continue;
 
+    // 保留泰学元数据标题头（# 标题 / # 日期 / # @taixue_meta）避免丢掉对应视频信息
+    if (/^(?:#|;|\/\/)\s*(?:@?taixue|标题\s*[:：]|日期\s*[:：]|泰文原版\s*[:：]|中文同传\s*[:：])/i.test(line)) {
+      outLines.push(line);
+      continue;
+    }
+
     // 保留标准 SRT 序号（仅当下一行是时间戳）
     if (/^\d+$/.test(line) && i + 1 < rawLines.length && srtRangeRegex.test(rawLines[i + 1].trim())) {
       outLines.push(line);

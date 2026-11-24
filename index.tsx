@@ -601,6 +601,7 @@ const App: React.FC = () => {
         isOpen={showAdminModal}
         onClose={() => setShowAdminModal(false)}
         currentStudent={currentStudent}
+        activeLesson={allLessons.find((l) => l.id === currentLessonId) || null}
         onLessonCalibrated={(lessonId, offset) => {
           // 管理员校准后：更新播放器偏移量并自动锁定，立即同步生效
           setPlayerOffsetSeconds(offset);

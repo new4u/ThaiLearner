@@ -71,6 +71,7 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
       "id": "lp_2026-11-07",
       "date": "2026-11-07",
       "sessionSuffix": "",
+      "matchedLessonId": "lesson_20261107",
       "thai": null,
       "chinese": {
         "id": "cn_2026_D26.89_2026-11-07",
@@ -82,7 +83,8 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
         "sizeBytes": 26481216,
         "wikiUrl": "https://www.dhamma.cn/luangpor/D26.89%E3%80%8A%E9%9A%86%E6%B3%A2%E5%B8%95%E9%BB%98%E5%B0%8A%E8%80%85%E5%BC%80%E7%A4%BA%E3%80%8B-2026%E5%B9%B411%E6%9C%887%E6%97%A5",
         "trackType": "chinese_audio",
-        "sourceDomain": "media.dhamma.cn"
+        "sourceDomain": "media.dhamma.cn",
+        "matchedLessonId": "lesson_20261107"
       }
     },
     {

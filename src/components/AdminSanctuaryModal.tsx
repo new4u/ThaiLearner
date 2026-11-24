@@ -26,11 +26,13 @@ import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { searchDhammaDiscourses, sniffPageMedia, DhammaSearchResult, DhammaMediaItem } from '../utils/dhammaLookup';
 import { CourseStudioModal } from './CourseStudioModal';
 import { DhammaExplorerDrawer } from './DhammaExplorerDrawer';
+import { TampermonkeyCopyAction } from './TampermonkeyCopyAction';
 
 interface AdminSanctuaryModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentStudent?: RegisteredStudent | null;
+  activeLesson?: CuratedLesson | null;
   onLessonCalibrated?: (lessonId: string, offset: number) => void;
   onLoadLessonToPlayer?: (lesson: CuratedLesson) => void;
 }
@@ -51,6 +53,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
   isOpen,
   onClose,
   currentStudent,
+  activeLesson,
   onLessonCalibrated,
   onLoadLessonToPlayer
 }) => {
@@ -65,6 +68,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
   const [showStudioModal, setShowStudioModal] = useState(false);
   const [studioPrefill, setStudioPrefill] = useState<{
     title?: string;
+    chineseTitle?: string;
+    date?: string;
     thaiVideoUrl?: string;
     chineseVideoUrl?: string;
     snippet?: string;
@@ -362,13 +367,11 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                   <Layers className="w-3.5 h-3.5" />
                   <span>
                     课件审核 (
-                    {communityLessons.filter((l) => l.status === 'pending').length > 0 ? (
-                      <span className="text-amber-300 font-black animate-pulse">
-                        {communityLessons.filter((l) => l.status === 'pending').length} 待审
-                      </span>
-                    ) : (
-                      communityLessons.length
-                    )}
+                    <span className="tabular-nums">
+                      {communityLessons.filter((l) => l.status === 'pending').length > 0
+                        ? `${communityLessons.filter((l) => l.status === 'pending').length} 待审`
+                        : communityLessons.length}
+                    </span>
                     )
                   </span>
                 </button>
@@ -423,40 +426,41 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
               {/* TAB 1: 共学互助校对与上传 (Course Studio) */}
               {activeTab === 'studio' && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-slate-900 to-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="p-4 rounded-2xl bg-slate-900 border border-amber-500/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                         <h4 className="text-sm font-bold text-white flex items-center gap-1.5">
                           <Wand2 className="w-4 h-4 text-amber-400" />
-                          <span>共学互助校对与上传 (Mutual-Aid Studio)</span>
+                          <span>共学互助校对与上传</span>
                         </h4>
-                        <span className="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">
-                          人人皆可上传
+                        <span className="text-xs text-slate-400">
+                          · 自动关联官方音视频与朱拉隆功音标
                         </span>
                       </div>
                       <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                        大家一起共学互助校对：任何学友皆可导入生肉或增强型 SRT 字幕，系统自动配齐朱拉隆功实用音标与词典释义，可立即载入播放器学习或上传分享给共学伙伴。
+                        直接粘贴或拖入油猴 v1.1.1 复制的 SRT（自动带标题与日期元数据）或 .linked.json，即可 1 步校验并载入播放器或分享给共学伙伴。
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2 flex-wrap shrink-0">
-                      <a
-                        href="/tools/taixue-youtube-cc.user.js"
-                        download="taixue-youtube-cc.user.js"
-                        className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/35 font-bold text-xs flex items-center gap-1.5 transition"
-                        title="安装/下载 Tampermonkey 油猴脚本 v1.1.0：在 YouTube 上抓当前视频或选期抓取官方 CC，输出 .srt 与 .linked.json 无缝导入此处"
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>油猴抓词器 v1.1.0</span>
-                      </a>
+                      <TampermonkeyCopyAction variant="dark" label="📋 复制油猴脚本 v1.1.1" />
                       <button
                         type="button"
                         onClick={() => {
-                          setStudioPrefill(null);
+                          setStudioPrefill(
+                            activeLesson
+                              ? {
+                                  title: activeLesson.title,
+                                  chineseTitle: activeLesson.chineseTitle,
+                                  date: activeLesson.date,
+                                  thaiVideoUrl: activeLesson.thaiVideoUrl,
+                                  chineseVideoUrl: activeLesson.chineseVideoUrl,
+                                }
+                              : null
+                          );
                           setShowStudioModal(true);
                         }}
-                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer"
+                        className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-black text-xs shadow-md shadow-amber-500/20 flex items-center gap-2 transition cursor-pointer whitespace-nowrap"
                       >
                         <Sparkles className="w-4 h-4" />
                         <span>✍️ 校对与上传字幕</span>
@@ -469,9 +473,9 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                     <div className="flex items-center justify-between">
                       <h5 className="text-xs font-bold text-white flex items-center gap-1.5">
                         <FolderOpen className="w-4 h-4 text-amber-400" />
-                        <span>快速挑选课件模板进行二次编辑或调入放映机</span>
+                        <span>快速挑选已有课件进行二次编辑或调入放映机</span>
                       </h5>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-slate-400 tabular-nums">
                         共 {curatedLessons.length} 篇精校课件
                       </span>
                     </div>
@@ -483,11 +487,11 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                           className="p-3 rounded-xl bg-slate-900 border border-slate-800/80 hover:border-amber-500/50 transition flex flex-col justify-between gap-2 text-xs"
                         >
                           <div>
-                            <div className="flex items-center justify-between mb-1">
-                              <span className="text-amber-400 font-mono font-bold text-[11px]">
-                                📅 {lesson.date}
+                            <div className="flex items-center justify-between mb-1 text-[11px] text-slate-400 tabular-nums">
+                              <span className="text-amber-400 font-mono font-bold">
+                                {lesson.date}
                               </span>
-                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                              <span className="text-emerald-300 font-medium">
                                 {lesson.totalSentences} 句全篇
                               </span>
                             </div>
@@ -496,8 +500,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                           </div>
 
                           <div className="flex items-center justify-between pt-2 border-t border-slate-800/60">
-                            <span className="text-[10px] text-slate-500 font-mono">
-                              时差: {lesson.defaultOffsetSeconds >= 0 ? `+${lesson.defaultOffsetSeconds}` : lesson.defaultOffsetSeconds}s
+                            <span className="text-[10px] text-slate-500 font-mono tabular-nums">
+                              时差 {lesson.defaultOffsetSeconds >= 0 ? `+${lesson.defaultOffsetSeconds}` : lesson.defaultOffsetSeconds}s
                             </span>
                             <div className="flex items-center gap-1.5">
                               <button
@@ -505,6 +509,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                                 onClick={() => {
                                   setStudioPrefill({
                                     title: lesson.title,
+                                    chineseTitle: lesson.chineseTitle,
+                                    date: lesson.date,
                                     thaiVideoUrl: lesson.thaiVideoUrl,
                                     chineseVideoUrl: lesson.chineseVideoUrl,
                                     subtitles: lesson.subtitles,
@@ -743,14 +749,7 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                       </div>
 
                       <div className="flex items-center gap-2 flex-wrap">
-                        <a
-                          href="/tools/taixue-youtube-cc.user.js"
-                          download="taixue-youtube-cc.user.js"
-                          className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/35 font-bold text-xs flex items-center gap-1.5 transition"
-                        >
-                          <Download className="w-3.5 h-3.5" />
-                          <span>油猴抓词器 (.user.js)</span>
-                        </a>
+                        <TampermonkeyCopyAction variant="amber-solid" label="📋 复制油猴脚本 v1.1.1" />
                         <button
                           type="button"
                           onClick={() => {
@@ -1065,8 +1064,8 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                                     {lesson.chineseTitle || lesson.title}
                                   </h4>
                                   {isPending && (
-                                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold animate-pulse">
-                                      ⏳ 待审核
+                                    <span className="text-xs text-amber-300 font-bold">
+                                      · 待审核
                                     </span>
                                   )}
                                   {isApproved && (

@@ -341,6 +341,7 @@ export const SOLIDIFIED_YOUTUBE_CATALOG: YouTubePairedCatalogResponse = {
       "date": "2026-11-07",
       "isRerun": false,
       "thaiCaptionStatus": "manual",
+      "matchedLessonId": "lesson_20261107",
       "thai": {
         "videoId": "ue_RkSAgal4",
         "title": "จิตเข้าสู่ความเป็นกลาง :: หลวงปู่ปราโมทย์ ปาโมชฺโช 7 พ.ย. 2569",

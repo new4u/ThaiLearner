@@ -1,6 +1,7 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { Readable } from 'node:stream';
 
@@ -1293,6 +1294,30 @@ async function createAppServer() {
         res.status(502).json({ error: err?.message || '泰语语音合成失败' });
       }
     }
+  });
+
+  // 纯文本返回 Tampermonkey 油猴脚本（防止静态文件下载在某些预览容器中被 HTML 壳包裹）
+  app.get('/api/tampermonkey-script', (_req: Request, res: Response) => {
+    const candidates = [
+      path.resolve(__dirname, 'public/tools/taixue-youtube-cc.user.js'),
+      path.resolve(__dirname, 'dist/tools/taixue-youtube-cc.user.js'),
+    ];
+    for (const filePath of candidates) {
+      try {
+        if (!fs.existsSync(filePath)) continue;
+        let scriptText = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '');
+        if (!scriptText.trimStart().startsWith('// ==UserScript==')) {
+          continue;
+        }
+        res.setHeader('Content-Type', 'text/javascript; charset=utf-8');
+        res.setHeader('Cache-Control', 'no-store');
+        res.send(scriptText);
+        return;
+      } catch {
+        // try next candidate
+      }
+    }
+    res.status(404).json({ error: '未找到纯净油猴脚本文件' });
   });
 
   if (!IS_PROD) {
