@@ -180,8 +180,8 @@ export function parseSRTToSubtitles(rawContent: string): { subtitles: SubtitleLi
     const id = timeLineIdx > 0 ? (parseInt(lines[0], 10) || (resultSubs.length + 1)) : (resultSubs.length + 1);
     const startSec = parseInt(timeMatch[1], 10) * 3600 + parseInt(timeMatch[2], 10) * 60 + parseInt(timeMatch[3], 10) + parseInt(timeMatch[4], 10) / 1000;
     const endSec = parseInt(timeMatch[5], 10) * 3600 + parseInt(timeMatch[6], 10) * 60 + parseInt(timeMatch[7], 10) + parseInt(timeMatch[8], 10) / 1000;
-    const timeStart = `${timeMatch[2]}:${timeMatch[3]}`;
-    const timeEnd = `${timeMatch[6]}:${timeMatch[7]}`;
+    const timeStart = formatSecondsToTime(startSec);
+    const timeEnd = formatSecondsToTime(endSec);
 
     // 时间戳后所有的文本行
     const textLines = lines.slice(timeLineIdx + 1);

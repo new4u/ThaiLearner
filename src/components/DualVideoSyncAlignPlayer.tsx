@@ -27,6 +27,12 @@ import {
   removeBoundSubtitlesForMedia,
 } from '../utils/mediaSubtitleBinding';
 import { AI_SRT_CONVERSION_PROMPT, exportToEnhancedSRT } from '../utils/lrFormatParser';
+import {
+  buildInspectionFromLinkedItem,
+  inspectSubtitleImportPayload,
+  TampermonkeyBundleEntry,
+  TampermonkeyLinkedMetadata,
+} from '../utils/tampermonkeyImport';
 import { thaiAudio } from '../utils/thaiAudioSynthesizer';
 import { 
   Play, Pause, RotateCcw, Volume2, Volume1, Settings, Sparkles, CheckCircle2,
@@ -476,6 +482,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     totalParsed: number;
   }>({ subtitles: [], totalParsed: 0 });
   const [copiedPromptInModal, setCopiedPromptInModal] = useState(false);
+  const [modalLinkedMeta, setModalLinkedMeta] = useState<TampermonkeyLinkedMetadata | null>(null);
+  const [modalBundleEntries, setModalBundleEntries] = useState<TampermonkeyBundleEntry[]>([]);
+  const [selectedModalBundleVid, setSelectedModalBundleVid] = useState<string>('');
 
   // YouTube 播放器引用与状态
   const thaiPlayerRef = useRef<any>(null);
@@ -1802,11 +1811,84 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, [currentLineIndex, autoScroll]);
 
-  // 实时解析粘贴内容
-  const handlePastedTextChange = (text: string) => {
+  const applyInspectedMetaToModal = (meta: TampermonkeyLinkedMetadata) => {
+    if (meta.thaiVideoUrl) setInputThaiUrl(meta.thaiVideoUrl);
+    if (meta.chineseVideoUrl !== undefined) setInputChineseUrl(meta.chineseVideoUrl || '');
+    if (meta.title) setInputTitle(meta.date ? `${meta.date} · ${meta.title}` : meta.title);
+    setModalLinkedMeta(meta);
+  };
+
+  // 实时解析粘贴内容（支持 .linked.json / 归档包 / SRT）
+  const handlePastedTextChange = (text: string, sourceFileName?: string) => {
+    if (!text.trim()) {
+      setPastedText(text);
+      setParseResult({ subtitles: [], totalParsed: 0 });
+      setModalLinkedMeta(null);
+      setModalBundleEntries([]);
+      setSelectedModalBundleVid('');
+      return;
+    }
+
+    const inspected = inspectSubtitleImportPayload(text, sourceFileName);
+    if (inspected.kind === 'archive_bundle' && inspected.bundleItems && inspected.bundleItems.length > 0) {
+      setModalBundleEntries(inspected.bundleItems);
+      setSelectedModalBundleVid(inspected.bundleItems[0].videoId);
+      setPastedText(inspected.normalizedSrtText || text);
+      setParseResult({
+        subtitles: inspected.subtitles,
+        totalParsed: inspected.totalParsed,
+        detectedTitle: inspected.detectedTitle,
+      });
+      applyInspectedMeta(inspected.meta);
+      return;
+    }
+
+    if (inspected.kind === 'linked_json') {
+      setModalBundleEntries([]);
+      setSelectedModalBundleVid('');
+      setPastedText(inspected.normalizedSrtText || text);
+      setParseResult({
+        subtitles: inspected.subtitles,
+        totalParsed: inspected.totalParsed,
+        detectedTitle: inspected.detectedTitle,
+      });
+      applyInspectedMetaToModal(inspected.meta);
+      return;
+    }
+
+    setModalBundleEntries([]);
+    setSelectedModalBundleVid('');
     setPastedText(text);
-    const result = parseLanguageReactorText(text);
-    setParseResult(result);
+    setParseResult({
+      subtitles: inspected.subtitles,
+      totalParsed: inspected.totalParsed,
+      detectedTitle: inspected.detectedTitle,
+    });
+    if (
+      (sourceFileName || text.includes('@taixue')) &&
+      (inspected.meta.thaiVideoUrl || inspected.meta.title)
+    ) {
+      applyInspectedMetaToModal(inspected.meta);
+    }
+  };
+
+  const applyInspectedMeta = (meta: TampermonkeyLinkedMetadata) => {
+    applyInspectedMetaToModal(meta);
+  };
+
+  const handleSelectModalBundleEntry = (vid: string) => {
+    const entry = modalBundleEntries.find((e) => e.videoId === vid);
+    if (!entry) return;
+    setSelectedModalBundleVid(vid);
+    const inspected = buildInspectionFromLinkedItem(entry.rawItem);
+    setPastedText(inspected.normalizedSrtText || '');
+    setParseResult({
+      subtitles: inspected.subtitles,
+      totalParsed: inspected.totalParsed,
+      detectedTitle: inspected.detectedTitle,
+    });
+    applyInspectedMetaToModal(inspected.meta);
+    triggerToast(`已切换至【${entry.date}】(${entry.sentenceCount} 句)`);
   };
 
   // 本地大文件/字幕文件专用读取处理器 (避免剪贴板卡顿与超长截断)
@@ -1827,19 +1909,22 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
         return;
       }
 
-      setPastedText(content);
-      const result = parseLanguageReactorText(content);
-      setParseResult(result);
+      const inspected = inspectSubtitleImportPayload(content, file.name);
+      handlePastedTextChange(content, file.name);
       setUploadedFileInfo({
         name: file.name,
         size: sizeFormatted,
-        linesCount: result.totalParsed
+        linesCount: inspected.totalParsed
       });
 
       setShowPasteModal(true);
 
-      if (result.totalParsed > 0) {
-        triggerToast(`成功解析「${file.name}」：共 ${result.totalParsed} 句法谈！`);
+      if (inspected.kind === 'archive_bundle' && inspected.bundleItems?.length) {
+        triggerToast(`已读取归档包「${file.name}」：共 ${inspected.bundleItems.length} 场，已自动关联首场视频链接！`);
+      } else if (inspected.kind === 'linked_json') {
+        triggerToast(`已读取关联包「${file.name}」：共 ${inspected.totalParsed} 句，已自动填入泰/中视频链接！`);
+      } else if (inspected.totalParsed > 0) {
+        triggerToast(`成功解析「${file.name}」：共 ${inspected.totalParsed} 句法谈！`);
       } else {
         triggerToast(`已读取「${file.name}」，未识别到双语字幕，请检查格式。`);
       }
@@ -1887,6 +1972,9 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     setUploadedFileInfo(null);
     setPastedText('');
     setParseResult({ subtitles: [], totalParsed: 0 });
+    setModalLinkedMeta(null);
+    setModalBundleEntries([]);
+    setSelectedModalBundleVid('');
   };
 
   // 统一应用装载：同时更新双视频链接与严格绑定到该泰文视频的字幕
@@ -3469,16 +3557,40 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 ) : (
                   <div className="flex items-center justify-center gap-2 text-xs text-stone-600">
                     <Upload className="w-4 h-4 text-amber-700" />
-                    <span className="font-bold text-stone-800">点击上传 或 拖拽字幕 / Language Reactor 导出文件 (.srt / .html / .txt)</span>
+                    <span className="font-bold text-stone-800">点击上传 或 拖拽字幕 / .linked.json / 归档包 (.srt / .json / .html / .txt)</span>
                   </div>
                 )}
               </div>
+
+              {(modalLinkedMeta || modalBundleEntries.length > 0) && (
+                <div className="p-2.5 rounded-xl bg-emerald-50/90 border border-emerald-300 space-y-2">
+                  {modalLinkedMeta && (
+                    <div className="text-[11px] text-emerald-900 font-bold">
+                      🔗 已自动关联泰/中视频链接{modalLinkedMeta.date ? ` · ${modalLinkedMeta.date}` : ''}
+                      {modalLinkedMeta.captionLang ? ` · 音轨 ${modalLinkedMeta.captionLang}` : ''}
+                    </div>
+                  )}
+                  {modalBundleEntries.length > 0 && (
+                    <select
+                      value={selectedModalBundleVid}
+                      onChange={(e) => handleSelectModalBundleEntry(e.target.value)}
+                      className="w-full text-xs px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-white text-stone-900 font-medium"
+                    >
+                      {modalBundleEntries.map((it) => (
+                        <option key={it.videoId} value={it.videoId}>
+                          {it.date} | {it.title.slice(0, 44)} ({it.sentenceCount}句{it.chineseVideoUrl ? ' · 含中文同传' : ''})
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              )}
 
               {/* 粘贴文本框 */}
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <label className="text-[11px] font-bold text-stone-600 flex items-center gap-1.5">
-                    <span>或直接在此粘贴 SRT / LR HTML 字幕文本:</span>
+                    <span>或直接在此粘贴 SRT / .linked.json / LR HTML 字幕文本:</span>
                     {parseResult.totalParsed > 0 && (
                       <span className="text-[11px] text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
                         ✓ 已就绪 {parseResult.totalParsed} 句

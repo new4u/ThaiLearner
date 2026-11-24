@@ -440,7 +440,16 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-2 flex-wrap shrink-0">
+                      <a
+                        href="/tools/taixue-youtube-cc.user.js"
+                        download="taixue-youtube-cc.user.js"
+                        className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/35 font-bold text-xs flex items-center gap-1.5 transition"
+                        title="安装/下载 Tampermonkey 油猴脚本 v1.1.0：在 YouTube 上抓当前视频或选期抓取官方 CC，输出 .srt 与 .linked.json 无缝导入此处"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>油猴抓词器 v1.1.0</span>
+                      </a>
                       <button
                         type="button"
                         onClick={() => {
@@ -733,18 +742,28 @@ export const AdminSanctuaryModal: React.FC<AdminSanctuaryModalProps> = ({
                         </p>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          navigator.clipboard.writeText(AI_SRT_CONVERSION_PROMPT);
-                          setCopiedPromptToast(true);
-                          setTimeout(() => setCopiedPromptToast(false), 3000);
-                        }}
-                        className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
-                      >
-                        {copiedPromptToast ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedPromptToast ? '已复制完整 Prompt！' : '📋 复制完整 AI 提示词'}</span>
-                      </button>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <a
+                          href="/tools/taixue-youtube-cc.user.js"
+                          download="taixue-youtube-cc.user.js"
+                          className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/35 font-bold text-xs flex items-center gap-1.5 transition"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>油猴抓词器 (.user.js)</span>
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(AI_SRT_CONVERSION_PROMPT);
+                            setCopiedPromptToast(true);
+                            setTimeout(() => setCopiedPromptToast(false), 3000);
+                          }}
+                          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                        >
+                          {copiedPromptToast ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedPromptToast ? '已复制完整 Prompt！' : '📋 复制完整 AI 提示词'}</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* 五大声调标准规范对照卡片 */}

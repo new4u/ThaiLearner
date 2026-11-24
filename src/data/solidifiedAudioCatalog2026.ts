@@ -4,7 +4,7 @@ import { LuangporPairedCatalogResponse } from '../services/offlineAudioStorage';
 export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
   "year": "2026",
   "buddhistYear": "2569",
-  "fetchedAt": 1795337394875,
+  "fetchedAt": 1795483460512,
   "total": 124,
   "thaiCount": 119,
   "chineseCount": 94,
@@ -3120,7 +3120,5 @@ export const SOLIDIFIED_AUDIO_CATALOG_2026: LuangporPairedCatalogResponse = {
         "sourceDomain": "media.dhamma.cn"
       }
     }
-  ],
-  "isSolidified": true,
-  "solidifiedAt": "2026-11-22T08:50:01.289Z"
+  ]
 };

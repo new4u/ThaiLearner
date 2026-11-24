@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   X, Upload, FileText, CheckCircle2, Sparkles, Copy, Check, 
-  Trash2, FileCheck2, Bot, Play, Save, Info, Eraser
+  Trash2, FileCheck2, Bot, Play, Save, Info, Eraser, Download, Link2
 } from 'lucide-react';
 import { CuratedLesson, SubtitleLine } from '../types';
 import { parseLanguageReactorText, extractThaiAndTimestampsOnly } from '../utils/languageReactorParser';
@@ -12,6 +12,12 @@ import {
   getVideoMediaKey,
   saveBoundSubtitlesForMedia,
 } from '../utils/mediaSubtitleBinding';
+import {
+  buildInspectionFromLinkedItem,
+  inspectSubtitleImportPayload,
+  TampermonkeyBundleEntry,
+  TampermonkeyLinkedMetadata,
+} from '../utils/tampermonkeyImport';
 
 interface CourseStudioModalProps {
   isOpen: boolean;
@@ -79,6 +85,10 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
   const [uploadedFileInfo, setUploadedFileInfo] = useState<{ name: string; size: string } | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [copiedRawText, setCopiedRawText] = useState(false);
+  const [linkedMetaInfo, setLinkedMetaInfo] = useState<TampermonkeyLinkedMetadata | null>(null);
+  const [bundleEntries, setBundleEntries] = useState<TampermonkeyBundleEntry[]>([]);
+  const [selectedBundleVid, setSelectedBundleVid] = useState<string>('');
+  const [bundleSearch, setBundleSearch] = useState<string>('');
   
   // 2. 状态与提示
   const [copiedPrompt, setCopiedPrompt] = useState(false);
@@ -98,7 +108,15 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const applyInspectedMeta = (meta: TampermonkeyLinkedMetadata) => {
+    if (meta.title) setLessonTitle(meta.title);
+    if (meta.date) setLessonDate(meta.date);
+    if (meta.thaiVideoUrl) setThaiVideoUrlInput(meta.thaiVideoUrl);
+    if (meta.chineseVideoUrl !== undefined) setChineseVideoUrlInput(meta.chineseVideoUrl || '');
+    setLinkedMetaInfo(meta);
   };
 
   // 当外部传入 prefillConfig 变动或弹窗打开时，自动同步全篇内容
@@ -108,6 +126,10 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     if (prefillConfig?.date) setLessonDate(prefillConfig.date);
     setThaiVideoUrlInput(prefillConfig?.thaiVideoUrl || '');
     setChineseVideoUrlInput(prefillConfig?.chineseVideoUrl || '');
+    setLinkedMetaInfo(null);
+    setBundleEntries([]);
+    setSelectedBundleVid('');
+    setBundleSearch('');
     if (currentUserName) setContributorName(currentUserName);
     if (prefillConfig?.subtitles && prefillConfig.subtitles.length > 0) {
       const fullText = exportToEnhancedSRT(prefillConfig.subtitles);
@@ -127,19 +149,69 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     }
   }, [isOpen, prefillConfig, currentUserName]);
 
-  // 文本变化时解析字幕
-  const handleTextChange = (text: string) => {
-    setRawText(text);
+  // 文本变化时解析字幕与关联关系
+  const handleTextChange = (text: string, sourceFileName?: string) => {
     if (!text.trim()) {
+      setRawText(text);
       setParseResult({ total: 0, lines: [] });
+      setLinkedMetaInfo(null);
+      setBundleEntries([]);
+      setSelectedBundleVid('');
       return;
     }
+
     try {
-      const parsed = parseLanguageReactorText(text);
-      setParseResult({ total: parsed.totalParsed, lines: parsed.subtitles });
+      const inspected = inspectSubtitleImportPayload(text, sourceFileName);
+
+      if (inspected.kind === 'archive_bundle' && inspected.bundleItems && inspected.bundleItems.length > 0) {
+        setBundleEntries(inspected.bundleItems);
+        setSelectedBundleVid(inspected.bundleItems[0].videoId);
+        setRawText(inspected.normalizedSrtText || text);
+        setParseResult({ total: inspected.totalParsed, lines: inspected.subtitles });
+        applyInspectedMeta(inspected.meta);
+        showToast(
+          `📦 识别到 Tampermonkey 归档包（含 ${inspected.bundleItems.length} 场），已默认载入最新场次 ${inspected.meta.date || ''}`
+        );
+        return;
+      }
+
+      if (inspected.kind === 'linked_json') {
+        setBundleEntries([]);
+        setSelectedBundleVid('');
+        setRawText(inspected.normalizedSrtText || text);
+        setParseResult({ total: inspected.totalParsed, lines: inspected.subtitles });
+        applyInspectedMeta(inspected.meta);
+        showToast(
+          `🔗 已从 JSON 关联包自动填入日期/标题与泰中视频链接（${inspected.totalParsed} 句）`
+        );
+        return;
+      }
+
+      setBundleEntries([]);
+      setSelectedBundleVid('');
+      setRawText(text);
+      setParseResult({ total: inspected.totalParsed, lines: inspected.subtitles });
+      if (
+        (sourceFileName || text.includes('@taixue')) &&
+        (inspected.meta.thaiVideoUrl || inspected.meta.date || inspected.meta.title)
+      ) {
+        applyInspectedMeta(inspected.meta);
+      }
     } catch {
+      setRawText(text);
       setParseResult({ total: 0, lines: [] });
     }
+  };
+
+  const handleSelectBundleEntry = (vid: string) => {
+    const entry = bundleEntries.find((e) => e.videoId === vid);
+    if (!entry) return;
+    setSelectedBundleVid(vid);
+    const inspected = buildInspectionFromLinkedItem(entry.rawItem);
+    setRawText(inspected.normalizedSrtText || '');
+    setParseResult({ total: inspected.totalParsed, lines: inspected.subtitles });
+    applyInspectedMeta(inspected.meta);
+    showToast(`已切换至【${entry.date}】(${entry.sentenceCount} 句)`);
   };
 
   // 读取文件内容
@@ -149,12 +221,11 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
     reader.onload = (e) => {
       const content = e.target?.result as string;
       if (content) {
-        handleTextChange(content);
+        handleTextChange(content, file.name);
         const sizeStr = file.size > 1024 * 1024 
           ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` 
           : `${(file.size / 1024).toFixed(1)} KB`;
         setUploadedFileInfo({ name: file.name, size: sizeStr });
-        showToast(`已成功读取文件【${file.name}】！`);
       }
     };
     reader.readAsText(file, 'UTF-8');
@@ -382,6 +453,68 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
             </div>
           </div>
           
+          {/* 关联元信息提示条 & Tampermonkey 归档包选期选择器 */}
+          {(linkedMetaInfo || bundleEntries.length > 0) && (
+            <div className="p-3 rounded-xl bg-emerald-50/90 border border-emerald-300 space-y-2">
+              {linkedMetaInfo && (
+                <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-emerald-900">
+                  <div className="flex items-center gap-1.5 font-bold">
+                    <Link2 className="w-3.5 h-3.5 text-emerald-700" />
+                    <span>
+                      已自动建立字幕与音视频关联
+                      {linkedMetaInfo.date ? ` · ${linkedMetaInfo.date}` : ''}
+                      {linkedMetaInfo.captionLang ? ` · 音轨 ${linkedMetaInfo.captionLang}` : ''}
+                      {linkedMetaInfo.isManualCC === true ? ' (官方人工 CC)' : linkedMetaInfo.isManualCC === false ? ' (ASR 自动字幕)' : ''}
+                    </span>
+                  </div>
+                  {linkedMetaInfo.matchedFromCatalog && (
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-200/80 text-emerald-950 font-bold text-[10px]">
+                      已匹配站内官方目录双播链接
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {bundleEntries.length > 0 && (
+                <div className="space-y-1.5 pt-1 border-t border-emerald-200/80">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-[11px] font-bold text-emerald-950">
+                      📦 从 Tampermonkey 导出包选择具体期数（共 {bundleEntries.length} 场）：
+                    </span>
+                    <input
+                      type="text"
+                      value={bundleSearch}
+                      onChange={(e) => setBundleSearch(e.target.value)}
+                      placeholder="按日期或标题筛选期数..."
+                      className="text-[11px] px-2.5 py-1 rounded-lg border border-emerald-300 bg-white text-stone-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                    />
+                  </div>
+                  <select
+                    value={selectedBundleVid}
+                    onChange={(e) => handleSelectBundleEntry(e.target.value)}
+                    className="w-full text-xs px-3 py-2 rounded-xl border border-emerald-300 bg-white text-stone-900 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    {bundleEntries
+                      .filter((it) => {
+                        const q = bundleSearch.trim().toLowerCase();
+                        if (!q) return true;
+                        return (
+                          it.date.toLowerCase().includes(q) ||
+                          it.title.toLowerCase().includes(q) ||
+                          it.videoId.toLowerCase().includes(q)
+                        );
+                      })
+                      .map((it) => (
+                        <option key={it.videoId} value={it.videoId}>
+                          {it.date} | {it.title.slice(0, 48)} ({it.sentenceCount}句{it.chineseVideoUrl ? ' · 含中文同传' : ''})
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* 1. AI 提示词部分 */}
           <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 space-y-2.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -392,6 +525,15 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="/tools/taixue-youtube-cc.user.js"
+                  download="taixue-youtube-cc.user.js"
+                  className="px-2.5 py-1 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-[11px] font-bold flex items-center gap-1 transition shadow-xs"
+                  title="下载 Tampermonkey 油猴脚本 v1.1.0：支持抓当前视频、选期抓取并直出 .srt 与 .linked.json"
+                >
+                  <Download className="w-3 h-3" />
+                  <span>油猴抓词器 v1.1.0 (.user.js)</span>
+                </a>
                 <a
                   href="/tools/Luangpor_Dhamma_Colab_Pipeline.ipynb"
                   download="Luangpor_Dhamma_Colab_Pipeline.ipynb"
@@ -420,7 +562,7 @@ export const CourseStudioModal: React.FC<CourseStudioModalProps> = ({
             </div>
 
             <p className="text-[11px] text-stone-600 leading-relaxed">
-              💡 将你的原始生肉 SRT 与此提示词发给 AI（ChatGPT、Claude、DeepSeek、Gemini），或用上方 <strong>Colab GPU 流水线</strong> 跑出 <code>.enhanced.srt</code> / <code>.taixue.json</code>，即可生成带标准朱拉隆功实用音标（5声调 <code>mid, à, â, á, ǎ</code>）与逐词释义的课件。
+              💡 <strong>工作流</strong>：① 用 <strong>油猴抓词器 (.user.js)</strong> 在 YouTube 抓取当前视频或选定期数的官方 CC（支持导出 <code>.srt</code> / <code>.linked.json</code>）；② 直接拖入下方，或发给 AI / <strong>Colab GPU 流水线</strong> 精校成 <code>.enhanced.srt</code>；③ 拖入即自动关联泰/中双视频链接与时间轴！
             </p>
 
             {showPromptDetails && (

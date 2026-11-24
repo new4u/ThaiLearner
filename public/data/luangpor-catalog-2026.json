@@ -1,7 +1,7 @@
 {
   "year": "2026",
   "buddhistYear": "2569",
-  "fetchedAt": 1795337394875,
+  "fetchedAt": 1795483460512,
   "total": 124,
   "thaiCount": 119,
   "chineseCount": 94,
@@ -3117,7 +3117,5 @@
         "sourceDomain": "media.dhamma.cn"
       }
     }
-  ],
-  "isSolidified": true,
-  "solidifiedAt": "2026-11-22T08:50:01.289Z"
+  ]
 }
