@@ -1576,6 +1576,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                     controls
                     autoPlay={Boolean(thaiTrack.autoPlay)}
                     preload="metadata"
+                    referrerPolicy="no-referrer"
                     className="w-full h-10"
                     onCanPlay={(e) => {
                       if (thaiTrack.autoPlay && e.currentTarget.paused) {
@@ -1604,7 +1605,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                           ...thaiTrack,
                           srcUrl: isProxy ? thaiTrack.rawMp3Url : buildAudioProxyUrl(thaiTrack.rawMp3Url),
                           fallbackTried: true,
-                          autoPlay: true,
+                          autoPlay: Boolean(thaiTrack.autoPlay),
                         });
                       } else {
                         showToast('泰语音频流加载失败，可点「缓存」或换本地音频', 'error');
@@ -1794,6 +1795,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                     controls
                     autoPlay={Boolean(chineseTrack.autoPlay)}
                     preload="metadata"
+                    referrerPolicy="no-referrer"
                     className="w-full h-10"
                     onCanPlay={(e) => {
                       if (chineseTrack.autoPlay && e.currentTarget.paused) {
@@ -1822,7 +1824,7 @@ export const MainlandOfflinePage: React.FC<MainlandOfflinePageProps> = ({
                           ...chineseTrack,
                           srcUrl: isProxy ? chineseTrack.rawMp3Url : buildAudioProxyUrl(chineseTrack.rawMp3Url),
                           fallbackTried: true,
-                          autoPlay: true,
+                          autoPlay: Boolean(chineseTrack.autoPlay),
                         });
                       } else {
                         showToast('中文音频加载失败，可点「缓存」或更换目录文件', 'error');

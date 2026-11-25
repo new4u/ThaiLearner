@@ -2,6 +2,7 @@
 // Dual-Engine Thai Audio Driver with Per-Keystroke Vocalization & Tone Shift Synthesis
 
 import { ToneId, THAI_FIVE_TONES } from './thaiPhoneticData';
+import { isAudioProxyAvailableSync, probeAudioProxySupport } from '../services/offlineAudioStorage';
 
 export interface KeySoundInfo {
   char: string;
@@ -136,7 +137,12 @@ class ThaiAudioEngine {
     if (this.ttsBlobCache.has(cleanText) || this.ttsCachingKeys.has(cleanText)) return;
     this.ttsCachingKeys.add(cleanText);
     fetch(apiUrl, { cache: 'force-cache' })
-      .then((res) => (res.ok ? res.blob() : null))
+      .then(async (res) => {
+        if (!res.ok) return null;
+        const ct = (res.headers.get('content-type') || '').toLowerCase();
+        if (!ct.includes('audio') && !ct.includes('octet-stream')) return null;
+        return res.blob();
+      })
       .then((blob) => {
         if (!blob || blob.size === 0) return;
         const objectUrl = URL.createObjectURL(blob);
@@ -157,9 +163,9 @@ class ThaiAudioEngine {
   }
 
   /**
-   * 查找系统中可用的泰语发音人（优先本地离线语音包）
+   * 查找系统中可用的泰语发音人（preferLocalOnly=true 时仅匹配本机离线语音，避免静默的远程浏览器语音阻塞直连 MP3 降级）
    */
-  public getThaiVoice(): SpeechSynthesisVoice | null {
+  public getThaiVoice(preferLocalOnly: boolean = false): SpeechSynthesisVoice | null {
     if (typeof window !== 'undefined' && window.speechSynthesis) {
       const current = window.speechSynthesis.getVoices();
       if (current && current.length > 0) {
@@ -173,13 +179,16 @@ class ThaiAudioEngine {
         v.lang.toLowerCase().startsWith('th') ||
         v.name.toLowerCase().includes('thai')
     );
-    return thaiVoices.find((v) => v.localService) || thaiVoices[0] || null;
+    const localVoice = thaiVoices.find((v) => v.localService) || null;
+    if (preferLocalOnly) return localVoice;
+    return localVoice || thaiVoices[0] || null;
   }
 
   private speakViaSpeechSynthesis(
     cleanText: string,
     rate: number,
-    seqId: number
+    seqId: number,
+    preferLocalOnly: boolean = false
   ): Promise<boolean> {
     return new Promise((resolve) => {
       if (
@@ -191,7 +200,7 @@ class ThaiAudioEngine {
         return;
       }
 
-      const thaiVoice = this.getThaiVoice();
+      const thaiVoice = this.getThaiVoice(preferLocalOnly);
       if (!thaiVoice) {
         resolve(false);
         return;
@@ -211,17 +220,43 @@ class ThaiAudioEngine {
           this.activeUtterance = utterance;
 
           let settled = false;
+          let started = false;
+          let startWatchdog: ReturnType<typeof setTimeout> | null = null;
+          let maxWatchdog: ReturnType<typeof setTimeout> | null = null;
+
           const finish = (ok: boolean) => {
             if (settled) return;
             settled = true;
+            if (startWatchdog) clearTimeout(startWatchdog);
+            if (maxWatchdog) clearTimeout(maxWatchdog);
             if (this.activeUtterance === utterance) {
               this.activeUtterance = null;
             }
             resolve(ok);
           };
 
-          utterance.onend = () => finish(true);
+          utterance.onstart = () => {
+            started = true;
+            if (startWatchdog) {
+              clearTimeout(startWatchdog);
+              startWatchdog = null;
+            }
+          };
+          utterance.onend = () => finish(started || Boolean(thaiVoice.localService));
           utterance.onerror = () => finish(false);
+
+          // 防止 Chrome/Edge 远程或卡死语音永久不触发 onend/onerror
+          startWatchdog = setTimeout(() => {
+            if (!started) {
+              try { window.speechSynthesis.cancel(); } catch {}
+              finish(false);
+            }
+          }, thaiVoice.localService ? 1400 : 900);
+
+          maxWatchdog = setTimeout(() => {
+            finish(started);
+          }, 8000);
+
           window.speechSynthesis.speak(utterance);
         } catch {
           resolve(false);
@@ -255,6 +290,50 @@ class ThaiAudioEngine {
     return this.audioCtx;
   }
 
+  private async playApiViaWebAudio(
+    cleanText: string,
+    apiUrl: string,
+    rate: number,
+    seqId: number
+  ): Promise<boolean> {
+    const ctx = this.getAudioContext();
+    if (!ctx || seqId !== this.playSequenceId) return false;
+    try {
+      const res = await fetch(apiUrl, { cache: 'force-cache' });
+      if (!res.ok || seqId !== this.playSequenceId) return false;
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (!ct.includes('audio') && !ct.includes('octet-stream')) return false;
+      const ab = await res.arrayBuffer();
+      if (!ab || ab.byteLength === 0 || seqId !== this.playSequenceId) return false;
+
+      // 顺便写入 Blob 缓存
+      if (!this.ttsBlobCache.has(cleanText)) {
+        const blob = new Blob([ab], { type: 'audio/mpeg' });
+        this.ttsBlobCache.set(cleanText, URL.createObjectURL(blob));
+      }
+
+      if (ctx.state === 'suspended') {
+        await ctx.resume().catch(() => {});
+      }
+      const audioBuf = await ctx.decodeAudioData(ab.slice(0));
+      if (seqId !== this.playSequenceId) return false;
+      return await new Promise<boolean>((resolve) => {
+        try {
+          const src = ctx.createBufferSource();
+          src.buffer = audioBuf;
+          src.playbackRate.value = rate;
+          src.connect(ctx.destination);
+          src.onended = () => resolve(true);
+          src.start(0);
+        } catch {
+          resolve(false);
+        }
+      });
+    } catch {
+      return false;
+    }
+  }
+
   /**
    * 获取任意泰语字符的官方发音名与说明
    */
@@ -273,9 +352,9 @@ class ThaiAudioEngine {
 
   /**
    * 朗读泰文词句：
-   * 优先使用单一持久化 HTMLAudioElement 在用户点击手势内同步直连 /api/thai-tts（含客户端 Blob 缓存），
-   * 彻底规避跨平台 Web Speech API 静默吞音与延迟超时导致自动播放被拦截的问题；
-   * 仅当服务端合成不可用时自动无缝回退到浏览器本地泰语语音。
+   * 1. 在点击手势内同步解锁 AudioContext 并优先直连 /api/thai-tts（支持 Range/Safari 与 Blob 缓存）；
+   * 2. 若 <audio> 受浏览器拦截但服务端可用，自动切换已解锁的 Web Audio 解码播放；
+   * 3. 若处于纯静态部署（无后端代理），优先本地离线系统语音或直连多路公开 TTS（Google / Youdao），再回退浏览器语音。
    */
   public speakThai(text: string, rate: number = 0.95): Promise<boolean> {
     return new Promise((resolve) => {
@@ -300,6 +379,9 @@ class ThaiAudioEngine {
         this.cancelTimeoutId = null;
       }
 
+      // 同步在用户手势中解锁 AudioContext，确保任意异步回退都能正常发声
+      this.getAudioContext();
+
       // 中断仍在排队的 Web Speech 朗读
       if (window.speechSynthesis && (window.speechSynthesis.speaking || window.speechSynthesis.pending)) {
         try {
@@ -309,12 +391,16 @@ class ThaiAudioEngine {
 
       const audio = this.getOrCreateTtsAudio();
       if (!audio) {
-        this.speakViaSpeechSynthesis(cleanText, safeRate, seqId).then(resolve);
+        this.speakViaSpeechSynthesis(cleanText, safeRate, seqId, false).then(resolve);
         return;
       }
 
       const apiUrl = `/api/thai-tts?text=${encodeURIComponent(cleanText)}`;
       const cachedUrl = this.ttsBlobCache.get(cleanText);
+      const serverAvailable = isAudioProxyAvailableSync();
+      if (serverAvailable === null) {
+        void probeAudioProxySupport();
+      }
 
       let settled = false;
       const finish = (ok: boolean) => {
@@ -323,19 +409,120 @@ class ThaiAudioEngine {
         resolve(ok);
       };
 
-      const fallbackToWebSpeech = () => {
+      const shortPiece = encodeURIComponent(cleanText.slice(0, 150));
+      const directTtsUrls = [
+        `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=th&client=gtx&q=${shortPiece}`,
+        `https://translate.google.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${shortPiece}`,
+        `https://dict.youdao.com/dictvoice?audio=${shortPiece}&le=th`,
+      ];
+
+      const tryDirectUrlsSequentially = (idx: number) => {
         if (seqId !== this.playSequenceId) {
           finish(false);
           return;
         }
-        this.speakViaSpeechSynthesis(cleanText, safeRate, seqId).then(finish);
+        if (idx >= directTtsUrls.length) {
+          // 全部直连 TTS 不可达时，最后尝试任意浏览器 SpeechSynthesis 泰语语音
+          this.speakViaSpeechSynthesis(cleanText, safeRate, seqId, false).then(finish);
+          return;
+        }
+        let advanced = false;
+        let watchdog: ReturnType<typeof setTimeout> | null = null;
+        const clearWatchdog = () => {
+          if (watchdog) {
+            clearTimeout(watchdog);
+            watchdog = null;
+          }
+        };
+        const advanceNext = () => {
+          if (advanced) return;
+          advanced = true;
+          clearWatchdog();
+          tryDirectUrlsSequentially(idx + 1);
+        };
+        try {
+          audio.pause();
+          audio.onloadedmetadata = () => {
+            if (seqId === this.playSequenceId) {
+              audio.playbackRate = safeRate;
+            }
+          };
+          audio.onplaying = clearWatchdog;
+          audio.oncanplay = clearWatchdog;
+          audio.onended = () => {
+            clearWatchdog();
+            finish(true);
+          };
+          audio.onerror = advanceNext;
+          audio.setAttribute('referrerpolicy', 'no-referrer');
+          audio.src = directTtsUrls[idx];
+          audio.volume = 1.0;
+          audio.playbackRate = safeRate;
+          watchdog = setTimeout(() => {
+            if (seqId === this.playSequenceId && audio.paused) {
+              advanceNext();
+            }
+          }, 2800);
+          const p = audio.play();
+          if (p !== undefined) {
+            p.catch(advanceNext);
+          }
+        } catch {
+          advanceNext();
+        }
+      };
+
+      const runStaticOrFallbackChain = (allowLocalSpeechFirst: boolean) => {
+        if (seqId !== this.playSequenceId) {
+          finish(false);
+          return;
+        }
+        const hasLocalVoice = allowLocalSpeechFirst && Boolean(this.getThaiVoice(true));
+        if (hasLocalVoice) {
+          this.speakViaSpeechSynthesis(cleanText, safeRate, seqId, true).then((speechOk) => {
+            if (speechOk || seqId !== this.playSequenceId) {
+              finish(speechOk);
+              return;
+            }
+            tryDirectUrlsSequentially(0);
+          });
+        } else {
+          // 无本地离线泰语语音时，直接同步发起直连 TTS 音频播放（保留用户点击手势）
+          tryDirectUrlsSequentially(0);
+        }
+      };
+
+      // 已确认是纯静态部署（无后端 /api/thai-tts）：同步走本地离线语音或直连 TTS，避免延迟或手势丢失
+      if (serverAvailable === false && !cachedUrl) {
+        runStaticOrFallbackChain(true);
+        return;
+      }
+
+      let apiWebAudioTried = false;
+      const handleApiFailure = async () => {
+        if (seqId !== this.playSequenceId) {
+          finish(false);
+          return;
+        }
+        if (!apiWebAudioTried && !cachedUrl && serverAvailable !== false) {
+          apiWebAudioTried = true;
+          const webAudioOk = await this.playApiViaWebAudio(cleanText, apiUrl, safeRate, seqId);
+          if (webAudioOk || seqId !== this.playSequenceId) {
+            finish(webAudioOk);
+            return;
+          }
+        }
+        runStaticOrFallbackChain(true);
       };
 
       try {
         audio.pause();
         audio.onloadedmetadata = null;
+        audio.onplaying = null;
+        audio.oncanplay = null;
         audio.onended = null;
         audio.onerror = null;
+        audio.removeAttribute('referrerpolicy');
 
         audio.src = cachedUrl || apiUrl;
         audio.volume = 1.0;
@@ -363,12 +550,11 @@ class ThaiAudioEngine {
             finish(false);
             return;
           }
-          // 若旧 Blob URL 失效则清理缓存
           if (cachedUrl) {
             this.ttsBlobCache.delete(cleanText);
             URL.revokeObjectURL(cachedUrl);
           }
-          fallbackToWebSpeech();
+          void handleApiFailure();
         };
 
         const playPromise = audio.play();
@@ -380,11 +566,11 @@ class ThaiAudioEngine {
               }
             })
             .catch(() => {
-              fallbackToWebSpeech();
+              void handleApiFailure();
             });
         }
       } catch {
-        fallbackToWebSpeech();
+        void handleApiFailure();
       }
     });
   }

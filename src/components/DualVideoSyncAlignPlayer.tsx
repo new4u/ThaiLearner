@@ -929,6 +929,23 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     }
   }, []);
 
+  const latestInitConfigRef = useRef({
+    playbackRate,
+    audioFocus,
+    thaiVol,
+    chineseVol,
+    applyAudioSettings,
+    inspectThaiPlayerCaptions,
+  });
+  latestInitConfigRef.current = {
+    playbackRate,
+    audioFocus,
+    thaiVol,
+    chineseVol,
+    applyAudioSettings,
+    inspectThaiPlayerCaptions,
+  };
+
   // 初始化与挂载 YouTube IFrame 官方受控播放器 (离线纯音频激活时安全卸载对应 YT 实例)
   useEffect(() => {
     let isMounted = true;
@@ -955,6 +972,11 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
       setIsChinesePlaying(false);
     }
 
+    const ytOrigin =
+      typeof window !== 'undefined' && /^https?:/i.test(window.location.origin)
+        ? window.location.origin
+        : undefined;
+
     const initPlayers = () => {
       if (!isMounted || !window.YT || !window.YT.Player) return;
 
@@ -969,31 +991,40 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               playsinline: 1,
               rel: 0,
               modestbranding: 1,
-              controls: 1
+              controls: 1,
+              enablejsapi: 1,
+              ...(ytOrigin ? { origin: ytOrigin } : {}),
             },
             events: {
               onReady: (event: any) => {
                 if (!isMounted) return;
                 isThaiReadyRef.current = true;
+                const latest = latestInitConfigRef.current;
                 try {
-                  event.target.setPlaybackRate(playbackRate);
+                  event.target.setPlaybackRate(latest.playbackRate);
                 } catch {}
-                applyAudioSettings(audioFocus, thaiVol, chineseVol);
-                inspectThaiPlayerCaptions(event.target);
+                latest.applyAudioSettings(latest.audioFocus, latest.thaiVol, latest.chineseVol);
+                latest.inspectThaiPlayerCaptions(event.target);
               },
               onApiChange: (event: any) => {
                 if (!isMounted) return;
-                inspectThaiPlayerCaptions(event.target);
+                latestInitConfigRef.current.inspectThaiPlayerCaptions(event.target);
               },
               onStateChange: (event: any) => {
                 if (!isMounted) return;
                 if (event.data === 1) {
                   setIsThaiPlaying(true);
-                  inspectThaiPlayerCaptions(event.target);
+                  latestInitConfigRef.current.inspectThaiPlayerCaptions(event.target);
                 } else if (event.data === 2) {
                   setIsThaiPlaying(false);
                 }
-              }
+              },
+              onError: (event: any) => {
+                if (!isMounted) return;
+                setIsThaiPlaying(false);
+                console.warn('Thai YT Player error code:', event?.data);
+                triggerToast('泰文视频受网络或原站嵌入限制，可切换左上角「音频学习」收听官方 MP3');
+              },
             }
           });
         } catch (err) {
@@ -1012,16 +1043,19 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
               playsinline: 1,
               rel: 0,
               modestbranding: 1,
-              controls: 1
+              controls: 1,
+              enablejsapi: 1,
+              ...(ytOrigin ? { origin: ytOrigin } : {}),
             },
             events: {
               onReady: (event: any) => {
                 if (!isMounted) return;
                 isChineseReadyRef.current = true;
+                const latest = latestInitConfigRef.current;
                 try {
-                  event.target.setPlaybackRate(playbackRate);
+                  event.target.setPlaybackRate(latest.playbackRate);
                 } catch {}
-                applyAudioSettings(audioFocus, thaiVol, chineseVol);
+                latest.applyAudioSettings(latest.audioFocus, latest.thaiVol, latest.chineseVol);
               },
               onStateChange: (event: any) => {
                 if (!isMounted) return;
@@ -1030,7 +1064,12 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
                 } else if (event.data === 2) {
                   setIsChinesePlaying(false);
                 }
-              }
+              },
+              onError: (event: any) => {
+                if (!isMounted) return;
+                setIsChinesePlaying(false);
+                console.warn('Chinese YT Player error code:', event?.data);
+              },
             }
           });
         } catch (err) {
@@ -1070,7 +1109,7 @@ export const DualVideoSyncAlignPlayer: React.FC<DualVideoSyncAlignPlayerProps> =
     return () => {
       isMounted = false;
     };
-  }, [thaiVideoId, chineseVideoId, isThaiOfflineActive, isChineseOfflineActive, applyAudioSettings, audioFocus, chineseVol, offsetSeconds, playbackRate, thaiVol]);
+  }, [thaiVideoId, chineseVideoId, isThaiOfflineActive, isChineseOfflineActive]);
 
   // 动态更换视频链接时自动切片
   useEffect(() => {

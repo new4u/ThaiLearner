@@ -62,6 +62,7 @@ async function createAppServer() {
     '2026-10-18': 'lesson_20261018',
     '2026-10-31': 'lesson_20261031',
     '2026-11-01': 'lesson_20261101',
+    '2026-11-07': 'lesson_20261107',
     '2026-11-08': 'lesson_20261108',
   };
 
@@ -1091,15 +1092,15 @@ async function createAppServer() {
     }
 
     const upstreamAbort = new AbortController();
-    req.on('close', () => {
-      if (!res.writableEnded) {
+    res.on('close', () => {
+      if (!res.writableFinished) {
         upstreamAbort.abort();
       }
     });
 
     try {
       const forwardHeaders: Record<string, string> = {
-        'User-Agent': 'Mozilla/5.0 (compatible; TaixueOfflineAudio/1.0)',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Accept': 'audio/*,application/octet-stream,*/*',
       };
 
@@ -1127,6 +1128,17 @@ async function createAppServer() {
         signal: upstreamAbort.signal,
       });
 
+      // 部分 CDN (如 Cloudflare) 会拦截 HEAD 请求但允许 Range GET，降级为 1 字节 Range 探测
+      if (upstreamMethod === 'HEAD' && (upstream.status === 403 || upstream.status === 405)) {
+        try { await upstream.body?.cancel(); } catch {}
+        upstream = await fetch(targetUrl.toString(), {
+          method: 'GET',
+          headers: { ...forwardHeaders, Range: 'bytes=0-0' },
+          redirect: 'follow',
+          signal: upstreamAbort.signal,
+        });
+      }
+
       if (!upstream.ok && upstream.status !== 206) {
         res.status(upstream.status).json({
           error: `源站返回状态 ${upstream.status}，请确认音频链接是否有效`,
@@ -1137,6 +1149,7 @@ async function createAppServer() {
       const contentType = (upstream.headers.get('content-type') || 'audio/mpeg').toLowerCase();
       // 严守纯音频安全策略：如果源站返回 HTML（如 Cloudflare 验证页）或视频流，直接拒绝
       if (contentType.includes('text/html') || contentType.startsWith('video/')) {
+        try { await upstream.body?.cancel(); } catch {}
         res.status(415).json({
           error: `目标链接返回内容类型为 ${contentType}，非纯音频流，已拦截`,
         });
@@ -1163,6 +1176,9 @@ async function createAppServer() {
       res.status(upstream.status);
       res.setHeader('Content-Type', contentType.includes('audio') ? contentType : 'audio/mpeg');
       res.setHeader('Accept-Ranges', upstream.headers.get('accept-ranges') || 'bytes');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Range, Accept-Ranges');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
       const contentLength = upstream.headers.get('content-length');
       if (contentLength) res.setHeader('Content-Length', contentLength);
       const contentRange = upstream.headers.get('content-range');
@@ -1175,6 +1191,7 @@ async function createAppServer() {
       }
 
       if (upstreamMethod === 'HEAD' || !upstream.body) {
+        try { await upstream.body?.cancel(); } catch {}
         res.end();
         return;
       }
@@ -1207,13 +1224,46 @@ async function createAppServer() {
       return;
     }
 
+    const sendMp3Buffer = (buf: Buffer) => {
+      const total = buf.length;
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Accept-Ranges', 'bytes');
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Range, Accept-Ranges');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+
+      const rawRange = typeof req.headers.range === 'string' ? req.headers.range.trim() : '';
+      const rangeMatch = rawRange.match(/^bytes=(\d*)-(\d*)$/i);
+      if (rangeMatch && total > 0 && (rangeMatch[1] !== '' || rangeMatch[2] !== '')) {
+        let start = rangeMatch[1] ? parseInt(rangeMatch[1], 10) : 0;
+        let end = rangeMatch[2] ? parseInt(rangeMatch[2], 10) : total - 1;
+        if (rangeMatch[1] === '' && rangeMatch[2] !== '') {
+          const suffixLen = parseInt(rangeMatch[2], 10);
+          start = Math.max(0, total - suffixLen);
+          end = total - 1;
+        }
+        if (start >= total || start > end || start < 0) {
+          res.status(416).setHeader('Content-Range', `bytes */${total}`).end();
+          return;
+        }
+        end = Math.min(end, total - 1);
+        const slice = buf.subarray(start, end + 1);
+        res.status(206);
+        res.setHeader('Content-Range', `bytes ${start}-${end}/${total}`);
+        res.setHeader('Content-Length', String(slice.length));
+        res.send(slice);
+        return;
+      }
+
+      res.setHeader('Content-Length', String(total));
+      res.send(buf);
+    };
+
     const safeText = rawText.slice(0, 600);
     const cached = thaiTtsCache.get(safeText);
     if (cached && cached.length > 0) {
-      res.setHeader('Content-Type', 'audio/mpeg');
-      res.setHeader('Content-Length', String(cached.length));
-      res.setHeader('Cache-Control', 'public, max-age=604800');
-      res.send(cached);
+      sendMp3Buffer(cached);
       return;
     }
 
@@ -1242,19 +1292,25 @@ async function createAppServer() {
       const endpoints = [
         `https://translate.google.com/translate_tts?ie=UTF-8&tl=th&client=tw-ob&q=${encodeURIComponent(chunk)}`,
         `https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=th&client=gtx&q=${encodeURIComponent(chunk)}`,
+        `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(chunk)}&le=th`,
       ];
       let lastError: any = null;
       for (const ttsUrl of endpoints) {
         try {
           const upstream = await fetch(ttsUrl, {
             headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-              Referer: 'https://translate.google.com/',
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+              Referer: ttsUrl.includes('youdao.com') ? 'https://dict.youdao.com/' : 'https://translate.google.com/',
             },
             signal: AbortSignal.timeout(10000),
           });
           if (!upstream.ok) {
             lastError = new Error(`TTS upstream status ${upstream.status}`);
+            continue;
+          }
+          const ct = (upstream.headers.get('content-type') || '').toLowerCase();
+          if (ct && !ct.includes('audio') && !ct.includes('octet-stream')) {
+            lastError = new Error(`TTS upstream non-audio type: ${ct}`);
             continue;
           }
           const ab = await upstream.arrayBuffer();
@@ -1284,10 +1340,7 @@ async function createAppServer() {
         thaiTtsCache.set(safeText, merged);
       }
 
-      res.setHeader('Content-Type', 'audio/mpeg');
-      res.setHeader('Content-Length', String(merged.length));
-      res.setHeader('Cache-Control', 'public, max-age=604800');
-      res.send(merged);
+      sendMp3Buffer(merged);
     } catch (err: any) {
       console.error('Thai TTS proxy error:', err);
       if (!res.headersSent) {
@@ -1320,6 +1373,45 @@ async function createAppServer() {
     res.status(404).json({ error: '未找到纯净油猴脚本文件' });
   });
 
+  // 生产与开发通用：dhamma.cn 与 satipatthana.life 检索代理
+  app.use('/api/satipatthana-cache', async (req: Request, res: Response) => {
+    try {
+      const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+      const upstream = await fetch(`https://www.satipatthana.life/.netlify/functions/dhamma-cache${qs}`, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+          Accept: 'application/json, text/plain, */*',
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+      const text = await upstream.text();
+      res.status(upstream.status);
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json; charset=utf-8');
+      res.send(text);
+    } catch (err: any) {
+      res.status(502).json({ error: err?.message || 'satipatthana cache proxy failed' });
+    }
+  });
+
+  app.use('/api/dhamma-proxy', async (req: Request, res: Response) => {
+    try {
+      const subPath = req.url.startsWith('/') ? req.url : `/${req.url}`;
+      const upstream = await fetch(`https://www.dhamma.cn${subPath}`, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+          Accept: 'application/json, text/plain, */*',
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+      const text = await upstream.text();
+      res.status(upstream.status);
+      res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json; charset=utf-8');
+      res.send(text);
+    } catch (err: any) {
+      res.status(502).json({ error: err?.message || 'dhamma.cn proxy failed' });
+    }
+  });
+
   if (!IS_PROD) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
@@ -1330,7 +1422,10 @@ async function createAppServer() {
   } else {
     const distDir = path.resolve(__dirname, 'dist');
     app.use(express.static(distDir));
-    app.get('*', (_req: Request, res: Response) => {
+    app.use('/api', (_req: Request, res: Response) => {
+      res.status(404).json({ error: 'API endpoint not found' });
+    });
+    app.use((_req: Request, res: Response) => {
       res.sendFile(path.join(distDir, 'index.html'));
     });
   }

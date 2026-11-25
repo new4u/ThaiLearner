@@ -327,6 +327,42 @@ export function triggerBlobDownload(blob: Blob, fileName: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
 
+let cachedAudioProxySupport: boolean | null = null;
+let audioProxyProbePromise: Promise<boolean> | null = null;
+
+export function isAudioProxyAvailableSync(): boolean | null {
+  return cachedAudioProxySupport;
+}
+
+export async function probeAudioProxySupport(): Promise<boolean> {
+  if (cachedAudioProxySupport !== null) return cachedAudioProxySupport;
+  if (audioProxyProbePromise) return audioProxyProbePromise;
+
+  audioProxyProbePromise = (async () => {
+    try {
+      const res = await fetch('/api/health', { cache: 'no-store' });
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (res.status === 404 || ct.includes('text/html')) {
+        cachedAudioProxySupport = false;
+        return false;
+      }
+      if (!res.ok || !ct.includes('application/json')) {
+        return false;
+      }
+      const data = await res.json();
+      const ok = Boolean(data?.ok && data?.audioOnlyProxy);
+      cachedAudioProxySupport = ok;
+      return ok;
+    } catch {
+      return false;
+    } finally {
+      audioProxyProbePromise = null;
+    }
+  })();
+
+  return audioProxyProbePromise;
+}
+
 export function buildAudioProxyUrl(rawUrl: string, downloadFileName?: string): string {
   const params = new URLSearchParams({ url: rawUrl.trim() });
   if (downloadFileName) {
@@ -335,12 +371,23 @@ export function buildAudioProxyUrl(rawUrl: string, downloadFileName?: string): s
   return `/api/audio-proxy?${params.toString()}`;
 }
 
+export function resolvePreferredAudioStreamUrl(rawUrl: string): string {
+  const cleaned = rawUrl.trim();
+  if (!cleaned) return '';
+  if (cachedAudioProxySupport === false) {
+    return cleaned;
+  }
+  return buildAudioProxyUrl(cleaned);
+}
+
 export async function fetchOfficialAudioBlob(
   rawUrl: string,
   onProgress?: (loadedBytes: number, totalBytes: number | null) => void
 ): Promise<{ blob: Blob; mimeType: string }> {
   const CHUNK_SIZE = 4 * 1024 * 1024; // 4 MB chunks (safe for Cloud Run 32MB limit)
-  const proxyUrl = buildAudioProxyUrl(rawUrl);
+  const directUrl = rawUrl.trim();
+  const proxyAvailable = await probeAudioProxySupport();
+  const proxyUrl = buildAudioProxyUrl(directUrl);
 
   const readSingleResponse = async (
     res: Response,
@@ -378,9 +425,22 @@ export async function fetchOfficialAudioBlob(
     return { part: merged, contentType };
   };
 
-  const firstRes = await fetch(proxyUrl, {
+  let activeUrl = proxyAvailable ? proxyUrl : directUrl;
+  let firstRes = await fetch(activeUrl, {
     headers: { Range: `bytes=0-${CHUNK_SIZE - 1}` },
+    ...(activeUrl === directUrl ? { referrerPolicy: 'no-referrer' as ReferrerPolicy } : {}),
   });
+
+  const firstCt = (firstRes.headers.get('content-type') || '').toLowerCase();
+  if (activeUrl === proxyUrl && ((!firstRes.ok && firstRes.status !== 206) || firstCt.includes('text/html'))) {
+    // 代理端点不可用（如纯静态部署返回 index.html），自动回退直连官网 HTTPS 音频
+    activeUrl = directUrl;
+    firstRes = await fetch(activeUrl, {
+      headers: { Range: `bytes=0-${CHUNK_SIZE - 1}` },
+      referrerPolicy: 'no-referrer',
+    });
+  }
+
   if (!firstRes.ok && firstRes.status !== 206) {
     let errMsg = `拉取官方音频失败 (${firstRes.status})`;
     try {
@@ -408,8 +468,9 @@ export async function fetchOfficialAudioBlob(
   if (firstRes.status === 206 && totalBytes && loaded < totalBytes) {
     while (loaded < totalBytes) {
       const end = Math.min(loaded + CHUNK_SIZE - 1, totalBytes - 1);
-      const nextRes = await fetch(proxyUrl, {
+      const nextRes = await fetch(activeUrl, {
         headers: { Range: `bytes=${loaded}-${end}` },
+        ...(activeUrl === directUrl ? { referrerPolicy: 'no-referrer' as ReferrerPolicy } : {}),
       });
       if (!nextRes.ok && nextRes.status !== 206) {
         throw new Error(`分片拉取音频失败 (${nextRes.status})`);
